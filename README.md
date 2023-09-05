@@ -21,5 +21,10 @@
  - Runs on hotspot connection via Raspberry Pi plugged in via ETH
  - Once connection is made allow that connection to be made globally via: https://www.remote.it/getting-started/raspberry-pi
  - your routing for the link on the board must be [WEBPAGE IP].com/raisehand; once properly entered remote.it will provide a live link.
- - Raising your hand is now possible via the locally hosted code, hotspot connection, and proper remote.it IP routing
+ - Raising your hand is now possible via the locally hosted code, hotspot connection, and proper remote.it IP routing.
+-------------------------------------------
+ Camera Setup
+ ===============================
+ ------------------------------------------
+ - Follow the intstructions as stated in the txt file located within the Rasp-pi Zoom folder. 
 -------------------------------------------
