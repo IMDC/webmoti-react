@@ -1,0 +1,6 @@
+sudo nano /etc/xdg/lxsession/LXDE-pi/autostart
+
+@chromium-browser --kiosk https://us05web.zoom.us/j/7914799872?pwd=7lp1mjU5OCJ94qpfbcEn8RR3QaU3hE.1
+^^achieves autostart although will need a single button press on the *join* button.
+^^we must navigate this issue so it seemlessly joins the session. 
+**work in progress**
