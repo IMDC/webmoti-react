@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://appssdk.zoom.us/sdk.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap"
+      rel="stylesheet"  
+    />
+    <link rel="stylesheet" href="styles.css" />
+
+    <title>Document</title>
+    <style type="text/css">
+      h1{
+  color:white;
+}
+.header {
+   display: flex;
+   justify-content: center;
+   width: 100%;
+   height: 70px;
+   background-color: #232323;
+   margin-bottom: 30px;
+ 
+   color: white;
+   font-size: 40px;
+   padding-top: 20px;
+ }
+ body {
+   padding: 0px;
+   margin: 0px;
+   background-color: rgb(47, 47, 47);
+   font-family: 'Poppins', sans-serif;
+ }
+ .container {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   width: 100%;
+   
+ }
+ .d-pad {
+   display: flex;
+   flex-direction: row;
+   justify-content: center;
+   width: 100%;
+ }
+ .control {
+   height: 75px;
+   width: 75px;
+   margin: 10px;
+   font-size: 24px;
+   text-align: center;
+   cursor: pointer;
+   outline: none;
+   color: #fff;
+   background-color: #eef4f2;
+   border: none;
+   border-radius: 15px;
+   
+ }
+
+ .control:hover {
+   transition: ease-in 0.3s;
+   background-color: rgb(23, 143, 223);
+ }
+ .control:active {
+   background-color: #356997;
+  
+   transform: translateY(4px);
+ }
+ .arrow {
+   border: solid #838383;
+   border-width: 0 3px 3px 0;
+   display: inline-block;
+   padding: 3px;
+ }
+ .right {
+   transform: rotate(-45deg);
+   -webkit-transform: rotate(-45deg);
+ }
+
+ .left {
+   transform: rotate(135deg);
+   -webkit-transform: rotate(135deg);
+ }
+
+ .up {
+   transform: rotate(-135deg);
+   -webkit-transform: rotate(-135deg);
+ }
+
+ .down {
+   transform: rotate(45deg);
+   -webkit-transform: rotate(45deg);
+ }
+ .center {
+   height: 75px;
+   width: 75px;
+   margin: 10px;
+   font-size: 24px;
+   text-align: center;
+   cursor: pointer;
+   outline: none;
+   color: #838383;
+   background-color: #eef4f2;
+   border: none;
+   border-radius: 100%;
+   
+ }
+ .center:hover {
+   transition: ease-in 0.3s;
+   background-color: rgb(23, 143, 223);
+ }
+ .center:active {
+   background-color: #356997;
+   
+   transform: translateY(4px);
+ }
+ .repo {
+  background-color: #838383;
+  width:10px;
+  height:10px;
+   border: solid #838383;
+   border-radius: 100%;
+  
+ }
+ .camera-control{
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    width:100%;
+    height:400px;
+    flex-wrap: wrap;
+  
+    
+ }
+ .camera-button{
+    
+   height: 100px;
+   width: 200px;
+   margin: 10px;
+   font-size: 24px;
+   text-align: center;
+   cursor: pointer;
+   outline: none;
+   color: #838383;
+   background-color: #eef4f2;
+   border: none;
+   border-radius: 15px;
+  
+
+ }
+ .camera-button:hover{
+  color:white;
+  background-color: rgb(23, 143, 223);
+  transition: ease-in 0.3s;
+ }
+ .footer {
+position: fixed;
+left: 0;
+bottom: 0;
+width: 100%;
+background-color: rgb(93, 93, 93);
+color: white;
+text-align: center;
+font-size: 12px;
+}
+.divider {
+  margin-top: 10px;
+  border-bottom: 2px solid grey;
+}
+    </style>
+  </head>
+  <body>
+    <div class="header">webMOTi</div>
+    <center><h1>Camera Control</h1></center>
+    <div class="container">
+      
+      <div class="d-pad top">
+         
+        <button class="control"><i class="arrow up"></i></button>
+      </div>
+      <div class="d-pad middle">
+        <div class="middle">
+          <button class="control"><i class="arrow left"></i></button>
+          <button class="center"><center><div class="repo"></div></center></div></button>
+          <button class="control"><i class="arrow right"></i></button>
+        </div>
+      </div>
+      <div class="d-pad top">
+        <button class="control"><i class="arrow down"></i></button>
+      </div>
+      <div class="divider"></div>
+      <center><h1>Camera Select</h1></center>
+      <div class="camera-control">
+         
+         <button class="camera-button camera_1">Board Camera</button>
+         <button class="camera-button camera_2">Class Camera</button>
+     
+      </div>
+
+    
+      <div class="footer">
+         <p>webi  some thing somethign copyright something something</p>
+      </div>
+   
+  </body>
+  <script type="text/javascript">
+    let openedWindow;
+
+    function openAndCloseWindow() {
+        openedWindow = window.zoomSdk.openUrl("http://webmoti.hopto.org/raisehand");
+        setTimeout(() => {
+            openedWindow.close(); 
+        }, 5000); // 10 seconds (10,000 milliseconds)
+    }
+
+    document.querySelector(".camera_1").onclick = function () {
+        openAndCloseWindow();
+    };
+  </script>
+</html>
