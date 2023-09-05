@@ -10,6 +10,9 @@
 - code is hosted locally on a PICO.
 - Two main files main.py and index.html.
 - The PICO board needs both files but will autorun the file main.py.
+- Once code and local hotspot is running from the PICO.
+- Use any touchscreen device to connect to this network and hosted webpage. 
+- Clicking on any of the 5x4 grid boxes will allow proper communication to the microphone. 
 --------------------------------------------
  RaiseHand Function
  ===============================
