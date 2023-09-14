@@ -8,7 +8,7 @@ export default function TestButton() {
     if (newTab) {
       window.setTimeout(() => {
         newTab.close();
-      }, 2500);
+      }, 12000);
     }
   };
 
