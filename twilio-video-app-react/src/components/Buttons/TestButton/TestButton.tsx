@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 
 export default function TestButton() {
   const raiseHand = () => {
-    const newTab = window.open('https://98bd9ca92de136b9.p22.rt3.io/raisehand', '_blank');
+    const newTab = window.open('https://4keaw6l3.connect.remote.it/raisehand', '_blank');
 
     if (newTab) {
       window.setTimeout(() => {
