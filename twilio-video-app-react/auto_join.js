@@ -1,10 +1,30 @@
 const puppeteer = require('puppeteer');
+const { exec } = require('child_process');
 
-// for now, copy the url here
-// TODO get url by running the view app command
-const URL = '';
+function getURL() {
+  // run the view app command to get the app url
+  return new Promise(resolve => {
+    exec('twilio rtc:apps:video:view', (error, stdout, stderr) => {
+      if (error || stderr) {
+        console.error(error || stderr);
+        process.exit(1);
+      }
+
+      // extract url from output
+      const match = stdout.match(/Web App URL: (.+)/);
+      if (match && match[1]) {
+        return resolve(match[1]);
+      } else {
+        console.error('There is no deployed app');
+        process.exit(1);
+      }
+    });
+  });
+}
 
 (async () => {
+  const URL = await getURL();
+
   // non headless to show browser
   // --use-fake-ui-for-media-stream will skip the use camera/mic prompt
   const browser = await puppeteer.launch({ headless: false, args: ['--use-fake-ui-for-media-stream'] });
