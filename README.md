@@ -63,4 +63,28 @@ Plugin: `twilio plugins:install @twilio-labs/plugin-rtc`
 
 `twilio rtc:apps:video:delete`
 
+### Running the App locally
+
+After following the steps below, run the app locally at `http://localhost:3000` with
+
+```sh
+npm start
+```
+
+#### Local setup
+
+- Create an account in the [Twilio Console](https://www.twilio.com/console).
+- Click on 'Settings' and take note of your Account SID.
+- Create a new API Key in the [API Keys Section](https://www.twilio.com/console/video/project/api-keys) under Programmable Video Tools in the Twilio Console. Take note of the SID and Secret of the new API key.
+- Store your Account SID, API Key SID, and API Key Secret in a new file called `.env` in the root level of the application (example below).
+
+```sh
+TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_API_KEY_SID=SKxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_API_KEY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+REACT_APP_DISABLE_TWILIO_CONVERSATIONS=true
+```
+
+**Note:** we don't use Twilio Conversations, so that's disabled.
+
 ----------------------------------
