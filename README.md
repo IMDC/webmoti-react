@@ -76,15 +76,16 @@ npm start
 - Create an account in the [Twilio Console](https://www.twilio.com/console).
 - Click on 'Settings' and take note of your Account SID.
 - Create a new API Key in the [API Keys Section](https://www.twilio.com/console/video/project/api-keys) under Programmable Video Tools in the Twilio Console. Take note of the SID and Secret of the new API key.
-- Store your Account SID, API Key SID, and API Key Secret in a new file called `.env` in the root level of the application (example below).
+- Create a new Conversations service in the [Services section](https://www.twilio.com/console/conversations/services) under the Conversations tab in the Twilio Console. Take note of the SID generated.
+- Store your Account SID, API Key SID, API Key Secret, and Conversations Service SID in a new file called `.env` in the root level of the application (example below).
 
 ```sh
 TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 TWILIO_API_KEY_SID=SKxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 TWILIO_API_KEY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-REACT_APP_DISABLE_TWILIO_CONVERSATIONS=true
+TWILIO_CONVERSATIONS_SERVICE_SID=ISxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+# use this to disable Twilio Conversations
+# REACT_APP_DISABLE_TWILIO_CONVERSATIONS=true
 ```
-
-**Note:** we don't use Twilio Conversations, so that's disabled.
 
 ----------------------------------
