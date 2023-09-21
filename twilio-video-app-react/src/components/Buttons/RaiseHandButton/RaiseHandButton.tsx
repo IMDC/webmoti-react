@@ -2,7 +2,7 @@ import Button from '@material-ui/core/Button';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 
-export default function TestButton() {
+export default function RaiseHandButton() {
   // get participant name for raise hand msg
   const { room } = useVideoContext();
   // default value of "Participant" if undefined
