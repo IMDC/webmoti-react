@@ -4,6 +4,7 @@ import Badge from '@material-ui/core/Badge';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Popover from '@material-ui/core/Popover';
 import { useTheme } from '@material-ui/core/styles';
 
@@ -16,14 +17,13 @@ import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 
 export default function RaiseHandButton() {
-  const { conversation } = useChatContext();
   const { room } = useVideoContext();
-  // get participant name for raise hand msg
-  const name = room?.localParticipant?.identity || 'Participant';
+  const { conversation } = useChatContext();
 
   const [handQueue, setHandQueue] = useState<string[]>([]);
   // the anchor is used so the popover knows where to appear on the screen
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const theme = useTheme();
   const handleOpenPopover = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -34,12 +34,18 @@ export default function RaiseHandButton() {
   };
 
   const raiseHand = () => {
+    // get participant name for raise hand msg
+    const name = room?.localParticipant?.identity || 'Participant';
+    // send msg in chat
     conversation?.sendMessage(`${name} raised hand`);
 
     const newTab = window.open('https://y24khent.connect.remote.it/raisehand', '_blank');
 
     if (newTab) {
+      setIsLoading(true);
+
       window.setTimeout(() => {
+        setIsLoading(false);
         newTab.close();
       }, 12000);
     }
@@ -75,7 +81,13 @@ export default function RaiseHandButton() {
   return (
     <div>
       {/* main raise hand button */}
-      <Button onClick={raiseHand} variant="contained" color="primary">
+      <Button
+        onClick={raiseHand}
+        variant="contained"
+        color="primary"
+        disabled={isLoading}
+        endIcon={isLoading ? <CircularProgress size={20} /> : null}
+      >
         Raise Hand
       </Button>
 
