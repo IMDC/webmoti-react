@@ -1,19 +1,20 @@
-import React from 'react';
-import clsx from 'clsx';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import clsx from 'clsx';
+import React from 'react';
 import { LocalAudioTrack, LocalVideoTrack, Participant, RemoteAudioTrack, RemoteVideoTrack } from 'twilio-video';
 
-import AudioLevelIndicator from '../AudioLevelIndicator/AudioLevelIndicator';
+import Typography from '@material-ui/core/Typography';
 import AvatarIcon from '../../icons/AvatarIcon';
+import ScreenShareIcon from '../../icons/ScreenShareIcon';
+import AudioLevelIndicator from '../AudioLevelIndicator/AudioLevelIndicator';
 import NetworkQualityLevel from '../NetworkQualityLevel/NetworkQualityLevel';
 import PinIcon from './PinIcon/PinIcon';
-import ScreenShareIcon from '../../icons/ScreenShareIcon';
-import Typography from '@material-ui/core/Typography';
 
 import useIsTrackSwitchedOff from '../../hooks/useIsTrackSwitchedOff/useIsTrackSwitchedOff';
+import useParticipantIsReconnecting from '../../hooks/useParticipantIsReconnecting/useParticipantIsReconnecting';
 import usePublications from '../../hooks/usePublications/usePublications';
 import useTrack from '../../hooks/useTrack/useTrack';
-import useParticipantIsReconnecting from '../../hooks/useParticipantIsReconnecting/useParticipantIsReconnecting';
+import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import { useAppState } from '../../state';
 
 const borderWidth = 2;
@@ -183,6 +184,8 @@ export default function ParticipantInfo({
 
   const { isGalleryViewActive } = useAppState();
 
+  const { isWebmotiVideoHidden } = useWebmotiVideoContext();
+
   const classes = useStyles();
 
   return (
@@ -215,7 +218,7 @@ export default function ParticipantInfo({
         <div>{isSelected && <PinIcon />}</div>
       </div>
       <div className={classes.innerContainer}>
-        {(!isVideoEnabled || isVideoSwitchedOff) && (
+        {(!isVideoEnabled || isVideoSwitchedOff || (participant.identity === 'Webmoti' && isWebmotiVideoHidden)) && (
           <div className={classes.avatarContainer}>
             <AvatarIcon />
           </div>
