@@ -64,11 +64,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface MenuBarProps {
-  setWebmotiVideoHidden: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-export default function MenuBar({ setWebmotiVideoHidden }: MenuBarProps) {
+export default function MenuBar() {
   const classes = useStyles();
   const { isSharingScreen, toggleScreenShare } = useVideoContext();
   const roomState = useRoomState();

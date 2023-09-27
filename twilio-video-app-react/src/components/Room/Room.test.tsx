@@ -31,25 +31,25 @@ mockUseAppState.mockImplementation(() => ({ isGalleryViewActive: false }));
 
 describe('the Room component', () => {
   it('should render correctly when the chat window and background selection windows are closed', () => {
-    const wrapper = shallow(<Room isWebmotiVideoHidden={false} />);
+    const wrapper = shallow(<Room />);
     expect(wrapper.prop('className')).not.toContain('rightDrawerOpen');
   });
 
   it('should render correctly with chat window open', () => {
     mockUseChatContext.mockImplementationOnce(() => ({ isChatWindowOpen: true }));
-    const wrapper = shallow(<Room isWebmotiVideoHidden={false} />);
+    const wrapper = shallow(<Room />);
     expect(wrapper.prop('className')).toContain('rightDrawerOpen');
   });
 
   it('should render correctly with the background selection window open', () => {
     mockUseVideoContext.mockImplementationOnce(() => ({ isBackgroundSelectionOpen: true }));
-    const wrapper = shallow(<Room isWebmotiVideoHidden={false} />);
+    const wrapper = shallow(<Room />);
     expect(wrapper.prop('className')).toContain('rightDrawerOpen');
   });
 
   it('should render correctly when gallery view is inactive', () => {
     mockUseVideoContext.mockImplementationOnce(() => ({ isBackgroundSelectionOpen: true }));
-    const wrapper = shallow(<Room isWebmotiVideoHidden={false} />);
+    const wrapper = shallow(<Room />);
     expect(wrapper.find('MainParticipant').exists()).toBe(true);
     expect(wrapper.find('ParticipantList').exists()).toBe(true);
     expect(wrapper.find('GalleryView').exists()).toBe(false);
@@ -58,7 +58,7 @@ describe('the Room component', () => {
   it('should render correctly when gallery view is active', () => {
     mockUseVideoContext.mockImplementationOnce(() => ({ isBackgroundSelectionOpen: true }));
     mockUseAppState.mockImplementationOnce(() => ({ isGalleryViewActive: true }));
-    const wrapper = shallow(<Room isWebmotiVideoHidden={false} />);
+    const wrapper = shallow(<Room />);
     expect(wrapper.find('MainParticipant').exists()).toBe(false);
     expect(wrapper.find('ParticipantList').exists()).toBe(false);
     expect(wrapper.find('GalleryView').exists()).toBe(true);

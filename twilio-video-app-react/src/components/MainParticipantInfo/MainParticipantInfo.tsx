@@ -113,10 +113,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface MainParticipantInfoProps {
   participant: Participant;
   children: React.ReactNode;
-  isWebmotiVideoHidden: boolean;
 }
 
-export default function MainParticipantInfo({ participant, children, isWebmotiVideoHidden }: MainParticipantInfoProps) {
+export default function MainParticipantInfo({ participant, children }: MainParticipantInfoProps) {
   const classes = useStyles();
   const { room } = useVideoContext();
   const localParticipant = room!.localParticipant;
@@ -174,7 +173,7 @@ export default function MainParticipantInfo({ participant, children, isWebmotiVi
           </Tooltip>
         )}
       </div>
-      {(!isVideoEnabled || isVideoSwitchedOff || (participant.identity === 'Webmoti' && isWebmotiVideoHidden)) && (
+      {(!isVideoEnabled || isVideoSwitchedOff) && (
         <div className={classes.avatarContainer}>
           <AvatarIcon />
         </div>
