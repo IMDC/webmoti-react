@@ -12,6 +12,7 @@ import ToggleAudioButton from '../Buttons/ToggleAudioButton/ToggleAudioButton';
 import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import ToggleScreenShareButton from '../Buttons/ToogleScreenShareButton/ToggleScreenShareButton';
+// import ToggleWebmotiButton from '../Buttons/ToggleWebmotiButton/ToggleWebmotiButton';
 import Menu from './Menu/Menu';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -63,7 +64,11 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function MenuBar() {
+interface MenuBarProps {
+  setWebmotiVideoHidden: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default function MenuBar({ setWebmotiVideoHidden }: MenuBarProps) {
   const classes = useStyles();
   const { isSharingScreen, toggleScreenShare } = useVideoContext();
   const roomState = useRoomState();

@@ -1,5 +1,5 @@
-import React from 'react';
 import { styled, Theme } from '@material-ui/core/styles';
+import { useState } from 'react';
 
 import MenuBar from './components/MenuBar/MenuBar';
 import MobileTopMenuBar from './components/MobileTopMenuBar/MobileTopMenuBar';
@@ -35,6 +35,9 @@ export default function App() {
   // will look good on mobile browsers even after the location bar opens or closes.
   const height = useHeight();
 
+  // local state for webmoti video visibility
+  const [isWebmotiVideoHidden, setWebmotiVideoHidden] = useState(false);
+
   return (
     <Container style={{ height }}>
       {roomState === 'disconnected' ? (
@@ -44,8 +47,8 @@ export default function App() {
           <ReconnectingNotification />
           <RecordingNotifications />
           <MobileTopMenuBar />
-          <Room />
-          <MenuBar />
+          <Room isWebmotiVideoHidden={isWebmotiVideoHidden} />
+          <MenuBar setWebmotiVideoHidden={setWebmotiVideoHidden} />
         </Main>
       )}
     </Container>

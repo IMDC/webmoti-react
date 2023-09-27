@@ -1,13 +1,13 @@
-import React from 'react';
-import clsx from 'clsx';
 import { makeStyles, Theme } from '@material-ui/core/styles';
+import clsx from 'clsx';
+import React from 'react';
 import { LocalAudioTrack, LocalVideoTrack, Participant, RemoteAudioTrack, RemoteVideoTrack } from 'twilio-video';
 
-import AudioLevelIndicator from '../AudioLevelIndicator/AudioLevelIndicator';
-import AvatarIcon from '../../icons/AvatarIcon';
-import NetworkQualityLevel from '../NetworkQualityLevel/NetworkQualityLevel';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
+import AvatarIcon from '../../icons/AvatarIcon';
+import AudioLevelIndicator from '../AudioLevelIndicator/AudioLevelIndicator';
+import NetworkQualityLevel from '../NetworkQualityLevel/NetworkQualityLevel';
 
 import useIsRecording from '../../hooks/useIsRecording/useIsRecording';
 import useIsTrackSwitchedOff from '../../hooks/useIsTrackSwitchedOff/useIsTrackSwitchedOff';
@@ -113,9 +113,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface MainParticipantInfoProps {
   participant: Participant;
   children: React.ReactNode;
+  isWebmotiVideoHidden: boolean;
 }
 
-export default function MainParticipantInfo({ participant, children }: MainParticipantInfoProps) {
+export default function MainParticipantInfo({ participant, children, isWebmotiVideoHidden }: MainParticipantInfoProps) {
   const classes = useStyles();
   const { room } = useVideoContext();
   const localParticipant = room!.localParticipant;
@@ -173,7 +174,7 @@ export default function MainParticipantInfo({ participant, children }: MainParti
           </Tooltip>
         )}
       </div>
-      {(!isVideoEnabled || isVideoSwitchedOff) && (
+      {(!isVideoEnabled || isVideoSwitchedOff || (participant.identity === 'Webmoti' && isWebmotiVideoHidden)) && (
         <div className={classes.avatarContainer}>
           <AvatarIcon />
         </div>

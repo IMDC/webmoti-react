@@ -1,12 +1,15 @@
-import MainParticipantInfo from '../MainParticipantInfo/MainParticipantInfo';
-import ParticipantTracks from '../ParticipantTracks/ParticipantTracks';
-import React from 'react';
 import useMainParticipant from '../../hooks/useMainParticipant/useMainParticipant';
-import useSelectedParticipant from '../VideoProvider/useSelectedParticipant/useSelectedParticipant';
 import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/useScreenShareParticipant';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
+import MainParticipantInfo from '../MainParticipantInfo/MainParticipantInfo';
+import ParticipantTracks from '../ParticipantTracks/ParticipantTracks';
+import useSelectedParticipant from '../VideoProvider/useSelectedParticipant/useSelectedParticipant';
 
-export default function MainParticipant() {
+interface MainParticipantProps {
+  isWebmotiVideoHidden: boolean;
+}
+
+export default function MainParticipant({ isWebmotiVideoHidden }: MainParticipantProps) {
   const mainParticipant = useMainParticipant();
   const { room } = useVideoContext();
   const localParticipant = room!.localParticipant;
@@ -22,7 +25,7 @@ export default function MainParticipant() {
   return (
     /* audio is disabled for this participant component because this participant's audio 
        is already being rendered in the <ParticipantStrip /> component.  */
-    <MainParticipantInfo participant={mainParticipant}>
+    <MainParticipantInfo participant={mainParticipant} isWebmotiVideoHidden={isWebmotiVideoHidden}>
       <ParticipantTracks
         participant={mainParticipant}
         videoOnly

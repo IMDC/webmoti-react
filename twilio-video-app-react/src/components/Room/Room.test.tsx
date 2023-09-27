@@ -1,11 +1,10 @@
-import React from 'react';
-import { shallow } from 'enzyme';
 import { renderHook } from '@testing-library/react-hooks';
+import { shallow } from 'enzyme';
 
-import Room, { useSetSpeakerViewOnScreenShare } from './Room';
 import useChatContext from '../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../state';
+import Room, { useSetSpeakerViewOnScreenShare } from './Room';
 
 jest.mock('swiper/react', () => ({
   Swiper: jest.fn(),
@@ -32,25 +31,25 @@ mockUseAppState.mockImplementation(() => ({ isGalleryViewActive: false }));
 
 describe('the Room component', () => {
   it('should render correctly when the chat window and background selection windows are closed', () => {
-    const wrapper = shallow(<Room />);
+    const wrapper = shallow(<Room isWebmotiVideoHidden={false} />);
     expect(wrapper.prop('className')).not.toContain('rightDrawerOpen');
   });
 
   it('should render correctly with chat window open', () => {
     mockUseChatContext.mockImplementationOnce(() => ({ isChatWindowOpen: true }));
-    const wrapper = shallow(<Room />);
+    const wrapper = shallow(<Room isWebmotiVideoHidden={false} />);
     expect(wrapper.prop('className')).toContain('rightDrawerOpen');
   });
 
   it('should render correctly with the background selection window open', () => {
     mockUseVideoContext.mockImplementationOnce(() => ({ isBackgroundSelectionOpen: true }));
-    const wrapper = shallow(<Room />);
+    const wrapper = shallow(<Room isWebmotiVideoHidden={false} />);
     expect(wrapper.prop('className')).toContain('rightDrawerOpen');
   });
 
   it('should render correctly when gallery view is inactive', () => {
     mockUseVideoContext.mockImplementationOnce(() => ({ isBackgroundSelectionOpen: true }));
-    const wrapper = shallow(<Room />);
+    const wrapper = shallow(<Room isWebmotiVideoHidden={false} />);
     expect(wrapper.find('MainParticipant').exists()).toBe(true);
     expect(wrapper.find('ParticipantList').exists()).toBe(true);
     expect(wrapper.find('GalleryView').exists()).toBe(false);
@@ -59,7 +58,7 @@ describe('the Room component', () => {
   it('should render correctly when gallery view is active', () => {
     mockUseVideoContext.mockImplementationOnce(() => ({ isBackgroundSelectionOpen: true }));
     mockUseAppState.mockImplementationOnce(() => ({ isGalleryViewActive: true }));
-    const wrapper = shallow(<Room />);
+    const wrapper = shallow(<Room isWebmotiVideoHidden={false} />);
     expect(wrapper.find('MainParticipant').exists()).toBe(false);
     expect(wrapper.find('ParticipantList').exists()).toBe(false);
     expect(wrapper.find('GalleryView').exists()).toBe(true);

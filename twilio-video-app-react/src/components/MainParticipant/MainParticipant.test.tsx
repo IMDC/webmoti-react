@@ -1,11 +1,10 @@
-import React from 'react';
-import MainParticipant from './MainParticipant';
-import ParticipantTracks from '../ParticipantTracks/ParticipantTracks';
 import { shallow } from 'enzyme';
 import useMainParticipant from '../../hooks/useMainParticipant/useMainParticipant';
-import useSelectedParticipant from '../VideoProvider/useSelectedParticipant/useSelectedParticipant';
 import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/useScreenShareParticipant';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
+import ParticipantTracks from '../ParticipantTracks/ParticipantTracks';
+import useSelectedParticipant from '../VideoProvider/useSelectedParticipant/useSelectedParticipant';
+import MainParticipant from './MainParticipant';
 
 jest.mock('../../hooks/useMainParticipant/useMainParticipant');
 jest.mock('../VideoProvider/useSelectedParticipant/useSelectedParticipant');
@@ -31,7 +30,7 @@ describe('the MainParticipant component', () => {
     mockuseMainParticipant.mockImplementationOnce(() => mockParticipant);
     mockUseSelectedParticipant.mockImplementationOnce(() => [mockParticipant]);
     mockUseScreenShareParticipant.mockImplementationOnce(() => ({}));
-    const wrapper = shallow(<MainParticipant />);
+    const wrapper = shallow(<MainParticipant isWebmotiVideoHidden={false} />);
     expect(wrapper.find(ParticipantTracks).prop('videoPriority')).toBe('high');
   });
 
@@ -40,7 +39,7 @@ describe('the MainParticipant component', () => {
     mockuseMainParticipant.mockImplementationOnce(() => mockParticipant);
     mockUseSelectedParticipant.mockImplementationOnce(() => [{}]);
     mockUseScreenShareParticipant.mockImplementationOnce(() => mockParticipant);
-    const wrapper = shallow(<MainParticipant />);
+    const wrapper = shallow(<MainParticipant isWebmotiVideoHidden={false} />);
     expect(wrapper.find(ParticipantTracks).prop('videoPriority')).toBe('high');
   });
 
@@ -55,7 +54,7 @@ describe('the MainParticipant component', () => {
       },
     }));
 
-    const wrapper = shallow(<MainParticipant />);
+    const wrapper = shallow(<MainParticipant isWebmotiVideoHidden={false} />);
 
     it('should not set the videoPriority', () => {
       expect(wrapper.find(ParticipantTracks).prop('videoPriority')).toBe(null);
@@ -75,7 +74,7 @@ describe('the MainParticipant component', () => {
     mockuseMainParticipant.mockImplementationOnce(() => mockParticipant);
     mockUseSelectedParticipant.mockImplementationOnce(() => [{}]);
     mockUseScreenShareParticipant.mockImplementationOnce(() => ({}));
-    const wrapper = shallow(<MainParticipant />);
+    const wrapper = shallow(<MainParticipant isWebmotiVideoHidden={false} />);
     expect(wrapper.find(ParticipantTracks).prop('videoPriority')).toBe(null);
   });
 });

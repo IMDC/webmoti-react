@@ -1,18 +1,18 @@
-import React, { useEffect, useRef } from 'react';
-import BackgroundSelectionDialog from '../BackgroundSelectionDialog/BackgroundSelectionDialog';
-import ChatWindow from '../ChatWindow/ChatWindow';
+import { Theme, makeStyles, useMediaQuery, useTheme } from '@material-ui/core';
 import clsx from 'clsx';
-import { GalleryView } from '../GalleryView/GalleryView';
-import { MobileGalleryView } from '../MobileGalleryView/MobileGalleryView';
-import MainParticipant from '../MainParticipant/MainParticipant';
-import { makeStyles, Theme, useMediaQuery, useTheme } from '@material-ui/core';
-import { Participant, Room as IRoom } from 'twilio-video';
-import { ParticipantAudioTracks } from '../ParticipantAudioTracks/ParticipantAudioTracks';
-import ParticipantList from '../ParticipantList/ParticipantList';
-import { useAppState } from '../../state';
+import React, { useEffect, useRef } from 'react';
+import { Room as IRoom, Participant } from 'twilio-video';
 import useChatContext from '../../hooks/useChatContext/useChatContext';
 import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/useScreenShareParticipant';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
+import { useAppState } from '../../state';
+import BackgroundSelectionDialog from '../BackgroundSelectionDialog/BackgroundSelectionDialog';
+import ChatWindow from '../ChatWindow/ChatWindow';
+import { GalleryView } from '../GalleryView/GalleryView';
+import MainParticipant from '../MainParticipant/MainParticipant';
+import { MobileGalleryView } from '../MobileGalleryView/MobileGalleryView';
+import { ParticipantAudioTracks } from '../ParticipantAudioTracks/ParticipantAudioTracks';
+import ParticipantList from '../ParticipantList/ParticipantList';
 
 const useStyles = makeStyles((theme: Theme) => {
   const totalMobileSidebarHeight = `${theme.sidebarMobileHeight +
@@ -70,7 +70,11 @@ export function useSetSpeakerViewOnScreenShare(
   }, [screenShareParticipant, setIsGalleryViewActive, room]);
 }
 
-export default function Room() {
+interface RoomProps {
+  isWebmotiVideoHidden: boolean;
+}
+
+export default function Room({ isWebmotiVideoHidden }: RoomProps) {
   const classes = useStyles();
   const { isChatWindowOpen } = useChatContext();
   const { isBackgroundSelectionOpen, room } = useVideoContext();
@@ -104,7 +108,7 @@ export default function Room() {
         )
       ) : (
         <>
-          <MainParticipant />
+          <MainParticipant isWebmotiVideoHidden={isWebmotiVideoHidden} />
           <ParticipantList />
         </>
       )}
