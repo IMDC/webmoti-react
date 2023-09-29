@@ -58,7 +58,7 @@ export default function RaiseHandButton() {
       window.setTimeout(() => {
         setIsLoading(false);
         newTab.close();
-      }, 12000);
+      }, 4000);
     }
   };
 
