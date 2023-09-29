@@ -39,7 +39,18 @@ export default function RaiseHandButton() {
     // send msg in chat
     conversation?.sendMessage(`${name} raised hand`);
 
-    const newTab = window.open('https://y24khent.connect.remote.it/raisehand', '_blank');
+    // set dimensions and position of new window for raise hand page
+    const width = window.screen.width / 3;
+    const height = window.screen.height / 10;
+    const left = (window.screen.width - width) / 2;
+    const top = window.screen.height - 4 * height;
+
+    // open new window with raise hand page
+    const newTab = window.open(
+      'https://y24khent.connect.remote.it/raisehand',
+      '_blank',
+      `width=${width},height=${height},left=${left},top=${top}`
+    );
 
     if (newTab) {
       setIsLoading(true);
