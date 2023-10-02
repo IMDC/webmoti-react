@@ -218,7 +218,9 @@ export default function ParticipantInfo({
         <div>{isSelected && <PinIcon />}</div>
       </div>
       <div className={classes.innerContainer}>
-        {(!isVideoEnabled || isVideoSwitchedOff || (participant.identity === 'Webmoti' && isWebmotiVideoHidden)) && (
+        {(!isVideoEnabled ||
+          isVideoSwitchedOff ||
+          ((participant.identity === 'Webmoti-1' || participant.identity === 'Webmoti-2') && isWebmotiVideoHidden)) && (
           <div className={classes.avatarContainer}>
             <AvatarIcon />
           </div>
