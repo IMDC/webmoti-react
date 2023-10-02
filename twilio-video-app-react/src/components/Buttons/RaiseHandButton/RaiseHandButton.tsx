@@ -21,6 +21,7 @@ export default function RaiseHandButton() {
   const { conversation } = useChatContext();
 
   const [handQueue, setHandQueue] = useState<string[]>([]);
+  const [isHandRaised, setIsHandRaised] = useState(false);
   // the anchor is used so the popover knows where to appear on the screen
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -36,6 +37,8 @@ export default function RaiseHandButton() {
   const raiseHand = () => {
     // get participant name for raise hand msg
     const name = room?.localParticipant?.identity || 'Participant';
+    // toggle state for button
+    setIsHandRaised(prevState => !prevState);
 
     // check if in queue
     if (!handQueue.includes(name)) {
@@ -105,7 +108,7 @@ export default function RaiseHandButton() {
         disabled={isLoading}
         endIcon={isLoading ? <CircularProgress size={20} /> : null}
       >
-        Raise Hand
+        {isHandRaised ? 'Lower Hand' : 'Raise Hand'}
       </Button>
 
       {/* indicator that shows how many hands are raised */}
