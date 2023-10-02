@@ -67,7 +67,7 @@ export default function RaiseHandButton() {
         }, 4000);
       }
     } else {
-      setHandQueue((prevQueue: string[]) => prevQueue.filter(e => e !== name));
+      conversation?.sendMessage(`${name} lowered hand`);
     }
   };
 
@@ -76,10 +76,11 @@ export default function RaiseHandButton() {
     const handleMessageAdded = (message: Message) => {
       if (message.body) {
         // check for raise hand msg format
-        const match = message.body.match(/^(.+) raised hand$/);
+        const match1 = message.body.match(/^(.+) raised hand$/);
+        const match2 = message.body.match(/^(.+) lowered hand$/);
 
-        if (match) {
-          const name = match[1];
+        if (match1) {
+          const name = match1[1];
           setHandQueue((prevQueue: string[]) => {
             // add if not in queue already
             if (!prevQueue.includes(name)) {
@@ -87,6 +88,9 @@ export default function RaiseHandButton() {
             }
             return prevQueue;
           });
+        } else if (match2) {
+          const name = match2[1];
+          setHandQueue((prevQueue: string[]) => prevQueue.filter(e => e !== name));
         }
       }
     };
