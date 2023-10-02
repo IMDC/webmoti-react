@@ -36,29 +36,35 @@ export default function RaiseHandButton() {
   const raiseHand = () => {
     // get participant name for raise hand msg
     const name = room?.localParticipant?.identity || 'Participant';
-    // send msg in chat
-    conversation?.sendMessage(`${name} raised hand`);
 
-    // set dimensions and position of new window for raise hand page
-    const width = window.screen.width / 3;
-    const height = window.screen.height / 10;
-    const left = (window.screen.width - width) / 2;
-    const top = window.screen.height - 4 * height;
+    // check if in queue
+    if (!handQueue.includes(name)) {
+      // send msg in chat
+      conversation?.sendMessage(`${name} raised hand`);
 
-    // open new window with raise hand page
-    const newTab = window.open(
-      'https://y24khent.connect.remote.it/raisehand',
-      '_blank',
-      `width=${width},height=${height},left=${left},top=${top}`
-    );
+      // set dimensions and position of new window for raise hand page
+      const width = window.screen.width / 3;
+      const height = window.screen.height / 10;
+      const left = (window.screen.width - width) / 2;
+      const top = window.screen.height - 4 * height;
 
-    if (newTab) {
-      setIsLoading(true);
+      // open new window with raise hand page
+      const newTab = window.open(
+        'https://y24khent.connect.remote.it/raisehand',
+        '_blank',
+        `width=${width},height=${height},left=${left},top=${top}`
+      );
 
-      window.setTimeout(() => {
-        setIsLoading(false);
-        newTab.close();
-      }, 4000);
+      if (newTab) {
+        setIsLoading(true);
+
+        window.setTimeout(() => {
+          setIsLoading(false);
+          newTab.close();
+        }, 4000);
+      }
+    } else {
+      setHandQueue((prevQueue: string[]) => prevQueue.filter(e => e !== name));
     }
   };
 
