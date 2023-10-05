@@ -22,8 +22,8 @@ export default function RaiseHandButton() {
 
   const [handQueue, setHandQueue] = useState<string[]>([]);
   const [isHandRaised, setIsHandRaised] = useState(false);
-  // the anchor is used so the popover knows where to appear on the screen
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [handTimeoutID, setHandTimeoutID] = useState<number | null>(null); // timeout id for auto lowering hand
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null); // the anchor is used so the popover knows where to appear on the screen
   const [isLoading, setIsLoading] = useState(false);
 
   const theme = useTheme();
@@ -39,6 +39,11 @@ export default function RaiseHandButton() {
     const name = room?.localParticipant?.identity || 'Participant';
     // toggle state for button
     setIsHandRaised(prevState => !prevState);
+
+    const autoLowerHand = () => {
+      setIsHandRaised(false);
+      conversation?.sendMessage(`${name} lowered hand`);
+    };
 
     // check if in queue
     if (!handQueue.includes(name)) {
@@ -64,14 +69,18 @@ export default function RaiseHandButton() {
         window.setTimeout(() => {
           setIsLoading(false);
           newTab.close();
+          // auto lower hand after 90 seconds
+          let timeoutID = (setTimeout(autoLowerHand, 90000) as unknown) as number;
+          setHandTimeoutID(timeoutID);
         }, 4000);
       }
     } else {
       conversation?.sendMessage(`${name} lowered hand`);
+      clearTimeout((handTimeoutID as unknown) as number); // remove auto lower hand timeout
     }
   };
 
-  // event listener for added msg
+  // listen for raise hand msg and update queue
   useEffect(() => {
     const handleMessageAdded = (message: Message) => {
       if (message.body) {
