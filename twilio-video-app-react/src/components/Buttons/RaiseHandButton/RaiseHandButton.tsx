@@ -108,18 +108,19 @@ export default function RaiseHandButton() {
       <Button
         onClick={raiseHand}
         variant="contained"
-        color="primary"
+        color={isHandRaised ? 'secondary' : 'primary'}
         disabled={isLoading}
-        endIcon={isLoading ? <CircularProgress size={20} /> : null}
+        style={{ position: 'relative' }}
       >
-        {isHandRaised ? 'Lower Hand' : 'Raise Hand'}
+        {isLoading && <CircularProgress size={20} style={{ position: 'absolute' }} />}
+        {isHandRaised ? <HandIcon color="disabled" /> : <HandIcon />}
       </Button>
 
       {/* indicator that shows how many hands are raised */}
       <Badge badgeContent={handQueue.length} color="secondary">
         {/* hand icon button, click to open queue */}
         <Button onClick={handleOpenPopover} color="default">
-          <HandIcon />
+          Hands
         </Button>
       </Badge>
 
