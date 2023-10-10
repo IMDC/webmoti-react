@@ -83,23 +83,23 @@ export default function RaiseHandButton() {
   // listen for raise hand msg and update queue
   useEffect(() => {
     const handleMessageAdded = (message: Message) => {
-      if (message.body) {
-        // check for raise hand msg format
-        const match1 = message.body.match(/^(.+) raised hand$/);
-        const match2 = message.body.match(/^(.+) lowered hand$/);
+      const match = message.body?.match(/^(.+) (raised|lowered) hand$/);
 
-        if (match1) {
-          const name = match1[1];
+      if (match) {
+        const [, name, action] = match;
+
+        if (message.author === name) {
           setHandQueue((prevQueue: string[]) => {
-            // add if not in queue already
-            if (!prevQueue.includes(name)) {
+            if (action === 'raised' && !prevQueue.includes(name)) {
               return [...prevQueue, name];
+            } else if (action === 'lowered') {
+              return prevQueue.filter(e => e !== name);
             }
             return prevQueue;
           });
-        } else if (match2) {
-          const name = match2[1];
-          setHandQueue((prevQueue: string[]) => prevQueue.filter(e => e !== name));
+
+          // delete hand msg so it's not shown when rejoining
+          message.remove();
         }
       }
     };

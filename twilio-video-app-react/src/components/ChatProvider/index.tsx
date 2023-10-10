@@ -1,7 +1,6 @@
-import React, { createContext, useCallback, useEffect, useRef, useState } from 'react';
 import { Client } from '@twilio/conversations';
-import { Conversation } from '@twilio/conversations/';
-import { Message } from '@twilio/conversations/';
+import { Conversation, Message } from '@twilio/conversations/';
+import React, { createContext, useCallback, useEffect, useRef, useState } from 'react';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 
 type ChatContextType = {
@@ -49,8 +48,16 @@ export const ChatProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     if (conversation) {
-      const handleMessageAdded = (message: Message) => setMessages(oldMessages => [...oldMessages, message]);
+      const handleMessageAdded = (message: Message) => {
+        // don't show raise hand messages in chat
+        const match = message.body?.match(/^(.+) (raised|lowered) hand$/);
+        if (!(match && message.author === match[1])) {
+          setMessages(oldMessages => [...oldMessages, message]);
+        }
+      };
+
       conversation.getMessages().then(newMessages => setMessages(newMessages.items));
+
       conversation.on('messageAdded', handleMessageAdded);
       return () => {
         conversation.off('messageAdded', handleMessageAdded);
