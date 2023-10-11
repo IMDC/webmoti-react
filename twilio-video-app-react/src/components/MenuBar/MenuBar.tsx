@@ -9,10 +9,11 @@ import { isMobile } from '../../utils';
 import EndCallButton from '../Buttons/EndCallButton/EndCallButton';
 import RaiseHandButton from '../Buttons/RaiseHandButton/RaiseHandButton';
 import ToggleAudioButton from '../Buttons/ToggleAudioButton/ToggleAudioButton';
+import ToggleCameraButton from '../Buttons/ToggleCameraButton/ToggleCameraButton';
 import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import ToggleScreenShareButton from '../Buttons/ToogleScreenShareButton/ToggleScreenShareButton';
-import ToggleCameraButton from '../Buttons/ToggleCameraButton/ToggleCameraButton';
+import VideoRotationSlider from '../Buttons/VideoRotationSlider/VideoRotationSlider';
 import Menu from './Menu/Menu';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -97,6 +98,7 @@ export default function MenuBar() {
               {!isSharingScreen && !isMobile && <ToggleScreenShareButton disabled={isReconnecting} />}
               {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />}
               <RaiseHandButton />
+              <VideoRotationSlider />
               <Hidden smDown>
                 <Menu />
               </Hidden>
