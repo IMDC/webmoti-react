@@ -15,9 +15,10 @@ interface VideoTrackProps {
   track: IVideoTrack;
   isLocal?: boolean;
   priority?: Track.Priority | null;
+  isWebmotiVideo?: boolean;
 }
 
-export default function VideoTrack({ track, isLocal, priority }: VideoTrackProps) {
+export default function VideoTrack({ track, isLocal, priority, isWebmotiVideo = false }: VideoTrackProps) {
   const ref = useRef<HTMLVideoElement>(null!);
   const mediaStreamTrack = useMediaStreamTrack(track);
   const dimensions = useVideoTrackDimensions(track);
@@ -48,7 +49,9 @@ export default function VideoTrack({ track, isLocal, priority }: VideoTrackProps
   // The local video track is mirrored if it is not facing the environment.
   const isFrontFacing = mediaStreamTrack?.getSettings().facingMode !== 'environment';
   const style = {
-    transform: `${isLocal && isFrontFacing ? 'scaleX(-1)' : ''} ${'rotate(' + rotation + 'deg)'} `,
+    transform: `${isLocal && isFrontFacing ? 'scaleX(-1)' : ''} ${
+      isWebmotiVideo ? 'rotate(' + rotation + 'deg)' : ''
+    } `,
     objectFit: isPortrait || track.name.includes('screen') ? ('contain' as const) : ('cover' as const),
   };
 

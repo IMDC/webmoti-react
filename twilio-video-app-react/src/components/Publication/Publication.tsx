@@ -13,26 +13,36 @@ interface PublicationProps {
   videoPriority?: Track.Priority | null;
 }
 
-export default function Publication({ publication, isLocalParticipant, videoPriority }: PublicationProps) {
+export default function Publication({ publication, isLocalParticipant, videoPriority, participant }: PublicationProps) {
   const track = useTrack(publication);
 
   if (!track) return null;
+
+  const isWebmotiVideo = participant.identity === 'Webmoti-1' || participant.identity === 'Webmoti-2';
 
   // Even though we only have one case here, let's keep this switch() in case
   // we even need to add a 'data' case for rendering DataTracks.
   switch (track.kind) {
     case 'video':
-      return (
-        <TransformWrapper>
-          <TransformComponent>
-            <VideoTrack
-              track={track as IVideoTrack}
-              priority={videoPriority}
-              isLocal={!track.name.includes('screen') && isLocalParticipant}
-            />
-          </TransformComponent>
-        </TransformWrapper>
+      const videoTrackElement = (
+        <VideoTrack
+          track={track as IVideoTrack}
+          priority={videoPriority}
+          isLocal={!track.name.includes('screen') && isLocalParticipant}
+          isWebmotiVideo={isWebmotiVideo}
+        />
       );
+
+      if (isWebmotiVideo) {
+        return (
+          <TransformWrapper>
+            <TransformComponent>{videoTrackElement}</TransformComponent>
+          </TransformWrapper>
+        );
+      }
+
+      return videoTrackElement;
+
     // All participant audio tracks are rendered in ParticipantAudioTracks.tsx
     default:
       return null;
