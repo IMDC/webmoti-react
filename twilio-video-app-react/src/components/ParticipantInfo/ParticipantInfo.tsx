@@ -53,6 +53,8 @@ const useStyles = makeStyles((theme: Theme) =>
       height: '100%',
     },
     infoContainer: {
+      // allow clicks to pass through to video track
+      pointerEvents: 'none',
       position: 'absolute',
       zIndex: 2,
       display: 'flex',

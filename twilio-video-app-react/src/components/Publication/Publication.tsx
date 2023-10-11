@@ -1,9 +1,9 @@
-import React from 'react';
 import useTrack from '../../hooks/useTrack/useTrack';
 import VideoTrack from '../VideoTrack/VideoTrack';
 
-import { IVideoTrack } from '../../types';
+import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 import { LocalTrackPublication, Participant, RemoteTrackPublication, Track } from 'twilio-video';
+import { IVideoTrack } from '../../types';
 
 interface PublicationProps {
   publication: LocalTrackPublication | RemoteTrackPublication;
@@ -23,11 +23,15 @@ export default function Publication({ publication, isLocalParticipant, videoPrio
   switch (track.kind) {
     case 'video':
       return (
-        <VideoTrack
-          track={track as IVideoTrack}
-          priority={videoPriority}
-          isLocal={!track.name.includes('screen') && isLocalParticipant}
-        />
+        <TransformWrapper>
+          <TransformComponent>
+            <VideoTrack
+              track={track as IVideoTrack}
+              priority={videoPriority}
+              isLocal={!track.name.includes('screen') && isLocalParticipant}
+            />
+          </TransformComponent>
+        </TransformWrapper>
       );
     // All participant audio tracks are rendered in ParticipantAudioTracks.tsx
     default:
