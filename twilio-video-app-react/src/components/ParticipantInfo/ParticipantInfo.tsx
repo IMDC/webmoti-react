@@ -187,7 +187,12 @@ export default function ParticipantInfo({
 
   const { isGalleryViewActive } = useAppState();
 
-  const { isWebmotiVideoHidden } = useWebmotiVideoContext();
+  const { isCameraOneOff, isCameraTwoOff } = useWebmotiVideoContext();
+  const isCameraOffOrVideoDisabled =
+    !isVideoEnabled ||
+    isVideoSwitchedOff ||
+    (participant.identity === WEBMOTI_CAMERA_1 && isCameraOneOff) ||
+    (participant.identity === WEBMOTI_CAMERA_2 && isCameraTwoOff);
 
   const classes = useStyles();
 
@@ -221,10 +226,7 @@ export default function ParticipantInfo({
         <div>{isSelected && <PinIcon />}</div>
       </div>
       <div className={classes.innerContainer}>
-        {(!isVideoEnabled ||
-          isVideoSwitchedOff ||
-          ((participant.identity === WEBMOTI_CAMERA_1 || participant.identity === WEBMOTI_CAMERA_2) &&
-            isWebmotiVideoHidden)) && (
+        {isCameraOffOrVideoDisabled && (
           <div className={classes.avatarContainer}>
             <AvatarIcon />
           </div>
