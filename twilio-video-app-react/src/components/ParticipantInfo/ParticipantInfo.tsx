@@ -10,6 +10,7 @@ import AudioLevelIndicator from '../AudioLevelIndicator/AudioLevelIndicator';
 import NetworkQualityLevel from '../NetworkQualityLevel/NetworkQualityLevel';
 import PinIcon from './PinIcon/PinIcon';
 
+import { WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../../constants';
 import useIsTrackSwitchedOff from '../../hooks/useIsTrackSwitchedOff/useIsTrackSwitchedOff';
 import useParticipantIsReconnecting from '../../hooks/useParticipantIsReconnecting/useParticipantIsReconnecting';
 import usePublications from '../../hooks/usePublications/usePublications';
@@ -222,7 +223,8 @@ export default function ParticipantInfo({
       <div className={classes.innerContainer}>
         {(!isVideoEnabled ||
           isVideoSwitchedOff ||
-          ((participant.identity === 'Webmoti-1' || participant.identity === 'Webmoti-2') && isWebmotiVideoHidden)) && (
+          ((participant.identity === WEBMOTI_CAMERA_1 || participant.identity === WEBMOTI_CAMERA_2) &&
+            isWebmotiVideoHidden)) && (
           <div className={classes.avatarContainer}>
             <AvatarIcon />
           </div>

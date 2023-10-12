@@ -3,6 +3,7 @@ import VideoTrack from '../VideoTrack/VideoTrack';
 
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 import { LocalTrackPublication, Participant, RemoteTrackPublication, Track } from 'twilio-video';
+import { WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../../constants';
 import { IVideoTrack } from '../../types';
 
 interface PublicationProps {
@@ -18,7 +19,7 @@ export default function Publication({ publication, isLocalParticipant, videoPrio
 
   if (!track) return null;
 
-  const isWebmotiVideo = participant.identity === 'Webmoti-1' || participant.identity === 'Webmoti-2';
+  const isWebmotiVideo = participant.identity === WEBMOTI_CAMERA_1 || participant.identity === WEBMOTI_CAMERA_2;
 
   // Even though we only have one case here, let's keep this switch() in case
   // we even need to add a 'data' case for rendering DataTracks.

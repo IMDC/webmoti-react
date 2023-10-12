@@ -20,3 +20,7 @@ export const SELECTED_BACKGROUND_SETTINGS_KEY = 'TwilioVideoApp-selectedBackgrou
 
 export const GALLERY_VIEW_ASPECT_RATIO = 9 / 16; // 16:9
 export const GALLERY_VIEW_MARGIN = 3;
+
+// webmoti camera names
+export const WEBMOTI_CAMERA_1 = 'Front';
+export const WEBMOTI_CAMERA_2 = 'Back';
