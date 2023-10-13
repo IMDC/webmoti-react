@@ -7,7 +7,7 @@ export default function ToggleCameraButton(props: { className?: string }) {
 
   return (
     <Button className={props.className} onClick={() => toggleWebmotiVideo(WEBMOTI_CAMERA_1)}>
-      Toggle Camera
+      Class-View ON/OFF
     </Button>
   );
 }

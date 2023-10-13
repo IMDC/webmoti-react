@@ -129,7 +129,7 @@ export default function RaiseHandButton() {
       <Badge badgeContent={handQueue.length} color="secondary">
         {/* hand icon button, click to open queue */}
         <Button onClick={handleOpenPopover} color="default">
-          <HandIcon />-Queue
+          Raising-Hand
         </Button>
       </Badge>
 
