@@ -159,8 +159,11 @@ export default createTheme({
     primary: {
       main: '#027AC5',
     },
+    secondary: {
+      main: '#6633CC',
+    },
   },
-  brand: '#E22525',
+  brand: '#333333',
   footerHeight: 72,
   mobileFooterHeight: 56,
   sidebarWidth: 300,

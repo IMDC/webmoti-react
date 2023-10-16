@@ -16,7 +16,7 @@ const useStyles = makeStyles({
   circle: {
     width: '10px',
     height: '10px',
-    backgroundColor: '#5BB75B',
+    backgroundColor: '#027AC5',
     borderRadius: '50%',
     position: 'absolute',
     top: '-3px',
@@ -28,7 +28,7 @@ const useStyles = makeStyles({
     opacity: 1,
   },
   ring: {
-    border: '3px solid #5BB75B',
+    border: '3px solid #027AC5',
     borderRadius: '30px',
     height: '14px',
     width: '14px',
