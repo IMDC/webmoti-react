@@ -100,7 +100,6 @@ export default function MenuBar() {
               {!isSharingScreen && !isMobile && <ToggleScreenShareButton disabled={isReconnecting} />}
               {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />}
               <RaiseHandButton />
-              <VideoRotationSlider />
               <Hidden smDown>
                 <Menu />
               </Hidden>
