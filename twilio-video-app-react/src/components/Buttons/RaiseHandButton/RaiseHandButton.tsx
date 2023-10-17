@@ -9,22 +9,22 @@ import Popover from '@material-ui/core/Popover';
 import { useTheme } from '@material-ui/core/styles';
 
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import HandIcon from '@material-ui/icons/PanTool';
 
 import { Message } from '@twilio/conversations';
 
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
+import { kMaxLength } from 'buffer';
 
 export default function RaiseHandButton() {
   const { room } = useVideoContext();
   const { conversation } = useChatContext();
-
   const [handQueue, setHandQueue] = useState<string[]>([]);
   const [isHandRaised, setIsHandRaised] = useState(false);
   const [handTimeoutID, setHandTimeoutID] = useState<number | null>(null); // timeout id for auto lowering hand
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null); // the anchor is used so the popover knows where to appear on the screen
   const [isLoading, setIsLoading] = useState(false);
+  const [countdown, setCountdown] = useState(0); // Add countdown state
 
   const theme = useTheme();
   const handleOpenPopover = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -33,7 +33,6 @@ export default function RaiseHandButton() {
   const handleClosePopover = () => {
     setAnchorEl(null);
   };
-
   const raiseHand = () => {
     // get participant name for raise hand msg
     const name = room?.localParticipant?.identity || 'Participant';
@@ -65,18 +64,32 @@ export default function RaiseHandButton() {
 
       if (newTab) {
         setIsLoading(true);
+  
+        const countdownDuration = 30;
+  
+        // Start the countdown timer
+        const intervalID = setInterval(() => {
+          setCountdown((prevCountdown) => {
+            if (prevCountdown <= 1) {
+              clearInterval(intervalID); // Stop the countdown when it reaches 0
+              autoLowerHand();
+              return 0;
+            }
+            return prevCountdown - 1;
+          });
+        }, 1000);
+        setCountdown(countdownDuration);
 
         window.setTimeout(() => {
           setIsLoading(false);
           newTab.close();
-          // auto lower hand after 90 seconds
-          let timeoutID = (setTimeout(autoLowerHand, 26000) as unknown) as number;
-          setHandTimeoutID(timeoutID);
-        }, 4000);
+          clearInterval(intervalID); // Clear the interval when the countdown is complete
+          autoLowerHand();
+        }, countdownDuration * 1000);
       }
     } else {
       conversation?.sendMessage(`${name} lowered hand`);
-      clearTimeout((handTimeoutID as unknown) as number); // remove auto lower hand timeout
+      clearTimeout((handTimeoutID as unknown) as number); // Remove auto lower hand timeout
     }
   };
 
@@ -121,8 +134,11 @@ export default function RaiseHandButton() {
         disabled={isLoading}
         style={{ position: 'relative' }}
       >
-        {isLoading && <CircularProgress size={20} style={{ position: 'absolute' }} />}
-        {isHandRaised ? <span style={{ color: 'disabled' }}>Lower Hand</span> : 'Raise Hand'}
+        {isLoading && (
+          <CircularProgress size={20} style={{ position: 'absolute'}} />
+        )}
+        {isHandRaised ? <span style={{ color: 'disabled' }}></span> : 'Raise Hand'}
+        {countdown > 0 && <span> ({countdown} sec)</span>}
       </Button>
 
       {/* indicator that shows how many hands are raised */}
