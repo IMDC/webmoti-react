@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { Request, Response } from 'express';
-import { ServerlessContext, ServerlessFunction } from './types';
 import Twilio from 'twilio';
+import { ServerlessContext, ServerlessFunction } from './types';
 
 const {
   TWILIO_ACCOUNT_SID,
@@ -9,6 +9,7 @@ const {
   TWILIO_API_KEY_SECRET,
   TWILIO_CONVERSATIONS_SERVICE_SID,
   REACT_APP_TWILIO_ENVIRONMENT,
+  REACT_APP_ROOM_TYPE,
 } = process.env;
 
 const twilioClient = Twilio(TWILIO_API_KEY_SID, TWILIO_API_KEY_SECRET, {
@@ -20,7 +21,7 @@ const context: ServerlessContext = {
   ACCOUNT_SID: TWILIO_ACCOUNT_SID,
   TWILIO_API_KEY_SID,
   TWILIO_API_KEY_SECRET,
-  ROOM_TYPE: 'group',
+  ROOM_TYPE: REACT_APP_ROOM_TYPE || 'go',
   CONVERSATIONS_SERVICE_SID: TWILIO_CONVERSATIONS_SERVICE_SID,
   getTwilioClient: () => twilioClient,
 };
