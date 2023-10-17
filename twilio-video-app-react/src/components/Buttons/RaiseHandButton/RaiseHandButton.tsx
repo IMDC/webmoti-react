@@ -70,7 +70,7 @@ export default function RaiseHandButton() {
           setIsLoading(false);
           newTab.close();
           // auto lower hand after 90 seconds
-          let timeoutID = (setTimeout(autoLowerHand, 90000) as unknown) as number;
+          let timeoutID = (setTimeout(autoLowerHand, 26000) as unknown) as number;
           setHandTimeoutID(timeoutID);
         }, 4000);
       }
