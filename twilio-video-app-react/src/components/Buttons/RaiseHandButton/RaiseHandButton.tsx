@@ -64,28 +64,41 @@ export default function RaiseHandButton() {
 
       if (newTab) {
         setIsLoading(true);
-  
-        const countdownDuration = 30;
-  
-        // Start the countdown timer
-        const intervalID = setInterval(() => {
+    
+        // Set the countdown duration for the tab (e.g., 4 seconds)
+        let tabCountdownDuration = 4;
+    
+        // Start the countdown timer for the tab
+        const tabIntervalID = setInterval(() => {
+          if (tabCountdownDuration <= 1) {
+            clearInterval(tabIntervalID);
+            newTab.close(); // Close the tab after 4 seconds
+          }
+          tabCountdownDuration -= 1;
+        }, 1000);
+    
+        // Set the countdown duration for the button (e.g., 30 seconds)
+        const buttonCountdownDuration = 30;
+    
+        // Start the countdown timer for the button
+        const buttonIntervalID = setInterval(() => {
           setCountdown((prevCountdown) => {
             if (prevCountdown <= 1) {
-              clearInterval(intervalID); // Stop the countdown when it reaches 0
+              clearInterval(buttonIntervalID);
               autoLowerHand();
               return 0;
             }
             return prevCountdown - 1;
           });
         }, 1000);
-        setCountdown(countdownDuration);
-
+    
+        setCountdown(buttonCountdownDuration);
+    
         window.setTimeout(() => {
           setIsLoading(false);
-          newTab.close();
-          clearInterval(intervalID); // Clear the interval when the countdown is complete
+          clearInterval(buttonIntervalID);
           autoLowerHand();
-        }, countdownDuration * 1000);
+        }, buttonCountdownDuration * 1000);
       }
     } else {
       conversation?.sendMessage(`${name} lowered hand`);
