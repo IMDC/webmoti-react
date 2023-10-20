@@ -1,4 +1,4 @@
-import { Client } from '@twilio/conversations';
+import { Client, JSONObject } from '@twilio/conversations';
 import { Conversation, Message } from '@twilio/conversations/';
 import React, { createContext, useCallback, useEffect, useRef, useState } from 'react';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
@@ -49,9 +49,17 @@ export const ChatProvider: React.FC = ({ children }) => {
   useEffect(() => {
     if (conversation) {
       const handleMessageAdded = (message: Message) => {
-        // don't show raise hand messages in chat
-        const match = message.body?.match(/^(.+) (raised|lowered) hand$/);
-        if (!(match && message.author === match[1])) {
+        // don't show system messages
+        let isSystemMsg = false;
+        const attrObj = message.attributes as JSONObject;
+        if (attrObj.attributes !== undefined) {
+          const attrSysMsg = JSON.parse(attrObj.attributes as string).systemMsg;
+          if (attrSysMsg !== undefined) {
+            isSystemMsg = true;
+          }
+        }
+
+        if (!isSystemMsg) {
           setMessages(oldMessages => [...oldMessages, message]);
         }
       };

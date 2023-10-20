@@ -10,11 +10,10 @@ import { useTheme } from '@material-ui/core/styles';
 
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 
-import { Message } from '@twilio/conversations';
+import { JSONObject, Message } from '@twilio/conversations';
 
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
-import { kMaxLength } from 'buffer';
 
 export default function RaiseHandButton() {
   const { room } = useVideoContext();
@@ -33,6 +32,12 @@ export default function RaiseHandButton() {
   const handleClosePopover = () => {
     setAnchorEl(null);
   };
+
+  // send with an attribute to differentiate from normal msg
+  const sendSystemMsg = (msg: string) => {
+    conversation?.sendMessage(msg, { attributes: JSON.stringify({ systemMsg: true }) });
+  };
+
   const raiseHand = () => {
     // get participant name for raise hand msg
     const name = room?.localParticipant?.identity || 'Participant';
@@ -41,13 +46,13 @@ export default function RaiseHandButton() {
 
     const autoLowerHand = () => {
       setIsHandRaised(false);
-      conversation?.sendMessage(`${name} lowered hand`);
+      sendSystemMsg(`${name} lowered hand`);
     };
 
     // check if in queue
     if (!handQueue.includes(name)) {
       // send msg in chat
-      conversation?.sendMessage(`${name} raised hand`);
+      sendSystemMsg(`${name} raised hand`);
 
       // set dimensions and position of new window for raise hand page
       const width = window.screen.width / 3;
@@ -64,10 +69,10 @@ export default function RaiseHandButton() {
 
       if (newTab) {
         setIsLoading(true);
-    
+
         // Set the countdown duration for the tab (e.g., 4 seconds)
         let tabCountdownDuration = 4;
-    
+
         // Start the countdown timer for the tab
         const tabIntervalID = setInterval(() => {
           if (tabCountdownDuration <= 1) {
@@ -76,13 +81,13 @@ export default function RaiseHandButton() {
           }
           tabCountdownDuration -= 1;
         }, 1000);
-    
+
         // Set the countdown duration for the button (e.g., 30 seconds)
         const buttonCountdownDuration = 30;
-    
+
         // Start the countdown timer for the button
         const buttonIntervalID = setInterval(() => {
-          setCountdown((prevCountdown) => {
+          setCountdown(prevCountdown => {
             if (prevCountdown <= 1) {
               clearInterval(buttonIntervalID);
               autoLowerHand();
@@ -91,9 +96,9 @@ export default function RaiseHandButton() {
             return prevCountdown - 1;
           });
         }, 1000);
-    
+
         setCountdown(buttonCountdownDuration);
-    
+
         window.setTimeout(() => {
           setIsLoading(false);
           clearInterval(buttonIntervalID);
@@ -101,7 +106,7 @@ export default function RaiseHandButton() {
         }, buttonCountdownDuration * 1000);
       }
     } else {
-      conversation?.sendMessage(`${name} lowered hand`);
+      sendSystemMsg(`${name} lowered hand`);
       clearTimeout((handTimeoutID as unknown) as number); // Remove auto lower hand timeout
     }
   };
@@ -109,23 +114,35 @@ export default function RaiseHandButton() {
   // listen for raise hand msg and update queue
   useEffect(() => {
     const handleMessageAdded = (message: Message) => {
-      const match = message.body?.match(/^(.+) (raised|lowered) hand$/);
+      // parse attributes
+      let isSystemMsg = false;
+      const attrObj = message.attributes as JSONObject;
+      if (attrObj.attributes !== undefined) {
+        const attrSysMsg = JSON.parse(attrObj.attributes as string).systemMsg;
+        if (attrSysMsg !== undefined) {
+          isSystemMsg = true;
+        }
+      }
 
-      if (match) {
-        const [, name, action] = match;
+      if (isSystemMsg) {
+        const match = message.body?.match(/^(.+) (raised|lowered) hand$/);
 
-        if (message.author === name) {
-          setHandQueue((prevQueue: string[]) => {
-            if (action === 'raised' && !prevQueue.includes(name)) {
-              return [...prevQueue, name];
-            } else if (action === 'lowered') {
-              return prevQueue.filter(e => e !== name);
-            }
-            return prevQueue;
-          });
+        if (match) {
+          const [, name, action] = match;
 
-          // delete hand msg so it's not shown when rejoining
-          message.remove();
+          if (message.author === name) {
+            setHandQueue((prevQueue: string[]) => {
+              if (action === 'raised' && !prevQueue.includes(name)) {
+                return [...prevQueue, name];
+              } else if (action === 'lowered') {
+                return prevQueue.filter(e => e !== name);
+              }
+              return prevQueue;
+            });
+
+            // delete hand msg so it's not shown when rejoining
+            message.remove();
+          }
         }
       }
     };
@@ -147,9 +164,7 @@ export default function RaiseHandButton() {
         disabled={isLoading}
         style={{ position: 'relative' }}
       >
-        {isLoading && (
-          <CircularProgress size={20} style={{ position: 'absolute'}} />
-        )}
+        {isLoading && <CircularProgress size={20} style={{ position: 'absolute' }} />}
         {isHandRaised ? <span style={{ color: 'disabled' }}></span> : 'Raise Hand'}
         {countdown > 0 && <span> ({countdown} sec)</span>}
       </Button>
