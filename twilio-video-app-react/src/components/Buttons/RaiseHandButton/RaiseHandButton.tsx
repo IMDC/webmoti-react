@@ -169,13 +169,16 @@ export default function RaiseHandButton() {
         style={{ position: 'relative' }}
       >
         {isLoading && <CircularProgress size={20} style={{ position: 'absolute' }} />}
-        {isHandRaised ? <span style={{ color: 'disabled' }}></span> : 'Raise Hand'}
-        {countdown > 0 && (
-          <span>
-            ({countdown} sec)
-            <LinearProgress variant="determinate" value={progress} style={{ marginTop: '8px' }} />
-          </span>
-        )}
+        <span style={{ minWidth: '80px' }}>
+          {/* Set a fixed width for the content */}
+          {isHandRaised ? <span style={{ color: 'disabled' }}></span> : 'Raise Hand'}
+          {countdown > 0 && (
+            <span>
+              ({countdown} sec)
+              <LinearProgress variant="determinate" value={progress} style={{ marginTop: '8px' }} />
+            </span>
+          )}
+        </span>
       </Button>
 
       {/* indicator that shows how many hands are raised */}
