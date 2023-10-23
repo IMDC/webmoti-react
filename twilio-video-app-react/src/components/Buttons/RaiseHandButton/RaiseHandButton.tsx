@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import LinearProgress from '@material-ui/core/LinearProgress';
 import Badge from '@material-ui/core/Badge';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -24,6 +25,7 @@ export default function RaiseHandButton() {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null); // the anchor is used so the popover knows where to appear on the screen
   const [isLoading, setIsLoading] = useState(false);
   const [countdown, setCountdown] = useState(0); // Add countdown state
+  const [progress, setProgress] = useState(0); // Update the progress state
 
   const theme = useTheme();
   const handleOpenPopover = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -88,6 +90,9 @@ export default function RaiseHandButton() {
         // Start the countdown timer for the button
         const buttonIntervalID = setInterval(() => {
           setCountdown(prevCountdown => {
+            // Calculate the progress as a percentage
+            const newProgress = ((buttonCountdownDuration - prevCountdown) / buttonCountdownDuration) * 100;
+            setProgress(newProgress); // Update the progress state
             if (prevCountdown <= 1) {
               clearInterval(buttonIntervalID);
               autoLowerHand();
@@ -98,6 +103,7 @@ export default function RaiseHandButton() {
         }, 1000);
 
         setCountdown(buttonCountdownDuration);
+        setProgress(0); // Reset progress when raising hand
 
         window.setTimeout(() => {
           setIsLoading(false);
@@ -166,7 +172,12 @@ export default function RaiseHandButton() {
       >
         {isLoading && <CircularProgress size={20} style={{ position: 'absolute' }} />}
         {isHandRaised ? <span style={{ color: 'disabled' }}></span> : 'Raise Hand'}
-        {countdown > 0 && <span> ({countdown} sec)</span>}
+        {countdown > 0 && (
+          <span>
+            ({countdown} sec)
+            <LinearProgress variant="determinate" value={progress} style={{ marginTop: '8px' }} />
+          </span>
+        )}
       </Button>
 
       {/* indicator that shows how many hands are raised */}
