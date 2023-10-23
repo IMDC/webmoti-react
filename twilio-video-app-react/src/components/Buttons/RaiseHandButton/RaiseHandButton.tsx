@@ -21,7 +21,6 @@ export default function RaiseHandButton() {
   const { conversation } = useChatContext();
   const [handQueue, setHandQueue] = useState<string[]>([]);
   const [isHandRaised, setIsHandRaised] = useState(false);
-  const [handTimeoutID, setHandTimeoutID] = useState<number | null>(null); // timeout id for auto lowering hand
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null); // the anchor is used so the popover knows where to appear on the screen
   const [isLoading, setIsLoading] = useState(false);
   const [countdown, setCountdown] = useState(0); // Add countdown state
@@ -113,7 +112,6 @@ export default function RaiseHandButton() {
       }
     } else {
       sendSystemMsg(`${name} lowered hand`);
-      clearTimeout((handTimeoutID as unknown) as number); // Remove auto lower hand timeout
     }
   };
 
