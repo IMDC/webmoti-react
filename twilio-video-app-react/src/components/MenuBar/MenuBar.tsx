@@ -13,7 +13,7 @@ import ToggleCameraButton from '../Buttons/ToggleCameraButton/ToggleCameraButton
 import ToggleCameraButton2 from '../Buttons/ToggleCameraButton2/ToggleCameraButton2';
 import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
-import ToggleScreenShareButton from '../Buttons/ToogleScreenShareButton/ToggleScreenShareButton';
+import ToggleScreenShareButton from '../Buttons/ToggleScreenShareButton/ToggleScreenShareButton';
 import VideoRotationSlider from '../Buttons/VideoRotationSlider/VideoRotationSlider';
 import Menu from './Menu/Menu';
 
