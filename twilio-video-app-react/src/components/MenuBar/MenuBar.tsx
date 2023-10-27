@@ -7,14 +7,14 @@ import useRoomState from '../../hooks/useRoomState/useRoomState';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import { isMobile } from '../../utils';
 import EndCallButton from '../Buttons/EndCallButton/EndCallButton';
+import MuteClassroomButton from '../Buttons/MuteClassroomButton/MuteClassroomButton';
 import RaiseHandButton from '../Buttons/RaiseHandButton/RaiseHandButton';
 import ToggleAudioButton from '../Buttons/ToggleAudioButton/ToggleAudioButton';
 import ToggleCameraButton from '../Buttons/ToggleCameraButton/ToggleCameraButton';
 import ToggleCameraButton2 from '../Buttons/ToggleCameraButton2/ToggleCameraButton2';
 import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
-import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import ToggleScreenShareButton from '../Buttons/ToggleScreenShareButton/ToggleScreenShareButton';
-import VideoRotationSlider from '../Buttons/VideoRotationSlider/VideoRotationSlider';
+import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import Menu from './Menu/Menu';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -94,6 +94,7 @@ export default function MenuBar() {
           <Grid item>
             <Grid container justifyContent="center">
               <ToggleAudioButton disabled={isReconnecting} />
+              <MuteClassroomButton />
               <ToggleVideoButton disabled={isReconnecting} />
               <ToggleCameraButton />
               <ToggleCameraButton2 />
