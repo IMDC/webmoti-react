@@ -10,6 +10,8 @@ interface WebmotiVideoContextType {
   setRotation: React.Dispatch<React.SetStateAction<number>>;
   zoom: number;
   setZoomLevel: (level: number) => void;
+  pan: { x: number; y: number };
+  setPan: React.Dispatch<React.SetStateAction<{ x: number; y: number }>>;
 }
 
 const WebmotiVideoContext = createContext<WebmotiVideoContextType | undefined>(undefined);
@@ -23,6 +25,7 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
   const [isCameraTwoOff, setIsCameraTwoOff] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
   const toggleWebmotiVideo = (camera: string) => {
     if (camera === WEBMOTI_CAMERA_1) {
@@ -35,6 +38,10 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
   const setZoomLevel = (level: number) => {
     if (level >= 1 && level <= 3) {
       setZoom(level);
+      // reset pan to center when going to level 1
+      if (level === 1) {
+        setPan({ x: 0, y: 0 });
+      }
     }
   };
 
@@ -48,6 +55,8 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
         setRotation,
         zoom,
         setZoomLevel,
+        pan,
+        setPan,
       }}
     >
       {children}
