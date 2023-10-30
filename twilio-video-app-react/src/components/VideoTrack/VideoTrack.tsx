@@ -1,9 +1,12 @@
-import { styled } from '@material-ui/core/styles';
 import { useEffect, useRef } from 'react';
+
+import { styled } from '@material-ui/core/styles';
 import { Track } from 'twilio-video';
+
 import useMediaStreamTrack from '../../hooks/useMediaStreamTrack/useMediaStreamTrack';
 import useVideoTrackDimensions from '../../hooks/useVideoTrackDimensions/useVideoTrackDimensions';
 import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
+
 import { IVideoTrack } from '../../types';
 
 const Video = styled('video')({
@@ -23,7 +26,7 @@ export default function VideoTrack({ track, isLocal, priority, isWebmotiVideo = 
   const mediaStreamTrack = useMediaStreamTrack(track);
   const dimensions = useVideoTrackDimensions(track);
   const isPortrait = (dimensions?.height ?? 0) > (dimensions?.width ?? 0);
-  const { rotation } = useWebmotiVideoContext();
+  const { zoom, rotation } = useWebmotiVideoContext();
 
   useEffect(() => {
     const el = ref.current;
@@ -48,10 +51,11 @@ export default function VideoTrack({ track, isLocal, priority, isWebmotiVideo = 
 
   // The local video track is mirrored if it is not facing the environment.
   const isFrontFacing = mediaStreamTrack?.getSettings().facingMode !== 'environment';
+
   const style = {
     transform: `${isLocal && isFrontFacing ? 'scaleX(-1)' : ''} ${
       isWebmotiVideo ? 'rotate(' + rotation + 'deg)' : ''
-    } `,
+    } scale(${zoom})`,
     objectFit: isPortrait || track.name.includes('screen') ? ('contain' as const) : ('cover' as const),
   };
 

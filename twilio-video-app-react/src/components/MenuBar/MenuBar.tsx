@@ -1,11 +1,14 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-
 import { Grid, Hidden, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+
 import useParticipants from '../../hooks/useParticipants/useParticipants';
 import useRoomState from '../../hooks/useRoomState/useRoomState';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
+
 import { isMobile } from '../../utils';
+
+import ChangeZoomButton from '../Buttons/ChangeZoomButton/ChangeZoomButton';
 import EndCallButton from '../Buttons/EndCallButton/EndCallButton';
 import MuteClassroomButton from '../Buttons/MuteClassroomButton/MuteClassroomButton';
 import RaiseHandButton from '../Buttons/RaiseHandButton/RaiseHandButton';
@@ -98,6 +101,7 @@ export default function MenuBar() {
               <ToggleVideoButton disabled={isReconnecting} />
               <ToggleCameraButton />
               <ToggleCameraButton2 />
+              <ChangeZoomButton />
               {!isSharingScreen && !isMobile && <ToggleScreenShareButton disabled={isReconnecting} />}
               {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />}
               <RaiseHandButton />

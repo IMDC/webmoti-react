@@ -1,9 +1,10 @@
+import { LocalTrackPublication, Participant, RemoteTrackPublication, Track } from 'twilio-video';
+// import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
+
+import { WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../../constants';
 import useTrack from '../../hooks/useTrack/useTrack';
 import VideoTrack from '../VideoTrack/VideoTrack';
 
-import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
-import { LocalTrackPublication, Participant, RemoteTrackPublication, Track } from 'twilio-video';
-import { WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../../constants';
 import { IVideoTrack } from '../../types';
 
 interface PublicationProps {
@@ -25,25 +26,13 @@ export default function Publication({ publication, isLocalParticipant, videoPrio
   // we even need to add a 'data' case for rendering DataTracks.
   switch (track.kind) {
     case 'video':
-      const videoTrackElement = (
+      return (
         <VideoTrack
           track={track as IVideoTrack}
           priority={videoPriority}
           isLocal={!track.name.includes('screen') && isLocalParticipant}
-          isWebmotiVideo={isWebmotiVideo}
         />
       );
-
-      if (isWebmotiVideo) {
-        return (
-          <TransformWrapper>
-            <TransformComponent>{videoTrackElement}</TransformComponent>
-          </TransformWrapper>
-        );
-      }
-
-      return videoTrackElement;
-
     // All participant audio tracks are rendered in ParticipantAudioTracks.tsx
     default:
       return null;
