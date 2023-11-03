@@ -1,6 +1,6 @@
 import React, { ReactNode, createContext, useState } from 'react';
 
-import { WEBMOTI_CAMERA_1 } from '../../constants';
+import { WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../../constants';
 
 interface WebmotiVideoContextType {
   isCameraOneOff: boolean;
@@ -12,6 +12,9 @@ interface WebmotiVideoContextType {
   setZoomLevel: (level: number) => void;
   pan: { x: number; y: number };
   setPan: React.Dispatch<React.SetStateAction<{ x: number; y: number }>>;
+  isWebmotiVideo: (identity: string) => boolean;
+  isMuted: boolean;
+  toggleClassroomMute: () => void;
 }
 
 const WebmotiVideoContext = createContext<WebmotiVideoContextType | undefined>(undefined);
@@ -26,6 +29,7 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
   const [rotation, setRotation] = useState(0);
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [isMuted, setIsMuted] = useState(false);
 
   const toggleWebmotiVideo = (camera: string) => {
     if (camera === WEBMOTI_CAMERA_1) {
@@ -45,6 +49,14 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
     }
   };
 
+  const isWebmotiVideo = (identity: string) => {
+    return identity === WEBMOTI_CAMERA_1 || identity === WEBMOTI_CAMERA_2;
+  };
+
+  const toggleClassroomMute = () => {
+    setIsMuted(!isMuted);
+  };
+
   return (
     <WebmotiVideoContext.Provider
       value={{
@@ -57,6 +69,9 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
         setZoomLevel,
         pan,
         setPan,
+        isWebmotiVideo,
+        isMuted,
+        toggleClassroomMute,
       }}
     >
       {children}

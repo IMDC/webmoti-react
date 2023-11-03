@@ -1,8 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { AudioTrack, LocalAudioTrack, RemoteAudioTrack } from 'twilio-video';
+
 import { interval } from 'd3-timer';
+import { AudioTrack, LocalAudioTrack, Participant, RemoteAudioTrack } from 'twilio-video';
+
 import useIsTrackEnabled from '../../hooks/useIsTrackEnabled/useIsTrackEnabled';
 import useMediaStreamTrack from '../../hooks/useMediaStreamTrack/useMediaStreamTrack';
+import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
+
+import { WEBMOTI_CAMERA_1 } from '../../constants';
 
 let clipId = 0;
 const getUniqueClipId = () => clipId++;
@@ -33,11 +38,18 @@ export function initializeAnalyser(stream: MediaStream) {
 
 const isIOS = /iPhone|iPad/.test(navigator.userAgent);
 
-function AudioLevelIndicator({ audioTrack, color = 'white' }: { audioTrack?: AudioTrack; color?: string }) {
+interface AudioLevelIndicatorProps {
+  audioTrack?: AudioTrack;
+  color?: string;
+  participant?: Participant;
+}
+
+function AudioLevelIndicator({ audioTrack, color = 'white', participant }: AudioLevelIndicatorProps) {
   const SVGRectRef = useRef<SVGRectElement>(null);
   const [analyser, setAnalyser] = useState<AnalyserNode>();
   const isTrackEnabled = useIsTrackEnabled(audioTrack as LocalAudioTrack | RemoteAudioTrack);
   const mediaStreamTrack = useMediaStreamTrack(audioTrack);
+  const { isMuted } = useWebmotiVideoContext();
 
   useEffect(() => {
     if (audioTrack && mediaStreamTrack && isTrackEnabled) {
@@ -112,7 +124,9 @@ function AudioLevelIndicator({ audioTrack, color = 'white' }: { audioTrack?: Aud
   // Each instance of this component will need a unique HTML ID
   const clipPathId = `audio-level-clip-${getUniqueClipId()}`;
 
-  return isTrackEnabled ? (
+  const isClassroomAndMuted = participant?.identity === WEBMOTI_CAMERA_1 && isMuted;
+
+  return isTrackEnabled && !isClassroomAndMuted ? (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" data-test-audio-indicator>
       <defs>
         <clipPath id={clipPathId}>

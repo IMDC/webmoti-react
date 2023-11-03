@@ -4,12 +4,11 @@ import { RemoteAudioTrack, RemoteTrack } from 'twilio-video';
 
 import { WEBMOTI_CAMERA_1 } from '../../../constants';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
-
-import { useState } from 'react';
+import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
 export default function ToggleCameraButton() {
   const { room } = useVideoContext();
-  const [isMuted, setIsMuted] = useState(false);
+  const { isMuted, toggleClassroomMute } = useWebmotiVideoContext();
 
   function isRemoteAudioTrack(track: RemoteTrack): track is RemoteAudioTrack {
     return track.kind === 'audio' && 'attach' in track;
@@ -47,7 +46,7 @@ export default function ToggleCameraButton() {
           // attach the track back after changing muted state
           attachedElements.forEach(el => audioTrack.attach(el));
 
-          setIsMuted(!isMuted);
+          toggleClassroomMute();
         }
       }
     }
