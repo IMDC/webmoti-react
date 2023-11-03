@@ -46,6 +46,7 @@ export default function RaiseHandButton() {
 
     const autoLowerHand = () => {
       setIsHandRaised(false);
+      setIsLoading(false);
       sendSystemMsg(`${name} lowered hand`);
     };
 
@@ -102,12 +103,6 @@ export default function RaiseHandButton() {
 
         setCountdown(buttonCountdownDuration);
         setProgress(0); // Reset progress when raising hand
-
-        window.setTimeout(() => {
-          setIsLoading(false);
-          clearInterval(buttonIntervalID);
-          autoLowerHand();
-        }, buttonCountdownDuration * 1000);
       }
     } else {
       sendSystemMsg(`${name} lowered hand`);
