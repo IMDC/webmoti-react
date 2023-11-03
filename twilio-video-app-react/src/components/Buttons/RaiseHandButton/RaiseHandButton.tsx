@@ -21,9 +21,9 @@ export default function RaiseHandButton() {
   const [handQueue, setHandQueue] = useState<string[]>([]);
   const [isHandRaised, setIsHandRaised] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null); // the anchor is used so the popover knows where to appear on the screen
-  const [isLoading, setIsLoading] = useState(false);
   const [countdown, setCountdown] = useState(0); // Add countdown state
   const [progress, setProgress] = useState(0); // Update the progress state
+  const [buttonIntervalID, setButtonIntervalID] = useState<NodeJS.Timeout | null>(null); // Add button interval ID state
 
   const theme = useTheme();
   const handleOpenPopover = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -44,9 +44,11 @@ export default function RaiseHandButton() {
     // toggle state for button
     setIsHandRaised(prevState => !prevState);
 
-    const autoLowerHand = () => {
+    const lowerHand = () => {
       setIsHandRaised(false);
-      setIsLoading(false);
+      setCountdown(0);
+      setProgress(0); // Reset progress when raising hand
+      if (buttonIntervalID) clearInterval(buttonIntervalID); // Clear the button countdown for auto-lowering hand
       sendSystemMsg(`${name} lowered hand`);
     };
 
@@ -69,8 +71,6 @@ export default function RaiseHandButton() {
       );
 
       if (newTab) {
-        setIsLoading(true);
-
         // Set the countdown duration for the tab (e.g., 4 seconds)
         let tabCountdownDuration = 4;
 
@@ -83,29 +83,29 @@ export default function RaiseHandButton() {
           tabCountdownDuration -= 1;
         }, 1000);
 
-        // Set the countdown duration for the button (e.g., 30 seconds)
-        const buttonCountdownDuration = 30;
+        const buttonCountdownDuration = 90; // Set the countdown duration for the button (e.g., 30 seconds)
 
         // Start the countdown timer for the button
-        const buttonIntervalID = setInterval(() => {
+        let tempButtonIntervalID = setInterval(() => {
           setCountdown(prevCountdown => {
             // Calculate the progress as a percentage
             const newProgress = ((buttonCountdownDuration - prevCountdown) / buttonCountdownDuration) * 100;
             setProgress(newProgress); // Update the progress state
             if (prevCountdown <= 1) {
-              clearInterval(buttonIntervalID);
-              autoLowerHand();
+              clearInterval(tempButtonIntervalID);
+              lowerHand();
               return 0;
             }
             return prevCountdown - 1;
           });
         }, 1000);
 
+        setButtonIntervalID(tempButtonIntervalID); // Update the button interval ID state
         setCountdown(buttonCountdownDuration);
         setProgress(0); // Reset progress when raising hand
       }
     } else {
-      sendSystemMsg(`${name} lowered hand`);
+      lowerHand();
     }
   };
 
@@ -159,12 +159,11 @@ export default function RaiseHandButton() {
         onClick={raiseHand}
         variant="contained"
         color={isHandRaised ? 'secondary' : 'primary'}
-        disabled={isLoading}
         style={{ position: 'relative' }}
       >
         <span style={{ minWidth: '80px' }}>
           {/* Set a fixed width for the content */}
-          {isHandRaised ? <span style={{ color: 'disabled' }}></span> : 'Raise Hand'}
+          {isHandRaised ? '' : 'Raise Hand'}
           {countdown > 0 && (
             <span>
               ({countdown} sec)
