@@ -1,12 +1,12 @@
+import { User } from 'firebase/auth';
 import React, { createContext, useContext, useReducer, useState } from 'react';
-import { RecordingRules, RoomType } from '../types';
 import { TwilioError } from 'twilio-video';
-import { settingsReducer, initialSettings, Settings, SettingsAction } from './settings/settingsReducer';
+import { useLocalStorageState } from '../hooks/useLocalStorageState/useLocalStorageState';
+import { RecordingRules, RoomType } from '../types';
+import { Settings, SettingsAction, initialSettings, settingsReducer } from './settings/settingsReducer';
 import useActiveSinkId from './useActiveSinkId/useActiveSinkId';
 import useFirebaseAuth from './useFirebaseAuth/useFirebaseAuth';
-import { useLocalStorageState } from '../hooks/useLocalStorageState/useLocalStorageState';
 import usePasscodeAuth from './usePasscodeAuth/usePasscodeAuth';
-import { User } from 'firebase/auth';
 
 export interface StateContextType {
   error: TwilioError | Error | null;
@@ -104,8 +104,17 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
             room_name,
             create_conversation: process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true',
           }),
-        }).then(res => res.json());
+        })
+          .then(res => res.json())
+          .then(json => {
+            if (json.error) {
+              // the most likely error is the duplicate participant one
+              throw new Error(json.error.message);
+            }
+            return json;
+          });
       },
+
       updateRecordingRules: async (room_sid, rules) => {
         const endpoint = process.env.REACT_APP_TOKEN_ENDPOINT || '/recordingrules';
 

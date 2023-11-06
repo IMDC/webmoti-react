@@ -101,6 +101,16 @@ export const ChatProvider: React.FC = ({ children }) => {
     }
   }, [room, chatClient, onError]);
 
+  useEffect(() => {
+    // leave conversation when closing tab
+    const handleBeforeUnload = () => conversation?.leave();
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [conversation]);
+
   return (
     <ChatContext.Provider
       value={{ isChatWindowOpen, setIsChatWindowOpen, connect, hasUnreadMessages, messages, conversation }}

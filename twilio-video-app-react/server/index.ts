@@ -1,7 +1,9 @@
+import path from 'path';
+
+import express, { RequestHandler } from 'express';
+
 import './bootstrap-globals';
 import { createExpressHandler } from './createExpressHandler';
-import express, { RequestHandler } from 'express';
-import path from 'path';
 import { ServerlessFunction } from './types';
 
 const PORT = process.env.PORT ?? 8081;
@@ -11,7 +13,10 @@ app.use(express.json());
 
 // This server reuses the serverless endpoints from the "plugin-rtc" Twilio CLI Plugin, which is used when the "npm run deploy:twilio-cli" command is run.
 // The documentation for this endpoint can be found in the README file here: https://github.com/twilio-labs/plugin-rtc
-const tokenFunction: ServerlessFunction = require('@twilio-labs/plugin-rtc/src/serverless/functions/token').handler;
+
+// this modified token endpoint is mostly the same as the one in the plugin
+// but it responds with an error when a duplicate participant tries to join
+const tokenFunction: ServerlessFunction = require('./token').handler;
 const tokenEndpoint = createExpressHandler(tokenFunction);
 
 const recordingRulesFunction: ServerlessFunction = require('@twilio-labs/plugin-rtc/src/serverless/functions/recordingrules')

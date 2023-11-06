@@ -119,8 +119,18 @@ module.exports.handler = async (context, event, callback) => {
         // Add participant to conversation
         await conversationsClient.conversations(room.sid).participants.create({ identity: user_identity });
       } catch (e) {
-        // Ignore "Participant already exists" error (50433)
-        if (e.code !== 50433) {
+        if (e.code === 50433) {
+          // participant already exists error, send response with conflict code
+          response.setStatusCode(409);
+          response.setBody({
+            error: {
+              message: 'Please choose a different name, as someone in the room is already using this one',
+              explanation: 'A participant with this identity already exists in the conversation.',
+            },
+          });
+          return callback(null, response);
+        } else {
+          // other error creating participant
           console.error('Error creating conversation participant:');
           console.error(e);
           response.setStatusCode(500);
