@@ -1,16 +1,53 @@
 # webmoti-W.I.P
 
-## ZOOM APP (OLD)
+## Twilio App
 
-----------------------------------
+### Setup
 
-- The Zoom App (web-moti-alpha) can be properly configured via the following youtube tutorial: <https://shorturl.at/ijHT9>
+1. Install dependencies: `npm install`
+
+2. Install the CLI: `npm install -g twilio-cli` or use [scoop](https://www.twilio.com/docs/twilio-cli/getting-started/install#scoop) on Windows
+
+3. Login: `twilio login`
+
+4. Install the plugin: `twilio plugins:install @twilio-labs/plugin-rtc`
+
+### Running the App locally for developement
+
+After following the steps below, run the app locally at `http://localhost:3000` with
+
+```sh
+npm start
+```
+
+It's set up to use the twilio video `go` room type (2 participant max) when running locally.
+
+#### Local setup
+
+- Open the [Twilio Console](https://www.twilio.com/console).
+- Click on 'Settings' and take note of your Account SID.
+- Create a new API Key in the [API Keys Section](https://www.twilio.com/console/video/project/api-keys) under Programmable Video Tools in the Twilio Console. Take note of the SID and Secret of the new API key.
+- Create a new Conversations service in the [Services section](https://www.twilio.com/console/conversations/services) under the Conversations tab in the Twilio Console. Take note of the SID generated.
+- Store your Account SID, API Key SID, API Key Secret, and Conversations Service SID in a new file called `.env` in the root level of the application (example below).
+
+```sh
+TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_API_KEY_SID=SKxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_API_KEY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_CONVERSATIONS_SERVICE_SID=ISxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+### Deploying
+
+Deploy the app: `npm run deploy:twilio-cli`. The deployed app will use the `group` room type instead of `go`.
+
+See deployed app info (like url and expiration): `twilio rtc:apps:video:view`
+
+Undeploy the app: `twilio rtc:apps:video:delete`
 
 ----------------------------------
 
 ## Microphone Function
-
-----------------------------------
 
 - code is hosted locally on a PICO.
 - Two main files main.py and index.html.
@@ -21,8 +58,6 @@
 ----------------------------------
 
 ## RaiseHand Function
-
-----------------------------------
 
 - Two files hosted locally on a PICO
 - Main.py and index.html
@@ -35,57 +70,12 @@
 
 ## Camera Setup
 
-----------------------------------
-
 - Follow the intstructions as stated in the txt file located within the Rasp-pi Zoom folder.
 
 ----------------------------------
 
-## Twilio App
+## ZOOM APP (OLD)
 
-----------------------------------
-
-### Setup
-
-Dependencies: `npm install`
-
-CLI: `npm install -g twilio-cli` or use scoop
-
-Login: `twilio login`
-
-Plugin: `twilio plugins:install @twilio-labs/plugin-rtc`
-
-### Run
-
-`npm run deploy:twilio-cli`
-
-`twilio rtc:apps:video:view`
-
-`twilio rtc:apps:video:delete`
-
-### Running the App locally
-
-After following the steps below, run the app locally at `http://localhost:3000` with
-
-```sh
-npm start
-```
-
-#### Local setup
-
-- Create an account in the [Twilio Console](https://www.twilio.com/console).
-- Click on 'Settings' and take note of your Account SID.
-- Create a new API Key in the [API Keys Section](https://www.twilio.com/console/video/project/api-keys) under Programmable Video Tools in the Twilio Console. Take note of the SID and Secret of the new API key.
-- Create a new Conversations service in the [Services section](https://www.twilio.com/console/conversations/services) under the Conversations tab in the Twilio Console. Take note of the SID generated.
-- Store your Account SID, API Key SID, API Key Secret, and Conversations Service SID in a new file called `.env` in the root level of the application (example below).
-
-```sh
-TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-TWILIO_API_KEY_SID=SKxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-TWILIO_API_KEY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-TWILIO_CONVERSATIONS_SERVICE_SID=ISxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-# use this to disable Twilio Conversations
-# REACT_APP_DISABLE_TWILIO_CONVERSATIONS=true
-```
+- The Zoom App (web-moti-alpha) can be properly configured via the following youtube tutorial: <https://shorturl.at/ijHT9>
 
 ----------------------------------
