@@ -21,8 +21,6 @@ interface VideoTrackProps {
   isWebmotiVideo?: boolean;
 }
 
-const clamp = (num: number, min: number, max: number) => Math.min(Math.max(num, min), max);
-
 export default function VideoTrack({ track, isLocal, priority, isWebmotiVideo = false }: VideoTrackProps) {
   const ref = useRef<HTMLVideoElement>(null!);
   const mediaStreamTrack = useMediaStreamTrack(track);
@@ -33,37 +31,45 @@ export default function VideoTrack({ track, isLocal, priority, isWebmotiVideo = 
   const isDraggingRef = useRef<boolean>(false);
   const lastPositionRef = useRef<{ x: number; y: number } | null>(null);
 
+  const setMaxPan = useCallback(
+    (deltaX = 0, deltaY = 0) => {
+      if (!ref.current) return { x: 0, y: 0 };
+
+      // use video element dimensions to find max pan
+      const scaledWidth = ref.current.offsetWidth;
+      const scaledHeight = ref.current.offsetHeight;
+      const excessWidth = scaledWidth * zoom - scaledWidth;
+      const excessHeight = scaledHeight * zoom - scaledHeight;
+
+      // dividing by 4 works perfectly for level 2, and 6 works for level 3
+      const divisor = zoom === 2 ? 4 : zoom === 3 ? 6 : 1;
+      const maxPanOffset = {
+        x: excessWidth / divisor,
+        y: excessHeight / divisor,
+      };
+
+      const clamp = (num: number, min: number, max: number) => Math.min(Math.max(num, min), max);
+
+      setPan(prev => ({
+        x: clamp(prev.x - deltaX, -maxPanOffset.x, maxPanOffset.x),
+        y: clamp(prev.y + deltaY, -maxPanOffset.y, maxPanOffset.y),
+      }));
+    },
+    [setPan, zoom]
+  );
+
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
       if (!isDraggingRef.current || !lastPositionRef.current) return;
 
       const deltaX = e.clientX - lastPositionRef.current.x;
       const deltaY = e.clientY - lastPositionRef.current.y;
+      setMaxPan(deltaX, deltaY);
 
-      if (ref.current) {
-        // use video element dimensions to find max pan
-        const scaledWidth = ref.current.offsetWidth;
-        const scaledHeight = ref.current.offsetHeight;
-        const excessWidth = scaledWidth * zoom - scaledWidth;
-        const excessHeight = scaledHeight * zoom - scaledHeight;
-
-        // dividing by 4 works perfectly for level 2, and 6 works for level 3
-        const divisor = zoom === 2 ? 4 : zoom === 3 ? 6 : 1;
-        const maxPanOffset = {
-          x: excessWidth / divisor,
-          y: excessHeight / divisor,
-        };
-
-        setPan(prev => ({
-          x: clamp(prev.x - deltaX, -maxPanOffset.x, maxPanOffset.x),
-          y: clamp(prev.y + deltaY, -maxPanOffset.y, maxPanOffset.y),
-        }));
-
-        // keep last position updated
-        lastPositionRef.current = { x: e.clientX, y: e.clientY };
-      }
+      // keep last position updated
+      lastPositionRef.current = { x: e.clientX, y: e.clientY };
     },
-    [zoom, setPan]
+    [setMaxPan]
   );
 
   const handleMouseUp = useCallback(() => {
@@ -97,6 +103,26 @@ export default function VideoTrack({ track, isLocal, priority, isWebmotiVideo = 
       el.removeEventListener('mousedown', handleMouseDown);
     };
   }, [handleMouseDown]);
+
+  useEffect(() => {
+    const handleZoomChange = () => setMaxPan();
+    window.addEventListener('webmotizoomchanged', handleZoomChange);
+
+    return () => {
+      window.removeEventListener('webmotizoomchanged', handleZoomChange);
+    };
+  }, [setMaxPan]);
+
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver(() => {
+      setMaxPan();
+    });
+    resizeObserver.observe(ref.current);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [setMaxPan]);
 
   useEffect(() => {
     const el = ref.current;

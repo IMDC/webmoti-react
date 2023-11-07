@@ -42,9 +42,13 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
   const setZoomLevel = (level: number) => {
     if (level >= 1 && level <= 3) {
       setZoom(level);
-      // reset pan to center when going to level 1
+
+      // keep pan offset accurate
       if (level === 1) {
         setPan({ x: 0, y: 0 });
+      } else {
+        const event = new CustomEvent('webmotizoomchanged', { detail: { zoomLevel: level } });
+        window.dispatchEvent(event);
       }
     }
   };
