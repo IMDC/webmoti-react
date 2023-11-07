@@ -26,7 +26,7 @@ export default function VideoTrack({ track, isLocal, priority, isWebmotiVideo = 
   const mediaStreamTrack = useMediaStreamTrack(track);
   const dimensions = useVideoTrackDimensions(track);
   const isPortrait = (dimensions?.height ?? 0) > (dimensions?.width ?? 0);
-  const { zoom, rotation, pan, setPan } = useWebmotiVideoContext();
+  const { zoom, rotation, pan, setPan, setZoomLevel } = useWebmotiVideoContext();
   // use ref for up to date values
   const isDraggingRef = useRef<boolean>(false);
   const lastPositionRef = useRef<{ x: number; y: number } | null>(null);
@@ -123,6 +123,27 @@ export default function VideoTrack({ track, isLocal, priority, isWebmotiVideo = 
       resizeObserver.disconnect();
     };
   }, [setMaxPan]);
+
+  useEffect(() => {
+    const THRESHOLD = 100;
+    let totalScroll = 0;
+
+    const handleWheel = (e: WheelEvent) => {
+      totalScroll += e.deltaY;
+
+      if (Math.abs(totalScroll) >= THRESHOLD) {
+        const direction = totalScroll < 0 ? 1 : -1;
+        setZoomLevel(zoom + direction);
+        totalScroll = 0;
+      }
+    };
+
+    window.addEventListener('wheel', handleWheel);
+
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+    };
+  }, [setZoomLevel, zoom]);
 
   useEffect(() => {
     const el = ref.current;
