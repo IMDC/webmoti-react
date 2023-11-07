@@ -6,11 +6,13 @@
 
 1. Install dependencies: `npm install`
 
-2. Install the CLI: `npm install -g twilio-cli` or use [scoop](https://www.twilio.com/docs/twilio-cli/getting-started/install#scoop) on Windows
+2. Install noise cancellation: `npm run noisecancellation:krisp`
 
-3. Login: `twilio login`
+3. Install the CLI: `npm install -g twilio-cli` or use [scoop](https://www.twilio.com/docs/twilio-cli/getting-started/install#scoop) on Windows
 
-4. Install the plugin: `twilio plugins:install @twilio-labs/plugin-rtc`
+4. Login: `twilio login`
+
+5. Install the plugin: `twilio plugins:install @twilio-labs/plugin-rtc`
 
 ### Running the App locally for developement
 
