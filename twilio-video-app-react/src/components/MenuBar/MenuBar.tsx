@@ -1,5 +1,5 @@
-import { Grid, Hidden, Typography } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
+import React, { useState } from 'react';
+import { Grid, Hidden, Typography, Button, Popover } from '@material-ui/core';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 
 import useParticipants from '../../hooks/useParticipants/useParticipants';
@@ -22,6 +22,9 @@ import Menu from './Menu/Menu';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    cameraControlsPopover: {
+      padding: theme.spacing(2),
+    },
     container: {
       backgroundColor: theme.palette.background.default,
       bottom: 0,
@@ -76,6 +79,15 @@ export default function MenuBar() {
   const isReconnecting = roomState === 'reconnecting';
   const { room } = useVideoContext();
   const participants = useParticipants();
+  const [cameraControlsAnchorEl, setCameraControlsAnchorEl] = useState<HTMLElement | null>(null);
+
+  const handleCameraControlsClick = (event: React.MouseEvent<HTMLElement>) => {
+    setCameraControlsAnchorEl(event.currentTarget);
+  };
+
+  const handleCameraControlsClose = () => {
+    setCameraControlsAnchorEl(null);
+  };
 
   return (
     <>
@@ -97,11 +109,28 @@ export default function MenuBar() {
           <Grid item>
             <Grid container justifyContent="center">
               <ToggleAudioButton disabled={isReconnecting} />
-              <MuteClassroomButton />
               <ToggleVideoButton disabled={isReconnecting} />
-              <ToggleCameraButton />
-              <ToggleCameraButton2 />
-              <ChangeZoomButton />
+              <Button onClick={handleCameraControlsClick}>Classroom Controls</Button>
+              <Popover
+                open={Boolean(cameraControlsAnchorEl)}
+                anchorEl={cameraControlsAnchorEl}
+                onClose={handleCameraControlsClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center',
+                }}
+              >
+                <div className={classes.cameraControlsPopover}>
+                  <ToggleCameraButton />
+                  <ToggleCameraButton2 />
+                  <ChangeZoomButton />
+                  <MuteClassroomButton />
+                </div>
+              </Popover>
               {!isSharingScreen && !isMobile && <ToggleScreenShareButton disabled={isReconnecting} />}
               {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />}
               <RaiseHandButton />
