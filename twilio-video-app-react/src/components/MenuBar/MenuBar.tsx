@@ -119,11 +119,11 @@ export default function MenuBar() {
                 anchorEl={cameraControlsAnchorEl}
                 onClose={handleCameraControlsClose}
                 anchorOrigin={{
-                  vertical: 'bottom',
+                  vertical: 'top',
                   horizontal: 'center',
                 }}
                 transformOrigin={{
-                  vertical: 'top',
+                  vertical: 'bottom',
                   horizontal: 'center',
                 }}
               >
