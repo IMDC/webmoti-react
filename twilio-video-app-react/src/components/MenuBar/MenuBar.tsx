@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Grid, Hidden, Typography, Button, Popover } from '@material-ui/core';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import useParticipants from '../../hooks/useParticipants/useParticipants';
 import useRoomState from '../../hooks/useRoomState/useRoomState';
@@ -110,7 +111,9 @@ export default function MenuBar() {
             <Grid container justifyContent="center">
               <ToggleAudioButton disabled={isReconnecting} />
               <ToggleVideoButton disabled={isReconnecting} />
-              <Button onClick={handleCameraControlsClick}>Classroom Controls</Button>
+              <Button onClick={handleCameraControlsClick}>
+                Classroom Controls <ExpandMoreIcon />
+              </Button>
               <Popover
                 open={Boolean(cameraControlsAnchorEl)}
                 anchorEl={cameraControlsAnchorEl}
@@ -125,10 +128,10 @@ export default function MenuBar() {
                 }}
               >
                 <div className={classes.cameraControlsPopover}>
+                  <MuteClassroomButton />
                   <ToggleCameraButton />
                   <ToggleCameraButton2 />
                   <ChangeZoomButton />
-                  <MuteClassroomButton />
                 </div>
               </Popover>
               {!isSharingScreen && !isMobile && <ToggleScreenShareButton disabled={isReconnecting} />}

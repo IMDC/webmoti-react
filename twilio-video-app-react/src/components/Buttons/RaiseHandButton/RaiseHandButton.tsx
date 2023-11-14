@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import Popover from '@material-ui/core/Popover';
 import { useTheme } from '@material-ui/core/styles';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 
@@ -177,7 +178,7 @@ export default function RaiseHandButton() {
       <Badge badgeContent={handQueue.length} color="secondary">
         {/* hand icon button, click to open queue */}
         <Button onClick={handleOpenPopover} color="default">
-          Hands Raised
+          Hands Raised <ExpandMoreIcon />
         </Button>
       </Badge>
 
