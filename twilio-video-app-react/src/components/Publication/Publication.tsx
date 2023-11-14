@@ -1,5 +1,4 @@
 import { LocalTrackPublication, Participant, RemoteTrackPublication, Track } from 'twilio-video';
-// import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 
 import { WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../../constants';
 import useTrack from '../../hooks/useTrack/useTrack';
