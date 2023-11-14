@@ -51,7 +51,7 @@ export default function VideoTrack({ track, isLocal, priority, isWebmotiVideo = 
       const clamp = (num: number, min: number, max: number) => Math.min(Math.max(num, min), max);
 
       setPan(prev => ({
-        x: clamp(prev.x - deltaX, -maxPanOffset.x, maxPanOffset.x),
+        x: clamp(prev.x + deltaX, -maxPanOffset.x, maxPanOffset.x),
         y: clamp(prev.y + deltaY, -maxPanOffset.y, maxPanOffset.y),
       }));
     },
@@ -96,54 +96,65 @@ export default function VideoTrack({ track, isLocal, priority, isWebmotiVideo = 
   );
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    el.addEventListener('mousedown', handleMouseDown);
-    return () => {
-      el.removeEventListener('mousedown', handleMouseDown);
-    };
-  }, [handleMouseDown]);
+    if (isWebmotiVideo) {
+      const el = ref.current;
+      if (!el) return;
+      el.addEventListener('mousedown', handleMouseDown);
+      return () => {
+        el.removeEventListener('mousedown', handleMouseDown);
+      };
+    }
+  }, [handleMouseDown, isWebmotiVideo]);
 
   useEffect(() => {
-    const handleZoomChange = () => setMaxPan();
-    window.addEventListener('webmotizoomchanged', handleZoomChange);
+    if (isWebmotiVideo) {
+      const handleZoomChange = () => setMaxPan();
+      window.addEventListener('webmotizoomchanged', handleZoomChange);
 
-    return () => {
-      window.removeEventListener('webmotizoomchanged', handleZoomChange);
-    };
-  }, [setMaxPan]);
-
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver(() => {
-      setMaxPan();
-    });
-    resizeObserver.observe(ref.current);
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, [setMaxPan]);
+      return () => {
+        window.removeEventListener('webmotizoomchanged', handleZoomChange);
+      };
+    }
+  }, [setMaxPan, isWebmotiVideo]);
 
   useEffect(() => {
-    const THRESHOLD = 100;
-    let totalScroll = 0;
+    if (isWebmotiVideo) {
+      const resizeObserver = new ResizeObserver(() => {
+        setMaxPan();
+      });
+      resizeObserver.observe(ref.current);
 
-    const handleWheel = (e: WheelEvent) => {
-      totalScroll += e.deltaY;
+      return () => {
+        resizeObserver.disconnect();
+      };
+    }
+  }, [setMaxPan, isWebmotiVideo]);
 
-      if (Math.abs(totalScroll) >= THRESHOLD) {
-        const direction = totalScroll < 0 ? 1 : -1;
-        setZoomLevel(zoom + direction);
-        totalScroll = 0;
-      }
-    };
+  useEffect(() => {
+    if (isWebmotiVideo) {
+      const el = ref.current;
+      if (!el) return;
 
-    window.addEventListener('wheel', handleWheel);
+      const THRESHOLD = 100;
+      let totalScroll = 0;
 
-    return () => {
-      window.removeEventListener('wheel', handleWheel);
-    };
-  }, [setZoomLevel, zoom]);
+      const handleWheel = (e: WheelEvent) => {
+        totalScroll += e.deltaY;
+
+        if (Math.abs(totalScroll) >= THRESHOLD) {
+          const direction = totalScroll < 0 ? 1 : -1;
+          setZoomLevel(zoom + direction);
+          totalScroll = 0;
+        }
+      };
+
+      el.addEventListener('wheel', handleWheel);
+
+      return () => {
+        el.removeEventListener('wheel', handleWheel);
+      };
+    }
+  }, [setZoomLevel, zoom, isWebmotiVideo]);
 
   useEffect(() => {
     const el = ref.current;
@@ -169,10 +180,12 @@ export default function VideoTrack({ track, isLocal, priority, isWebmotiVideo = 
   // The local video track is mirrored if it is not facing the environment.
   const isFrontFacing = mediaStreamTrack?.getSettings().facingMode !== 'environment';
 
+  const webmotiTransform = isWebmotiVideo
+    ? `rotate(${rotation}deg) scale(${zoom}) translate(${pan.x}px, ${pan.y}px)`
+    : '';
+
   const style = {
-    transform: `${isLocal && isFrontFacing ? 'scaleX(-1)' : ''} ${
-      isWebmotiVideo ? 'rotate(' + rotation + 'deg)' : ''
-    } scale(${zoom}) translate(${pan.x}px, ${pan.y}px)`,
+    transform: `${isLocal && isFrontFacing ? 'scaleX(-1)' : ''} ${webmotiTransform}`,
     objectFit: isPortrait || track.name.includes('screen') ? ('contain' as const) : ('cover' as const),
   };
 

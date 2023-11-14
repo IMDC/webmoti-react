@@ -31,6 +31,7 @@ export default function Publication({ publication, isLocalParticipant, videoPrio
           track={track as IVideoTrack}
           priority={videoPriority}
           isLocal={!track.name.includes('screen') && isLocalParticipant}
+          isWebmotiVideo={isWebmotiVideo}
         />
       );
     // All participant audio tracks are rendered in ParticipantAudioTracks.tsx
