@@ -108,7 +108,7 @@ export default function MenuBar() {
             </Grid>
           </Hidden>
           <Grid item>
-            <Grid container justifyContent="center">
+            <Grid container justifyContent="center" alignItems="center">
               <ToggleAudioButton disabled={isReconnecting} />
               <ToggleVideoButton disabled={isReconnecting} />
               <Button onClick={handleCameraControlsClick}>
@@ -134,6 +134,7 @@ export default function MenuBar() {
                   <ChangeZoomButton />
                 </div>
               </Popover>
+              {!isSharingScreen && !isMobile && <ToggleScreenShareButton disabled={isReconnecting} />}
               {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />}
               <RaiseHandButton />
               <Hidden smDown>
