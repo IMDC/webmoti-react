@@ -134,7 +134,6 @@ export default function MenuBar() {
                   <ChangeZoomButton />
                 </div>
               </Popover>
-              {!isSharingScreen && !isMobile && <ToggleScreenShareButton disabled={isReconnecting} />}
               {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />}
               <RaiseHandButton />
               <Hidden smDown>

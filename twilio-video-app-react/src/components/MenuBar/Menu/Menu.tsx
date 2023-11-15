@@ -21,6 +21,8 @@ import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import FlipCameraIcon from '../../../icons/FlipCameraIcon';
 import useFlipCameraToggle from '../../../hooks/useFlipCameraToggle/useFlipCameraToggle';
 import { VideoRoomMonitor } from '@twilio/video-room-monitor';
+import ToggleScreenShareButton from '../../Buttons/ToggleScreenShareButton/ToggleScreenShareButton';
+import ScreenShareIcon from '../../../icons/ScreenShareIcon';
 
 export const IconContainer = styled('div')({
   display: 'flex',
@@ -43,6 +45,8 @@ export default function Menu(props: { buttonClassName?: string }) {
 
   const anchorRef = useRef<HTMLButtonElement>(null);
   const { flipCameraDisabled, toggleFacingMode, flipCameraSupported } = useFlipCameraToggle();
+
+  const { isSharingScreen, toggleScreenShare } = useVideoContext();
 
   return (
     <>
@@ -133,6 +137,13 @@ export default function Menu(props: { buttonClassName?: string }) {
             <SearchIcon style={{ fill: '#707578', width: '0.9em' }} />
           </IconContainer>
           <Typography variant="body1">Room Monitor</Typography>
+        </MenuItem>
+
+        <MenuItem onClick={() => toggleScreenShare()}>
+          <IconContainer>
+            <ScreenShareIcon />
+          </IconContainer>
+          <Typography variant="body1">Share Screen</Typography>
         </MenuItem>
 
         <MenuItem
