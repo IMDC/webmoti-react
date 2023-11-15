@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       padding: '0 1.43em',
       zIndex: 10,
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         height: `${theme.mobileFooterHeight}px`,
         padding: 0,
       },
@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     hideMobile: {
       display: 'initial',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         display: 'none',
       },
     },
@@ -100,7 +100,7 @@ export default function MenuBar() {
       )}
       <footer className={classes.container}>
         <Grid container justifyContent="space-around" alignItems="center">
-          <Hidden smDown>
+          <Hidden mdDown>
             <Grid style={{ flex: 1 }}>
               <Typography variant="body1">
                 {room!.name} | {participants.length + 1} participant{participants.length ? 's' : ''}
@@ -137,12 +137,12 @@ export default function MenuBar() {
               {!isSharingScreen && !isMobile && <ToggleScreenShareButton disabled={isReconnecting} />}
               {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />}
               <RaiseHandButton />
-              <Hidden smDown>
+              <Hidden mdDown>
                 <Menu />
               </Hidden>
             </Grid>
           </Grid>
-          <Hidden smDown>
+          <Hidden mdDown>
             <Grid style={{ flex: 1 }}>
               <Grid container justifyContent="flex-end">
                 <EndCallButton />

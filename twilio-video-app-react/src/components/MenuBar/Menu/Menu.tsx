@@ -30,7 +30,7 @@ export const IconContainer = styled('div')({
 });
 
 export default function Menu(props: { buttonClassName?: string }) {
-  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 
   const [aboutOpen, setAboutOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);

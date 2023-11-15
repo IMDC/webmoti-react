@@ -1,6 +1,7 @@
 import React, { useCallback, useRef } from 'react';
 
 import Button from '@material-ui/core/Button';
+import { Theme, useMediaQuery } from '@material-ui/core';
 import VideoOffIcon from '../../../icons/VideoOffIcon';
 import VideoOnIcon from '../../../icons/VideoOnIcon';
 
@@ -11,6 +12,7 @@ export default function ToggleVideoButton(props: { disabled?: boolean; className
   const [isVideoEnabled, toggleVideoEnabled] = useLocalVideoToggle();
   const lastClickTimeRef = useRef(0);
   const { hasVideoInputDevices } = useDevices();
+  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
 
   const toggleVideo = useCallback(() => {
     if (Date.now() - lastClickTimeRef.current > 500) {
@@ -26,7 +28,7 @@ export default function ToggleVideoButton(props: { disabled?: boolean; className
       disabled={!hasVideoInputDevices || props.disabled}
       startIcon={isVideoEnabled ? <VideoOnIcon /> : <VideoOffIcon />}
     >
-      {!hasVideoInputDevices ? 'No Video' : isVideoEnabled ? 'Stop My Video' : 'Start My Video'}
+      {!hasVideoInputDevices ? 'No Video' : !isMobile ? (isVideoEnabled ? 'Stop My Video' : 'Start My Video') : ''}
     </Button>
   );
 }

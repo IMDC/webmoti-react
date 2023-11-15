@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
+import { Theme, useMediaQuery } from '@material-ui/core';
 import ChatIcon from '../../../icons/ChatIcon';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core';
@@ -61,6 +62,7 @@ export default function ToggleChatButton() {
   const [shouldAnimate, setShouldAnimate] = useState(false);
   const { isChatWindowOpen, setIsChatWindowOpen, conversation, hasUnreadMessages } = useChatContext();
   const { setIsBackgroundSelectionOpen } = useVideoContext();
+  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
 
   const toggleChatWindow = () => {
     setIsChatWindowOpen(!isChatWindowOpen);
@@ -96,7 +98,7 @@ export default function ToggleChatButton() {
         </div>
       }
     >
-      Chat
+      {isMobile ? '' : 'Chat'}
     </Button>
   );
 }

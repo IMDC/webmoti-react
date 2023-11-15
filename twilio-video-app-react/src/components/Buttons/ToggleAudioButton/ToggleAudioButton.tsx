@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Button from '@material-ui/core/Button';
+import { Theme, useMediaQuery } from '@material-ui/core';
 import MicIcon from '../../../icons/MicIcon';
 import MicOffIcon from '../../../icons/MicOffIcon';
 
@@ -11,6 +12,7 @@ export default function ToggleAudioButton(props: { disabled?: boolean; className
   const [isAudioEnabled, toggleAudioEnabled] = useLocalAudioToggle();
   const { localTracks } = useVideoContext();
   const hasAudioTrack = localTracks.some(track => track.kind === 'audio');
+  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
 
   return (
     <Button
@@ -20,7 +22,7 @@ export default function ToggleAudioButton(props: { disabled?: boolean; className
       startIcon={isAudioEnabled ? <MicIcon /> : <MicOffIcon />}
       data-cy-audio-toggle
     >
-      {!hasAudioTrack ? 'No Audio' : isAudioEnabled ? 'Mute' : 'Unmute'}
+      {!hasAudioTrack ? 'No Audio' : !isMobile ? (isAudioEnabled ? 'Mute' : 'Unmute') : ''}
     </Button>
   );
 }
