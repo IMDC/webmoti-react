@@ -1,5 +1,15 @@
-import React, { createContext, ReactNode, useCallback, useState } from 'react';
-import { CreateLocalTrackOptions, ConnectOptions, LocalAudioTrack, LocalVideoTrack, Room } from 'twilio-video';
+import { createContext, ReactNode, useCallback, useState } from 'react';
+
+import {
+  ConnectOptions,
+  CreateLocalTrackOptions,
+  LocalAudioTrack,
+  LocalVideoTrack,
+  RemoteAudioTrack,
+  RemoteParticipant,
+  RemoteTrack,
+  Room,
+} from 'twilio-video';
 import { ErrorCallback } from '../../types';
 import { SelectedParticipantProvider } from './useSelectedParticipant/useSelectedParticipant';
 
@@ -35,6 +45,9 @@ export interface IVideoContext {
   setIsBackgroundSelectionOpen: (value: boolean) => void;
   backgroundSettings: BackgroundSettings;
   setBackgroundSettings: (settings: BackgroundSettings) => void;
+  muteParticipant: (participant: RemoteParticipant, muteState: boolean) => void;
+  toggleFeature: () => void;
+  isFeatureActive: boolean;
 }
 
 export const VideoContext = createContext<IVideoContext>(null!);
@@ -84,6 +97,39 @@ export function VideoProvider({ options, children, onError = () => {} }: VideoPr
     | undefined;
   const [backgroundSettings, setBackgroundSettings] = useBackgroundSettings(videoTrack, room);
 
+  const [isFeatureActive, setIsFeatureActive] = useState(false);
+  const toggleFeature = () => {
+    setIsFeatureActive(!isFeatureActive);
+  };
+
+  const muteParticipant = useCallback((participant: RemoteParticipant, muteState: boolean) => {
+    // locally mute participant
+    const isRemoteAudioTrack = (track: RemoteTrack): track is RemoteAudioTrack => {
+      return track.kind === 'audio' && 'attach' in track;
+    };
+
+    const audioTracks = Array.from(participant.tracks.values())
+      .filter(trackPublication => trackPublication.track !== null && trackPublication.track.kind === 'audio')
+      .map(trackPublication => trackPublication.track!);
+
+    if (audioTracks.length > 0) {
+      const audioTrack = audioTracks[0];
+
+      if (isRemoteAudioTrack(audioTrack)) {
+        // track.detach returns all attached elements, but also detaches them
+        const attachedElements = audioTrack.detach();
+
+        // mute all elements
+        attachedElements.forEach(el => {
+          el.muted = muteState;
+        });
+
+        // attach the track back after changing muted state
+        attachedElements.forEach(el => audioTrack.attach(el));
+      }
+    }
+  }, []);
+
   return (
     <VideoContext.Provider
       value={{
@@ -102,6 +148,9 @@ export function VideoProvider({ options, children, onError = () => {} }: VideoPr
         setIsBackgroundSelectionOpen,
         backgroundSettings,
         setBackgroundSettings,
+        muteParticipant,
+        toggleFeature,
+        isFeatureActive,
       }}
     >
       <SelectedParticipantProvider room={room}>{children}</SelectedParticipantProvider>

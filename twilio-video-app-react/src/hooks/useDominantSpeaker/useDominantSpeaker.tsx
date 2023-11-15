@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import useVideoContext from '../useVideoContext/useVideoContext';
 import { RemoteParticipant } from 'twilio-video';
+import useVideoContext from '../useVideoContext/useVideoContext';
 
 export default function useDominantSpeaker(includeNull = false) {
-  const { room } = useVideoContext();
+  const { room, muteParticipant, isFeatureActive } = useVideoContext();
   const [dominantSpeaker, setDominantSpeaker] = useState(room?.dominantSpeaker ?? null);
 
   useEffect(() => {
@@ -15,6 +15,13 @@ export default function useDominantSpeaker(includeNull = false) {
       const handleDominantSpeakerChanged = (newDominantSpeaker: RemoteParticipant) => {
         if (includeNull || newDominantSpeaker !== null) {
           setDominantSpeaker(newDominantSpeaker);
+
+          // mute all other participants and unmute dominant speaker
+          if (room.participants && isFeatureActive) {
+            for (const participant of room.participants.values()) {
+              muteParticipant(participant, participant.identity !== newDominantSpeaker.identity);
+            }
+          }
         }
       };
 
@@ -33,7 +40,7 @@ export default function useDominantSpeaker(includeNull = false) {
         room.off('participantDisconnected', handleParticipantDisconnected);
       };
     }
-  }, [room, includeNull]);
+  }, [room, includeNull, muteParticipant, isFeatureActive]);
 
   return dominantSpeaker;
 }

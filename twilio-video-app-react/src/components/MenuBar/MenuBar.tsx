@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Grid, Hidden, Typography, Button, Popover } from '@material-ui/core';
+
+import { Button, Grid, Hidden, Popover, Typography } from '@material-ui/core';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
@@ -78,7 +79,7 @@ export default function MenuBar() {
   const { isSharingScreen, toggleScreenShare } = useVideoContext();
   const roomState = useRoomState();
   const isReconnecting = roomState === 'reconnecting';
-  const { room } = useVideoContext();
+  const { room, muteParticipant, toggleFeature, isFeatureActive } = useVideoContext();
   const participants = useParticipants();
   const [cameraControlsAnchorEl, setCameraControlsAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -134,6 +135,22 @@ export default function MenuBar() {
                   <ChangeZoomButton />
                 </div>
               </Popover>
+              <Button
+                variant="contained"
+                color={isFeatureActive ? 'secondary' : 'primary'}
+                onClick={() => {
+                  if (room && room.participants && isFeatureActive) {
+                    console.log('unmuting participants');
+                    for (const participant of room.participants.values()) {
+                      muteParticipant(participant, false);
+                    }
+                  }
+
+                  toggleFeature();
+                }}
+              >
+                {isFeatureActive ? 'Muting On' : 'Muting Off'}
+              </Button>
               {!isSharingScreen && !isMobile && <ToggleScreenShareButton disabled={isReconnecting} />}
               {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />}
               <RaiseHandButton />

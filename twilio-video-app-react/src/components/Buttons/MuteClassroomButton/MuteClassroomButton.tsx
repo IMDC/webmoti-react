@@ -1,18 +1,12 @@
 import Button from '@material-ui/core/Button';
 
-import { RemoteAudioTrack, RemoteTrack } from 'twilio-video';
-
 import { WEBMOTI_CAMERA_1 } from '../../../constants';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
 export default function ToggleCameraButton() {
-  const { room } = useVideoContext();
+  const { room, muteParticipant } = useVideoContext();
   const { isMuted, toggleClassroomMute } = useWebmotiVideoContext();
-
-  function isRemoteAudioTrack(track: RemoteTrack): track is RemoteAudioTrack {
-    return track.kind === 'audio' && 'attach' in track;
-  }
 
   const toggleMute = () => {
     // get classroom participant
@@ -27,28 +21,8 @@ export default function ToggleCameraButton() {
     }
 
     if (classroom) {
-      const audioTracks = Array.from(classroom.tracks.values())
-        .filter(trackPublication => trackPublication.track !== null && trackPublication.track.kind === 'audio')
-        .map(trackPublication => trackPublication.track!);
-
-      if (audioTracks.length > 0) {
-        const audioTrack = audioTracks[0];
-
-        if (isRemoteAudioTrack(audioTrack)) {
-          // track.detach returns all attached elements, but also detaches them
-          const attachedElements = audioTrack.detach();
-
-          // mute all elements
-          attachedElements.forEach(el => {
-            el.muted = !isMuted;
-          });
-
-          // attach the track back after changing muted state
-          attachedElements.forEach(el => audioTrack.attach(el));
-
-          toggleClassroomMute();
-        }
-      }
+      muteParticipant(classroom, !isMuted);
+      toggleClassroomMute();
     }
   };
 
