@@ -1,6 +1,6 @@
 import { LocalTrackPublication, Participant, RemoteTrackPublication, Track } from 'twilio-video';
 
-import { WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../../constants';
+import { WEBMOTI_CAMERA_1 } from '../../constants';
 import useTrack from '../../hooks/useTrack/useTrack';
 import VideoTrack from '../VideoTrack/VideoTrack';
 
@@ -19,8 +19,6 @@ export default function Publication({ publication, isLocalParticipant, videoPrio
 
   if (!track) return null;
 
-  const isWebmotiVideo = participant.identity === WEBMOTI_CAMERA_1 || participant.identity === WEBMOTI_CAMERA_2;
-
   // Even though we only have one case here, let's keep this switch() in case
   // we even need to add a 'data' case for rendering DataTracks.
   switch (track.kind) {
@@ -30,7 +28,7 @@ export default function Publication({ publication, isLocalParticipant, videoPrio
           track={track as IVideoTrack}
           priority={videoPriority}
           isLocal={!track.name.includes('screen') && isLocalParticipant}
-          isWebmotiVideo={isWebmotiVideo}
+          isWebmotiVideo={participant.identity === WEBMOTI_CAMERA_1}
         />
       );
     // All participant audio tracks are rendered in ParticipantAudioTracks.tsx
