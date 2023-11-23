@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
   },
   infoContainer: {
+    pointerEvents: 'none',
     position: 'absolute',
     zIndex: 2,
     height: '100%',
