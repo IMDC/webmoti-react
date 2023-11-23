@@ -41,11 +41,11 @@ TWILIO_CONVERSATIONS_SERVICE_SID=ISxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ### Deploying
 
-Deploy the app: `npm run deploy:twilio-cli`. The deployed app will use the `group` room type instead of `go`.
+Deploy the app: `npm run deploy`. The deployed app will use the `group` room type instead of `go`.
 
-See deployed app info (like url and expiration): `twilio rtc:apps:video:view`
+See deployed app info (like url and expiration): `npm run view`
 
-Undeploy the app: `twilio rtc:apps:video:delete`
+Undeploy the app: `npm run delete`
 
 ----------------------------------
 
