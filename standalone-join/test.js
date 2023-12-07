@@ -1,41 +1,73 @@
-const puppeteer = require('puppeteer');
+const puppeteer = require("puppeteer");
+const crypto = require("crypto");
+const axios = require("axios");
+require("dotenv").config();
 
-const URL = 'http://localhost:3000';
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const url_server = `https://${process.env.URL_SERVER}`;
+
+const signature = crypto
+  .createHmac("sha1", authToken)
+  .update(Buffer.from(url_server, "utf-8"))
+  .digest("base64");
 
 (async () => {
-  const browser = await puppeteer.launch({ headless: false, args: ['--use-fake-ui-for-media-stream'] });
-  const page = await browser.newPage();
+  // get url from twilio endpoint
+  let URL;
+  try {
+    const response = await axios.get(url_server, {
+      headers: {
+        "X-Twilio-Signature": signature,
+      },
+    });
+
+    URL = response.data["url"];
+  } catch (e) {
+    console.error("Error fetching URL:", e);
+    return;
+  }
+
+  const browser = await puppeteer.launch({
+    // new headless mode to conserve resources
+    headless: "new",
+    args: ["--use-fake-ui-for-media-stream"],
+  });
+  // get current tab
+  const [page] = await browser.pages();
   await page.goto(URL);
 
-  const nameSel = '#input-user-name';
-  const roomSel = '#input-room-name';
-  const btnSel = '.MuiButton-label';
+  const nameSel = "#input-user-name";
+  const roomSel = "#input-room-name";
+  const btnSel = ".MuiButton-label";
 
   await page.waitForSelector(nameSel);
   await page.waitForSelector(roomSel);
   await page.waitForSelector(btnSel);
 
-  await page.type(nameSel, 'Webmoti');
-  await page.type(roomSel, 'Room 1');
+  await page.type(nameSel, "Webmoti");
+  await page.type(roomSel, "Classroom");
   await page.click(btnSel);
 
-  const btn2Sel = '.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary';
+  const btn2Sel =
+    ".MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary";
   await page.waitForSelector(btn2Sel);
 
   await page.waitForFunction(
-    selector => !document.querySelector(selector).classList.contains('Mui-disabled'),
+    (selector) =>
+      !document.querySelector(selector).classList.contains("Mui-disabled"),
     {},
     btn2Sel
   );
 
   await page.click(btn2Sel);
 
-  const btn3Sel = '#root > div > main > footer > div > div.MuiGrid-root.MuiGrid-item > div > button:nth-child(1)';
+  const btn3Sel =
+    "#root > div > main > footer > div > div.MuiGrid-root.MuiGrid-item > div > button:nth-child(1)";
   await page.waitForSelector(btn3Sel);
 
-  const isMicrophoneUnmuted = await page.evaluate(selector => {
+  const isMicrophoneUnmuted = await page.evaluate((selector) => {
     const button = document.querySelector(selector);
-    return button && !button.classList.contains('muted-class'); 
+    return button && !button.classList.contains("muted-class");
   }, btn3Sel);
 
   if (isMicrophoneUnmuted) {
