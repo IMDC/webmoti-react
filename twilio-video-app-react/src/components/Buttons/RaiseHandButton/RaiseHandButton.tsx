@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import LinearProgress from '@material-ui/core/LinearProgress';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Badge from '@material-ui/core/Badge';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -160,18 +160,54 @@ export default function RaiseHandButton() {
         onClick={raiseHand}
         variant="contained"
         color={isHandRaised ? 'secondary' : 'primary'}
-        style={{ position: 'relative' }}
+        style={{
+          position: 'relative',
+          height: isHandRaised ? '45px' : '38px',
+        }}
       >
-        <span style={{ minWidth: '80px' }}>
-          {/* Set a fixed width for the content */}
-          {isHandRaised ? '' : 'Raise Hand'}
-          {countdown > 0 && (
-            <span>
-              ({countdown} sec)
-              <LinearProgress variant="determinate" value={progress} style={{ marginTop: '8px' }} />
-            </span>
-          )}
-        </span>
+        <div style={{ position: 'relative', display: 'inline-block' }}>
+          <span style={{ minWidth: '80px', lineHeight: '40px' }}>
+            {/* Set a fixed width for the content */}
+            {isHandRaised ? '' : 'Raise Hand'}
+            {countdown > 0 && (
+              <span>
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                >
+                  <CircularProgress
+                    variant="determinate"
+                    value={(countdown / 90) * 100}
+                    size={30}
+                    thickness={6}
+                    style={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      color: 'white',
+                      fontSize: '16px',
+                    }}
+                  >
+                    {countdown}
+                  </div>
+                </div>
+              </span>
+            )}
+          </span>
+        </div>
       </Button>
 
       {/* indicator that shows how many hands are raised */}
