@@ -44,20 +44,25 @@ const signature = crypto
   const roomSel = "#input-room-name";
   const btnSel = ".MuiButton-label";
 
+  // wait until loaded
   await page.waitForSelector(nameSel);
   await page.waitForSelector(roomSel);
   await page.waitForSelector(btnSel);
-  
+
+  // model: Raspberry Pi 4 Model B Rev 1.5
   // imdc1: Board-View
   // imdc2: Class-View
+  // enter name and room, click continue
   await page.type(nameSel, "Board-View or Class-View");
   await page.type(roomSel, "Classroom");
   await page.click(btnSel);
 
+  // ui changes here and join button appears
   const btn2Sel =
     ".MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary";
   await page.waitForSelector(btn2Sel);
 
+  // wait until join button is enabled
   await page.waitForFunction(
     (selector) =>
       !document.querySelector(selector).classList.contains("Mui-disabled"),
@@ -65,7 +70,11 @@ const signature = crypto
     btn2Sel
   );
 
+  // join meeting
   await page.click(btn2Sel);
+
+  // the following code to mute mic is only for imdc2
+  // comment it out for imdc1
 
   const btn3Sel =
     "#root > div > main > footer > div > div.MuiGrid-root.MuiGrid-item > div > button:nth-child(1)";
