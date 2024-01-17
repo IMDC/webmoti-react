@@ -1,7 +1,9 @@
-const puppeteer = require("puppeteer");
+const puppeteer = require("puppeteer-core");
 const crypto = require("crypto");
 const axios = require("axios");
 require("dotenv").config();
+
+// TODO add check for missing .env variables
 
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const url_server = `https://${process.env.URL_SERVER}`;
@@ -28,9 +30,11 @@ const signature = crypto
   }
 
   const browser = await puppeteer.launch({
-    // new headless mode to conserve resources
-    headless: "new",
+    // don't use headless mode, too hard to exit
+    headless: false,
     args: ["--use-fake-ui-for-media-stream"],
+    // needed for puppeteer core
+    executablePath: "chromium-browser",
   });
   // get current tab
   const [page] = await browser.pages();
@@ -43,8 +47,10 @@ const signature = crypto
   await page.waitForSelector(nameSel);
   await page.waitForSelector(roomSel);
   await page.waitForSelector(btnSel);
-
-  await page.type(nameSel, "Webmoti");
+  
+  // imdc1: Board-View
+  // imdc2: Class-View
+  await page.type(nameSel, "Board-View or Class-View");
   await page.type(roomSel, "Classroom");
   await page.click(btnSel);
 
