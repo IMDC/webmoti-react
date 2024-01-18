@@ -124,7 +124,7 @@ export default function ToggleChatButton() {
       </Button>
 
       {/* Pop-up */}
-      <Dialog open={isPopUpOpen} onClose={handlePopUpClose}>
+      {/* <Dialog open={isPopUpOpen} onClose={handlePopUpClose}>
         <DialogContent className={clsx(classes.popUp)}>
           <div className={classes.closeButton}>
             <Button color="primary" onClick={handlePopUpClose}>
@@ -134,7 +134,7 @@ export default function ToggleChatButton() {
           <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '16px' }}>New Message Received!</div>
           <div style={{ marginBottom: '30px' }}>Open the chat to respond.</div>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
     </>
   );
 }

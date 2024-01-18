@@ -18,6 +18,7 @@ import ToggleAudioButton from '../Buttons/ToggleAudioButton/ToggleAudioButton';
 import ToggleCameraButton from '../Buttons/ToggleCameraButton/ToggleCameraButton';
 import ToggleCameraButton2 from '../Buttons/ToggleCameraButton2/ToggleCameraButton2';
 // import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
+import AudioMixer from '../AudioMixer/AudioMixer';
 import ToggleScreenShareButton from '../Buttons/ToggleScreenShareButton/ToggleScreenShareButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import Menu from './Menu/Menu';
@@ -151,6 +152,9 @@ export default function MenuBar() {
               >
                 {isFeatureActive ? 'Muting On' : 'Muting Off'}
               </Button>
+
+              <AudioMixer></AudioMixer>
+
               {!isSharingScreen && !isMobile && <ToggleScreenShareButton disabled={isReconnecting} />}
               {/* {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />} */}
               <RaiseHandButton />
