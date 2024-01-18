@@ -20,6 +20,7 @@ export default function PreJoinScreens() {
 
   const [name, setName] = useState<string>(user?.displayName || '');
   const [roomName, setRoomName] = useState<string>('');
+  const [isProfessor, setIsProfessor] = useState<boolean>(false);
 
   const [mediaError, setMediaError] = useState<Error>();
 
@@ -59,8 +60,10 @@ export default function PreJoinScreens() {
         <RoomNameScreen
           name={name}
           roomName={roomName}
+          isProfessor={isProfessor}
           setName={setName}
           setRoomName={setRoomName}
+          setIsProfessor={setIsProfessor}
           handleSubmit={handleSubmit}
         />
       )}

@@ -1,5 +1,15 @@
 import React, { ChangeEvent, FormEvent } from 'react';
-import { Typography, makeStyles, TextField, Grid, Button, InputLabel, Theme } from '@material-ui/core';
+import {
+  Typography,
+  makeStyles,
+  TextField,
+  Grid,
+  Button,
+  InputLabel,
+  Checkbox,
+  FormControlLabel,
+  Theme,
+} from '@material-ui/core';
 import { useAppState } from '../../../state';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -25,17 +35,30 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '100%',
     },
   },
+  checkboxContainer: {
+    margin: '1.5em 0',
+  },
 }));
 
 interface RoomNameScreenProps {
   name: string;
   roomName: string;
+  isProfessor: boolean;
   setName: (name: string) => void;
   setRoomName: (roomName: string) => void;
+  setIsProfessor: (isProfessor: boolean) => void;
   handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
-export default function RoomNameScreen({ name, roomName, setName, setRoomName, handleSubmit }: RoomNameScreenProps) {
+export default function RoomNameScreen({
+  name,
+  roomName,
+  isProfessor,
+  setName,
+  setRoomName,
+  setIsProfessor,
+  handleSubmit,
+}: RoomNameScreenProps) {
   const classes = useStyles();
   const { user } = useAppState();
 
@@ -46,6 +69,12 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
   const handleRoomNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setRoomName(event.target.value);
   };
+
+  const handleProfessorChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setIsProfessor(event.target.checked);
+  };
+
+  console.log('isProfessor:', isProfessor); // Log the value
 
   const hasUsername = !window.location.search.includes('customIdentity=true') && user?.displayName;
 
@@ -90,6 +119,12 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
               onChange={handleRoomNameChange}
             />
           </div>
+        </div>
+        <div className={classes.checkboxContainer}>
+          <FormControlLabel
+            control={<Checkbox checked={isProfessor} onChange={handleProfessorChange} color="primary" />}
+            label="I am a professor"
+          />
         </div>
         <Grid container justifyContent="flex-end">
           <Button

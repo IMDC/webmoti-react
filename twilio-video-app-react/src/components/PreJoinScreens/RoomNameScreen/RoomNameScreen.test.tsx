@@ -8,14 +8,16 @@ jest.mock('../../../state');
 const mockUseAppState = useAppState as jest.Mock<any>;
 
 describe('the RoomNameScreen component', () => {
-  it('should render correctly when there is no logged in user', () => {
+  it('should render correctly when there is no logged-in user', () => {
     mockUseAppState.mockImplementationOnce(() => ({ user: undefined }));
     const wrapper = shallow(
       <RoomNameScreen
         name="test"
         roomName="testRoom"
+        isProfessor={false} // Add this line to provide the missing prop
         setName={() => {}}
         setRoomName={() => {}}
+        setIsProfessor={() => {}} // Add this line to provide the missing prop
         handleSubmit={() => {}}
       />
     );
@@ -24,14 +26,16 @@ describe('the RoomNameScreen component', () => {
     expect(wrapper.find(TextField).length).toBe(2);
   });
 
-  it('should render correctly when there is a logged in user', () => {
+  it('should render correctly when there is a logged-in user', () => {
     mockUseAppState.mockImplementationOnce(() => ({ user: { displayName: 'Test Name' } }));
     const wrapper = shallow(
       <RoomNameScreen
         name="test"
         roomName="testRoom"
+        isProfessor={false} // Add this line to provide the missing prop
         setName={() => {}}
         setRoomName={() => {}}
+        setIsProfessor={() => {}} // Add this line to provide the missing prop
         handleSubmit={() => {}}
       />
     );
@@ -40,7 +44,7 @@ describe('the RoomNameScreen component', () => {
     expect(wrapper.find(TextField).length).toBe(1);
   });
 
-  it('should render correctly when there is a logged in user and "customIdentity=true" query parameter"', () => {
+  it('should render correctly when there is a logged-in user and "customIdentity=true" query parameter"', () => {
     mockUseAppState.mockImplementationOnce(() => ({ user: { displayName: 'Test Name' } }));
 
     // @ts-ignore
@@ -55,8 +59,10 @@ describe('the RoomNameScreen component', () => {
       <RoomNameScreen
         name="test"
         roomName="testRoom"
+        isProfessor={false} // Add this line to provide the missing prop
         setName={() => {}}
         setRoomName={() => {}}
+        setIsProfessor={() => {}} // Add this line to provide the missing prop
         handleSubmit={() => {}}
       />
     );
