@@ -16,6 +16,11 @@ const ERROR_CODES = {
   PUPPETEER_ERROR: 102,
 };
 
+// for axios
+const MAX_RETRIES = 20;
+// 5 seconds
+const RETRY_DELAY = 5000;
+
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const urlServer = `https://${process.env.URL_SERVER}`;
 
@@ -32,29 +37,43 @@ const signature = crypto
 (async () => {
   // get url from twilio endpoint
   let URL;
-  try {
-    const response = await axios.get(urlServer, {
-      headers: {
-        "X-Twilio-Signature": signature,
-      },
-    });
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const response = await axios.get(urlServer, {
+        headers: {
+          "X-Twilio-Signature": signature,
+        },
+      });
 
-    URL = response.data["url"];
-  } catch (e) {
-    if (e.response) {
-      // request was made and server responded
-      console.error("Error fetching URL:", e.message);
-      console.error("Status:", e.response.status);
-      console.error("Data:", e.response.data);
-    } else if (e.request) {
-      // no response was received
-      console.error("Error fetching URL:", e.message);
-    } else {
-      // setup error
-      console.error("Error:", e.message);
+      URL = response.data["url"];
+      // break loop if successful
+      break;
+    } catch (e) {
+      if (attempt === MAX_RETRIES) {
+        // if last attempt, log error and exit
+        if (e.response) {
+          console.error("Error fetching URL:", e.message);
+          console.error("Status:", e.response.status);
+          console.error("Data:", e.response.data);
+        } else if (e.request) {
+          console.error(
+            "Error fetching URL (no response received):",
+            e.message
+          );
+        } else {
+          console.error("Error setting up request:", e.message);
+        }
+        process.exit(ERROR_CODES.AXIOS_ERROR);
+      } else {
+        console.log(
+          `Attempt ${attempt} failed. Retrying in ${
+            RETRY_DELAY / 1000
+          } seconds...`
+        );
+        // retry after waiting
+        await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY));
+      }
     }
-
-    process.exit(ERROR_CODES.AXIOS_ERROR);
   }
 
   let browser;
@@ -119,11 +138,10 @@ const signature = crypto
       await page.click(btn3Sel);
     }
   } catch (e) {
-    console.error("Puppeteer error:", e.message);
-    process.exit(ERROR_CODES.PUPPETEER_ERROR);
-  } finally {
     if (browser) {
       await browser.close();
     }
+    console.error("Puppeteer error:", e.message);
+    process.exit(ERROR_CODES.PUPPETEER_ERROR);
   }
 })();
