@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent } from 'react';
+import React, { ChangeEvent, FormEvent, useContext } from 'react';
 import {
   Typography,
   makeStyles,
@@ -11,6 +11,7 @@ import {
   Theme,
 } from '@material-ui/core';
 import { useAppState } from '../../../state';
+import WebmotiVideoContext from '../../WebmotiVideoProvider';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
@@ -61,6 +62,11 @@ export default function RoomNameScreen({
 }: RoomNameScreenProps) {
   const classes = useStyles();
   const { user } = useAppState();
+  const webmotiContext = useContext(WebmotiVideoContext);
+
+  if (!webmotiContext) {
+    throw new Error('WebmotiVideoContext is undefined');
+  }
 
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
@@ -72,6 +78,7 @@ export default function RoomNameScreen({
 
   const handleProfessorChange = (event: ChangeEvent<HTMLInputElement>) => {
     setIsProfessor(event.target.checked);
+    webmotiContext.setIsProfessor(event.target.checked);
   };
 
   console.log('isProfessor:', isProfessor); // Log the value

@@ -15,6 +15,8 @@ interface WebmotiVideoContextType {
   isWebmotiVideo: (identity: string) => boolean;
   isMuted: boolean;
   toggleClassroomMute: () => void;
+  isProfessor: boolean;
+  setIsProfessor: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const WebmotiVideoContext = createContext<WebmotiVideoContextType | undefined>(undefined);
@@ -30,6 +32,7 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [isMuted, setIsMuted] = useState(false);
+  const [isProfessor, setIsProfessor] = useState(false);
 
   const toggleWebmotiVideo = (camera: string) => {
     if (camera === WEBMOTI_CAMERA_1) {
@@ -76,6 +79,8 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
         isWebmotiVideo,
         isMuted,
         toggleClassroomMute,
+        isProfessor,
+        setIsProfessor,
       }}
     >
       {children}
