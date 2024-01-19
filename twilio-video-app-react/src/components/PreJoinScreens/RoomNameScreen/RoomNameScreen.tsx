@@ -87,6 +87,11 @@ export default function RoomNameScreen({
 
   const handleAdminChange = (event: ChangeEvent<HTMLInputElement>) => {
     setIsAdmin(event.target.checked);
+    webmotiContext.setAdmin(event.target.checked);
+
+    if (event.target.checked) {
+      webmotiContext.setAdminName(name);
+    }
   };
 
   const hasUsername = !window.location.search.includes('customIdentity=true') && user?.displayName;
