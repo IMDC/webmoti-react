@@ -4,11 +4,15 @@ const axios = require("axios");
 require("dotenv").config();
 
 // raspberry pi run on startup:
-// pm2 start node main.js
+// pm2 start main.js
 // pm2 startup systemd
 // copy paste outputted command
 // pm2 save
 // sudo reboot (to make sure it works)
+
+// edits needed:
+// line 108: Board-View or Class-View
+// line 130: (if imdc2) Uncomment
 
 const ERROR_CODES = {
   MISSING_ENV: 100,
@@ -16,10 +20,11 @@ const ERROR_CODES = {
   PUPPETEER_ERROR: 102,
 };
 
-// for axios
-const MAX_RETRIES = 20;
-// 5 seconds
-const RETRY_DELAY = 5000;
+// for axios (keep trying for 3 min)
+// needed because rasp pi won't have wifi immediately
+const MAX_RETRIES = 72;
+// 2.5 seconds
+const RETRY_DELAY = 2500;
 
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const urlServer = `https://${process.env.URL_SERVER}`;
@@ -49,20 +54,18 @@ const signature = crypto
       // break loop if successful
       break;
     } catch (e) {
+      // log error each time
+      if (e.response) {
+        console.error("Error fetching URL: ", e.message);
+        console.error("Status: ", e.response.status);
+        console.error("Data: ", e.response.data);
+      } else if (e.request) {
+        console.error("Error fetching URL (no response received): ", e.message);
+      } else {
+        console.error("Error setting up request: ", e.message);
+      }
+
       if (attempt === MAX_RETRIES) {
-        // if last attempt, log error and exit
-        if (e.response) {
-          console.error("Error fetching URL:", e.message);
-          console.error("Status:", e.response.status);
-          console.error("Data:", e.response.data);
-        } else if (e.request) {
-          console.error(
-            "Error fetching URL (no response received):",
-            e.message
-          );
-        } else {
-          console.error("Error setting up request:", e.message);
-        }
         process.exit(ERROR_CODES.AXIOS_ERROR);
       } else {
         console.log(
@@ -99,8 +102,8 @@ const signature = crypto
     await page.waitForSelector(btnSel);
 
     // model: Raspberry Pi 4 Model B Rev 1.5
-    // imdc1: Board-View
-    // imdc2: Class-View
+    // imdc1: Board-View (Hand)
+    // imdc2: Class-View (Directional mic)
     // enter name and room, click continue
     await page.type(nameSel, "Board-View or Class-View");
     await page.type(roomSel, "Classroom");
@@ -122,9 +125,9 @@ const signature = crypto
     // join meeting
     await page.click(btn2Sel);
 
-    // the following code to mute mic is only for imdc2
-    // comment it out for imdc1
+    // uncomment the following code to mute mic for imdc1 only
 
+    /*
     const btn3Sel =
       "#root > div > main > footer > div > div.MuiGrid-root.MuiGrid-item > div > button:nth-child(1)";
     await page.waitForSelector(btn3Sel);
@@ -137,6 +140,7 @@ const signature = crypto
     if (isMicrophoneUnmuted) {
       await page.click(btn3Sel);
     }
+    */
   } catch (e) {
     if (browser) {
       await browser.close();
