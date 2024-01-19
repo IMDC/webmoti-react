@@ -21,6 +21,8 @@ interface WebmotiVideoContextType {
   setAdmin: React.Dispatch<React.SetStateAction<boolean>>;
   adminName: string;
   setAdminName: React.Dispatch<React.SetStateAction<string>>;
+  professorsName: string;
+  setProfessorsName: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const WebmotiVideoContext = createContext<WebmotiVideoContextType | undefined>(undefined);
@@ -37,6 +39,7 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
   const [pan, setPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [isMuted, setIsMuted] = useState(false);
   const [isProfessor, setIsProfessor] = useState(false);
+  const [professorsName, setProfessorsName] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminName, setAdminName] = useState('');
 
@@ -91,6 +94,8 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
         setAdmin: setIsAdmin,
         adminName,
         setAdminName,
+        professorsName,
+        setProfessorsName,
       }}
     >
       {children}

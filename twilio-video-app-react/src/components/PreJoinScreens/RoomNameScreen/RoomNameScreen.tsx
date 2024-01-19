@@ -83,6 +83,10 @@ export default function RoomNameScreen({
   const handleProfessorChange = (event: ChangeEvent<HTMLInputElement>) => {
     setIsProfessor(event.target.checked);
     webmotiContext.setIsProfessor(event.target.checked);
+
+    if (event.target.checked) {
+      webmotiContext.setProfessorsName(name);
+    }
   };
 
   const handleAdminChange = (event: ChangeEvent<HTMLInputElement>) => {
