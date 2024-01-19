@@ -45,9 +45,11 @@ interface RoomNameScreenProps {
   name: string;
   roomName: string;
   isProfessor: boolean;
+  isAdmin: boolean;
   setName: (name: string) => void;
   setRoomName: (roomName: string) => void;
   setIsProfessor: (isProfessor: boolean) => void;
+  setIsAdmin: (isAdmin: boolean) => void;
   handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
@@ -55,9 +57,11 @@ export default function RoomNameScreen({
   name,
   roomName,
   isProfessor,
+  isAdmin,
   setName,
   setRoomName,
   setIsProfessor,
+  setIsAdmin,
   handleSubmit,
 }: RoomNameScreenProps) {
   const classes = useStyles();
@@ -81,7 +85,9 @@ export default function RoomNameScreen({
     webmotiContext.setIsProfessor(event.target.checked);
   };
 
-  console.log('isProfessor:', isProfessor); // Log the value
+  const handleAdminChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setIsAdmin(event.target.checked);
+  };
 
   const hasUsername = !window.location.search.includes('customIdentity=true') && user?.displayName;
 
@@ -131,6 +137,10 @@ export default function RoomNameScreen({
           <FormControlLabel
             control={<Checkbox checked={isProfessor} onChange={handleProfessorChange} color="primary" />}
             label="I am a professor"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={isAdmin} onChange={handleAdminChange} color="primary" />}
+            label="I am an admin"
           />
         </div>
         <Grid container justifyContent="flex-end">

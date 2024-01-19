@@ -14,10 +14,12 @@ describe('the RoomNameScreen component', () => {
       <RoomNameScreen
         name="test"
         roomName="testRoom"
-        isProfessor={false} // Add this line to provide the missing prop
+        isProfessor={false}
+        isAdmin={false}
         setName={() => {}}
         setRoomName={() => {}}
-        setIsProfessor={() => {}} // Add this line to provide the missing prop
+        setIsProfessor={() => {}}
+        setIsAdmin={() => {}}
         handleSubmit={() => {}}
       />
     );
@@ -32,10 +34,12 @@ describe('the RoomNameScreen component', () => {
       <RoomNameScreen
         name="test"
         roomName="testRoom"
-        isProfessor={false} // Add this line to provide the missing prop
+        isProfessor={false}
+        isAdmin={false}
         setName={() => {}}
         setRoomName={() => {}}
-        setIsProfessor={() => {}} // Add this line to provide the missing prop
+        setIsProfessor={() => {}}
+        setIsAdmin={() => {}}
         handleSubmit={() => {}}
       />
     );
@@ -59,10 +63,12 @@ describe('the RoomNameScreen component', () => {
       <RoomNameScreen
         name="test"
         roomName="testRoom"
-        isProfessor={false} // Add this line to provide the missing prop
+        isProfessor={false}
+        isAdmin={false}
         setName={() => {}}
         setRoomName={() => {}}
-        setIsProfessor={() => {}} // Add this line to provide the missing prop
+        setIsProfessor={() => {}}
+        setIsAdmin={() => {}}
         handleSubmit={() => {}}
       />
     );
