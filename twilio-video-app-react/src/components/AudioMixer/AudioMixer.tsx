@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { Button, Popover } from '@material-ui/core';
+import { Box, Button, Popover } from '@material-ui/core';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
@@ -21,6 +21,8 @@ export default function AudioMixer() {
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [alignment, setAlignment] = useState('left');
+  const [isClassMicEnabled, setIsClassMicEnabled] = useState(true);
+  const [isProfSpeakerEnabled, setIsProfSpeakerEnabled] = useState(true);
 
   const name = room?.localParticipant?.identity || 'Participant';
 
@@ -54,6 +56,8 @@ export default function AudioMixer() {
           toggleAudioEnabled();
         }
       }
+
+      setIsClassMicEnabled(state);
     },
     [name, toggleAudioEnabled, isAudioEnabled]
   );
@@ -69,6 +73,8 @@ export default function AudioMixer() {
           }
         }
       }
+
+      setIsProfSpeakerEnabled(state);
     },
     [isProfessor, muteParticipant, name, room]
   );
@@ -133,14 +139,38 @@ export default function AudioMixer() {
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
-        <ToggleButtonGroup value={alignment} exclusive onChange={handleAlignment} aria-label="audio alignment">
-          <ToggleButton value="left" aria-label="left aligned">
-            In-Person
-          </ToggleButton>
-          <ToggleButton value="right" aria-label="right aligned">
-            Virtual
-          </ToggleButton>
-        </ToggleButtonGroup>
+        <Box p={2} display="flex" flexDirection="column" alignItems="center">
+          <ToggleButtonGroup value={alignment} exclusive onChange={handleAlignment} aria-label="audio alignment">
+            <ToggleButton value="left" aria-label="left aligned">
+              In-Person
+            </ToggleButton>
+            <ToggleButton value="right" aria-label="right aligned">
+              Virtual
+            </ToggleButton>
+          </ToggleButtonGroup>
+
+          <Box mt={2}>
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ backgroundColor: isClassMicEnabled ? 'green' : 'red' }}
+              onClick={() => setClassMicState(!isClassMicEnabled)}
+            >
+              Class Mic
+            </Button>
+          </Box>
+
+          <Box mt={2}>
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ backgroundColor: isProfSpeakerEnabled ? 'green' : 'red' }}
+              onClick={() => setProfSpeakerState(!isProfSpeakerEnabled)}
+            >
+              Prof Speakers
+            </Button>
+          </Box>
+        </Box>
       </Popover>
     </div>
   );
