@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { Button, Popover } from '@material-ui/core';
 import ToggleButton from '@material-ui/lab/ToggleButton';
@@ -11,11 +11,13 @@ import { WEBMOTI_CAMERA_1 } from '../../constants';
 import useChatContext from '../../hooks/useChatContext/useChatContext';
 import useLocalAudioToggle from '../../hooks/useLocalAudioToggle/useLocalAudioToggle';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
+import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
 export default function AudioMixer() {
-  const { room } = useVideoContext();
+  const { room, muteParticipant } = useVideoContext();
   const { conversation } = useChatContext();
-  const [, toggleAudioEnabled] = useLocalAudioToggle();
+  const [isAudioEnabled, toggleAudioEnabled] = useLocalAudioToggle();
+  const { isProfessor } = useWebmotiVideoContext();
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [alignment, setAlignment] = useState('left');
@@ -44,6 +46,33 @@ export default function AudioMixer() {
     }
   };
 
+  const setClassMicState = useCallback(
+    (state: boolean) => {
+      // mute classroom mic to remove feedback
+      if (name === WEBMOTI_CAMERA_1) {
+        if (isAudioEnabled !== state) {
+          toggleAudioEnabled();
+        }
+      }
+    },
+    [name, toggleAudioEnabled, isAudioEnabled]
+  );
+
+  const setProfSpeakerState = useCallback(
+    (state: boolean) => {
+      // disable speakers by muting everyone else
+      if (isProfessor && room && room.participants) {
+        for (const participant of room.participants.values()) {
+          // don't mute self
+          if (name !== participant.identity) {
+            muteParticipant(participant, state);
+          }
+        }
+      }
+    },
+    [isProfessor, muteParticipant, name, room]
+  );
+
   useEffect(() => {
     const handleMessageAdded = (message: Message) => {
       // parse attributes
@@ -62,21 +91,20 @@ export default function AudioMixer() {
         if (match) {
           const [, role] = match;
 
+          // in person mode:
+          // enable mic
+          // disable speaker
+
+          // virtual mode:
+          // disable mic
+          // enable speaker
+
           if (role === 'In-Person') {
-            // TODO class view should locally mute teacher (to prevent double audio)
-            // TODO ^ this should be active always, not just here
-
-            // TODO disable teachers speakers (locally mute everyone)
-
-            // unmute classroom mic
-            if (name === WEBMOTI_CAMERA_1) {
-              toggleAudioEnabled();
-            }
+            setClassMicState(true);
+            setProfSpeakerState(false);
           } else {
-            // mute classroom mic to remove feedback
-            if (name === WEBMOTI_CAMERA_1) {
-              toggleAudioEnabled();
-            }
+            setClassMicState(false);
+            setProfSpeakerState(true);
           }
 
           // delete msg so it's not shown when rejoining
@@ -90,7 +118,7 @@ export default function AudioMixer() {
     return () => {
       conversation?.off('messageAdded', handleMessageAdded);
     };
-  }, [conversation, toggleAudioEnabled, name]);
+  }, [conversation, setClassMicState, setProfSpeakerState]);
 
   return (
     <div>
