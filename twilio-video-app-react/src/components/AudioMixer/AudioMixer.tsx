@@ -19,6 +19,11 @@ const enum Mode {
   Virtual = 'VIRTUAL',
 }
 
+const enum Devices {
+  ProfSpeaker = 'PROFSPEAKER',
+  ClassMic = 'CLASSMIC',
+}
+
 export default function AudioMixer() {
   const { room, muteParticipant } = useVideoContext();
   const { conversation } = useChatContext();
@@ -107,26 +112,47 @@ export default function AudioMixer() {
         if (match) {
           const [, newMode] = match;
 
-          if (newMode === Mode.Professor) {
-            // - disable mic (to prevent double audio)
-            // - disable speakers (optional)
-            setClassMicState(false);
-            setProfSpeakerState(false);
-          } else if (newMode === Mode.Classroom) {
-            // for in person students
-            // - enable mic
-            // - disable speakers (mandatory)
-            setClassMicState(true);
-            setProfSpeakerState(false);
-          } else {
-            // for online students
-            // - disable mic
-            // - enable speakers
-            setClassMicState(false);
-            setProfSpeakerState(true);
+          switch (newMode) {
+            case Mode.Professor:
+              // - disable mic (to prevent double audio)
+              // - disable speakers (optional)
+              setClassMicState(false);
+              setProfSpeakerState(false);
+              break;
+
+            case Mode.Classroom:
+              // for in person students
+              // - enable mic
+              // - disable speakers (mandatory)
+              setClassMicState(true);
+              setProfSpeakerState(false);
+              break;
+
+            default:
+              // for online students
+              // - disable mic
+              // - enable speakers
+              setClassMicState(false);
+              setProfSpeakerState(true);
           }
 
           // delete msg so it's not shown when rejoining
+          message.remove();
+        }
+
+        const pattern2 = `^Toggle (${Devices.ProfSpeaker}|${Devices.ClassMic})$`;
+        const regex2 = new RegExp(pattern2);
+        const match2 = message.body?.match(regex2);
+
+        if (match2) {
+          const [, target] = match2;
+
+          if (target === Devices.ProfSpeaker) {
+            setProfSpeakerState(!isProfSpeakerEnabled);
+          } else {
+            setClassMicState(!isClassMicEnabled);
+          }
+
           message.remove();
         }
       }
@@ -137,7 +163,7 @@ export default function AudioMixer() {
     return () => {
       conversation?.off('messageAdded', handleMessageAdded);
     };
-  }, [conversation, setClassMicState, setProfSpeakerState]);
+  }, [conversation, setClassMicState, setProfSpeakerState, isClassMicEnabled, isProfSpeakerEnabled]);
 
   return (
     <div>
@@ -164,7 +190,7 @@ export default function AudioMixer() {
               variant="contained"
               color="primary"
               style={{ backgroundColor: isClassMicEnabled ? 'green' : 'red' }}
-              onClick={() => setClassMicState(!isClassMicEnabled)}
+              onClick={() => sendSystemMsg(`Toggle ${Devices.ClassMic}`)}
             >
               Class Mic
             </Button>
@@ -175,7 +201,7 @@ export default function AudioMixer() {
               variant="contained"
               color="primary"
               style={{ backgroundColor: isProfSpeakerEnabled ? 'green' : 'red' }}
-              onClick={() => setProfSpeakerState(!isProfSpeakerEnabled)}
+              onClick={() => sendSystemMsg(`Toggle ${Devices.ProfSpeaker}`)}
             >
               Prof Speakers
             </Button>
