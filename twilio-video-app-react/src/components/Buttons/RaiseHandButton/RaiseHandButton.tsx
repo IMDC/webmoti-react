@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 
-import CircularProgress from '@material-ui/core/CircularProgress';
 import Badge from '@material-ui/core/Badge';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Popover from '@material-ui/core/Popover';
 import { useTheme } from '@material-ui/core/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -15,15 +15,16 @@ import { JSONObject, Message } from '@twilio/conversations';
 
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
+import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
 export default function RaiseHandButton() {
   const { room } = useVideoContext();
   const { conversation } = useChatContext();
+  const { sendSystemMsg } = useWebmotiVideoContext();
   const [handQueue, setHandQueue] = useState<string[]>([]);
   const [isHandRaised, setIsHandRaised] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null); // the anchor is used so the popover knows where to appear on the screen
   const [countdown, setCountdown] = useState(0); // Add countdown state
-  const [progress, setProgress] = useState(0); // Update the progress state
   const [buttonIntervalID, setButtonIntervalID] = useState<NodeJS.Timeout | null>(null); // Add button interval ID state
 
   const theme = useTheme();
@@ -32,11 +33,6 @@ export default function RaiseHandButton() {
   };
   const handleClosePopover = () => {
     setAnchorEl(null);
-  };
-
-  // send with an attribute to differentiate from normal msg
-  const sendSystemMsg = (msg: string) => {
-    conversation?.sendMessage(msg, { attributes: JSON.stringify({ systemMsg: true }) });
   };
 
   const raiseHand = () => {
@@ -48,15 +44,14 @@ export default function RaiseHandButton() {
     const lowerHand = () => {
       setIsHandRaised(false);
       setCountdown(0);
-      setProgress(0); // Reset progress when raising hand
       if (buttonIntervalID) clearInterval(buttonIntervalID); // Clear the button countdown for auto-lowering hand
-      sendSystemMsg(`${name} lowered hand`);
+      sendSystemMsg(conversation, `${name} lowered hand`);
     };
 
     // check if in queue
     if (!handQueue.includes(name)) {
       // send msg in chat
-      sendSystemMsg(`${name} raised hand`);
+      sendSystemMsg(conversation, `${name} raised hand`);
 
       // set dimensions and position of new window for raise hand page
       const width = window.screen.width / 3;
@@ -89,9 +84,6 @@ export default function RaiseHandButton() {
         // Start the countdown timer for the button
         let tempButtonIntervalID = setInterval(() => {
           setCountdown(prevCountdown => {
-            // Calculate the progress as a percentage
-            const newProgress = ((buttonCountdownDuration - prevCountdown) / buttonCountdownDuration) * 100;
-            setProgress(newProgress); // Update the progress state
             if (prevCountdown <= 1) {
               clearInterval(tempButtonIntervalID);
               lowerHand();
@@ -103,7 +95,6 @@ export default function RaiseHandButton() {
 
         setButtonIntervalID(tempButtonIntervalID); // Update the button interval ID state
         setCountdown(buttonCountdownDuration);
-        setProgress(0); // Reset progress when raising hand
       }
     } else {
       lowerHand();

@@ -28,7 +28,7 @@ export default function AudioMixer() {
   const { room, muteParticipant } = useVideoContext();
   const { conversation } = useChatContext();
   const [isAudioEnabled, toggleAudioEnabled] = useLocalAudioToggle();
-  const { isProfessor } = useWebmotiVideoContext();
+  const { isProfessor, sendSystemMsg } = useWebmotiVideoContext();
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [alignment, setAlignment] = useState('');
@@ -36,10 +36,6 @@ export default function AudioMixer() {
   const [isProfSpeakerEnabled, setIsProfSpeakerEnabled] = useState(true);
 
   const name = room?.localParticipant?.identity || 'Participant';
-
-  const sendSystemMsg = (msg: string) => {
-    conversation?.sendMessage(msg, { attributes: JSON.stringify({ systemMsg: true }) });
-  };
 
   const handleOpenPopover = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -52,11 +48,11 @@ export default function AudioMixer() {
       setAlignment(newAlignment);
 
       if (newAlignment === Mode.Professor) {
-        sendSystemMsg(`${Mode.Professor} is active`);
+        sendSystemMsg(conversation, `${Mode.Professor} is active`);
       } else if (newAlignment === Mode.Classroom) {
-        sendSystemMsg(`${Mode.Classroom} is active`);
+        sendSystemMsg(conversation, `${Mode.Classroom} is active`);
       } else {
-        sendSystemMsg(`${Mode.Virtual} is active`);
+        sendSystemMsg(conversation, `${Mode.Virtual} is active`);
       }
     }
   };
@@ -190,7 +186,7 @@ export default function AudioMixer() {
               variant="contained"
               color="primary"
               style={{ backgroundColor: isClassMicEnabled ? 'green' : 'red' }}
-              onClick={() => sendSystemMsg(`Toggle ${Devices.ClassMic}`)}
+              onClick={() => sendSystemMsg(conversation, `Toggle ${Devices.ClassMic}`)}
             >
               Class Mic
             </Button>
@@ -201,7 +197,7 @@ export default function AudioMixer() {
               variant="contained"
               color="primary"
               style={{ backgroundColor: isProfSpeakerEnabled ? 'green' : 'red' }}
-              onClick={() => sendSystemMsg(`Toggle ${Devices.ProfSpeaker}`)}
+              onClick={() => sendSystemMsg(conversation, `Toggle ${Devices.ProfSpeaker}`)}
             >
               Prof Speakers
             </Button>

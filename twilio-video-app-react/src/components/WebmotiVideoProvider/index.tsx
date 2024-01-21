@@ -1,5 +1,6 @@
 import React, { ReactNode, createContext, useState } from 'react';
 
+import { Conversation } from '@twilio/conversations';
 import { WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../../constants';
 
 interface WebmotiVideoContextType {
@@ -23,6 +24,7 @@ interface WebmotiVideoContextType {
   setAdminName: React.Dispatch<React.SetStateAction<string>>;
   professorsName: string;
   setProfessorsName: React.Dispatch<React.SetStateAction<string>>;
+  sendSystemMsg: (conversation: Conversation | null, msg: string) => void;
 }
 
 const WebmotiVideoContext = createContext<WebmotiVideoContextType | undefined>(undefined);
@@ -73,6 +75,11 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
     setIsMuted(!isMuted);
   };
 
+  const sendSystemMsg = (conversation: Conversation | null, msg: string) => {
+    // send with an attribute to differentiate from normal msg
+    conversation?.sendMessage(msg, { attributes: JSON.stringify({ systemMsg: true }) });
+  };
+
   return (
     <WebmotiVideoContext.Provider
       value={{
@@ -96,6 +103,7 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
         setAdminName,
         professorsName,
         setProfessorsName,
+        sendSystemMsg,
       }}
     >
       {children}
