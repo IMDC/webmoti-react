@@ -13,6 +13,12 @@ import useLocalAudioToggle from '../../hooks/useLocalAudioToggle/useLocalAudioTo
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
+const enum Mode {
+  Professor = 'PROFESSOR',
+  Classroom = 'CLASSROOM',
+  Virtual = 'VIRTUAL',
+}
+
 export default function AudioMixer() {
   const { room, muteParticipant } = useVideoContext();
   const { conversation } = useChatContext();
@@ -20,7 +26,7 @@ export default function AudioMixer() {
   const { isProfessor } = useWebmotiVideoContext();
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const [alignment, setAlignment] = useState('left');
+  const [alignment, setAlignment] = useState('');
   const [isClassMicEnabled, setIsClassMicEnabled] = useState(true);
   const [isProfSpeakerEnabled, setIsProfSpeakerEnabled] = useState(true);
 
@@ -40,10 +46,12 @@ export default function AudioMixer() {
     if (newAlignment !== null) {
       setAlignment(newAlignment);
 
-      if (newAlignment === 'left') {
-        sendSystemMsg('In-Person is active');
+      if (newAlignment === Mode.Professor) {
+        sendSystemMsg(`${Mode.Professor} is active`);
+      } else if (newAlignment === Mode.Classroom) {
+        sendSystemMsg(`${Mode.Classroom} is active`);
       } else {
-        sendSystemMsg('Virtual is active');
+        sendSystemMsg(`${Mode.Virtual} is active`);
       }
     }
   };
@@ -92,23 +100,28 @@ export default function AudioMixer() {
       }
 
       if (isSystemMsg) {
-        const match = message.body?.match(/^(In-Person|Virtual) is active$/);
+        const pattern = `^(${Mode.Professor}|${Mode.Classroom}|${Mode.Virtual}) is active$`;
+        const regex = new RegExp(pattern);
+        const match = message.body?.match(regex);
 
         if (match) {
-          const [, role] = match;
+          const [, newMode] = match;
 
-          // in person mode:
-          // enable mic
-          // disable speaker
-
-          // virtual mode:
-          // disable mic
-          // enable speaker
-
-          if (role === 'In-Person') {
+          if (newMode === Mode.Professor) {
+            // - disable mic (to prevent double audio)
+            // - disable speakers (optional)
+            setClassMicState(false);
+            setProfSpeakerState(false);
+          } else if (newMode === Mode.Classroom) {
+            // for in person students
+            // - enable mic
+            // - disable speakers (mandatory)
             setClassMicState(true);
             setProfSpeakerState(false);
           } else {
+            // for online students
+            // - disable mic
+            // - enable speakers
             setClassMicState(false);
             setProfSpeakerState(true);
           }
@@ -140,13 +153,10 @@ export default function AudioMixer() {
         transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
         <Box p={2} display="flex" flexDirection="column" alignItems="center">
-          <ToggleButtonGroup value={alignment} exclusive onChange={handleAlignment} aria-label="audio alignment">
-            <ToggleButton value="left" aria-label="left aligned">
-              In-Person
-            </ToggleButton>
-            <ToggleButton value="right" aria-label="right aligned">
-              Virtual
-            </ToggleButton>
+          <ToggleButtonGroup value={alignment} exclusive onChange={handleAlignment}>
+            <ToggleButton value={Mode.Professor}>Professor</ToggleButton>
+            <ToggleButton value={Mode.Classroom}>Classroom</ToggleButton>
+            <ToggleButton value={Mode.Virtual}>Virtual</ToggleButton>
           </ToggleButtonGroup>
 
           <Box mt={2}>
