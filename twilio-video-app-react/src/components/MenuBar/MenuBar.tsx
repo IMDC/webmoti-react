@@ -80,7 +80,7 @@ export default function MenuBar() {
   const { isSharingScreen, toggleScreenShare } = useVideoContext();
   const roomState = useRoomState();
   const isReconnecting = roomState === 'reconnecting';
-  const { room, muteParticipant, toggleFeature, isFeatureActive } = useVideoContext();
+  const { room } = useVideoContext();
   const participants = useParticipants();
   const [cameraControlsAnchorEl, setCameraControlsAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -136,22 +136,6 @@ export default function MenuBar() {
                   <ChangeZoomButton />
                 </div>
               </Popover>
-              <Button
-                variant="contained"
-                color={isFeatureActive ? 'secondary' : 'primary'}
-                onClick={() => {
-                  if (room && room.participants && isFeatureActive) {
-                    console.log('unmuting participants');
-                    for (const participant of room.participants.values()) {
-                      muteParticipant(participant, false);
-                    }
-                  }
-
-                  toggleFeature();
-                }}
-              >
-                {isFeatureActive ? 'Muting On' : 'Muting Off'}
-              </Button>
 
               <AudioMixer></AudioMixer>
 

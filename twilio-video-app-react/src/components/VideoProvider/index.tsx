@@ -46,8 +46,6 @@ export interface IVideoContext {
   backgroundSettings: BackgroundSettings;
   setBackgroundSettings: (settings: BackgroundSettings) => void;
   muteParticipant: (participant: RemoteParticipant, muteState: boolean) => void;
-  toggleFeature: () => void;
-  isFeatureActive: boolean;
 }
 
 export const VideoContext = createContext<IVideoContext>(null!);
@@ -97,11 +95,6 @@ export function VideoProvider({ options, children, onError = () => {} }: VideoPr
     | undefined;
   const [backgroundSettings, setBackgroundSettings] = useBackgroundSettings(videoTrack, room);
 
-  const [isFeatureActive, setIsFeatureActive] = useState(false);
-  const toggleFeature = () => {
-    setIsFeatureActive(!isFeatureActive);
-  };
-
   const muteParticipant = useCallback((participant: RemoteParticipant, muteState: boolean) => {
     // locally mute participant
     const isRemoteAudioTrack = (track: RemoteTrack): track is RemoteAudioTrack => {
@@ -149,8 +142,6 @@ export function VideoProvider({ options, children, onError = () => {} }: VideoPr
         backgroundSettings,
         setBackgroundSettings,
         muteParticipant,
-        toggleFeature,
-        isFeatureActive,
       }}
     >
       <SelectedParticipantProvider room={room}>{children}</SelectedParticipantProvider>
