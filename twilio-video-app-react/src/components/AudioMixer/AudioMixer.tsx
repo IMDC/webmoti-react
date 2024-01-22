@@ -78,7 +78,8 @@ export default function AudioMixer() {
         for (const participant of room.participants.values()) {
           // don't mute self
           if (name !== participant.identity) {
-            muteParticipant(participant, state);
+            // true means mute, so use opposite of speaker state
+            muteParticipant(participant, !state);
           }
         }
       }
