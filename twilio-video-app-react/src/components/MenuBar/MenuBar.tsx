@@ -7,6 +7,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import useParticipants from '../../hooks/useParticipants/useParticipants';
 import useRoomState from '../../hooks/useRoomState/useRoomState';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
+import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
 import { isMobile } from '../../utils';
 
@@ -81,6 +82,7 @@ export default function MenuBar() {
   const roomState = useRoomState();
   const isReconnecting = roomState === 'reconnecting';
   const { room } = useVideoContext();
+  const { isProfessor, isAdmin } = useWebmotiVideoContext();
   const participants = useParticipants();
   const [cameraControlsAnchorEl, setCameraControlsAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -137,7 +139,8 @@ export default function MenuBar() {
                 </div>
               </Popover>
 
-              <AudioMixer></AudioMixer>
+              {/* only prof and admin can see mixer */}
+              {(isProfessor || isAdmin) && <AudioMixer />}
 
               {!isSharingScreen && !isMobile && <ToggleScreenShareButton disabled={isReconnecting} />}
               {/* {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />} */}
