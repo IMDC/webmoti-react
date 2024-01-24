@@ -1,11 +1,11 @@
-import React, { useState, useEffect, FormEvent } from 'react';
-import DeviceSelectionScreen from './DeviceSelectionScreen/DeviceSelectionScreen';
-import IntroContainer from '../IntroContainer/IntroContainer';
-import MediaErrorSnackbar from './MediaErrorSnackbar/MediaErrorSnackbar';
-import RoomNameScreen from './RoomNameScreen/RoomNameScreen';
-import { useAppState } from '../../state';
+import { FormEvent, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
+import { useAppState } from '../../state';
+import IntroContainer from '../IntroContainer/IntroContainer';
+import DeviceSelectionScreen from './DeviceSelectionScreen/DeviceSelectionScreen';
+import MediaErrorSnackbar from './MediaErrorSnackbar/MediaErrorSnackbar';
+import RoomNameScreen from './RoomNameScreen/RoomNameScreen';
 
 export enum Steps {
   roomNameStep,
@@ -19,7 +19,8 @@ export default function PreJoinScreens() {
   const [step, setStep] = useState(Steps.roomNameStep);
 
   const [name, setName] = useState<string>(user?.displayName || '');
-  const [roomName, setRoomName] = useState<string>('');
+  // default room is "Classroom"
+  const [roomName, setRoomName] = useState<string>('Classroom');
   const [isProfessor, setIsProfessor] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
