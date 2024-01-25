@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useContext } from 'react';
+import React, { ChangeEvent, FormEvent, useContext, useState } from 'react';
 import {
   Typography,
   makeStyles,
@@ -39,6 +39,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   checkboxContainer: {
     margin: '1.5em 0',
   },
+  errorText: {
+    color: theme.palette.secondary.main,
+    fontWeight: 'bold',
+  },
 }));
 
 interface RoomNameScreenProps {
@@ -66,6 +70,10 @@ export default function RoomNameScreen({
 }: RoomNameScreenProps) {
   const classes = useStyles();
   const { user } = useAppState();
+  const correctProfessorPassword = 'professor123';
+  const correctAdminPassword = 'admin456';
+  const [professorPasswordError, setProfessorPasswordError] = useState(false);
+  const [adminPasswordError, setAdminPasswordError] = useState(false);
   const webmotiContext = useContext(WebmotiVideoContext);
 
   if (!webmotiContext) {
@@ -81,20 +89,42 @@ export default function RoomNameScreen({
   };
 
   const handleProfessorChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setIsProfessor(event.target.checked);
-    webmotiContext.setIsProfessor(event.target.checked);
-
-    if (event.target.checked) {
-      webmotiContext.setProfessorsName(name);
+    const isChecked = event.target.checked;
+    if (isChecked) {
+      const password = prompt('Enter the professor password:');
+      if (password === correctProfessorPassword) {
+        setIsProfessor(true);
+        webmotiContext.setIsProfessor(true);
+        webmotiContext.setProfessorsName(name);
+        setProfessorPasswordError(false);
+      } else {
+        event.target.checked = false;
+        setProfessorPasswordError(true);
+      }
+    } else {
+      setIsProfessor(false);
+      webmotiContext.setIsProfessor(false);
+      setProfessorPasswordError(false);
     }
   };
 
   const handleAdminChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setIsAdmin(event.target.checked);
-    webmotiContext.setAdmin(event.target.checked);
-
-    if (event.target.checked) {
-      webmotiContext.setAdminName(name);
+    const isChecked = event.target.checked;
+    if (isChecked) {
+      const password = prompt('Enter the admin password:');
+      if (password === correctAdminPassword) {
+        setIsAdmin(true);
+        webmotiContext.setAdmin(true);
+        webmotiContext.setAdminName(name);
+        setAdminPasswordError(false);
+      } else {
+        event.target.checked = false;
+        setAdminPasswordError(true);
+      }
+    } else {
+      setIsAdmin(false);
+      webmotiContext.setAdmin(false);
+      setAdminPasswordError(false);
     }
   };
 
@@ -152,6 +182,17 @@ export default function RoomNameScreen({
             label="I am an admin"
           />
         </div>
+        {professorPasswordError && (
+          <Typography variant="body2" className={classes.errorText}>
+            Incorrect professor password! Please try again.
+          </Typography>
+        )}
+        {adminPasswordError && (
+          <Typography variant="body2" className={classes.errorText}>
+            Incorrect admin password! Please try again.
+          </Typography>
+        )}
+
         <Grid container justifyContent="flex-end">
           <Button
             variant="contained"
