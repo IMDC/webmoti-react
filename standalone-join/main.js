@@ -93,12 +93,12 @@ const signature = crypto
     await page.goto(URL);
 
     const nameSel = "#input-user-name";
-    const roomSel = "#input-room-name";
+    // const roomSel = "#input-room-name";
     const btnSel = ".MuiButton-label";
 
     // wait until loaded
     await page.waitForSelector(nameSel);
-    await page.waitForSelector(roomSel);
+    // await page.waitForSelector(roomSel);
     await page.waitForSelector(btnSel);
 
     // model: Raspberry Pi 4 Model B Rev 1.5
@@ -106,7 +106,8 @@ const signature = crypto
     // imdc2: Class-View (Directional mic)
     // enter name and room, click continue
     await page.type(nameSel, "Board-View or Class-View");
-    await page.type(roomSel, "Classroom");
+    // Classroom is already there by default
+    // await page.type(roomSel, "Classroom");
     await page.click(btnSel);
 
     // ui changes here and join button appears
