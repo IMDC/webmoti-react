@@ -1,17 +1,18 @@
-import { useCallback, useEffect, useState } from 'react';
-
-import { Box, Button, Popover } from '@material-ui/core';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Box, Button, Popover, Typography } from '@material-ui/core';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-
 import { JSONObject, Message } from '@twilio/conversations';
-
 import { WEBMOTI_CAMERA_1 } from '../../constants';
-
 import useChatContext from '../../hooks/useChatContext/useChatContext';
 import useLocalAudioToggle from '../../hooks/useLocalAudioToggle/useLocalAudioToggle';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
+import theme from '../../theme';
+import MicIcon from '@material-ui/icons/Mic';
+import MicOffIcon from '@material-ui/icons/MicOff';
+import VolumeUpIcon from '@material-ui/icons/VolumeUp';
+import VolumeOffIcon from '@material-ui/icons/VolumeOff';
 
 const enum Mode {
   Professor = 'PROFESSOR',
@@ -31,7 +32,7 @@ export default function AudioMixer() {
   const { isProfessor, sendSystemMsg } = useWebmotiVideoContext();
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const [alignment, setAlignment] = useState('');
+  const [alignment, setAlignment] = useState<Mode | null>(null);
   const [isClassMicEnabled, setIsClassMicEnabled] = useState(true);
   const [isProfSpeakerEnabled, setIsProfSpeakerEnabled] = useState(true);
 
@@ -43,7 +44,7 @@ export default function AudioMixer() {
   const handleClosePopover = () => {
     setAnchorEl(null);
   };
-  const handleAlignment = (_: React.MouseEvent<HTMLElement>, newAlignment: string | null) => {
+  const handleAlignment = (_: React.MouseEvent<HTMLElement>, newAlignment: Mode | null) => {
     if (newAlignment !== null) {
       setAlignment(newAlignment);
 
@@ -177,19 +178,43 @@ export default function AudioMixer() {
       >
         <Box p={2} display="flex" flexDirection="column" alignItems="center">
           <ToggleButtonGroup value={alignment} exclusive onChange={handleAlignment}>
-            <ToggleButton value={Mode.Professor}>Professor</ToggleButton>
-            <ToggleButton value={Mode.Classroom}>Classroom</ToggleButton>
-            <ToggleButton value={Mode.Virtual}>Virtual</ToggleButton>
+            <ToggleButton
+              value={Mode.Professor}
+              style={{
+                backgroundColor: alignment === Mode.Professor ? theme.palette.secondary.main : undefined,
+                color: alignment === Mode.Professor ? 'white' : undefined,
+              }}
+            >
+              Professor
+            </ToggleButton>
+            <ToggleButton
+              value={Mode.Classroom}
+              style={{
+                backgroundColor: alignment === Mode.Classroom ? theme.palette.secondary.main : undefined,
+                color: alignment === Mode.Classroom ? 'white' : undefined,
+              }}
+            >
+              Classroom
+            </ToggleButton>
+            <ToggleButton
+              value={Mode.Virtual}
+              style={{
+                backgroundColor: alignment === Mode.Virtual ? theme.palette.secondary.main : undefined,
+                color: alignment === Mode.Virtual ? 'white' : undefined,
+              }}
+            >
+              Virtual
+            </ToggleButton>
           </ToggleButtonGroup>
 
           <Box mt={2}>
             <Button
               variant="contained"
               color="primary"
-              style={{ backgroundColor: isClassMicEnabled ? 'green' : 'red' }}
               onClick={() => sendSystemMsg(conversation, `Toggle ${Devices.ClassMic}`)}
             >
-              Class Mic
+              {isClassMicEnabled ? <MicIcon /> : <MicOffIcon />}
+              <Typography variant="body2">Class Mic</Typography>
             </Button>
           </Box>
 
@@ -197,10 +222,10 @@ export default function AudioMixer() {
             <Button
               variant="contained"
               color="primary"
-              style={{ backgroundColor: isProfSpeakerEnabled ? 'green' : 'red' }}
               onClick={() => sendSystemMsg(conversation, `Toggle ${Devices.ProfSpeaker}`)}
             >
-              Prof Speakers
+              {isProfSpeakerEnabled ? <VolumeUpIcon /> : <VolumeOffIcon />}
+              <Typography variant="body2">Prof Speakers</Typography>
             </Button>
           </Box>
         </Box>
