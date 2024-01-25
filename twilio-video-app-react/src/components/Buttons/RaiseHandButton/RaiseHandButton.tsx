@@ -35,53 +35,45 @@ export default function RaiseHandButton() {
     setAnchorEl(null);
   };
 
-  const raiseHand = () => {
+  const url = 'https://y24khent.connect.remote.it/raisehand';
+
+  const raiseHand = async () => {
     // get participant name for raise hand msg
     const name = room?.localParticipant?.identity || 'Participant';
-    // toggle state for button
-    setIsHandRaised(prevState => !prevState);
 
     const lowerHand = () => {
       setIsHandRaised(false);
       setCountdown(0);
-      if (buttonIntervalID) clearInterval(buttonIntervalID); // Clear the button countdown for auto-lowering hand
+      // Clear the button countdown for auto-lowering hand
+      if (buttonIntervalID) clearInterval(buttonIntervalID);
       sendSystemMsg(conversation, `${name} lowered hand`);
     };
 
     // check if in queue
     if (!handQueue.includes(name)) {
-      // send msg in chat
-      sendSystemMsg(conversation, `${name} raised hand`);
+      try {
+        const response = await fetch(url, { method: 'POST' });
 
-      // set dimensions and position of new window for raise hand page
-      const width = window.screen.width / 3;
-      const height = window.screen.height / 10;
-      const left = (window.screen.width - width) / 2;
-      const top = window.screen.height - 4 * height;
-
-      // open new window with raise hand page
-      const newTab = window.open(
-        'https://y24khent.connect.remote.it/raisehand',
-        '_blank',
-        `width=${width},height=${height},left=${left},top=${top}`
-      );
-
-      if (newTab) {
-        // Set the countdown duration for the tab (e.g., 4 seconds)
-        let tabCountdownDuration = 4;
-
-        // Start the countdown timer for the tab
-        const tabIntervalID = setInterval(() => {
-          if (tabCountdownDuration <= 1) {
-            clearInterval(tabIntervalID);
-            newTab.close(); // Close the tab after 4 seconds
+        if (!response.ok) {
+          if (response.status === 503) {
+            // board not connected to wifi
+            alert('Service Offline');
+            return;
           }
-          tabCountdownDuration -= 1;
-        }, 1000);
 
-        const buttonCountdownDuration = 90; // Set the countdown duration for the button (e.g., 30 seconds)
+          // unknown error
+          alert(`Unknown error while raising hand: ${response.status}`);
+          console.error(`Unknown error while raising hand: ${response.status}`);
+          return;
+        }
 
-        // Start the countdown timer for the button
+        // success, toggle state for button
+        setIsHandRaised(prevState => !prevState);
+        // send msg in chat
+        sendSystemMsg(conversation, `${name} raised hand`);
+
+        const buttonCountdownDuration = 90;
+        // start the countdown timer for the button
         let tempButtonIntervalID = setInterval(() => {
           setCountdown(prevCountdown => {
             if (prevCountdown <= 1) {
@@ -93,8 +85,12 @@ export default function RaiseHandButton() {
           });
         }, 1000);
 
-        setButtonIntervalID(tempButtonIntervalID); // Update the button interval ID state
+        setButtonIntervalID(tempButtonIntervalID);
         setCountdown(buttonCountdownDuration);
+      } catch (e) {
+        alert(e);
+        console.error(e);
+        return;
       }
     } else {
       lowerHand();
