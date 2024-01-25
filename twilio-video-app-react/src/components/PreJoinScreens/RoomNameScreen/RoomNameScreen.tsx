@@ -91,40 +91,48 @@ export default function RoomNameScreen({
   const handleProfessorChange = (event: ChangeEvent<HTMLInputElement>) => {
     const isChecked = event.target.checked;
     if (isChecked) {
-      const password = prompt('Enter the professor password:');
-      if (password === correctProfessorPassword) {
-        setIsProfessor(true);
-        webmotiContext.setIsProfessor(true);
-        webmotiContext.setProfessorsName(name);
-        setProfessorPasswordError(false);
-      } else {
-        event.target.checked = false;
-        setProfessorPasswordError(true);
-      }
+      askProfessorPassword();
     } else {
       setIsProfessor(false);
       webmotiContext.setIsProfessor(false);
+      webmotiContext.setProfessorsName('');
       setProfessorPasswordError(false);
+    }
+  };
+
+  const askProfessorPassword = () => {
+    const password = prompt('Enter the professor password:');
+    if (password === correctProfessorPassword) {
+      setIsProfessor(true);
+      webmotiContext.setIsProfessor(true);
+      webmotiContext.setProfessorsName(name);
+      setProfessorPasswordError(false);
+    } else {
+      setProfessorPasswordError(true);
     }
   };
 
   const handleAdminChange = (event: ChangeEvent<HTMLInputElement>) => {
     const isChecked = event.target.checked;
     if (isChecked) {
-      const password = prompt('Enter the admin password:');
-      if (password === correctAdminPassword) {
-        setIsAdmin(true);
-        webmotiContext.setAdmin(true);
-        webmotiContext.setAdminName(name);
-        setAdminPasswordError(false);
-      } else {
-        event.target.checked = false;
-        setAdminPasswordError(true);
-      }
+      askAdminPassword();
     } else {
       setIsAdmin(false);
       webmotiContext.setAdmin(false);
+      webmotiContext.setAdminName('');
       setAdminPasswordError(false);
+    }
+  };
+
+  const askAdminPassword = () => {
+    const password = prompt('Enter the admin password:');
+    if (password === correctAdminPassword) {
+      setIsAdmin(true);
+      webmotiContext.setAdmin(true);
+      webmotiContext.setAdminName(name);
+      setAdminPasswordError(false);
+    } else {
+      setAdminPasswordError(true);
     }
   };
 
