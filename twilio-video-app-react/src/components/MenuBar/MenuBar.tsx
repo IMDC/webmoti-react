@@ -23,6 +23,7 @@ import AudioMixer from '../AudioMixer/AudioMixer';
 import ToggleScreenShareButton from '../Buttons/ToggleScreenShareButton/ToggleScreenShareButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import Menu from './Menu/Menu';
+import ModeDisplay from '../AudioMixer/ModeDisplay';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -113,6 +114,7 @@ export default function MenuBar() {
           </Hidden>
           <Grid item>
             <Grid container justifyContent="center" alignItems="center">
+              <ModeDisplay />
               <ToggleAudioButton disabled={isReconnecting} />
               <ToggleVideoButton disabled={isReconnecting} />
               <Button onClick={handleCameraControlsClick}>
