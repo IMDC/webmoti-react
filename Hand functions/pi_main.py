@@ -49,10 +49,6 @@ while True:
             set_servo_angle(160)
             sleep(0.5)
             set_servo_angle(0)
-            sleep(0.5)
-            set_servo_angle(160)
-            sleep(0.5)
-            set_servo_angle(0)
             sleep(1)
         except BrokenPipeError:
             print("Client disconnected before response completed.")
