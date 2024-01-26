@@ -101,7 +101,10 @@ export default function RoomNameScreen({
   };
 
   const askProfessorPassword = () => {
-    const password = prompt('Enter the professor password:');
+    let password = prompt('Enter the professor password:');
+    while (password !== correctProfessorPassword && password !== null) {
+      password = prompt('Incorrect professor password! Please try again:');
+    }
     if (password === correctProfessorPassword) {
       setIsProfessor(true);
       webmotiContext.setIsProfessor(true);
@@ -125,7 +128,10 @@ export default function RoomNameScreen({
   };
 
   const askAdminPassword = () => {
-    const password = prompt('Enter the admin password:');
+    let password = prompt('Enter the admin password:');
+    while (password !== correctAdminPassword && password !== null) {
+      password = prompt('Incorrect admin password! Please try again:');
+    }
     if (password === correctAdminPassword) {
       setIsAdmin(true);
       webmotiContext.setAdmin(true);
@@ -190,16 +196,6 @@ export default function RoomNameScreen({
             label="I am an admin"
           />
         </div>
-        {professorPasswordError && (
-          <Typography variant="body2" className={classes.errorText}>
-            Incorrect professor password! Please try again.
-          </Typography>
-        )}
-        {adminPasswordError && (
-          <Typography variant="body2" className={classes.errorText}>
-            Incorrect admin password! Please try again.
-          </Typography>
-        )}
 
         <Grid container justifyContent="flex-end">
           <Button
