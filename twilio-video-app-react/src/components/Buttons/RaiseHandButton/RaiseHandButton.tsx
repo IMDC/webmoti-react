@@ -23,9 +23,11 @@ export default function RaiseHandButton() {
   const { sendSystemMsg } = useWebmotiVideoContext();
   const [handQueue, setHandQueue] = useState<string[]>([]);
   const [isHandRaised, setIsHandRaised] = useState(false);
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null); // the anchor is used so the popover knows where to appear on the screen
-  const [countdown, setCountdown] = useState(0); // Add countdown state
-  const [buttonIntervalID, setButtonIntervalID] = useState<NodeJS.Timeout | null>(null); // Add button interval ID state
+  const [isLoading, setIsLoading] = useState(false);
+  // the anchor is used so the popover knows where to appear on the screen
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [countdown, setCountdown] = useState(0);
+  const [buttonIntervalID, setButtonIntervalID] = useState<NodeJS.Timeout | null>(null);
 
   const theme = useTheme();
   const handleOpenPopover = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -38,6 +40,14 @@ export default function RaiseHandButton() {
   const url = 'https://y24khent.connect.remote.it/raisehand';
 
   const raiseHand = async () => {
+    const err = (msg: string) => {
+      setIsLoading(false);
+      alert(msg);
+      console.error(msg);
+    };
+
+    setIsLoading(true);
+
     // get participant name for raise hand msg
     const name = room?.localParticipant?.identity || 'Participant';
 
@@ -57,14 +67,11 @@ export default function RaiseHandButton() {
         if (!response.ok) {
           if (response.status === 503) {
             // board not connected to wifi
-            alert('Service Offline');
-            return;
+            return err('Service Offline');
           }
 
           // unknown error
-          alert(`Unknown error while raising hand: ${response.status}`);
-          console.error(`Unknown error while raising hand: ${response.status}`);
-          return;
+          return err(`Unknown error while raising hand: ${response.status}`);
         }
 
         // success, toggle state for button
@@ -88,13 +95,13 @@ export default function RaiseHandButton() {
         setButtonIntervalID(tempButtonIntervalID);
         setCountdown(buttonCountdownDuration);
       } catch (e) {
-        alert(e);
-        console.error(e);
-        return;
+        return err(e as string);
       }
     } else {
       lowerHand();
     }
+
+    setIsLoading(false);
   };
 
   // listen for raise hand msg and update queue
@@ -151,11 +158,26 @@ export default function RaiseHandButton() {
           position: 'relative',
           height: isHandRaised ? '45px' : '38px',
         }}
+        disabled={isLoading}
       >
         <div style={{ position: 'relative', display: 'inline-block' }}>
           <span style={{ minWidth: '80px', lineHeight: '40px' }}>
             {/* Set a fixed width for the content */}
             {isHandRaised ? '' : 'Raise Hand'}
+
+            {isLoading && (
+              <CircularProgress
+                size={24}
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  marginTop: -12,
+                  marginLeft: -12,
+                }}
+              />
+            )}
+
             {countdown > 0 && (
               <span>
                 <div
