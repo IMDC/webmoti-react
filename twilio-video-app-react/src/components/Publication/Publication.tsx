@@ -1,6 +1,6 @@
 import { LocalTrackPublication, Participant, RemoteTrackPublication, Track } from 'twilio-video';
 
-import { WEBMOTI_CAMERA_1 } from '../../constants';
+import { WEBMOTI_CAMERA_2 } from '../../constants';
 import useTrack from '../../hooks/useTrack/useTrack';
 import VideoTrack from '../VideoTrack/VideoTrack';
 
@@ -28,7 +28,7 @@ export default function Publication({ publication, isLocalParticipant, videoPrio
           track={track as IVideoTrack}
           priority={videoPriority}
           isLocal={!track.name.includes('screen') && isLocalParticipant}
-          isWebmotiVideo={participant.identity === WEBMOTI_CAMERA_1}
+          isWebmotiVideo={participant.identity === WEBMOTI_CAMERA_2}
         />
       );
     // All participant audio tracks are rendered in ParticipantAudioTracks.tsx
