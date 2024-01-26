@@ -53,6 +53,13 @@ while True:
         except BrokenPipeError:
             print("Client disconnected before response completed.")
 
+    # this is to initialize the remote.it connection to speed up future requests
+    elif "GET /init" in request:
+        try:
+            conn.send(b"HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n")
+        except BrokenPipeError:
+            print("Client disconnected before response completed.")
+
     # Load and serve the HTML page
     response = get_html()
     try:
