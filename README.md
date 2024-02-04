@@ -47,6 +47,39 @@ See deployed app info (like url and expiration): `npm run view`
 
 Undeploy the app: `npm run delete`
 
+### Webmoti URL server
+
+The raspberry pi boards are able to always know the latest url and password by sending a request to this server (twilio-video-app-react/server/get_url.js). This is hosted as a twilio serverless function and can be edited in the [twilio console](https://console.twilio.com/us1/develop/functions/services).
+
+----------------------------------
+
+## Standalone Join
+
+Both raspberry pi boards automatically join the twilio room when they're booted using a js script (standalone-join/main.js).
+
+### Info
+
+- model: Raspberry Pi 4 Model B Rev 1.5
+- imdc1: Board-View (Hand)
+- imdc2: Class-View (Directional mic)
+
+### Setting up the scripts
+
+#### Code changes
+
+- line 108: Board-View or Class-View
+- line 130: (if imdc2) Uncomment
+
+#### Autorun
+
+```sh
+pm2 start main.js
+pm2 startup systemd
+# copy paste outputted command
+pm2 save
+sudo reboot # for testing
+```
+
 ----------------------------------
 
 ## Microphone Function
