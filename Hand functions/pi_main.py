@@ -34,12 +34,34 @@ def set_servo_angle(angle):
     duty_cycle = (angle / 18) + 2
     pwm.start(duty_cycle)
     sleep(1)
+    # this prevents hand from moving after setting angle
+    pwm.stop()
 
 
 is_hand_raised = False
 
 
+def raise_hand(mode):
+    if mode == "wave":
+        set_servo_angle(160)
+        sleep(0.5)
+        set_servo_angle(0)
+        sleep(1)
+    elif mode == "toggle":
+        if is_hand_raised:
+            set_servo_angle(0)
+        else:
+            # go farther than halfway so camera isn't blocked
+            set_servo_angle(120)
+        is_hand_raised = not is_hand_raised
+        sleep(1)
+    elif mode == "init":
+        # this is to initialize the remote.it connection to speed up future requests
+        pass
+
+
 # TODO need cleanup function on exit for toggle
+# TODO more http responses
 
 
 # Listen for connections
@@ -58,26 +80,7 @@ while True:
         mode = params.get("mode", ["wave"])[0]
 
         try:
-            if mode == "wave":
-                set_servo_angle(160)
-                sleep(0.5)
-                set_servo_angle(0)
-                sleep(1)
-            elif mode == "toggle":
-                if is_hand_raised:
-                    set_servo_angle(0)
-                else:
-                    # go farther than halfway so camera isn't blocked
-                    set_servo_angle(120)
-                is_hand_raised = not is_hand_raised
-                sleep(1)
-            elif mode == "init":
-                # this is to initialize the remote.it connection to speed up future requests
-                pass
-            else:
-                conn.send(
-                    b"HTTP/1.0 400 Bad Request\r\nContent-Type: text/plain\r\n\r\nInvalid mode parameter"
-                )
+            raise_hand(mode)
         except BrokenPipeError:
             print("Client disconnected before response completed.")
 
