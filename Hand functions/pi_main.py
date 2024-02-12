@@ -1,5 +1,6 @@
 import socket
 from time import sleep
+from urllib.parse import parse_qs
 
 from RPi import GPIO
 
@@ -12,7 +13,8 @@ def get_html():
 
 
 # HTTP server with socket
-ethernet_ip = "141.117.145.158"
+# old ip: 141.117.145.158
+ethernet_ip = "141.117.144.159"
 port = 80
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -34,6 +36,12 @@ def set_servo_angle(angle):
     sleep(1)
 
 
+is_hand_raised = False
+
+
+# TODO need cleanup function on exit for toggle
+
+
 # Listen for connections
 while True:
     conn, addr = s.accept()
@@ -41,22 +49,35 @@ while True:
 
     # Receive the request
     request = conn.recv(1024).decode()
+    headers, body = request.split("\r\n\r\n", 1)
 
     # Check if it's a POST request to raise hand
     if "POST /raisehand" in request:
-        # Run the "raiseHand" servo code
-        try:
-            set_servo_angle(160)
-            sleep(0.5)
-            set_servo_angle(0)
-            sleep(1)
-        except BrokenPipeError:
-            print("Client disconnected before response completed.")
+        params = parse_qs(body)
+        # default is wave if no params sent
+        mode = params.get("mode", ["wave"])[0]
 
-    # this is to initialize the remote.it connection to speed up future requests
-    elif "GET /init" in request:
         try:
-            conn.send(b"HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n")
+            if mode == "wave":
+                set_servo_angle(160)
+                sleep(0.5)
+                set_servo_angle(0)
+                sleep(1)
+            elif mode == "toggle":
+                if is_hand_raised:
+                    set_servo_angle(0)
+                else:
+                    # go farther than halfway so camera isn't blocked
+                    set_servo_angle(120)
+                is_hand_raised = not is_hand_raised
+                sleep(1)
+            elif mode == "init":
+                # this is to initialize the remote.it connection to speed up future requests
+                pass
+            else:
+                conn.send(
+                    b"HTTP/1.0 400 Bad Request\r\nContent-Type: text/plain\r\n\r\nInvalid mode parameter"
+                )
         except BrokenPipeError:
             print("Client disconnected before response completed.")
 
