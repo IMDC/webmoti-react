@@ -125,8 +125,6 @@ def send_response(conn, body, status_code="200 OK", content_type="text/plain"):
         logging.info(f"Sent response with status {status_code}.")
     except BrokenPipeError:
         logging.warning("Client disconnected before response could be sent.")
-    finally:
-        conn.close()
 
 
 if __name__ == "__main__":
