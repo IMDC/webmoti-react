@@ -6,6 +6,17 @@ from urllib.parse import parse_qs
 
 from RPi import GPIO
 
+# TODO need cleanup function on exit for toggle
+
+
+logging.basicConfig(
+    level=logging.INFO,
+    filename="hand_server.log",
+    filemode="a",
+    format="%(asctime)s - %(levelname)s - %(message)s",
+)
+
+
 # 9th floor ip: 141.117.145.158
 # 8th floor ip: 141.117.144.159
 ETHERNET_IP = "141.117.144.159"
@@ -23,7 +34,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((ETHERNET_IP, PORT))
 s.listen(1)
 
-print("Listening on", (ETHERNET_IP, PORT))
+logging.info("Listening on %s:%s", ETHERNET_IP, PORT)
 
 GPIO.setmode(GPIO.BOARD)
 servo_pin = 12
@@ -58,13 +69,13 @@ def start_reset_timer():
     timer.start()
 
 
-def wave():
-    set_servo_angle(MAX_ANGLE)
-    set_servo_angle(MIN_ANGLE)
-
-
 def raise_hand(mode):
+    def wave():
+        set_servo_angle(MAX_ANGLE)
+        set_servo_angle(MIN_ANGLE)
+
     global is_hand_raised
+    logging.info(f"Raising hand with mode: {mode}")
 
     if mode == "WAVE2":
         wave()
@@ -92,10 +103,7 @@ def raise_hand(mode):
 
     elif mode == "INIT":
         # this is to initialize the remote.it connection to speed up future requests
-        pass
-
-
-# TODO need cleanup function on exit for toggle
+        logging.info("Initializing remote.it connection")
 
 
 # Function to load the modified HTML page
@@ -106,47 +114,55 @@ def get_html():
 
 
 def send_response(conn, body, status_code="200 OK", content_type="text/plain"):
-    response_headers = f"HTTP/1.0 {status_code}\r\nContent-type: {content_type}\r\n\r\n"
-    if isinstance(body, str):
-        body = body.encode("utf-8")
-
     try:
+        response_headers = (
+            f"HTTP/1.0 {status_code}\r\nContent-type: {content_type}\r\n\r\n"
+        )
+        if isinstance(body, str):
+            body = body.encode("utf-8")
+
         conn.sendall(response_headers.encode("utf-8") + body)
+        logging.info(f"Sent response with status {status_code}.")
     except BrokenPipeError:
-        print("Client disconnected before response could be sent.")
+        logging.warning("Client disconnected before response could be sent.")
     finally:
         conn.close()
 
 
-# Listen for connections
-while True:
-    try:
-        conn, addr = s.accept()
-        print("Got a connection from %s" % str(addr))
-
-        # Receive the request
-        request = conn.recv(1024).decode()
-        headers, body = request.split("\r\n\r\n", 1)
-
-        # Check if it's a POST request to raise hand
-        if "POST /raisehand" in request:
-            params = parse_qs(body)
-            # default is wave if no params sent
-            mode = params.get("mode", ["WAVE2"])[0].upper()
-            if mode not in MODES:
-                send_response(conn, "Invalid mode", "400 Bad Request")
-                continue
-            raise_hand(mode)
-
-        # Load and serve the HTML page
-        body = get_html()
-        send_response(conn, body, content_type="text/html")
-
-    except Exception as e:
-        print(f"An error occurred: {e}")
+if __name__ == "__main__":
+    # Listen for connections
+    while True:
+        conn = None
         try:
-            send_response(conn, "Internal Server Error", "500 Internal Server Error")
-        except Exception:
-            print("Failed to send error response to client.")
-    finally:
-        conn.close()
+            conn, addr = s.accept()
+            logging.info(f"Got a connection from {addr}")
+
+            # Receive the request
+            request = conn.recv(1024).decode()
+            headers, body = request.split("\r\n\r\n", 1)
+
+            # Check if it's a POST request to raise hand
+            if "POST /raisehand" in request:
+                params = parse_qs(body)
+                # default is wave if no params sent
+                mode = params.get("mode", ["WAVE2"])[0].upper()
+                if mode not in MODES:
+                    logging.error(f"Invalid mode received: {mode}")
+                    send_response(conn, "Invalid mode", "400 Bad Request")
+                    continue
+                raise_hand(mode)
+
+            # Load and serve the HTML page
+            body = get_html()
+            send_response(conn, body, content_type="text/html")
+
+        except Exception as e:
+            logging.exception("An unexpected error occurred.")
+            try:
+                send_response(
+                    conn, "Internal Server Error", "500 Internal Server Error"
+                )
+            except Exception:
+                logging.error("Failed to send error response to client.")
+        finally:
+            conn.close()
