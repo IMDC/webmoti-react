@@ -1,3 +1,4 @@
+import logging
 import socket
 import threading
 from time import sleep
@@ -9,7 +10,7 @@ from RPi import GPIO
 # 8th floor ip: 141.117.144.159
 ETHERNET_IP = "141.117.144.159"
 PORT = 80
-MODES = ["WAVE2", "WAVE", "TOGGLE", "INIT"]
+MODES = ["WAVE2", "WAVE", "TOGGLE", "RAISE", "LOWER", "INIT"]
 MAX_ANGLE = 160
 MIN_ANGLE = 0
 HALFWAY_ANGLE = 140
@@ -57,18 +58,20 @@ def start_reset_timer():
     timer.start()
 
 
+def wave():
+    set_servo_angle(MAX_ANGLE)
+    set_servo_angle(MIN_ANGLE)
+
+
 def raise_hand(mode):
     global is_hand_raised
 
     if mode == "WAVE2":
-        set_servo_angle(MAX_ANGLE)
-        set_servo_angle(MIN_ANGLE)
-        set_servo_angle(MAX_ANGLE)
-        set_servo_angle(MIN_ANGLE)
+        wave()
+        wave()
 
     elif mode == "WAVE":
-        set_servo_angle(MAX_ANGLE)
-        set_servo_angle(MIN_ANGLE)
+        wave()
 
     elif mode == "TOGGLE":
         if is_hand_raised:
