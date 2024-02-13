@@ -44,11 +44,13 @@ def set_servo_angle(angle):
 current_timer = None
 
 
+# this is for if the hand was left up
 def start_reset_timer():
     def reset_hand():
         global is_hand_raised
-        set_servo_angle(0)
-        is_hand_raised = False
+        if is_hand_raised:
+            set_servo_angle(0)
+            is_hand_raised = False
 
     # make sure there's only one timer
     global current_timer
