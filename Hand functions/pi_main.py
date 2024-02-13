@@ -5,32 +5,29 @@ from urllib.parse import parse_qs
 
 from RPi import GPIO
 
-
-# Function to load the modified HTML page
-def get_html():
-    with open("index.html", "r") as file:
-        html = file.read()
-    return html
-
-
-# HTTP server with socket
 # 9th floor ip: 141.117.145.158
 # 8th floor ip: 141.117.144.159
-ethernet_ip = "141.117.144.159"
-port = 80
+ETHERNET_IP = "141.117.144.159"
+PORT = 80
+MODES = ["WAVE2", "WAVE", "TOGGLE", "INIT"]
+MAX_ANGLE = 160
+MIN_ANGLE = 0
+HALFWAY_ANGLE = 140
 
+is_hand_raised = False
+current_timer = None
+
+# HTTP server with socket
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind((ethernet_ip, port))
+s.bind((ETHERNET_IP, PORT))
 s.listen(1)
 
-print("Listening on", (ethernet_ip, port))
+print("Listening on", (ETHERNET_IP, PORT))
 
 GPIO.setmode(GPIO.BOARD)
 servo_pin = 12
 GPIO.setup(servo_pin, GPIO.OUT)
 pwm = GPIO.PWM(servo_pin, 50)
-
-is_hand_raised = False
 
 
 def set_servo_angle(angle):
@@ -40,9 +37,6 @@ def set_servo_angle(angle):
     sleep(1.5)
     # this prevents hand from moving after setting angle
     # pwm.stop()
-
-
-current_timer = None
 
 
 # this is for if the hand was left up
@@ -66,31 +60,46 @@ def start_reset_timer():
 def raise_hand(mode):
     global is_hand_raised
 
-    if mode == "wave2":
-        set_servo_angle(160)
-        set_servo_angle(0)
-        set_servo_angle(160)
-        set_servo_angle(0)
+    if mode == "WAVE2":
+        set_servo_angle(MAX_ANGLE)
+        set_servo_angle(MIN_ANGLE)
+        set_servo_angle(MAX_ANGLE)
+        set_servo_angle(MIN_ANGLE)
 
-    elif mode == "wave":
-        set_servo_angle(160)
-        set_servo_angle(0)
+    elif mode == "WAVE":
+        set_servo_angle(MAX_ANGLE)
+        set_servo_angle(MIN_ANGLE)
 
-    elif mode == "toggle":
+    elif mode == "TOGGLE":
         if is_hand_raised:
-            set_servo_angle(0)
+            set_servo_angle(MIN_ANGLE)
         else:
             # go farther than halfway so camera isn't blocked
-            set_servo_angle(140)
+            set_servo_angle(HALFWAY_ANGLE)
             start_reset_timer()
         is_hand_raised = not is_hand_raised
 
-    elif mode == "init":
+    elif mode == "RAISE":
+        set_servo_angle(HALFWAY_ANGLE)
+        is_hand_raised = True
+
+    elif mode == "LOWER":
+        set_servo_angle(MIN_ANGLE)
+        is_hand_raised = False
+
+    elif mode == "INIT":
         # this is to initialize the remote.it connection to speed up future requests
         pass
 
 
 # TODO need cleanup function on exit for toggle
+
+
+# Function to load the modified HTML page
+def get_html():
+    with open("index.html", "r") as file:
+        html = file.read()
+    return html
 
 
 def send_response(conn, body, status_code="200 OK", content_type="text/plain"):
@@ -120,8 +129,8 @@ while True:
         if "POST /raisehand" in request:
             params = parse_qs(body)
             # default is wave if no params sent
-            mode = params.get("mode", ["wave2"])[0]
-            if mode not in ["wave2", "wave", "toggle", "init"]:
+            mode = params.get("mode", ["WAVE2"])[0].upper()
+            if mode not in MODES:
                 send_response(conn, "Invalid mode", "400 Bad Request")
                 continue
             raise_hand(mode)
