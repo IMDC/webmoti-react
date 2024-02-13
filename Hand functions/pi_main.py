@@ -1,4 +1,5 @@
 import socket
+import threading
 from time import sleep
 from urllib.parse import parse_qs
 
@@ -28,6 +29,8 @@ servo_pin = 12
 GPIO.setup(servo_pin, GPIO.OUT)
 pwm = GPIO.PWM(servo_pin, 50)
 
+is_hand_raised = False
+
 
 def set_servo_angle(angle):
     # Convert angle to duty cycle (2 to 12)
@@ -38,7 +41,23 @@ def set_servo_angle(angle):
     # pwm.stop()
 
 
-is_hand_raised = False
+current_timer = None
+
+
+def start_reset_timer():
+    def reset_hand():
+        global is_hand_raised
+        set_servo_angle(0)
+        is_hand_raised = False
+
+    # make sure there's only one timer
+    global current_timer
+    if current_timer:
+        current_timer.cancel()
+
+    # wait for 5 minutes
+    timer = threading.Timer(300, reset_hand)
+    timer.start()
 
 
 def raise_hand(mode):
@@ -60,6 +79,7 @@ def raise_hand(mode):
         else:
             # go farther than halfway so camera isn't blocked
             set_servo_angle(140)
+            start_reset_timer()
         is_hand_raised = not is_hand_raised
 
     elif mode == "init":
