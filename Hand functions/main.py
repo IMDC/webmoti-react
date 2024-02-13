@@ -11,7 +11,7 @@ from RPi import GPIO
 
 logging.basicConfig(
     level=logging.INFO,
-    filename="hand_server.log",
+    filename="/home/imdc1/hand_server.log",
     filemode="a",
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
