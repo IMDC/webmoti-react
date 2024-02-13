@@ -33,28 +33,35 @@ def set_servo_angle(angle):
     # Convert angle to duty cycle (2 to 12)
     duty_cycle = (angle / 18) + 2
     pwm.start(duty_cycle)
-    sleep(1)
+    sleep(1.5)
     # this prevents hand from moving after setting angle
-    pwm.stop()
+    # pwm.stop()
 
 
 is_hand_raised = False
 
 
 def raise_hand(mode):
-    if mode == "wave":
+    global is_hand_raised
+
+    if mode == "wave2":
         set_servo_angle(160)
-        sleep(0.5)
         set_servo_angle(0)
-        sleep(1)
+        set_servo_angle(160)
+        set_servo_angle(0)
+
+    elif mode == "wave":
+        set_servo_angle(160)
+        set_servo_angle(0)
+
     elif mode == "toggle":
         if is_hand_raised:
             set_servo_angle(0)
         else:
             # go farther than halfway so camera isn't blocked
-            set_servo_angle(120)
+            set_servo_angle(140)
         is_hand_raised = not is_hand_raised
-        sleep(1)
+
     elif mode == "init":
         # this is to initialize the remote.it connection to speed up future requests
         pass
@@ -62,6 +69,7 @@ def raise_hand(mode):
 
 # TODO need cleanup function on exit for toggle
 # TODO more http responses
+# also err handling
 
 
 # Listen for connections
@@ -77,7 +85,7 @@ while True:
     if "POST /raisehand" in request:
         params = parse_qs(body)
         # default is wave if no params sent
-        mode = params.get("mode", ["wave"])[0]
+        mode = params.get("mode", ["wave2"])[0]
 
         try:
             raise_hand(mode)
