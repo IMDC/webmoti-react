@@ -14,7 +14,8 @@ def get_html():
 
 
 # HTTP server with socket
-# old ip: 141.117.145.158
+# 9th floor ip: 141.117.145.158
+# 8th floor ip: 141.117.144.159
 ethernet_ip = "141.117.144.159"
 port = 80
 
@@ -90,36 +91,50 @@ def raise_hand(mode):
 
 
 # TODO need cleanup function on exit for toggle
-# TODO more http responses
-# also err handling
+
+
+def send_response(conn, body, status_code="200 OK", content_type="text/plain"):
+    response_headers = f"HTTP/1.0 {status_code}\r\nContent-type: {content_type}\r\n\r\n"
+    if isinstance(body, str):
+        body = body.encode("utf-8")
+
+    try:
+        conn.sendall(response_headers.encode("utf-8") + body)
+    except BrokenPipeError:
+        print("Client disconnected before response could be sent.")
+    finally:
+        conn.close()
 
 
 # Listen for connections
 while True:
-    conn, addr = s.accept()
-    print("Got a connection from %s" % str(addr))
-
-    # Receive the request
-    request = conn.recv(1024).decode()
-    headers, body = request.split("\r\n\r\n", 1)
-
-    # Check if it's a POST request to raise hand
-    if "POST /raisehand" in request:
-        params = parse_qs(body)
-        # default is wave if no params sent
-        mode = params.get("mode", ["wave2"])[0]
-
-        try:
-            raise_hand(mode)
-        except BrokenPipeError:
-            print("Client disconnected before response completed.")
-
-    # Load and serve the HTML page
-    response = get_html()
     try:
-        conn.send(b"HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n")
-        conn.send(response.encode("utf-8"))
-    except BrokenPipeError:
-        print("Client disconnected before response completed.")
+        conn, addr = s.accept()
+        print("Got a connection from %s" % str(addr))
 
-    conn.close()
+        # Receive the request
+        request = conn.recv(1024).decode()
+        headers, body = request.split("\r\n\r\n", 1)
+
+        # Check if it's a POST request to raise hand
+        if "POST /raisehand" in request:
+            params = parse_qs(body)
+            # default is wave if no params sent
+            mode = params.get("mode", ["wave2"])[0]
+            if mode not in ["wave2", "wave", "toggle", "init"]:
+                send_response(conn, "Invalid mode", "400 Bad Request")
+                continue
+            raise_hand(mode)
+
+        # Load and serve the HTML page
+        body = get_html()
+        send_response(conn, body, content_type="text/html")
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        try:
+            send_response(conn, "Internal Server Error", "500 Internal Server Error")
+        except Exception:
+            print("Failed to send error response to client.")
+    finally:
+        conn.close()

@@ -4,3 +4,4 @@ standalone-join/node_modules
 .env
 .vscode/
 .todo
+test_request.py
