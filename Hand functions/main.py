@@ -1,6 +1,7 @@
 import logging
 import socket
 import threading
+from logging.handlers import RotatingFileHandler
 from time import sleep
 from urllib.parse import parse_qs
 
@@ -9,18 +10,12 @@ from RPi import GPIO
 # TODO need cleanup function on exit for toggle
 
 
-logging.basicConfig(
-    level=logging.INFO,
-    filename="/home/imdc1/hand_server.log",
-    filemode="a",
-    format="%(asctime)s - %(levelname)s - %(message)s",
-)
-
-
 # 9th floor ip: 141.117.145.158
 # 8th floor ip: 141.117.144.159
+
 ETHERNET_IP = "141.117.144.159"
 PORT = 80
+
 MODES = ["WAVE2", "WAVE", "TOGGLE", "RAISE", "LOWER", "INIT"]
 MAX_ANGLE = 160
 MIN_ANGLE = 0
@@ -29,17 +24,10 @@ HALFWAY_ANGLE = 140
 is_hand_raised = False
 current_timer = None
 
-# HTTP server with socket
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind((ETHERNET_IP, PORT))
-s.listen(1)
-
-logging.info("Listening on %s:%s", ETHERNET_IP, PORT)
-
 GPIO.setmode(GPIO.BOARD)
-servo_pin = 12
-GPIO.setup(servo_pin, GPIO.OUT)
-pwm = GPIO.PWM(servo_pin, 50)
+SERVO_PIN = 12
+GPIO.setup(SERVO_PIN, GPIO.OUT)
+pwm = GPIO.PWM(SERVO_PIN, 50)
 
 
 def set_servo_angle(angle):
@@ -52,21 +40,21 @@ def set_servo_angle(angle):
 
 
 # this is for if the hand was left up
-def start_reset_timer():
-    def reset_hand():
-        global is_hand_raised
-        if is_hand_raised:
-            set_servo_angle(0)
-            is_hand_raised = False
+# def start_reset_timer():
+#     def reset_hand():
+#         global is_hand_raised
+#         if is_hand_raised:
+#             set_servo_angle(0)
+#             is_hand_raised = False
 
-    # make sure there's only one timer
-    global current_timer
-    if current_timer:
-        current_timer.cancel()
+#     # make sure there's only one timer
+#     global current_timer
+#     if current_timer:
+#         current_timer.cancel()
 
-    # wait for 5 minutes
-    timer = threading.Timer(300, reset_hand)
-    timer.start()
+#     # wait for 5 minutes
+#     timer = threading.Timer(300, reset_hand)
+#     timer.start()
 
 
 def raise_hand(mode):
@@ -90,7 +78,7 @@ def raise_hand(mode):
         else:
             # go farther than halfway so camera isn't blocked
             set_servo_angle(HALFWAY_ANGLE)
-            start_reset_timer()
+            # start_reset_timer()
         is_hand_raised = not is_hand_raised
 
     elif mode == "RAISE":
@@ -127,40 +115,57 @@ def send_response(conn, body, status_code="200 OK", content_type="text/plain"):
         logging.warning("Client disconnected before response could be sent.")
 
 
-if __name__ == "__main__":
-    # Listen for connections
-    while True:
-        conn = None
-        try:
+def handle_request(conn):
+    request = conn.recv(1024).decode()
+    _, body = request.split("\r\n\r\n", 1)
+
+    if "POST /raisehand" in request:
+        params = parse_qs(body)
+        # default is wave if no params sent
+        mode = params.get("mode", ["WAVE2"])[0].upper()
+        if mode not in MODES:
+            logging.error(f"Invalid mode received: {mode}")
+            send_response(conn, "Invalid mode", "400 Bad Request")
+            return
+        raise_hand(mode)
+
+    # Load and serve the HTML page
+    body = get_html()
+    send_response(conn, body, content_type="text/html")
+
+
+def main():
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind((ETHERNET_IP, PORT))
+        s.listen(1)
+        logging.info("Server started. Listening on %s:%s", ETHERNET_IP, PORT)
+
+        while True:
             conn, addr = s.accept()
-            logging.info(f"Got a connection from {addr}")
+            with conn:
+                logging.info(f"Got a connection from {addr}")
+                try:
+                    handle_request(conn)
+                except Exception:
+                    logging.exception("An unexpected error occurred.")
+                    try:
+                        send_response(
+                            conn, "Internal Server Error", "500 Internal Server Error"
+                        )
+                    except Exception as e:
+                        logging.error(f"Failed to send error response to client: {e}")
 
-            # Receive the request
-            request = conn.recv(1024).decode()
-            headers, body = request.split("\r\n\r\n", 1)
 
-            # Check if it's a POST request to raise hand
-            if "POST /raisehand" in request:
-                params = parse_qs(body)
-                # default is wave if no params sent
-                mode = params.get("mode", ["WAVE2"])[0].upper()
-                if mode not in MODES:
-                    logging.error(f"Invalid mode received: {mode}")
-                    send_response(conn, "Invalid mode", "400 Bad Request")
-                    continue
-                raise_hand(mode)
+if __name__ == "__main__":
+    # setup logging
+    log_format = "%(asctime)s - %(levelname)s - %(message)s"
+    logging.basicConfig(level=logging.INFO, format=log_format, handlers=[])
+    # rotate when log file is 5mb
+    handler = RotatingFileHandler(
+        "/home/imdc1/hand_server.log", maxBytes=5 * 1024 * 1024, backupCount=5
+    )
+    formatter = logging.Formatter(log_format)
+    handler.setFormatter(formatter)
+    logging.getLogger().addHandler(handler)
 
-            # Load and serve the HTML page
-            body = get_html()
-            send_response(conn, body, content_type="text/html")
-
-        except Exception as e:
-            logging.exception("An unexpected error occurred.")
-            try:
-                send_response(
-                    conn, "Internal Server Error", "500 Internal Server Error"
-                )
-            except Exception:
-                logging.error("Failed to send error response to client.")
-        finally:
-            conn.close()
+    main()
