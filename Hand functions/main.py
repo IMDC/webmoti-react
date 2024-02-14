@@ -1,14 +1,12 @@
 import logging
+import signal
 import socket
-import threading
+import sys
 from logging.handlers import RotatingFileHandler
 from time import sleep
 from urllib.parse import parse_qs
 
 from RPi import GPIO
-
-# TODO need cleanup function on exit for toggle
-
 
 # 9th floor ip: 141.117.145.158
 # 8th floor ip: 141.117.144.159
@@ -28,15 +26,14 @@ GPIO.setmode(GPIO.BOARD)
 SERVO_PIN = 12
 GPIO.setup(SERVO_PIN, GPIO.OUT)
 pwm = GPIO.PWM(SERVO_PIN, 50)
+pwm.start(0)
 
 
 def set_servo_angle(angle):
     # Convert angle to duty cycle (2 to 12)
     duty_cycle = (angle / 18) + 2
-    pwm.start(duty_cycle)
+    pwm.ChangeDutyCycle(duty_cycle)
     sleep(1.5)
-    # this prevents hand from moving after setting angle
-    # pwm.stop()
 
 
 # this is for if the hand was left up
@@ -167,5 +164,14 @@ if __name__ == "__main__":
     formatter = logging.Formatter(log_format)
     handler.setFormatter(formatter)
     logging.getLogger().addHandler(handler)
+
+    def signal_handler(*_):
+        pwm.stop()
+        GPIO.cleanup()
+        logging.info("Cleaning up and exiting...")
+        sys.exit(0)
+
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
 
     main()
