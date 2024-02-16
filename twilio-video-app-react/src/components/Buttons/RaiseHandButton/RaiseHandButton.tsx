@@ -16,6 +16,7 @@ import { JSONObject, Message } from '@twilio/conversations';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
+import { Tooltip } from '@material-ui/core';
 
 export default function RaiseHandButton() {
   const { room } = useVideoContext();
@@ -30,14 +31,50 @@ export default function RaiseHandButton() {
   const [buttonIntervalID, setButtonIntervalID] = useState<NodeJS.Timeout | null>(null);
 
   const theme = useTheme();
+
   const handleOpenPopover = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClosePopover = () => {
     setAnchorEl(null);
   };
 
   const url = 'https://y24khent.connect.remote.it/raisehand';
+
+  const handleMouseDown = async () => {
+    setIsLoading(true);
+    try {
+      await fetch('/raisehand', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({ mode: 'RAISE' }),
+      });
+      setIsHandRaised(true);
+    } catch (error) {
+      console.error('Error raising hand:', error);
+    }
+    setIsLoading(false);
+  };
+
+  const handleMouseUp = async () => {
+    setIsLoading(true);
+    try {
+      await fetch('/raisehand', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({ mode: 'LOWER' }),
+      });
+      setIsHandRaised(false);
+    } catch (error) {
+      console.error('Error lowering hand:', error);
+    }
+    setIsLoading(false);
+  };
 
   const raiseHand = async () => {
     const err = (msg: string) => {
@@ -150,74 +187,29 @@ export default function RaiseHandButton() {
   return (
     <div>
       {/* main raise hand button */}
-      <Button
-        onClick={raiseHand}
-        variant="contained"
-        color={isHandRaised ? 'secondary' : 'primary'}
-        style={{
-          position: 'relative',
-          height: isHandRaised ? '45px' : '38px',
-        }}
-        disabled={isLoading}
-      >
-        <div style={{ position: 'relative', display: 'inline-block' }}>
-          <span style={{ minWidth: '80px', lineHeight: '40px' }}>
-            {/* Set a fixed width for the content */}
-            {isHandRaised ? '' : 'Raise Hand'}
-
-            {isLoading && (
-              <CircularProgress
-                size={24}
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  marginTop: -12,
-                  marginLeft: -12,
-                }}
-              />
-            )}
-
-            {countdown > 0 && (
-              <span>
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                  }}
-                >
-                  <CircularProgress
-                    variant="determinate"
-                    value={(countdown / 90) * 100}
-                    size={30}
-                    thickness={6}
-                    style={{
-                      position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      transform: 'translate(-50%, -50%)',
-                    }}
-                  />
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      color: 'white',
-                      fontSize: '16px',
-                    }}
-                  >
-                    {countdown}
-                  </div>
-                </div>
-              </span>
-            )}
-          </span>
-        </div>
-      </Button>
+      <Tooltip title={isHandRaised ? 'Release to lower hand' : 'Click & hold to raise hand'}>
+        <Button
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+          variant="contained"
+          color={isHandRaised ? 'secondary' : 'primary'}
+          disabled={isLoading}
+        >
+          {isHandRaised ? 'Lower Hand' : 'Raise Hand'}
+          {isLoading && (
+            <CircularProgress
+              size={24}
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                marginTop: -12,
+                marginLeft: -12,
+              }}
+            />
+          )}
+        </Button>
+      </Tooltip>
 
       {/* indicator that shows how many hands are raised */}
       <Badge badgeContent={handQueue.length} color="secondary">
