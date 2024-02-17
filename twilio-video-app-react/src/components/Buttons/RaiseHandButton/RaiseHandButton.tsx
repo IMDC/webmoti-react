@@ -56,6 +56,7 @@ export default function RaiseHandButton() {
     } catch (error) {
       console.error('Error raising hand:', error);
     }
+    raiseHand();
     setIsLoading(false);
   };
 
@@ -73,7 +74,17 @@ export default function RaiseHandButton() {
     } catch (error) {
       console.error('Error lowering hand:', error);
     }
+    lowerHand();
+
     setIsLoading(false);
+  };
+
+  const lowerHand = () => {
+    setIsHandRaised(false);
+    setCountdown(0);
+    // Clear the button countdown for auto-lowering hand
+    if (buttonIntervalID) clearInterval(buttonIntervalID);
+    sendSystemMsg(conversation, `${room?.localParticipant?.identity || 'Participant'} lowered hand`);
   };
 
   const raiseHand = async () => {
@@ -87,14 +98,6 @@ export default function RaiseHandButton() {
 
     // get participant name for raise hand msg
     const name = room?.localParticipant?.identity || 'Participant';
-
-    const lowerHand = () => {
-      setIsHandRaised(false);
-      setCountdown(0);
-      // Clear the button countdown for auto-lowering hand
-      if (buttonIntervalID) clearInterval(buttonIntervalID);
-      sendSystemMsg(conversation, `${name} lowered hand`);
-    };
 
     // check if in queue
     if (!handQueue.includes(name)) {
