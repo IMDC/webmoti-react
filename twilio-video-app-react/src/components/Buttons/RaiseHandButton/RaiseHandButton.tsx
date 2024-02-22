@@ -56,7 +56,6 @@ export default function RaiseHandButton() {
     } catch (error) {
       console.error('Error raising hand:', error);
     }
-    raiseHand();
     setIsLoading(false);
   };
 
@@ -74,8 +73,6 @@ export default function RaiseHandButton() {
     } catch (error) {
       console.error('Error lowering hand:', error);
     }
-    lowerHand();
-
     setIsLoading(false);
   };
 
