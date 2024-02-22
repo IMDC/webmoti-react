@@ -42,40 +42,6 @@ export default function RaiseHandButton() {
 
   const url = 'https://y24khent.connect.remote.it/raisehand';
 
-  const handleMouseDown = async () => {
-    setIsLoading(true);
-    try {
-      await fetch('/raisehand', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({ mode: 'RAISE' }),
-      });
-      setIsHandRaised(true);
-    } catch (error) {
-      console.error('Error raising hand:', error);
-    }
-    setIsLoading(false);
-  };
-
-  const handleMouseUp = async () => {
-    setIsLoading(true);
-    try {
-      await fetch('/raisehand', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({ mode: 'LOWER' }),
-      });
-      setIsHandRaised(false);
-    } catch (error) {
-      console.error('Error lowering hand:', error);
-    }
-    setIsLoading(false);
-  };
-
   const lowerHand = () => {
     setIsHandRaised(false);
     setCountdown(0);
@@ -188,13 +154,7 @@ export default function RaiseHandButton() {
     <div>
       {/* main raise hand button */}
       <Tooltip title={isHandRaised ? 'Release to lower hand' : 'Click & hold to raise hand'}>
-        <Button
-          onMouseDown={handleMouseDown}
-          onMouseUp={handleMouseUp}
-          variant="contained"
-          color={isHandRaised ? 'secondary' : 'primary'}
-          disabled={isLoading}
-        >
+        <Button variant="contained" color={isHandRaised ? 'secondary' : 'primary'} disabled={isLoading}>
           {isHandRaised ? 'Lower Hand' : 'Raise Hand'}
           {isLoading && (
             <CircularProgress
