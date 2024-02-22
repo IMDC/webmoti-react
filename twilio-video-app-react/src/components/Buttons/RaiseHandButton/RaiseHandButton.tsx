@@ -24,7 +24,6 @@ export default function RaiseHandButton() {
   const { sendSystemMsg } = useWebmotiVideoContext();
   const [handQueue, setHandQueue] = useState<string[]>([]);
   const [isHandRaised, setIsHandRaised] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   // the anchor is used so the popover knows where to appear on the screen
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [countdown, setCountdown] = useState(0);
@@ -45,7 +44,6 @@ export default function RaiseHandButton() {
   const toggleHand = async () => {
     const name = room?.localParticipant?.identity || 'Participant';
     const mode = isHandRaised ? 'LOWER' : 'RAISE';
-    setIsLoading(true);
 
     try {
       const response = await fetch(url, {
@@ -79,7 +77,6 @@ export default function RaiseHandButton() {
     } catch (error) {
       console.error(`Error ${mode === 'RAISE' ? 'raising' : 'lowering'} hand:`, error);
     } finally {
-      setIsLoading(false);
     }
   };
 
@@ -135,10 +132,9 @@ export default function RaiseHandButton() {
           onMouseUp={() => isHandRaised && toggleHand()}
           variant="contained"
           color={isHandRaised ? 'secondary' : 'primary'}
-          disabled={isLoading}
         >
           {isHandRaised ? 'Lower Hand' : 'Raise Hand'}
-          {isLoading && (
+          {
             <CircularProgress
               size={24}
               style={{
@@ -149,7 +145,7 @@ export default function RaiseHandButton() {
                 marginLeft: -12,
               }}
             />
-          )}
+          }
         </Button>
       </Tooltip>
 
