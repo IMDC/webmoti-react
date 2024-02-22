@@ -42,14 +42,6 @@ export default function RaiseHandButton() {
 
   const url = 'https://y24khent.connect.remote.it/raisehand';
 
-  const lowerHand = () => {
-    setIsHandRaised(false);
-    setCountdown(0);
-    // Clear the button countdown for auto-lowering hand
-    if (buttonIntervalID) clearInterval(buttonIntervalID);
-    sendSystemMsg(conversation, `${room?.localParticipant?.identity || 'Participant'} lowered hand`);
-  };
-
   const toggleHand = async () => {
     const mode = isHandRaised ? 'LOWER' : 'RAISE';
     setIsLoading(true);
