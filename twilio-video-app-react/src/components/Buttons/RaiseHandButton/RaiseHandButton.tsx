@@ -50,58 +50,24 @@ export default function RaiseHandButton() {
     sendSystemMsg(conversation, `${room?.localParticipant?.identity || 'Participant'} lowered hand`);
   };
 
-  const raiseHand = async () => {
-    const err = (msg: string) => {
-      setIsLoading(false);
-      alert(msg);
-      console.error(msg);
-    };
-
+  const toggleHand = async () => {
+    const mode = isHandRaised ? 'LOWER' : 'RAISE';
     setIsLoading(true);
 
-    // get participant name for raise hand msg
-    const name = room?.localParticipant?.identity || 'Participant';
+    try {
+      await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({ mode }),
+      });
 
-    // check if in queue
-    if (!handQueue.includes(name)) {
-      try {
-        const response = await fetch(url, { method: 'POST' });
-
-        if (!response.ok) {
-          if (response.status === 503) {
-            // board not connected to wifi
-            return err('Service Offline');
-          }
-
-          // unknown error
-          return err(`Unknown error while raising hand: ${response.status}`);
-        }
-
-        // success, toggle state for button
-        setIsHandRaised(prevState => !prevState);
-        // send msg in chat
-        sendSystemMsg(conversation, `${name} raised hand`);
-
-        const buttonCountdownDuration = 90;
-        // start the countdown timer for the button
-        let tempButtonIntervalID = setInterval(() => {
-          setCountdown(prevCountdown => {
-            if (prevCountdown <= 1) {
-              clearInterval(tempButtonIntervalID);
-              lowerHand();
-              return 0;
-            }
-            return prevCountdown - 1;
-          });
-        }, 1000);
-
-        setButtonIntervalID(tempButtonIntervalID);
-        setCountdown(buttonCountdownDuration);
-      } catch (e) {
-        return err(e as string);
-      }
-    } else {
-      lowerHand();
+      setIsHandRaised(!isHandRaised);
+      const action = mode === 'RAISE' ? 'raised' : 'lowered';
+      sendSystemMsg(conversation, `${room?.localParticipant?.identity || 'Participant'} ${action} hand`);
+    } catch (error) {
+      console.error(`Error ${mode === 'RAISE' ? 'raising' : 'lowering'} hand:`, error);
     }
 
     setIsLoading(false);
@@ -154,7 +120,13 @@ export default function RaiseHandButton() {
     <div>
       {/* main raise hand button */}
       <Tooltip title={isHandRaised ? 'Release to lower hand' : 'Click & hold to raise hand'}>
-        <Button variant="contained" color={isHandRaised ? 'secondary' : 'primary'} disabled={isLoading}>
+        <Button
+          onMouseDown={() => !isHandRaised && toggleHand()}
+          onMouseUp={() => isHandRaised && toggleHand()}
+          variant="contained"
+          color={isHandRaised ? 'secondary' : 'primary'}
+          disabled={isLoading}
+        >
           {isHandRaised ? 'Lower Hand' : 'Raise Hand'}
           {isLoading && (
             <CircularProgress
