@@ -134,7 +134,7 @@ export default function RaiseHandButton() {
           color={isHandRaised ? 'secondary' : 'primary'}
         >
           {isHandRaised ? 'Lower Hand' : 'Raise Hand'}
-          {
+          {/* {
             <CircularProgress
               size={24}
               style={{
@@ -145,7 +145,7 @@ export default function RaiseHandButton() {
                 marginLeft: -12,
               }}
             />
-          }
+          } */}
         </Button>
       </Tooltip>
 
