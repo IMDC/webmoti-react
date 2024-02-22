@@ -43,11 +43,12 @@ export default function RaiseHandButton() {
   const url = 'https://y24khent.connect.remote.it/raisehand';
 
   const toggleHand = async () => {
+    const name = room?.localParticipant?.identity || 'Participant';
     const mode = isHandRaised ? 'LOWER' : 'RAISE';
     setIsLoading(true);
 
     try {
-      await fetch(url, {
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -55,14 +56,31 @@ export default function RaiseHandButton() {
         body: new URLSearchParams({ mode }),
       });
 
-      setIsHandRaised(!isHandRaised);
+      if (!response.ok) {
+        if (response.status === 503) {
+          // board not connected to wifi
+          alert('Service Offline.');
+          throw new Error('Service Offline');
+        }
+        // unknown error
+        throw new Error(`Unknown error while raising hand: ${response.status}: ${response.statusText}`);
+      }
+
       const action = mode === 'RAISE' ? 'raised' : 'lowered';
-      sendSystemMsg(conversation, `${room?.localParticipant?.identity || 'Participant'} ${action} hand`);
+      sendSystemMsg(conversation, `${name} ${action} hand`);
+
+      if (mode === 'RAISE' && !handQueue.includes(name)) {
+        setHandQueue(prevQueue => [...prevQueue, name]);
+      } else if (mode === 'LOWER') {
+        setHandQueue(prevQueue => prevQueue.filter(participantName => participantName !== name));
+      }
+
+      setIsHandRaised(!isHandRaised);
     } catch (error) {
       console.error(`Error ${mode === 'RAISE' ? 'raising' : 'lowering'} hand:`, error);
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   // listen for raise hand msg and update queue
