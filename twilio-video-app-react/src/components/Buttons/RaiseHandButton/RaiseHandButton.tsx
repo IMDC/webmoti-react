@@ -28,6 +28,7 @@ export default function RaiseHandButton() {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [countdown, setCountdown] = useState(0);
   const [buttonIntervalID, setButtonIntervalID] = useState<NodeJS.Timeout | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const theme = useTheme();
 
@@ -44,6 +45,7 @@ export default function RaiseHandButton() {
   const toggleHand = async () => {
     const name = room?.localParticipant?.identity || 'Participant';
     const mode = isHandRaised ? 'LOWER' : 'RAISE';
+    setIsLoading(true);
 
     try {
       const response = await fetch(url, {
@@ -77,6 +79,29 @@ export default function RaiseHandButton() {
     } catch (error) {
       console.error(`Error ${mode === 'RAISE' ? 'raising' : 'lowering'} hand:`, error);
     } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleMouseDown = () => {
+    if (!isHandRaised) {
+      // Start a timeout when the mouse is held down
+      const timeoutId = setTimeout(() => {
+        toggleHand(); // Only raise hand if held for more than 500ms
+      }, 500);
+      setButtonIntervalID(timeoutId);
+    }
+  };
+
+  const handleMouseUp = () => {
+    // Clear the timeout if the mouse is released quickly
+    if (buttonIntervalID) {
+      clearTimeout(buttonIntervalID);
+      setButtonIntervalID(null);
+    }
+    // If the hand was already raised, lower it immediately on mouse up
+    if (isHandRaised) {
+      toggleHand();
     }
   };
 
@@ -128,13 +153,14 @@ export default function RaiseHandButton() {
       {/* main raise hand button */}
       <Tooltip title={isHandRaised ? 'Release to lower hand' : 'Click & hold to raise hand'}>
         <Button
-          onMouseDown={() => !isHandRaised && toggleHand()}
-          onMouseUp={() => isHandRaised && toggleHand()}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
           variant="contained"
           color={isHandRaised ? 'secondary' : 'primary'}
+          disabled={isLoading}
         >
           {isHandRaised ? 'Lower Hand' : 'Raise Hand'}
-          {/* {
+          {isLoading && (
             <CircularProgress
               size={24}
               style={{
@@ -145,7 +171,7 @@ export default function RaiseHandButton() {
                 marginLeft: -12,
               }}
             />
-          } */}
+          )}
         </Button>
       </Tooltip>
 
