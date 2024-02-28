@@ -93,15 +93,25 @@ export default function RaiseHandButton() {
     }
   };
 
+  const handleGlobalMouseUp = () => {
+    if (isHandRaised) {
+      toggleHand();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mouseup', handleGlobalMouseUp);
+
+    return () => {
+      document.removeEventListener('mouseup', handleGlobalMouseUp);
+    };
+  }, [isHandRaised]);
+
   const handleMouseUp = () => {
-    // Clear the timeout if the mouse is released quickly
+    // Clear the timeout if the mouse is released
     if (buttonIntervalID) {
       clearTimeout(buttonIntervalID);
       setButtonIntervalID(null);
-    }
-    // If the hand was already raised, lower it immediately on mouse up
-    if (isHandRaised) {
-      toggleHand();
     }
   };
 
