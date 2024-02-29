@@ -16,6 +16,7 @@ import { JSONObject, Message } from '@twilio/conversations';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
+import { Tooltip } from '@material-ui/core';
 
 export default function RaiseHandButton() {
   const { room } = useVideoContext();
@@ -23,85 +24,95 @@ export default function RaiseHandButton() {
   const { sendSystemMsg } = useWebmotiVideoContext();
   const [handQueue, setHandQueue] = useState<string[]>([]);
   const [isHandRaised, setIsHandRaised] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   // the anchor is used so the popover knows where to appear on the screen
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [countdown, setCountdown] = useState(0);
   const [buttonIntervalID, setButtonIntervalID] = useState<NodeJS.Timeout | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const theme = useTheme();
+
   const handleOpenPopover = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClosePopover = () => {
     setAnchorEl(null);
   };
 
   const url = 'https://y24khent.connect.remote.it/raisehand';
 
-  const raiseHand = async () => {
-    const err = (msg: string) => {
-      setIsLoading(false);
-      alert(msg);
-      console.error(msg);
-    };
-
+  const toggleHand = async () => {
+    const name = room?.localParticipant?.identity || 'Participant';
+    const mode = isHandRaised ? 'LOWER' : 'RAISE';
     setIsLoading(true);
 
-    // get participant name for raise hand msg
-    const name = room?.localParticipant?.identity || 'Participant';
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({ mode }),
+      });
 
-    const lowerHand = () => {
-      setIsHandRaised(false);
-      setCountdown(0);
-      // Clear the button countdown for auto-lowering hand
-      if (buttonIntervalID) clearInterval(buttonIntervalID);
-      sendSystemMsg(conversation, `${name} lowered hand`);
-    };
-
-    // check if in queue
-    if (!handQueue.includes(name)) {
-      try {
-        const response = await fetch(url, { method: 'POST' });
-
-        if (!response.ok) {
-          if (response.status === 503) {
-            // board not connected to wifi
-            return err('Service Offline');
-          }
-
-          // unknown error
-          return err(`Unknown error while raising hand: ${response.status}`);
+      if (!response.ok) {
+        if (response.status === 503) {
+          // board not connected to wifi
+          alert('Service Offline.');
+          throw new Error('Service Offline');
         }
-
-        // success, toggle state for button
-        setIsHandRaised(prevState => !prevState);
-        // send msg in chat
-        sendSystemMsg(conversation, `${name} raised hand`);
-
-        const buttonCountdownDuration = 90;
-        // start the countdown timer for the button
-        let tempButtonIntervalID = setInterval(() => {
-          setCountdown(prevCountdown => {
-            if (prevCountdown <= 1) {
-              clearInterval(tempButtonIntervalID);
-              lowerHand();
-              return 0;
-            }
-            return prevCountdown - 1;
-          });
-        }, 1000);
-
-        setButtonIntervalID(tempButtonIntervalID);
-        setCountdown(buttonCountdownDuration);
-      } catch (e) {
-        return err(e as string);
+        // unknown error
+        throw new Error(`Unknown error while raising hand: ${response.status}: ${response.statusText}`);
       }
-    } else {
-      lowerHand();
-    }
 
-    setIsLoading(false);
+      const action = mode === 'RAISE' ? 'raised' : 'lowered';
+      sendSystemMsg(conversation, `${name} ${action} hand`);
+
+      if (mode === 'RAISE' && !handQueue.includes(name)) {
+        setHandQueue(prevQueue => [...prevQueue, name]);
+      } else if (mode === 'LOWER') {
+        setHandQueue(prevQueue => prevQueue.filter(participantName => participantName !== name));
+      }
+
+      setIsHandRaised(!isHandRaised);
+    } catch (error) {
+      console.error(`Error ${mode === 'RAISE' ? 'raising' : 'lowering'} hand:`, error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleMouseDown = () => {
+    if (!isHandRaised) {
+      // Start a timeout when the mouse is held down
+      const timeoutId = setTimeout(() => {
+        toggleHand(); // Only raise hand if held for more than 500ms
+      }, 500);
+      setButtonIntervalID(timeoutId);
+    }
+  };
+
+  const handleGlobalMouseUp = () => {
+    if (isHandRaised) {
+      toggleHand();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mouseup', handleGlobalMouseUp);
+
+    return () => {
+      document.removeEventListener('mouseup', handleGlobalMouseUp);
+    };
+  }, [isHandRaised]);
+
+  const handleMouseUp = () => {
+    // Clear the timeout if the mouse is released
+    if (buttonIntervalID) {
+      clearTimeout(buttonIntervalID);
+      setButtonIntervalID(null);
+    }
   };
 
   // listen for raise hand msg and update queue
@@ -150,74 +161,29 @@ export default function RaiseHandButton() {
   return (
     <div>
       {/* main raise hand button */}
-      <Button
-        onClick={raiseHand}
-        variant="contained"
-        color={isHandRaised ? 'secondary' : 'primary'}
-        style={{
-          position: 'relative',
-          height: isHandRaised ? '45px' : '38px',
-        }}
-        disabled={isLoading}
-      >
-        <div style={{ position: 'relative', display: 'inline-block' }}>
-          <span style={{ minWidth: '80px', lineHeight: '40px' }}>
-            {/* Set a fixed width for the content */}
-            {isHandRaised ? '' : 'Raise Hand'}
-
-            {isLoading && (
-              <CircularProgress
-                size={24}
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  marginTop: -12,
-                  marginLeft: -12,
-                }}
-              />
-            )}
-
-            {countdown > 0 && (
-              <span>
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                  }}
-                >
-                  <CircularProgress
-                    variant="determinate"
-                    value={(countdown / 90) * 100}
-                    size={30}
-                    thickness={6}
-                    style={{
-                      position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      transform: 'translate(-50%, -50%)',
-                    }}
-                  />
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      color: 'white',
-                      fontSize: '16px',
-                    }}
-                  >
-                    {countdown}
-                  </div>
-                </div>
-              </span>
-            )}
-          </span>
-        </div>
-      </Button>
+      <Tooltip title={isHandRaised ? 'Release to lower hand' : 'Click & hold to raise hand'}>
+        <Button
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+          variant="contained"
+          color={isHandRaised ? 'secondary' : 'primary'}
+          disabled={isLoading}
+        >
+          {isHandRaised ? 'Lower Hand' : 'Raise Hand'}
+          {isLoading && (
+            <CircularProgress
+              size={24}
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                marginTop: -12,
+                marginLeft: -12,
+              }}
+            />
+          )}
+        </Button>
+      </Tooltip>
 
       {/* indicator that shows how many hands are raised */}
       <Badge badgeContent={handQueue.length} color="secondary">
