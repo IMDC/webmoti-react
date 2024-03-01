@@ -20,16 +20,20 @@ const ERROR_CODES = {
   PUPPETEER_ERROR: 102,
 };
 
-// for axios (keep trying for 3 min)
+// keep trying for 3 min
 // needed because rasp pi won't have wifi immediately
-const MAX_RETRIES = 72;
+const WEBMOTI_MAX_RETRIES = 72;
 // 2.5 seconds
-const RETRY_DELAY = 2500;
+const WEBMOTI_RETRY_DELAY = 2500;
+
+const REMOTEIT_MAX_RETRIES = 10;
+const REMOTEIT_RETRY_DELAY = 10000;
 
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const urlServer = `https://${process.env.URL_SERVER}`;
+const remoteItEndpoint = `https://${process.env.REMOTEIT_ENDPOINT}`;
 
-if (!authToken || !urlServer) {
+if (!authToken || !urlServer || !remoteItEndpoint) {
   console.error("Missing environment variables");
   process.exit(ERROR_CODES.MISSING_ENV);
 }
@@ -39,45 +43,50 @@ const signature = crypto
   .update(Buffer.from(urlServer, "utf-8"))
   .digest("base64");
 
-(async () => {
-  // get url from twilio endpoint
-  let URL;
-  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+const retryRequest = async (url, headers, maxRetries, retryDelay, errMsg) => {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      const response = await axios.get(urlServer, {
-        headers: {
-          "X-Twilio-Signature": signature,
-        },
-      });
-
-      URL = response.data["url"];
-      // break loop if successful
-      break;
-    } catch (e) {
-      // log error each time
-      if (e.response) {
-        console.error("Error fetching URL: ", e.message);
-        console.error("Status: ", e.response.status);
-        console.error("Data: ", e.response.data);
-      } else if (e.request) {
-        console.error("Error fetching URL (no response received): ", e.message);
+      let response;
+      if (url === urlServer) {
+        response = await axios.get(url, { headers: headers });
       } else {
-        console.error("Error setting up request: ", e.message);
+        response = await axios.post(url, "mode=INIT", {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        });
       }
+      return response.data;
+    } catch (e) {
+      console.error("Request error: ", e.message);
 
-      if (attempt === MAX_RETRIES) {
+      // don't terminate for remote it init
+      if (attempt === maxRetries && url === urlServer) {
         process.exit(ERROR_CODES.AXIOS_ERROR);
       } else {
         console.log(
-          `Attempt ${attempt} failed. Retrying in ${
-            RETRY_DELAY / 1000
+          `Attempt ${attempt} failed for ${errMsg}. Retrying in ${
+            retryDelay / 1000
           } seconds...`
         );
         // retry after waiting
-        await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY));
+        await new Promise((resolve) => setTimeout(resolve, retryDelay));
       }
     }
   }
+};
+
+(async () => {
+  // get url from twilio endpoint
+  const webmotiData = await retryRequest(
+    urlServer,
+    {
+      "X-Twilio-Signature": signature,
+    },
+    WEBMOTI_MAX_RETRIES,
+    WEBMOTI_RETRY_DELAY,
+    "webmoti url"
+  );
 
   let browser;
   try {
@@ -90,7 +99,7 @@ const signature = crypto
     });
     // get current tab
     const [page] = await browser.pages();
-    await page.goto(URL);
+    await page.goto(webmotiData["url"]);
 
     const nameSel = "#input-user-name";
     // const roomSel = "#input-room-name";
@@ -127,6 +136,7 @@ const signature = crypto
     await page.click(btn2Sel);
 
     // uncomment the following code to mute mic for imdc1 only
+    // it also initializes remote it
 
     /*
     const btn3Sel =
@@ -141,6 +151,15 @@ const signature = crypto
     if (isMicrophoneUnmuted) {
       await page.click(btn3Sel);
     }
+
+    // initialize remote it
+    await retryRequest(
+      remoteItEndpoint,
+      {},
+      REMOTEIT_MAX_RETRIES,
+      REMOTEIT_RETRY_DELAY,
+      "remote it init"
+    );
     */
   } catch (e) {
     if (browser) {

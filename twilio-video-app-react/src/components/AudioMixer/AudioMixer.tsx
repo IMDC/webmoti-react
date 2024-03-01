@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Box, Button, Popover, Typography } from '@material-ui/core';
+import { Box, Button, Popover, TextField, Typography } from '@material-ui/core';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import { JSONObject, Message } from '@twilio/conversations';
@@ -35,6 +35,7 @@ export default function AudioMixer() {
   const [alignment, setAlignment] = useState<Mode | null>(null);
   const [isClassMicEnabled, setIsClassMicEnabled] = useState(true);
   const [isProfSpeakerEnabled, setIsProfSpeakerEnabled] = useState(true);
+  const [input, setInput] = useState('');
 
   const name = room?.localParticipant?.identity || 'Participant';
 
@@ -136,6 +137,7 @@ export default function AudioMixer() {
 
           // delete msg so it's not shown when rejoining
           message.remove();
+          return;
         }
 
         const pattern2 = `^Toggle (${Devices.ProfSpeaker}|${Devices.ClassMic})$`;
@@ -152,6 +154,23 @@ export default function AudioMixer() {
           }
 
           message.remove();
+          return;
+        }
+
+        const pattern3 = `^Mute (.+)$`;
+        const regex3 = new RegExp(pattern3);
+        const match3 = message.body?.match(regex3);
+
+        if (match3) {
+          const [, target] = match3;
+
+          // if this participant was muted
+          if (target === name) {
+            toggleAudioEnabled();
+          }
+
+          message.remove();
+          return;
         }
       }
     };
@@ -161,7 +180,19 @@ export default function AudioMixer() {
     return () => {
       conversation?.off('messageAdded', handleMessageAdded);
     };
-  }, [conversation, setClassMicState, setProfSpeakerState, isClassMicEnabled, isProfSpeakerEnabled]);
+  }, [
+    conversation,
+    setClassMicState,
+    setProfSpeakerState,
+    isClassMicEnabled,
+    isProfSpeakerEnabled,
+    name,
+    toggleAudioEnabled,
+  ]);
+
+  const handleMuteBtnClick = () => {
+    sendSystemMsg(conversation, `Mute ${input}`);
+  };
 
   return (
     <div>
@@ -226,6 +257,19 @@ export default function AudioMixer() {
             >
               {isProfSpeakerEnabled ? <VolumeUpIcon /> : <VolumeOffIcon />}
               <Typography variant="body2">Prof Speakers</Typography>
+            </Button>
+          </Box>
+
+          <Box mt={2} display="flex">
+            <TextField
+              variant="outlined"
+              label="Participant"
+              value={input}
+              onChange={event => setInput(event.target.value)}
+            />
+
+            <Button variant="contained" color="primary" onClick={handleMuteBtnClick}>
+              Mute
             </Button>
           </Box>
         </Box>
