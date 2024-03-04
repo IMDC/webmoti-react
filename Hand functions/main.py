@@ -11,7 +11,6 @@ from RPi import GPIO
 # 9th floor ip: 141.117.145.158
 # 8th floor ip: 141.117.144.159
 
-ETHERNET_IP = "141.117.144.159"
 PORT = 80
 
 MODES = ["WAVE2", "WAVE", "TOGGLE", "RAISE", "LOWER", "INIT"]
@@ -133,9 +132,9 @@ def handle_request(conn):
 
 def main():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind((ETHERNET_IP, PORT))
+        s.bind(('', PORT))  # Bind to all interfaces and use the DHCP assigned IP
         s.listen(1)
-        logging.info("Server started. Listening on %s:%s", ETHERNET_IP, PORT)
+        logging.info("Server started. Listening on %s:%s", s.getsockname()[0], PORT)
 
         while True:
             conn, addr = s.accept()
