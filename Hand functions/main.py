@@ -11,6 +11,7 @@ from RPi import GPIO
 # 9th floor ip: 141.117.145.158
 # 8th floor ip: 141.117.144.159
 
+ETHERNET_IP = "141.117.145.158"
 PORT = 80
 
 MODES = ["WAVE2", "WAVE", "TOGGLE", "RAISE", "LOWER", "INIT"]
@@ -113,12 +114,19 @@ def send_response(conn, body, status_code="200 OK", content_type="text/plain"):
 
 def handle_request(conn):
     request = conn.recv(1024).decode()
-    _, body = request.split("\r\n\r\n", 1)
+    split = request.split("\r\n\r\n", 1)
 
     if "POST /raisehand" in request:
-        params = parse_qs(body)
-        # default is wave if no params sent
-        mode = params.get("mode", ["WAVE2"])[0].upper()
+        mode = None
+        if len(split) == 2:
+            _, body = split
+            params = parse_qs(body)
+            # default is wave if no params sent
+            mode = params.get("mode", ["WAVE2"])[0].upper()
+        else:
+            # no body in request
+            mode = "WAVE2"
+
         if mode not in MODES:
             logging.error(f"Invalid mode received: {mode}")
             send_response(conn, "Invalid mode", "400 Bad Request")
@@ -132,9 +140,9 @@ def handle_request(conn):
 
 def main():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind(('', PORT))  # Bind to all interfaces and use the DHCP assigned IP
+        s.bind((ETHERNET_IP, PORT))
         s.listen(1)
-        logging.info("Server started. Listening on %s:%s", s.getsockname()[0], PORT)
+        logging.info("Server started. Listening on %s:%s", ETHERNET_IP, PORT)
 
         while True:
             conn, addr = s.accept()
