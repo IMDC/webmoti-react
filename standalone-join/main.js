@@ -26,14 +26,10 @@ const WEBMOTI_MAX_RETRIES = 72;
 // 2.5 seconds
 const WEBMOTI_RETRY_DELAY = 2500;
 
-const REMOTEIT_MAX_RETRIES = 10;
-const REMOTEIT_RETRY_DELAY = 10000;
-
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const urlServer = `https://${process.env.URL_SERVER}`;
-const remoteItEndpoint = `https://${process.env.REMOTEIT_ENDPOINT}`;
 
-if (!authToken || !urlServer || !remoteItEndpoint) {
+if (!authToken || !urlServer) {
   console.error("Missing environment variables");
   process.exit(ERROR_CODES.MISSING_ENV);
 }
@@ -60,8 +56,7 @@ const retryRequest = async (url, headers, maxRetries, retryDelay, errMsg) => {
     } catch (e) {
       console.error("Request error: ", e.message);
 
-      // don't terminate for remote it init
-      if (attempt === maxRetries && url === urlServer) {
+      if (attempt === maxRetries) {
         process.exit(ERROR_CODES.AXIOS_ERROR);
       } else {
         console.log(
@@ -159,15 +154,6 @@ const retryRequest = async (url, headers, maxRetries, retryDelay, errMsg) => {
     if (!isMuted) {
       await page.click(muteBtnSel);
     }
-
-    // initialize remote it
-    await retryRequest(
-      remoteItEndpoint,
-      {},
-      REMOTEIT_MAX_RETRIES,
-      REMOTEIT_RETRY_DELAY,
-      "remote it init"
-    );
     */
   } catch (e) {
     if (browser) {
