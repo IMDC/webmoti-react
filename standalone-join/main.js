@@ -139,17 +139,25 @@ const retryRequest = async (url, headers, maxRetries, retryDelay, errMsg) => {
     // it also initializes remote it
 
     /*
-    const btn3Sel =
-      "#root > div > main > footer > div > div.MuiGrid-root.MuiGrid-item > div > button:nth-child(1)";
-    await page.waitForSelector(btn3Sel);
+    const muteBtnSel = 'button[data-cy-audio-toggle="true"]';
+    // muted button needs to load
+    await page.waitForFunction(
+      (selector) => !!document.querySelector(selector),
+      // increase time from 30000 ms because this takes a while sometimes
+      { timeout: 60000 },
+      muteBtnSel
+    );
 
-    const isMicrophoneUnmuted = await page.evaluate((selector) => {
-      const button = document.querySelector(selector);
-      return button && !button.classList.contains("muted-class");
-    }, btn3Sel);
+    const isMuted = await page.evaluate((selector) => {
+      // the svg has a group element when it's muted
+      const groupSel = document.querySelector(
+        `${selector} > span > span > svg > g`
+      );
+      return groupSel !== null;
+    }, muteBtnSel);
 
-    if (isMicrophoneUnmuted) {
-      await page.click(btn3Sel);
+    if (!isMuted) {
+      await page.click(muteBtnSel);
     }
 
     // initialize remote it
