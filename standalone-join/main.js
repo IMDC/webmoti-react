@@ -27,12 +27,14 @@ const WEBMOTI_MAX_RETRIES = 72;
 const WEBMOTI_RETRY_DELAY = 2500;
 
 const authToken = process.env.TWILIO_AUTH_TOKEN;
-const urlServer = `https://${process.env.URL_SERVER}`;
+const urlServerEnv = process.env.URL_SERVER;
 
-if (!authToken || !urlServer) {
+if (!authToken || !urlServerEnv) {
   console.error("Missing environment variables");
   process.exit(ERROR_CODES.MISSING_ENV);
 }
+
+const urlServer = `https://${urlServerEnv}`;
 
 const signature = crypto
   .createHmac("sha1", authToken)
