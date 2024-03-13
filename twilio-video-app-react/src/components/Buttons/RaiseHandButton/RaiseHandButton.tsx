@@ -40,7 +40,7 @@ export default function RaiseHandButton() {
     setAnchorEl(null);
   };
 
-  const url = 'https://y24khent.connect.remote.it/raisehand';
+  const url = 'https://jmn2f42hjgfv.connect.remote.it/raisehand';
 
   const toggleHand = async () => {
     const name = room?.localParticipant?.identity || 'Participant';
