@@ -45,7 +45,7 @@ export default function NotifyButton() {
 
   return (
     <Tooltip title="Click to grab professor's attention">
-      <Button onClick={notifyProfessor}>Notify Professor</Button>
+      <Button onClick={notifyProfessor}>Nudge</Button>
     </Tooltip>
   );
 }
