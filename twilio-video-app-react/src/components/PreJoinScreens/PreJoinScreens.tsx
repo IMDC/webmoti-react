@@ -47,6 +47,12 @@ export default function PreJoinScreens() {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (isProfessor) {
+      // append Prof to name
+      setName(`${name} (Prof)`);
+    }
+
     // If this app is deployed as a twilio function, don't change the URL because routing isn't supported.
     // @ts-ignore
     if (!window.location.origin.includes('twil.io') && !window.STORYBOOK_ENV) {
