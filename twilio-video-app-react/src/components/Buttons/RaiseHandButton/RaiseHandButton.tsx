@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
+import { Tooltip } from '@material-ui/core';
 import Badge from '@material-ui/core/Badge';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -7,13 +8,10 @@ import Chip from '@material-ui/core/Chip';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Popover from '@material-ui/core/Popover';
 import { useTheme } from '@material-ui/core/styles';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { JSONObject, Message } from '@twilio/conversations';
 
-import { Tooltip } from '@material-ui/core';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
@@ -45,6 +43,30 @@ export default function RaiseHandButton() {
 
   const url = 'https://jmn2f42hjgfv.connect.remote.it/raisehand';
 
+  const sendHandRequest = async (mode: string) => {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({ mode }),
+    });
+
+    return response;
+  };
+
+  // this is run when participant joins
+  // useEffect(() => {
+  //   const initRemoteIt = async () => {
+  //     // the service can be offline here, it's just to make the initial connection
+  //     const response = await sendHandRequest('INIT');
+
+  //     console.log(`Remote.It init: ${response.status}`);
+  //   };
+
+  //   initRemoteIt();
+  // }, []);
+
   const toggleHand = useCallback(async () => {
     const name = room?.localParticipant?.identity || 'Participant';
     const mode = isHandRaised ? 'LOWER' : 'RAISE';
@@ -56,13 +78,7 @@ export default function RaiseHandButton() {
       setHandQueue(prevQueue => [...prevQueue, name]);
 
       // send request
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({ mode }),
-      });
+      const response = await sendHandRequest(mode);
 
       if (!response.ok) {
         if (response.status === 503) {
