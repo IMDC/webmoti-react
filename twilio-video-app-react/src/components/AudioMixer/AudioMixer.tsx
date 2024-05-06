@@ -1,18 +1,21 @@
-import React, { useCallback, useEffect, useState } from 'react';
 import { Box, Button, Popover, TextField, Typography } from '@material-ui/core';
+import MicIcon from '@material-ui/icons/Mic';
+import MicOffIcon from '@material-ui/icons/MicOff';
+import VolumeOffIcon from '@material-ui/icons/VolumeOff';
+import VolumeUpIcon from '@material-ui/icons/VolumeUp';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+
+import React, { useCallback, useEffect, useState } from 'react';
+
 import { JSONObject, Message } from '@twilio/conversations';
+
 import { WEBMOTI_CAMERA_1 } from '../../constants';
 import useChatContext from '../../hooks/useChatContext/useChatContext';
 import useLocalAudioToggle from '../../hooks/useLocalAudioToggle/useLocalAudioToggle';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import theme from '../../theme';
-import MicIcon from '@material-ui/icons/Mic';
-import MicOffIcon from '@material-ui/icons/MicOff';
-import VolumeUpIcon from '@material-ui/icons/VolumeUp';
-import VolumeOffIcon from '@material-ui/icons/VolumeOff';
 
 const enum Mode {
   Professor = 'PROFESSOR',
@@ -29,7 +32,7 @@ export default function AudioMixer() {
   const { room, muteParticipant } = useVideoContext();
   const { conversation } = useChatContext();
   const [isAudioEnabled, toggleAudioEnabled] = useLocalAudioToggle();
-  const { isProfessor, sendSystemMsg } = useWebmotiVideoContext();
+  const { isProfessor, isAdmin, sendSystemMsg } = useWebmotiVideoContext();
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [alignment, setAlignment] = useState<Mode | null>(null);
@@ -194,86 +197,93 @@ export default function AudioMixer() {
     sendSystemMsg(conversation, `Mute ${input}`);
   };
 
+  // only show mixer if prof or admin
+  const showMixer = isProfessor || isAdmin;
+
   return (
-    <div>
-      <Button variant="contained" color="primary" onClick={handleOpenPopover}>
-        Mixer
-      </Button>
+    <>
+      {showMixer && (
+        <>
+          <Button variant="contained" color="primary" onClick={handleOpenPopover}>
+            Mixer
+          </Button>
 
-      <Popover
-        open={Boolean(anchorEl)}
-        anchorEl={anchorEl}
-        onClose={handleClosePopover}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Box p={2} display="flex" flexDirection="column" alignItems="center">
-          <ToggleButtonGroup value={alignment} exclusive onChange={handleAlignment}>
-            <ToggleButton
-              value={Mode.Professor}
-              style={{
-                backgroundColor: alignment === Mode.Professor ? theme.palette.secondary.main : undefined,
-                color: alignment === Mode.Professor ? 'white' : undefined,
-              }}
-            >
-              Professor
-            </ToggleButton>
-            <ToggleButton
-              value={Mode.Classroom}
-              style={{
-                backgroundColor: alignment === Mode.Classroom ? theme.palette.secondary.main : undefined,
-                color: alignment === Mode.Classroom ? 'white' : undefined,
-              }}
-            >
-              Classroom
-            </ToggleButton>
-            <ToggleButton
-              value={Mode.Virtual}
-              style={{
-                backgroundColor: alignment === Mode.Virtual ? theme.palette.secondary.main : undefined,
-                color: alignment === Mode.Virtual ? 'white' : undefined,
-              }}
-            >
-              Virtual
-            </ToggleButton>
-          </ToggleButtonGroup>
+          <Popover
+            open={Boolean(anchorEl)}
+            anchorEl={anchorEl}
+            onClose={handleClosePopover}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          >
+            <Box p={2} display="flex" flexDirection="column" alignItems="center">
+              <ToggleButtonGroup value={alignment} exclusive onChange={handleAlignment}>
+                <ToggleButton
+                  value={Mode.Professor}
+                  style={{
+                    backgroundColor: alignment === Mode.Professor ? theme.palette.secondary.main : undefined,
+                    color: alignment === Mode.Professor ? 'white' : undefined,
+                  }}
+                >
+                  Professor
+                </ToggleButton>
+                <ToggleButton
+                  value={Mode.Classroom}
+                  style={{
+                    backgroundColor: alignment === Mode.Classroom ? theme.palette.secondary.main : undefined,
+                    color: alignment === Mode.Classroom ? 'white' : undefined,
+                  }}
+                >
+                  Classroom
+                </ToggleButton>
+                <ToggleButton
+                  value={Mode.Virtual}
+                  style={{
+                    backgroundColor: alignment === Mode.Virtual ? theme.palette.secondary.main : undefined,
+                    color: alignment === Mode.Virtual ? 'white' : undefined,
+                  }}
+                >
+                  Virtual
+                </ToggleButton>
+              </ToggleButtonGroup>
 
-          <Box mt={2}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => sendSystemMsg(conversation, `Toggle ${Devices.ClassMic}`)}
-            >
-              {isClassMicEnabled ? <MicIcon /> : <MicOffIcon />}
-              <Typography variant="body2">Class Mic</Typography>
-            </Button>
-          </Box>
+              <Box mt={2}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => sendSystemMsg(conversation, `Toggle ${Devices.ClassMic}`)}
+                >
+                  {isClassMicEnabled ? <MicIcon /> : <MicOffIcon />}
+                  <Typography variant="body2">Class Mic</Typography>
+                </Button>
+              </Box>
 
-          <Box mt={2}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => sendSystemMsg(conversation, `Toggle ${Devices.ProfSpeaker}`)}
-            >
-              {isProfSpeakerEnabled ? <VolumeUpIcon /> : <VolumeOffIcon />}
-              <Typography variant="body2">Prof Speakers</Typography>
-            </Button>
-          </Box>
+              <Box mt={2}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => sendSystemMsg(conversation, `Toggle ${Devices.ProfSpeaker}`)}
+                >
+                  {isProfSpeakerEnabled ? <VolumeUpIcon /> : <VolumeOffIcon />}
+                  <Typography variant="body2">Prof Speakers</Typography>
+                </Button>
+              </Box>
 
-          <Box mt={2} display="flex">
-            <TextField
-              variant="outlined"
-              label="Participant"
-              value={input}
-              onChange={event => setInput(event.target.value)}
-            />
+              <Box mt={2} display="flex">
+                <TextField
+                  variant="outlined"
+                  label="Participant"
+                  value={input}
+                  onChange={event => setInput(event.target.value)}
+                />
 
-            <Button variant="contained" color="primary" onClick={handleMuteBtnClick}>
-              Mute
-            </Button>
-          </Box>
-        </Box>
-      </Popover>
-    </div>
+                <Button variant="contained" color="primary" onClick={handleMuteBtnClick}>
+                  Mute
+                </Button>
+              </Box>
+            </Box>
+          </Popover>
+        </>
+      )}
+    </>
   );
 }
