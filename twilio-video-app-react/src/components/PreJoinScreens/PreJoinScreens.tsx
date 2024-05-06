@@ -48,9 +48,10 @@ export default function PreJoinScreens() {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (isProfessor) {
+    const suffix = '(Prof)';
+    if (isProfessor && !name.endsWith(suffix)) {
       // append Prof to name
-      setName(`${name} (Prof)`);
+      setName(`${name} ${suffix}`);
     }
 
     // If this app is deployed as a twilio function, don't change the URL because routing isn't supported.
