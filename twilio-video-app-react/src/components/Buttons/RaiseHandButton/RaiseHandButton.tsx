@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import Badge from '@material-ui/core/Badge';
 import Box from '@material-ui/core/Box';
@@ -13,10 +13,10 @@ import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 
 import { JSONObject, Message } from '@twilio/conversations';
 
+import { Tooltip } from '@material-ui/core';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
-import { Tooltip } from '@material-ui/core';
 
 export default function RaiseHandButton() {
   const { room } = useVideoContext();
@@ -26,7 +26,10 @@ export default function RaiseHandButton() {
   const [isHandRaised, setIsHandRaised] = useState(false);
   // the anchor is used so the popover knows where to appear on the screen
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  // const [countdown, setCountdown] = useState(0);
+
+  const buttonCountdownDuration = 30;
+  const [countdown, setCountdown] = useState(0);
+
   const [buttonIntervalID, setButtonIntervalID] = useState<NodeJS.Timeout | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -47,7 +50,12 @@ export default function RaiseHandButton() {
     const mode = isHandRaised ? 'LOWER' : 'RAISE';
     setIsLoading(true);
 
-    try {
+    if (mode === 'RAISE' && !handQueue.includes(name)) {
+      // raise hand
+      sendSystemMsg(conversation, `${name} raised hand`);
+      setHandQueue(prevQueue => [...prevQueue, name]);
+
+      // send request
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -60,27 +68,29 @@ export default function RaiseHandButton() {
         if (response.status === 503) {
           // board not connected to wifi
           alert('Service Offline.');
-          throw new Error('Service Offline');
+        } else {
+          alert(`Unknown error while raising hand: ${response.status}: ${response.statusText}`);
         }
-        // unknown error
-        throw new Error(`Unknown error while raising hand: ${response.status}: ${response.statusText}`);
       }
+    } else if (mode === 'LOWER') {
+      sendSystemMsg(conversation, `${name} lowered hand`);
+      setHandQueue(prevQueue => prevQueue.filter(participantName => participantName !== name));
 
-      const action = mode === 'RAISE' ? 'raised' : 'lowered';
-      sendSystemMsg(conversation, `${name} ${action} hand`);
-
-      if (mode === 'RAISE' && !handQueue.includes(name)) {
-        setHandQueue(prevQueue => [...prevQueue, name]);
-      } else if (mode === 'LOWER') {
-        setHandQueue(prevQueue => prevQueue.filter(participantName => participantName !== name));
-      }
-
-      setIsHandRaised(!isHandRaised);
-    } catch (error) {
-      console.error(`Error ${mode === 'RAISE' ? 'raising' : 'lowering'} hand:`, error);
-    } finally {
-      setIsLoading(false);
+      // start countdown timer for hand
+      setCountdown(buttonCountdownDuration);
+      const intervalId = setInterval(() => {
+        setCountdown(prevCountdown => {
+          if (prevCountdown <= 1) {
+            clearInterval(intervalId);
+            return 0;
+          }
+          return prevCountdown - 1;
+        });
+      }, 1000);
     }
+
+    setIsLoading(false);
+    setIsHandRaised(!isHandRaised);
   }, [conversation, handQueue, isHandRaised, room, sendSystemMsg]);
 
   const handleMouseDown = () => {
@@ -167,11 +177,27 @@ export default function RaiseHandButton() {
           onMouseUp={handleMouseUp}
           variant="contained"
           color={isHandRaised ? 'secondary' : 'primary'}
-          disabled={isLoading}
+          // countdown > 0 for some time after raising hand
+          disabled={isLoading || countdown > 0}
         >
           {isHandRaised ? 'Lower Hand' : 'Raise Hand'}
           {isLoading && (
             <CircularProgress
+              size={24}
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                marginTop: -12,
+                marginLeft: -12,
+              }}
+            />
+          )}
+
+          {countdown > 0 && (
+            <CircularProgress
+              variant="determinate"
+              value={(countdown / buttonCountdownDuration) * 100}
               size={24}
               style={{
                 position: 'absolute',
