@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 import Badge from '@material-ui/core/Badge';
 import Box from '@material-ui/core/Box';
@@ -26,7 +26,7 @@ export default function RaiseHandButton() {
   const [isHandRaised, setIsHandRaised] = useState(false);
   // the anchor is used so the popover knows where to appear on the screen
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const [countdown, setCountdown] = useState(0);
+  // const [countdown, setCountdown] = useState(0);
   const [buttonIntervalID, setButtonIntervalID] = useState<NodeJS.Timeout | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -42,7 +42,7 @@ export default function RaiseHandButton() {
 
   const url = 'https://jmn2f42hjgfv.connect.remote.it/raisehand';
 
-  const toggleHand = async () => {
+  const toggleHand = useCallback(async () => {
     const name = room?.localParticipant?.identity || 'Participant';
     const mode = isHandRaised ? 'LOWER' : 'RAISE';
     setIsLoading(true);
@@ -81,7 +81,7 @@ export default function RaiseHandButton() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [conversation, handQueue, isHandRaised, room, sendSystemMsg]);
 
   const handleMouseDown = () => {
     if (!isHandRaised) {
@@ -93,19 +93,19 @@ export default function RaiseHandButton() {
     }
   };
 
-  const handleGlobalMouseUp = () => {
-    if (isHandRaised) {
-      toggleHand();
-    }
-  };
-
   useEffect(() => {
+    const handleGlobalMouseUp = () => {
+      if (isHandRaised) {
+        toggleHand();
+      }
+    };
+
     document.addEventListener('mouseup', handleGlobalMouseUp);
 
     return () => {
       document.removeEventListener('mouseup', handleGlobalMouseUp);
     };
-  }, [isHandRaised]);
+  }, [isHandRaised, toggleHand]);
 
   const handleMouseUp = () => {
     // Clear the timeout if the mouse is released

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useContext, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useContext } from 'react';
 import {
   Typography,
   makeStyles,
@@ -72,8 +72,8 @@ export default function RoomNameScreen({
   const { user } = useAppState();
   const correctProfessorPassword = 'professor123';
   const correctAdminPassword = 'admin456';
-  const [professorPasswordError, setProfessorPasswordError] = useState(false);
-  const [adminPasswordError, setAdminPasswordError] = useState(false);
+  // const [professorPasswordError, setProfessorPasswordError] = useState(false);
+  // const [adminPasswordError, setAdminPasswordError] = useState(false);
   const webmotiContext = useContext(WebmotiVideoContext);
 
   if (!webmotiContext) {
@@ -96,7 +96,7 @@ export default function RoomNameScreen({
       setIsProfessor(false);
       webmotiContext.setIsProfessor(false);
       webmotiContext.setProfessorsName('');
-      setProfessorPasswordError(false);
+      // setProfessorPasswordError(false);
     }
   };
 
@@ -109,9 +109,9 @@ export default function RoomNameScreen({
       setIsProfessor(true);
       webmotiContext.setIsProfessor(true);
       webmotiContext.setProfessorsName(name);
-      setProfessorPasswordError(false);
+      // setProfessorPasswordError(false);
     } else {
-      setProfessorPasswordError(true);
+      // setProfessorPasswordError(true);
     }
   };
 
@@ -123,7 +123,7 @@ export default function RoomNameScreen({
       setIsAdmin(false);
       webmotiContext.setAdmin(false);
       webmotiContext.setAdminName('');
-      setAdminPasswordError(false);
+      // setAdminPasswordError(false);
     }
   };
 
@@ -136,9 +136,9 @@ export default function RoomNameScreen({
       setIsAdmin(true);
       webmotiContext.setAdmin(true);
       webmotiContext.setAdminName(name);
-      setAdminPasswordError(false);
+      // setAdminPasswordError(false);
     } else {
-      setAdminPasswordError(true);
+      // setAdminPasswordError(true);
     }
   };
 
