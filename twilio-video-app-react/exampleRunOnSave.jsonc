@@ -1,0 +1,11 @@
+// .vscode/settings.json
+{
+    "runOnSave.onlyRunOnManualSave": true,
+    "runOnSave.commands": [
+        {
+            "match": "\\.tsx$",
+            "command": "cd ${workspaceFolder}\\twilio-video-app-react ; npm run lint-fix-imports ${file}",
+            "runIn": "terminal"
+        }
+    ]
+}

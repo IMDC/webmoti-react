@@ -96,6 +96,7 @@
     "test": "cross-env TZ=utc jest --config jest.config.js",
     "eject": "react-scripts eject",
     "lint": "eslint src server",
+    "lint-fix-imports": "eslint --config .eslintrc_on_save.json --fix",
     "server": "ts-node -T -P server/tsconfig.json server/index.ts",
     "typescript:server": "tsc --noEmit -p server/",
     "test:ci": "cross-env TZ=utc jest --config jest.config.js --ci --runInBand --reporters=default --reporters=jest-junit --coverage --silent",
@@ -110,42 +111,11 @@
   },
   "eslintConfig": {
     "extends": [
-      "react-app",
-      "plugin:import/errors",
-      "plugin:import/warnings",
-      "plugin:import/typescript"
-    ],
-    "plugins": [
-      "import"
+      "react-app"
     ],
     "rules": {
       "no-shadow": "off",
-      "@typescript-eslint/no-shadow": 1,
-      "import/order": [
-        "error",
-        {
-          "groups": [
-            "builtin",
-            "external",
-            "internal"
-          ],
-          "pathGroups": [
-            {
-              "pattern": "react",
-              "group": "external",
-              "position": "before"
-            }
-          ],
-          "pathGroupsExcludedImportTypes": [
-            "react"
-          ],
-          "newlines-between": "always",
-          "alphabetize": {
-            "order": "asc",
-            "caseInsensitive": true
-          }
-        }
-      ]
+      "@typescript-eslint/no-shadow": 1
     },
     "overrides": [
       {
