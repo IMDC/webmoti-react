@@ -138,6 +138,18 @@ PEAP networks like the one at TMU aren't supported by default for the raspberry 
             post-down killall -q wpa_supplicant
     ```
 
+3. If you need to use VNC viewer with ethernet, make sure that ethernet has higher priority over wifi. If you don't do this, it will always connect to wifi and you'll need to know the ip address to use VNC viewer.
+
+    Add this to `/etc/dhcpcd.conf`
+
+    ```plaintext
+    interface eth0
+    metric 202
+
+    interface wlan0
+    metric 300
+    ```
+
 ----------------------------------
 
 ## Microphone Function
