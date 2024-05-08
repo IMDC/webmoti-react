@@ -1,4 +1,21 @@
-# webmoti-W.I.P
+# webmoti-W.I.P <!-- omit in toc -->
+
+- [Twilio App](#twilio-app)
+  - [Setup](#setup)
+  - [Running the App locally for developement](#running-the-app-locally-for-developement)
+    - [Local setup](#local-setup)
+  - [Deploying](#deploying)
+  - [Webmoti URL server](#webmoti-url-server)
+- [Standalone Join](#standalone-join)
+  - [Info](#info)
+  - [Setting up the scripts](#setting-up-the-scripts)
+    - [Code changes](#code-changes)
+    - [Autorun](#autorun)
+- [Connecting raspberry pi to secure networks](#connecting-raspberry-pi-to-secure-networks)
+- [Microphone Function](#microphone-function)
+- [RaiseHand Function](#raisehand-function)
+- [Camera Setup](#camera-setup)
+- [ZOOM APP (OLD)](#zoom-app-old)
 
 ## Twilio App
 
@@ -79,6 +96,47 @@ pm2 startup systemd
 pm2 save
 sudo reboot # for testing
 ```
+
+----------------------------------
+
+## Connecting raspberry pi to secure networks
+
+<https://www.miskatonic.org/2019/04/24/networkingpi/>
+
+PEAP networks like the one at TMU aren't supported by default for the raspberry pi so it needs to be configured.
+
+1. Add this to `/etc/wpa_supplicant/wpa_supplicant.conf` and fill in your user details.
+
+    ```plaintext
+    network={
+        ssid=""
+        priority=1
+        proto=RSN
+        key_mgmt=WPA-EAP
+        pairwise=CCMP
+        auth_alg=OPEN
+        eap=PEAP
+        identity=
+        password=hash:
+        phase1="peaplabel=0"
+        phase2="auth=MSCHAPV2"
+        }
+    ```
+
+2. Add this to `/etc/network/interfaces`
+
+    ```plaintext
+    auto lo
+
+    iface lo inet loopback
+    iface eth0 inet dhcp
+
+    allow-hotplug wlan0
+
+    iface wlan0 inet dhcp
+            pre-up wpa_supplicant -B -Dwext -i wlan0 -c/etc/wpa_supplicant/wpa_supplicant.conf
+            post-down killall -q wpa_supplicant
+    ```
 
 ----------------------------------
 
