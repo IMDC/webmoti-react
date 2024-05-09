@@ -12,6 +12,7 @@
     - [Code changes](#code-changes)
     - [Autorun](#autorun)
 - [Connecting raspberry pi to secure networks](#connecting-raspberry-pi-to-secure-networks)
+  - [Network Manager alternative](#network-manager-alternative)
 - [Microphone Function](#microphone-function)
 - [RaiseHand Function](#raisehand-function)
 - [Camera Setup](#camera-setup)
@@ -149,6 +150,12 @@ PEAP networks like the one at TMU aren't supported by default for the raspberry 
     interface wlan0
     metric 300
     ```
+
+### Network Manager alternative
+
+Settings:
+
+<https://www.torontomu.ca/ccs/services/connections/on-campus/wireless/ubuntu/#!tab-1510243563508-step-4>
 
 ----------------------------------
 
