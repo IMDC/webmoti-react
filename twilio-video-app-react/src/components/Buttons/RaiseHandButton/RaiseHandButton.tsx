@@ -188,43 +188,45 @@ export default function RaiseHandButton() {
     <div>
       {/* main raise hand button */}
       <Tooltip title={isHandRaised ? 'Release to lower hand' : 'Click & hold to raise hand'}>
-        <Button
-          onMouseDown={handleMouseDown}
-          onMouseUp={handleMouseUp}
-          variant="contained"
-          color={isHandRaised ? 'secondary' : 'primary'}
-          // countdown > 0 for some time after raising hand
-          disabled={isLoading || countdown > 0}
-        >
-          {isHandRaised ? 'Lower Hand' : 'Raise Hand'}
-          {isLoading && (
-            <CircularProgress
-              size={24}
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                marginTop: -12,
-                marginLeft: -12,
-              }}
-            />
-          )}
+        <span>
+          <Button
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            variant="contained"
+            color={isHandRaised ? 'secondary' : 'primary'}
+            // countdown > 0 for some time after raising hand
+            disabled={isLoading || countdown > 0}
+          >
+            {isHandRaised ? 'Lower Hand' : 'Raise Hand'}
+            {isLoading && (
+              <CircularProgress
+                size={24}
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  marginTop: -12,
+                  marginLeft: -12,
+                }}
+              />
+            )}
 
-          {countdown > 0 && (
-            <CircularProgress
-              variant="determinate"
-              value={(countdown / buttonCountdownDuration) * 100}
-              size={24}
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                marginTop: -12,
-                marginLeft: -12,
-              }}
-            />
-          )}
-        </Button>
+            {countdown > 0 && (
+              <CircularProgress
+                variant="determinate"
+                value={(countdown / buttonCountdownDuration) * 100}
+                size={24}
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  marginTop: -12,
+                  marginLeft: -12,
+                }}
+              />
+            )}
+          </Button>
+        </span>
       </Tooltip>
 
       {/* indicator that shows how many hands are raised */}
