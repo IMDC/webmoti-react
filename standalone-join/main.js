@@ -158,10 +158,11 @@ const retryRequest = async (url, headers, maxRetries, retryDelay, errMsg) => {
     }
     */
   } catch (e) {
-    if (browser) {
-      await browser.close();
-    }
+    // if (browser) {
+    //   await browser.close();
+    // }
     console.error("Puppeteer error:", e.message);
-    process.exit(ERROR_CODES.PUPPETEER_ERROR);
+    // don't exit because pm2 will try to restart it
+    // process.exit(ERROR_CODES.PUPPETEER_ERROR);
   }
 })();
