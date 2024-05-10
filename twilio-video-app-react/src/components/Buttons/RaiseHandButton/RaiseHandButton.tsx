@@ -230,7 +230,8 @@ export default function RaiseHandButton() {
       </Tooltip>
 
       {/* indicator that shows how many hands are raised */}
-      <Badge badgeContent={handQueue.length} color="secondary">
+      {/* need to set overlap to avoid warning */}
+      <Badge badgeContent={handQueue.length} overlap="rectangular" color="secondary">
         {/* hand icon button, click to open queue */}
         <Button onClick={handleOpenPopover} color="default">
           Hands Raised <ExpandMoreIcon />
