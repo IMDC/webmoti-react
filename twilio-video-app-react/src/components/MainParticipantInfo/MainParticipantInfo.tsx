@@ -16,6 +16,7 @@ import usePublications from '../../hooks/usePublications/usePublications';
 import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/useScreenShareParticipant';
 import useTrack from '../../hooks/useTrack/useTrack';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
+import { WEBMOTI_CAMERA_2 } from '../../constants';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -135,7 +136,10 @@ export default function MainParticipantInfo({ participant, children }: MainParti
   const audioPublication = publications.find(p => p.kind === 'audio');
   const audioTrack = useTrack(audioPublication) as LocalAudioTrack | RemoteAudioTrack | undefined;
 
-  const isVideoSwitchedOff = useIsTrackSwitchedOff(videoTrack as LocalVideoTrack | RemoteVideoTrack);
+  // WEBMOTI_CAMERA_2 (board) camera is never switched off
+  const isVideoSwitchedOff =
+    useIsTrackSwitchedOff(videoTrack as LocalVideoTrack | RemoteVideoTrack) &&
+    participant.identity !== WEBMOTI_CAMERA_2;
   const isParticipantReconnecting = useParticipantIsReconnecting(participant);
 
   const isRecording = useIsRecording();

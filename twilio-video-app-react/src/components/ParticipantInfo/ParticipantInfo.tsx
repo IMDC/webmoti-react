@@ -190,7 +190,8 @@ export default function ParticipantInfo({
   const { isCameraOneOff, isCameraTwoOff } = useWebmotiVideoContext();
   const isCameraOffOrVideoDisabled =
     !isVideoEnabled ||
-    isVideoSwitchedOff ||
+    // prevent WEBMOTI_CAMERA_2 (board) from being switched off
+    (participant.identity !== WEBMOTI_CAMERA_2 && isVideoSwitchedOff) ||
     (participant.identity === WEBMOTI_CAMERA_1 && isCameraOneOff) ||
     (participant.identity === WEBMOTI_CAMERA_2 && isCameraTwoOff);
 
