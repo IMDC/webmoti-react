@@ -21,7 +21,7 @@ export const initialSettings: Settings = {
   dominantSpeakerPriority: 'standard',
   bandwidthProfileMode: 'collaboration',
   maxAudioBitrate: '16000',
-  contentPreferencesMode: 'auto',
+  contentPreferencesMode: 'manual',
   clientTrackSwitchOffControl: 'auto',
 };
 

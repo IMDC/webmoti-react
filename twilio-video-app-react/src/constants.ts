@@ -5,8 +5,8 @@ export const BACKGROUND_FILTER_VIDEO_CONSTRAINTS: MediaStreamConstraints['video'
 };
 
 export const DEFAULT_VIDEO_CONSTRAINTS: MediaStreamConstraints['video'] = {
-  width: 1280,
-  height: 720,
+  width: 1920,
+  height: 1080,
   frameRate: 24,
 };
 

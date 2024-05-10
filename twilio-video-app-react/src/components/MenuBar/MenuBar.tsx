@@ -4,26 +4,25 @@ import { Button, Grid, Hidden, Popover, Typography } from '@material-ui/core';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+import Menu from './Menu/Menu';
 import useParticipants from '../../hooks/useParticipants/useParticipants';
 import useRoomState from '../../hooks/useRoomState/useRoomState';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
-
 import { isMobile } from '../../utils';
-
+import AudioMixer from '../AudioMixer/AudioMixer';
+import ModeDisplay from '../AudioMixer/ModeDisplay';
+import BoardQualityButton from '../Buttons/BoardQualityButton/BoardQualityButton';
 import ChangeZoomButton from '../Buttons/ChangeZoomButton/ChangeZoomButton';
 import EndCallButton from '../Buttons/EndCallButton/EndCallButton';
 import MuteClassroomButton from '../Buttons/MuteClassroomButton/MuteClassroomButton';
+import NotifyButton from '../Buttons/NotifyButton/NotifyButton';
 import RaiseHandButton from '../Buttons/RaiseHandButton/RaiseHandButton';
 import ToggleAudioButton from '../Buttons/ToggleAudioButton/ToggleAudioButton';
 import ToggleCameraButton from '../Buttons/ToggleCameraButton/ToggleCameraButton';
 import ToggleCameraButton2 from '../Buttons/ToggleCameraButton2/ToggleCameraButton2';
 // import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
-import AudioMixer from '../AudioMixer/AudioMixer';
 import ToggleScreenShareButton from '../Buttons/ToggleScreenShareButton/ToggleScreenShareButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
-import NotifyButton from '../Buttons/NotifyButton/NotifyButton';
-import Menu from './Menu/Menu';
-import ModeDisplay from '../AudioMixer/ModeDisplay';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -145,6 +144,9 @@ export default function MenuBar() {
               {!isSharingScreen && !isMobile && <ToggleScreenShareButton disabled={isReconnecting} />}
               {/* {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />} */}
               <RaiseHandButton />
+
+              <BoardQualityButton />
+
               <NotifyButton />
               <Hidden mdDown>
                 <Menu />
