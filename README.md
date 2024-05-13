@@ -11,7 +11,8 @@
   - [Setting up the scripts](#setting-up-the-scripts)
     - [Code changes](#code-changes)
     - [Autorun](#autorun)
-- [Connecting raspberry pi to secure networks](#connecting-raspberry-pi-to-secure-networks)
+- [Connecting raspberry pi to secure networks (like TMU)](#connecting-raspberry-pi-to-secure-networks-like-tmu)
+  - [dhcpcd method](#dhcpcd-method)
   - [Network Manager alternative](#network-manager-alternative)
 - [Microphone Function](#microphone-function)
 - [RaiseHand Function](#raisehand-function)
@@ -100,13 +101,13 @@ sudo reboot # for testing
 
 ----------------------------------
 
-## Connecting raspberry pi to secure networks
+## Connecting raspberry pi to secure networks (like TMU)
+
+### dhcpcd method
 
 <https://www.miskatonic.org/2019/04/24/networkingpi/>
 
-PEAP networks like the one at TMU aren't supported by default for the raspberry pi so it needs to be configured.
-
-1. Add this to `/etc/wpa_supplicant/wpa_supplicant.conf` and fill in your user details.
+1. Add this to `/etc/wpa_supplicant/wpa_supplicant.conf` and fill in your user details. Either hash the password with MD4 and input it with the `hash:` prefix or input it in plaintext in quotes.
 
     ```plaintext
     network={
@@ -150,6 +151,16 @@ PEAP networks like the one at TMU aren't supported by default for the raspberry 
     interface wlan0
     metric 300
     ```
+
+4. Make sure NetworkManager is disabled on boot and dhcpcd is enabled
+
+  ```bash
+  sudo systemctl disable NetworkManager
+  sudo systemctl stop NetworkManager
+
+  sudo systemctl enable dhcpcd
+  sudo systemctl start dhcpcd
+  ```
 
 ### Network Manager alternative
 
