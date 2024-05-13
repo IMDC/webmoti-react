@@ -157,6 +157,26 @@ Settings:
 
 <https://www.torontomu.ca/ccs/services/connections/on-campus/wireless/ubuntu/#!tab-1510243563508-step-4>
 
+```plaintext
+Wireless
+
+SSID: TMU
+```
+
+```plaintext
+Wireless Security
+
+Security: WPA & WPA2 Enterprise
+
+Authentication: Protected EAP (PEAP)
+
+CA certificate: https://ai-apps.torontomu.ca/ccssoftware/allryerson/wireless/ca-bundle.crt
+
+Identity: TMU username
+
+Password: TMU password
+```
+
 ----------------------------------
 
 ## Microphone Function
