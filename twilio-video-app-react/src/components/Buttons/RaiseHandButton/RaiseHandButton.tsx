@@ -19,7 +19,7 @@ import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWeb
 export default function RaiseHandButton() {
   const { room } = useVideoContext();
   const { conversation } = useChatContext();
-  const { sendSystemMsg } = useWebmotiVideoContext();
+  const { sendSystemMsg, isWebmotiVideo } = useWebmotiVideoContext();
   const [handQueue, setHandQueue] = useState<string[]>([]);
   const [isHandRaised, setIsHandRaised] = useState(false);
   // the anchor is used so the popover knows where to appear on the screen
@@ -43,9 +43,7 @@ export default function RaiseHandButton() {
 
   const url = 'https://jmn2f42hjgfv.connect.remote.it/raisehand';
 
-  const sendHandRequest = async (mode: string) => {
-    setIsLoading(true);
-
+  const sendHandRequest = async (mode: string, is_silent = false) => {
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -54,9 +52,7 @@ export default function RaiseHandButton() {
       body: new URLSearchParams({ mode }),
     });
 
-    setIsLoading(false);
-
-    if (!response.ok) {
+    if (!response.ok && !is_silent) {
       if (response.status === 503) {
         // board not connected to wifi
         alert('Service Offline.');
@@ -69,23 +65,33 @@ export default function RaiseHandButton() {
   };
 
   // this is run when participant joins
-  // useEffect(() => {
-  //   const initRemoteIt = async () => {
-  //     // the service can be offline here, it's just to make the initial connection
-  //     const response = await sendHandRequest('INIT');
+  useEffect(() => {
+    const initRemoteIt = async () => {
+      const name = room?.localParticipant?.identity || 'Participant';
+      // don't init remote it if not student
+      if (isWebmotiVideo(name)) {
+        return;
+      }
 
-  //     console.log(`Remote.It init: ${response.status}`);
-  //   };
+      // the service can be offline here, it's just to make the initial connection
+      const response = await sendHandRequest('INIT', true);
 
-  //   initRemoteIt();
-  // }, []);
+      console.log(`Remote.It init: ${response.status}`);
+    };
+
+    initRemoteIt();
+    // it should only run once
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const toggleHand = useCallback(async () => {
     const name = room?.localParticipant?.identity || 'Participant';
     const mode = isHandRaised ? 'LOWER' : 'RAISE';
 
     // send request
+    setIsLoading(true);
     await sendHandRequest(mode);
+    setIsLoading(false);
 
     if (mode === 'RAISE' && !handQueue.includes(name)) {
       // raise hand
