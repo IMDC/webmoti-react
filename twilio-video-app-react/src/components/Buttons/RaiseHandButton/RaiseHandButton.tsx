@@ -44,6 +44,8 @@ export default function RaiseHandButton() {
   const url = 'https://jmn2f42hjgfv.connect.remote.it/raisehand';
 
   const sendHandRequest = async (mode: string) => {
+    setIsLoading(true);
+
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -51,6 +53,17 @@ export default function RaiseHandButton() {
       },
       body: new URLSearchParams({ mode }),
     });
+
+    setIsLoading(false);
+
+    if (!response.ok) {
+      if (response.status === 503) {
+        // board not connected to wifi
+        alert('Service Offline.');
+      } else {
+        alert(`Unknown error while raising hand: ${response.status}: ${response.statusText}`);
+      }
+    }
 
     return response;
   };
@@ -70,24 +83,14 @@ export default function RaiseHandButton() {
   const toggleHand = useCallback(async () => {
     const name = room?.localParticipant?.identity || 'Participant';
     const mode = isHandRaised ? 'LOWER' : 'RAISE';
-    setIsLoading(true);
+
+    // send request
+    await sendHandRequest(mode);
 
     if (mode === 'RAISE' && !handQueue.includes(name)) {
       // raise hand
       sendSystemMsg(conversation, `${name} raised hand`);
       setHandQueue(prevQueue => [...prevQueue, name]);
-
-      // send request
-      const response = await sendHandRequest(mode);
-
-      if (!response.ok) {
-        if (response.status === 503) {
-          // board not connected to wifi
-          alert('Service Offline.');
-        } else {
-          alert(`Unknown error while raising hand: ${response.status}: ${response.statusText}`);
-        }
-      }
     } else if (mode === 'LOWER') {
       sendSystemMsg(conversation, `${name} lowered hand`);
       setHandQueue(prevQueue => prevQueue.filter(participantName => participantName !== name));
@@ -105,7 +108,6 @@ export default function RaiseHandButton() {
       }, 1000);
     }
 
-    setIsLoading(false);
     setIsHandRaised(!isHandRaised);
   }, [conversation, handQueue, isHandRaised, room, sendSystemMsg]);
 
