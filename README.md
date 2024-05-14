@@ -1,5 +1,7 @@
 # webmoti-W.I.P <!-- omit in toc -->
 
+[Project Tasks](https://github.com/orgs/IMDC/projects/2)
+
 - [Twilio App](#twilio-app)
   - [Setup](#setup)
   - [Running the App locally for developement](#running-the-app-locally-for-developement)
@@ -70,8 +72,6 @@ Undeploy the app: `npm run delete`
 
 The raspberry pi boards are able to always know the latest url and password by sending a request to this server (twilio-video-app-react/server/get_url.js). This is hosted as a twilio serverless function and can be edited in the [twilio console](https://console.twilio.com/us1/develop/functions/services).
 
-----------------------------------
-
 ## Standalone Join
 
 Both raspberry pi boards automatically join the twilio room when they're booted using a js script (standalone-join/main.js).
@@ -98,8 +98,6 @@ pm2 startup systemd
 pm2 save
 sudo reboot # for testing
 ```
-
-----------------------------------
 
 ## Connecting raspberry pi to secure networks (like TMU)
 
@@ -188,8 +186,6 @@ Identity: TMU username
 Password: TMU password
 ```
 
-----------------------------------
-
 ## Microphone Function
 
 - code is hosted locally on a PICO.
@@ -198,27 +194,19 @@ Password: TMU password
 - Once code and local hotspot is running from the PICO; Use any touchscreen device to connect to this network and hosted webpage.
 - Clicking on any of the 5x4 grid boxes will allow proper communication to the microphone.
 
-----------------------------------
-
 ## RaiseHand Function
 
 - Two files hosted locally on a PICO
 - Main.py and index.html
 - Runs on hotspot connection via Raspberry Pi plugged in via ETH
 - Once connection is made allow that connection to be made globally via: <https://www.remote.it/getting-started/raspberry-pi>
-- your routing for the link on the board must be [WEBPAGE IP].com/raisehand; once properly entered remote.it will provide a live link.
+- your routing for the link on the board must be `[WEBPAGE IP].com/raisehand` and the Service URL must be `http://localhost/raisehand`. Once properly entered remote.it will provide a live link.
 - Raising your hand is now possible via the locally hosted code, hotspot connection, and proper remote.it IP routing.
-
-----------------------------------
 
 ## Camera Setup
 
 - Follow the intstructions as stated in the txt file located within the Rasp-pi Zoom folder.
 
-----------------------------------
-
 ## ZOOM APP (OLD)
 
 - The Zoom App (web-moti-alpha) can be properly configured via the following youtube tutorial: <https://shorturl.at/ijHT9>
-
-----------------------------------
