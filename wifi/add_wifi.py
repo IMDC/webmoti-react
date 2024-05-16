@@ -1,4 +1,5 @@
 import configparser
+import hashlib
 import logging
 import os
 from pathlib import Path
@@ -13,6 +14,12 @@ USB_PATH = Path("D:\\")
 TYPES = ["SECURE", "REGULAR", "OPEN"]
 
 
+def md4_hash(input_str):
+    h = hashlib.new("md4")
+    h.update(input_str.encode())
+    return h.hexdigest()
+
+
 def get_peap_config(ssid, username, password):
     return f"""
         network={{
@@ -24,7 +31,7 @@ def get_peap_config(ssid, username, password):
             auth_alg=OPEN
             eap=PEAP
             identity={username}
-            password=hash:{password}
+            password=hash:{md4_hash(password)}
             phase1="peaplabel=0"
             phase2="auth=MSCHAPV2"
             }}
@@ -56,11 +63,11 @@ def stop(msg):
 
 
 def get_value(config, key):
-    value = config.get(CONFIG_SECTION, key, fallback=None)
+    value = config.get(CONFIG_SECTION, key, fallback=None).upper()
     # allow for empty/none values in config file
     if value in ("", "NONE"):
         return None
-    return value.upper()
+    return value
 
 
 def write_config(config_path):
