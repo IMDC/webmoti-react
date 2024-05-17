@@ -16,6 +16,7 @@
 - [Connecting raspberry pi to secure networks (like TMU)](#connecting-raspberry-pi-to-secure-networks-like-tmu)
   - [dhcpcd method](#dhcpcd-method)
   - [Network Manager alternative](#network-manager-alternative)
+- [Auto wifi setup](#auto-wifi-setup)
 - [Microphone Function](#microphone-function)
 - [RaiseHand Function](#raisehand-function)
 - [Camera Setup](#camera-setup)
@@ -185,6 +186,36 @@ Identity: TMU username
 
 Password: TMU password
 ```
+
+## Auto wifi setup
+
+Make sure the usb drive is named `Webmoti`.
+
+Create this file `/etc/udev/rules.d/99-usb-autorun.rules`. This rule will trigger the service below when a usb is plugged in.
+
+```bash
+ACTION=="add", \
+KERNEL=="sd[a-z][0-9]", \
+SUBSYSTEM=="block", \
+ENV{SYSTEMD_WANTS}="usb-auto-wifi.service"
+```
+
+Then create `# /etc/systemd/system/usb-auto-wifi.service`. Replace USERNAME with `imdc1` or `imdc2`. This service will run after the usb mounts.
+
+```ini
+[Unit]
+Description=Run script after USB is mounted
+After=media-USERNAME-Webmoti.mount
+
+[Service]
+ExecStart=/usr/bin/python3 /home/USERNAME/add_wifi.py
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Run `sudo systemctl enable usb-auto-wifi.service` to enable the service.
 
 ## Microphone Function
 
