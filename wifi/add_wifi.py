@@ -1,13 +1,18 @@
+#!/usr/bin/env python3
+
 import configparser
 import hashlib
 import logging
 import os
+import textwrap
 from pathlib import Path
+
+# imdc1 or imdc2
+USERNAME = "imdc1"
 
 CONFIG_NAME = "wifi.ini"
 CONFIG_SECTION = "WIFI"
 WPA_PATH = Path("/etc/wpa_supplicant/wpa_supplicant.conf")
-USB_PATH = Path("D:\\")
 # SECURE: WPA-EAP + PEAP
 # REGULAR: WPA-PSK
 # OPEN: No password
@@ -22,40 +27,43 @@ def md4_hash(input_str):
 
 
 def get_peap_config(ssid, username, password):
-    return f"""
-        network={{
-            ssid="{ssid}"
-            priority=1
-            proto=RSN
-            key_mgmt=WPA-EAP
-            pairwise=CCMP
-            auth_alg=OPEN
-            eap=PEAP
-            identity={username}
-            password=hash:{md4_hash(password)}
-            phase1="peaplabel=0"
-            phase2="auth=MSCHAPV2"
-            }}
+    config = f"""
+                network={{
+                    ssid="{ssid}"
+                    priority=1
+                    proto=RSN
+                    key_mgmt=WPA-EAP
+                    pairwise=CCMP
+                    auth_alg=OPEN
+                    eap=PEAP
+                    identity={username}
+                    password=hash:{md4_hash(password)}
+                    phase1="peaplabel=0"
+                    phase2="auth=MSCHAPV2"
+                    }}
     """
+    return textwrap.dedent(config)
 
 
 def get_psk_config(ssid, password):
-    return f"""
-        network={{
-            ssid="{ssid}"
-            psk="{password}"
-            key_mgmt=WPA-PSK
-        }}
+    config = f"""
+                network={{
+                    ssid="{ssid}"
+                    psk="{password}"
+                    key_mgmt=WPA-PSK
+                }}
     """
+    return textwrap.dedent(config)
 
 
 def get_open_config(ssid):
-    return f"""
-        network={{
-            ssid="{ssid}"
-            key_mgmt=NONE
-        }}
+    config = f"""
+                network={{
+                    ssid="{ssid}"
+                    key_mgmt=NONE
+                }}
     """
+    return textwrap.dedent(config)
 
 
 def validate_config(lines):
@@ -135,6 +143,9 @@ def validate_config(lines):
         if key not in valid_keys:
             stop(f"Invalid key found: {key}")
 
+        if not value:
+            stop(f"Value is empty for key: {key}")
+
         expected_type = valid_keys[key]["type"]
         try:
             if expected_type == int:
@@ -157,8 +168,8 @@ def validate_config(lines):
     return config
 
 
-def get_custom_config(filename):
-    path = USB_PATH / filename
+def get_custom_config(usb_path, filename):
+    path = usb_path / filename
 
     if not path.is_file():
         stop("Wifi config file not found")
@@ -177,7 +188,7 @@ def get_custom_config(filename):
 
 def stop(msg):
     logging.error(f"{msg}\n")
-    exit(1)
+    exit(2)
 
 
 def get_value(config, key):
@@ -191,7 +202,7 @@ def get_value(config, key):
     return value
 
 
-def write_config(config_path):
+def write_config(usb_path, config_path):
     logging.info("Reading wifi config file")
     config = configparser.ConfigParser()
     config.read(config_path)
@@ -233,28 +244,37 @@ def write_config(config_path):
         if wifi_config_name is None:
             stop("Custom config filename not found")
 
-        config_str = get_custom_config(wifi_config_name)
+        config_str = get_custom_config(usb_path, wifi_config_name)
 
     wpa_conf_path = Path(WPA_PATH)
     if not wpa_conf_path.is_file():
         stop("wpa_supplicant.conf not found")
 
+    logging.info("Writing to wpa_supplicant.conf")
+
     # write config_str to wpa_supplicant.conf
     with wpa_conf_path.open("a") as f:
+        # empty line between network blocks
+        f.write("\n")
         f.write(config_str)
+
+    logging.info("Successfully added wifi network")
 
 
 def main():
-    if not USB_PATH.is_dir():
-        print("USB not found")
-        exit(1)
+    # usb must be named "Webmoti"
+    usb_path = Path(f"/media/{USERNAME}/Webmoti")
+
+    if not usb_path.is_dir():
+        print("Webmoti USB not found")
+        exit(3)
 
     # setup logging (logs are saved on usb key)
     log_format = "%(asctime)s - %(levelname)s - %(message)s"
     logging.basicConfig(
         level=logging.INFO,
         format=log_format,
-        filename=USB_PATH / "wifi_debug.log",
+        filename=usb_path / "wifi_debug.log",
         filemode="a",
     )
 
@@ -266,15 +286,15 @@ def main():
     logging.info("Found USB drive")
 
     # make sure root access
-    # if os.geteuid() != 0:
-    #     stop("Couldn't write to file, script doesn't have root")
+    if os.geteuid() != 0:
+        stop("Couldn't write to file, script doesn't have root")
 
-    config_path = USB_PATH / CONFIG_NAME
+    config_path = usb_path / CONFIG_NAME
     if not config_path.is_file():
         stop("Wifi config not found")
     logging.info("Found wifi config file")
 
-    write_config(config_path)
+    write_config(usb_path, config_path)
 
 
 if __name__ == "__main__":
