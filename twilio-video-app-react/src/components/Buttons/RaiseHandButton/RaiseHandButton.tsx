@@ -134,10 +134,19 @@ export default function RaiseHandButton() {
       }
     };
 
+    const handleKeyPress = (event: KeyboardEvent) => {
+      // shortcut is r key
+      if (event.key === 'r') {
+        toggleHand();
+      }
+    };
+
     document.addEventListener('mouseup', handleGlobalMouseUp);
+    document.addEventListener('keydown', handleKeyPress);
 
     return () => {
       document.removeEventListener('mouseup', handleGlobalMouseUp);
+      document.removeEventListener('keydown', handleKeyPress);
     };
   }, [isHandRaised, toggleHand]);
 
