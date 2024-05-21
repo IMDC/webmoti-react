@@ -264,13 +264,41 @@ def write_config(usb_path, config_path):
 
     logging.info("Writing to wpa_supplicant.conf")
 
-    # write config_str to wpa_supplicant.conf
-    with wpa_conf_path.open("a") as f:
-        # empty line between network blocks
+    with wpa_conf_path.open("a+") as f:
+        # check if config already in wpa_supplicant.conf
+        f.seek(0)
+        contents = f.read()
+        if config_str in contents:
+            stop("Config is already in wpa_supplicant.conf")
+
+        # write config_str to wpa_supplicant.conf with empty line before
         f.write("\n")
         f.write(config_str)
 
     logging.info("Successfully added wifi network")
+
+
+def poll(interval, timeout, poll_func, fail_msg, is_silent=False):
+    start_time = time.time()
+    while time.time() - start_time < timeout:
+        # sleep first before checking
+        if not is_silent:
+            logging.info("Polling...")
+        time.sleep(interval)
+
+        try:
+            success = poll_func()
+            if success:
+                return True
+        except Exception as e:
+            if not is_silent:
+                stop(f"Error: {e}")
+
+    if not is_silent:
+        logging.error(fail_msg)
+        stop(f"{timeout} seconds passed, exiting now")
+
+    return False
 
 
 def connect_to_wifi():
@@ -279,6 +307,18 @@ def connect_to_wifi():
         # close old wpa_supplicant
         # if wpa_supplicant isn't running, this has a non 0 exit code, so check=False
         subprocess.run(["sudo", "killall", "-q", "wpa_supplicant"])
+
+        def check_wpa():
+            response = subprocess.run(["pgrep", "-x", "wpa_supplicant"])
+            return response.returncode == 0
+
+        WPA_INTERVAL = 3
+        WPA_TIMEOUT = 12
+        fail_msg = "Couldn't stop old wpa_supplicant process"
+
+        # allow previous wpa_supplicant time to exit gracefully
+        poll(WPA_INTERVAL, WPA_TIMEOUT, check_wpa, fail_msg)
+
         # run wpa_supplicant in background
         subprocess.run(
             [
@@ -298,31 +338,29 @@ def connect_to_wifi():
 
     logging.info("Restarted wpa_supplicant")
 
+    def check_wifi():
+        # check google's server
+        response = subprocess.run(["ping", "-c", "1", "google.com"])
+        return response.returncode == 0
+
     # keep checking until wifi connects or timeout
-    start_time = time.time()
-    while time.time() - start_time < CONNECTION_TIMEOUT:
-        try:
-            # check google's server
-            response = subprocess.run(["ping", "-c", "1", "google.com"])
-            if response.returncode == 0:
-                return
-        except subprocess.CalledProcessError:
-            stop("Couldn't verify connection")
-
-        logging.info("Connecting...")
-        time.sleep(CHECK_INTERVAL)
-
-    stop(f"{CONNECTION_TIMEOUT} seconds passed without connecting, exiting now")
+    fail_msg = "Couldn't connect to wifi"
+    poll(CHECK_INTERVAL, CONNECTION_TIMEOUT, check_wifi, fail_msg)
 
 
 def main():
-    # make sure usb is mounted
-    time.sleep(2.5)
-
     # usb must be named "Webmoti"
     usb_path = Path(f"/media/{USERNAME}/Webmoti")
 
-    if not usb_path.is_dir():
+    def check_usb():
+        return usb_path.is_dir()
+
+    # wait for usb to mount for 30 seconds
+    USB_INTERVAL = 2.5
+    USB_TIMEOUT = 30
+    success = poll(USB_INTERVAL, USB_TIMEOUT, check_usb, "", is_silent=True)
+
+    if not success:
         print("Webmoti USB not found")
         exit(3)
 
@@ -342,18 +380,23 @@ def main():
 
     logging.info("Found USB drive")
 
-    # make sure root access
-    if os.geteuid() != 0:
-        stop("Couldn't write to file, script doesn't have root")
+    try:
+        # make sure root access
+        if os.geteuid() != 0:
+            stop("Couldn't write to file, script doesn't have root")
 
-    config_path = usb_path / CONFIG_NAME
-    if not config_path.is_file():
-        stop("Wifi config not found")
-    logging.info("Found wifi config file")
+        config_path = usb_path / CONFIG_NAME
+        if not config_path.is_file():
+            stop("Wifi config not found")
+        logging.info("Found wifi config file")
 
-    write_config(usb_path, config_path)
+        write_config(usb_path, config_path)
 
-    connect_to_wifi()
+        connect_to_wifi()
+
+    except Exception as e:
+        logging.exception("Error in main")
+        stop(f"Unknown error: {e}")
 
     logging.info("Connected to wifi\n")
 
