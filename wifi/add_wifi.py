@@ -4,11 +4,14 @@ import configparser
 import hashlib
 import logging
 import os
+import subprocess
 import textwrap
+import time
 from pathlib import Path
 
 # imdc1 or imdc2
 USERNAME = "imdc1"
+
 
 CONFIG_NAME = "wifi.ini"
 CONFIG_SECTION = "WIFI"
@@ -19,10 +22,14 @@ WPA_PATH = Path("/etc/wpa_supplicant/wpa_supplicant.conf")
 # CUSTOM: From file
 TYPES = ["SECURE", "REGULAR", "OPEN", "CUSTOM"]
 
+# for connecting to wifi
+CONNECTION_TIMEOUT = 60
+CHECK_INTERVAL = 5
+
 
 def md4_hash(input_str):
     h = hashlib.new("md4")
-    h.update(input_str.encode())
+    h.update(input_str.encode("utf-16le"))
     return h.hexdigest()
 
 
@@ -36,7 +43,7 @@ def get_peap_config(ssid, username, password):
                     pairwise=CCMP
                     auth_alg=OPEN
                     eap=PEAP
-                    identity={username}
+                    identity="{username}"
                     password=hash:{md4_hash(password)}
                     phase1="peaplabel=0"
                     phase2="auth=MSCHAPV2"
@@ -209,8 +216,11 @@ def write_config(usb_path, config_path):
 
     wifi_type = get_value(config, "type")
     logging.info(f"Wifi type: {wifi_type}")
-    if wifi_type is not None and wifi_type.upper() not in TYPES:
-        stop("Invalid wifi type")
+    if wifi_type is None:
+        stop("Wifi type not found")
+
+    # wifi type is case insensitive
+    wifi_type = wifi_type.upper()
 
     wifi_ssid = get_value(config, "name")
     logging.info(f"Wifi name: {wifi_ssid}")
@@ -221,7 +231,7 @@ def write_config(usb_path, config_path):
     logging.info(f"Wifi username: {wifi_username}")
 
     wifi_password = get_value(config, "password")
-    logging.info(f"Wifi password: {wifi_password}")
+    logging.info(f"Wifi password: {'*' * len(wifi_password)}")
 
     config_str = ""
     if wifi_type == "SECURE":
@@ -238,11 +248,13 @@ def write_config(usb_path, config_path):
         config_str = get_psk_config(wifi_ssid, wifi_password)
     elif wifi_type == "OPEN":
         config_str = get_open_config(wifi_ssid)
-    else:
+    elif wifi_type == "CUSTOM":
         wifi_config_name = get_value(config, "filename")
         logging.info(f"Wifi custom config: {wifi_config_name}")
         if wifi_config_name is None:
             stop("Custom config filename not found")
+    else:
+        stop("Invalid wifi type")
 
         config_str = get_custom_config(usb_path, wifi_config_name)
 
@@ -261,7 +273,52 @@ def write_config(usb_path, config_path):
     logging.info("Successfully added wifi network")
 
 
+def connect_to_wifi():
+    # restart wpa_supplicant so rasp pi connects to the new network
+    try:
+        # close old wpa_supplicant
+        # if wpa_supplicant isn't running, this has a non 0 exit code, so check=False
+        subprocess.run(["sudo", "killall", "-q", "wpa_supplicant"])
+        # run wpa_supplicant in background
+        subprocess.run(
+            [
+                "sudo",
+                "wpa_supplicant",
+                "-B",
+                "-i",
+                "wlan0",
+                "-c",
+                "/etc/wpa_supplicant/wpa_supplicant.conf",
+                "-Dnl80211",
+            ],
+            check=True,
+        )
+    except subprocess.CalledProcessError as e:
+        stop(f"Failed to restart wpa_supplicant: {e}")
+
+    logging.info("Restarted wpa_supplicant")
+
+    # keep checking until wifi connects or timeout
+    start_time = time.time()
+    while time.time() - start_time < CONNECTION_TIMEOUT:
+        try:
+            # check google's server
+            response = subprocess.run(["ping", "-c", "1", "google.com"])
+            if response.returncode == 0:
+                return
+        except subprocess.CalledProcessError:
+            stop("Couldn't verify connection")
+
+        logging.info("Connecting...")
+        time.sleep(CHECK_INTERVAL)
+
+    stop(f"{CONNECTION_TIMEOUT} seconds passed without connecting, exiting now")
+
+
 def main():
+    # make sure usb is mounted
+    time.sleep(2.5)
+
     # usb must be named "Webmoti"
     usb_path = Path(f"/media/{USERNAME}/Webmoti")
 
@@ -295,6 +352,10 @@ def main():
     logging.info("Found wifi config file")
 
     write_config(usb_path, config_path)
+
+    connect_to_wifi()
+
+    logging.info("Connected to wifi\n")
 
 
 if __name__ == "__main__":
