@@ -1,18 +1,22 @@
 import React, { useCallback, useEffect, useState } from 'react';
+
+import { Grid, MenuItem, Select, Slider } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
+import VolumeDown from '@material-ui/icons/VolumeDown';
+import VolumeUp from '@material-ui/icons/VolumeUp';
+import { JSONObject, Message } from '@twilio/conversations';
+
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import soundsFile from '../../../sounds/ClearAnnounceTones.wav';
-import professor_1 from '../../../sounds/speech/professor_1.mp3';
-import professor_2 from '../../../sounds/speech/professor_2.mp3';
-import professor_3 from '../../../sounds/speech/professor_3.mp3';
 import excuse_me_1 from '../../../sounds/speech/excuse_me_professor_1.mp3';
 import excuse_me_2 from '../../../sounds/speech/excuse_me_professor_2.mp3';
 import question_1 from '../../../sounds/speech/i_have_a_question_1.mp3';
 import question_2 from '../../../sounds/speech/i_have_a_question_2.mp3';
-import { JSONObject, Message } from '@twilio/conversations';
-import { MenuItem, Select } from '@material-ui/core';
+import professor_1 from '../../../sounds/speech/professor_1.mp3';
+import professor_2 from '../../../sounds/speech/professor_2.mp3';
+import professor_3 from '../../../sounds/speech/professor_3.mp3';
 
 interface SoundEntry {
   sound: string;
@@ -38,6 +42,8 @@ export default function NotifyButton() {
   const { conversation } = useChatContext();
   const { sendSystemMsg, isProfessor } = useWebmotiVideoContext();
 
+  const [volume, setVolume] = useState(50);
+
   const [soundKey, setSoundKey] = useState(Object.keys(Sounds)[0]);
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -45,11 +51,17 @@ export default function NotifyButton() {
     setSoundKey(key);
   };
 
+  const handleVolumeSliderChange = (event: any, newValue: number | number[]) => {
+    setVolume(newValue as number);
+  };
+
   const playSetSound = useCallback(() => {
     const sound = Sounds[soundKey];
     const audio = new Audio(sound.sound);
+    // volume is 0 to 1 but slider is 1 to 100
+    audio.volume = volume / 100;
     audio.play();
-  }, [soundKey]);
+  }, [soundKey, volume]);
 
   const notifyProfessor = () => {
     if (!isProfessor) {
@@ -96,6 +108,20 @@ export default function NotifyButton() {
           </MenuItem>
         ))}
       </Select>
+
+      <Grid container spacing={2}>
+        <Grid item>
+          <VolumeUp />
+        </Grid>
+
+        <Grid item xs>
+          <Slider value={volume} onChange={handleVolumeSliderChange} />
+        </Grid>
+
+        <Grid item>
+          <VolumeDown />
+        </Grid>
+      </Grid>
     </>
   );
 }

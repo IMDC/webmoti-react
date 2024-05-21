@@ -15,7 +15,6 @@ import BoardQualityButton from '../Buttons/BoardQualityButton/BoardQualityButton
 import ChangeZoomButton from '../Buttons/ChangeZoomButton/ChangeZoomButton';
 import EndCallButton from '../Buttons/EndCallButton/EndCallButton';
 import MuteClassroomButton from '../Buttons/MuteClassroomButton/MuteClassroomButton';
-import NotifyButton from '../Buttons/NotifyButton/NotifyButton';
 import RaiseHandButton from '../Buttons/RaiseHandButton/RaiseHandButton';
 import ToggleAudioButton from '../Buttons/ToggleAudioButton/ToggleAudioButton';
 import ToggleCameraButton from '../Buttons/ToggleCameraButton/ToggleCameraButton';
@@ -23,6 +22,7 @@ import ToggleCameraButton2 from '../Buttons/ToggleCameraButton2/ToggleCameraButt
 // import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleScreenShareButton from '../Buttons/ToggleScreenShareButton/ToggleScreenShareButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
+import SoundsPopover from '../SoundsPopover/SoundsPopover';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -147,7 +147,7 @@ export default function MenuBar() {
 
               <BoardQualityButton />
 
-              <NotifyButton />
+              <SoundsPopover />
               <Hidden mdDown>
                 <Menu />
               </Hidden>
