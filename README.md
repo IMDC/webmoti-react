@@ -117,7 +117,7 @@ sudo reboot # for testing
         pairwise=CCMP
         auth_alg=OPEN
         eap=PEAP
-        identity=
+        identity=""
         password=hash:
         phase1="peaplabel=0"
         phase2="auth=MSCHAPV2"
@@ -135,7 +135,7 @@ sudo reboot # for testing
     allow-hotplug wlan0
 
     iface wlan0 inet dhcp
-            pre-up wpa_supplicant -B -Dwext -i wlan0 -c/etc/wpa_supplicant/wpa_supplicant.conf
+            pre-up wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf -Dnl80211
             post-down killall -q wpa_supplicant
     ```
 
@@ -210,6 +210,8 @@ After=media-USERNAME-Webmoti.mount
 [Service]
 ExecStart=/usr/bin/python3 /home/USERNAME/add_wifi.py
 Type=oneshot
+TimeoutSec=300
+RemainAfterExit=yes
 
 [Install]
 WantedBy=multi-user.target
