@@ -278,14 +278,9 @@ def write_config(usb_path, config_path):
     logging.info("Successfully added wifi network")
 
 
-def poll(interval, timeout, poll_func, fail_msg, is_silent=False):
+def poll(interval, timeout, poll_func, fail_msg, poll_msg, is_silent=False):
     start_time = time.time()
     while time.time() - start_time < timeout:
-        # sleep first before checking
-        if not is_silent:
-            logging.info("Polling...")
-        time.sleep(interval)
-
         try:
             success = poll_func()
             if success:
@@ -293,6 +288,10 @@ def poll(interval, timeout, poll_func, fail_msg, is_silent=False):
         except Exception as e:
             if not is_silent:
                 stop(f"Error: {e}")
+
+        if not is_silent:
+            logging.info(poll_msg)
+        time.sleep(interval)
 
     if not is_silent:
         logging.error(fail_msg)
@@ -315,10 +314,11 @@ def connect_to_wifi():
 
         WPA_INTERVAL = 3
         WPA_TIMEOUT = 12
+        poll_msg = "Restarting wpa_supplicant..."
         fail_msg = "Couldn't stop old wpa_supplicant process"
 
         # allow previous wpa_supplicant time to exit gracefully
-        poll(WPA_INTERVAL, WPA_TIMEOUT, check_wpa, fail_msg)
+        poll(WPA_INTERVAL, WPA_TIMEOUT, check_wpa, fail_msg, poll_msg)
 
         # run wpa_supplicant in background
         subprocess.run(
@@ -345,8 +345,9 @@ def connect_to_wifi():
         return response.returncode == 0
 
     # keep checking until wifi connects or timeout
+    poll_msg = "Connecting..."
     fail_msg = "Couldn't connect to wifi"
-    poll(CHECK_INTERVAL, CONNECTION_TIMEOUT, check_wifi, fail_msg)
+    poll(CHECK_INTERVAL, CONNECTION_TIMEOUT, check_wifi, fail_msg, poll_msg)
 
 
 def main():
@@ -359,7 +360,7 @@ def main():
     # wait for usb to mount for 30 seconds
     USB_INTERVAL = 2.5
     USB_TIMEOUT = 30
-    success = poll(USB_INTERVAL, USB_TIMEOUT, check_usb, "", is_silent=True)
+    success = poll(USB_INTERVAL, USB_TIMEOUT, check_usb, "", "", is_silent=True)
 
     if not success:
         print("Webmoti USB not found")
