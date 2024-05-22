@@ -310,7 +310,8 @@ def connect_to_wifi():
 
         def check_wpa():
             response = subprocess.run(["pgrep", "-x", "wpa_supplicant"])
-            return response.returncode == 0
+            # pgrep returns 0 if found process
+            return response.returncode != 0
 
         WPA_INTERVAL = 3
         WPA_TIMEOUT = 12
