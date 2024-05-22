@@ -11,6 +11,8 @@ from pathlib import Path
 
 # imdc1 or imdc2
 USERNAME = "imdc1"
+# usb must be named "Webmoti"
+USB_PATH = Path(f"/media/{USERNAME}/Webmoti")
 
 
 CONFIG_NAME = "wifi.ini"
@@ -175,8 +177,8 @@ def validate_config(lines):
     return config
 
 
-def get_custom_config(usb_path, filename):
-    path = usb_path / filename
+def get_custom_config(filename):
+    path = USB_PATH / filename
 
     if not path.is_file():
         stop("Wifi config file not found")
@@ -194,7 +196,8 @@ def get_custom_config(usb_path, filename):
 
 
 def stop(msg):
-    logging.error(f"{msg}\n")
+    logging.error(f"{msg}")
+    unmount_usb()
     exit(2)
 
 
@@ -209,7 +212,7 @@ def get_value(config, key):
     return value
 
 
-def write_config(usb_path, config_path):
+def write_config(config_path):
     logging.info("Reading wifi config file")
     config = configparser.ConfigParser()
     config.read(config_path)
@@ -256,7 +259,7 @@ def write_config(usb_path, config_path):
     else:
         stop("Invalid wifi type")
 
-        config_str = get_custom_config(usb_path, wifi_config_name)
+        config_str = get_custom_config(wifi_config_name)
 
     wpa_conf_path = Path(WPA_PATH)
     if not wpa_conf_path.is_file():
@@ -349,13 +352,34 @@ def connect_to_wifi():
     fail_msg = "Couldn't connect to wifi"
     poll(CHECK_INTERVAL, CONNECTION_TIMEOUT, check_wifi, fail_msg, poll_msg)
 
+    logging.info("Connected to wifi\n")
+
+
+def unmount_usb():
+    logging.info(f"Unmounting {USB_PATH}...")
+
+    # check if in desktop mode (can unmount manually in desktop mode)
+    try:
+        # Xorg process means desktop mode
+        subprocess.check_output(["pgrep", "-x", "Xorg"])
+        logging.info(f"Desktop mode detected, not unmounting usb\n")
+        return
+    except subprocess.CalledProcessError:
+        # not found, continue to unmount usb
+        pass
+
+    try:
+        # -l makes it try to unmount as soon as not busy
+        subprocess.run(["umount", "-l", USB_PATH], check=True)
+    except subprocess.CalledProcessError as e:
+        logging.error(f"Failed to unmount the usb: {e}")
+
+    logging.info("Successfully unmounted usb\n")
+
 
 def main():
-    # usb must be named "Webmoti"
-    usb_path = Path(f"/media/{USERNAME}/Webmoti")
-
     def check_usb():
-        return usb_path.is_dir()
+        return USB_PATH.is_dir()
 
     # wait for usb to mount for 30 seconds
     USB_INTERVAL = 2.5
@@ -371,7 +395,7 @@ def main():
     logging.basicConfig(
         level=logging.INFO,
         format=log_format,
-        filename=usb_path / "wifi_debug.log",
+        filename=USB_PATH / "wifi_debug.log",
         filemode="a",
     )
 
@@ -387,12 +411,12 @@ def main():
         if os.geteuid() != 0:
             stop("Couldn't write to file, script doesn't have root")
 
-        config_path = usb_path / CONFIG_NAME
+        config_path = USB_PATH / CONFIG_NAME
         if not config_path.is_file():
             stop("Wifi config not found")
         logging.info("Found wifi config file")
 
-        write_config(usb_path, config_path)
+        write_config(config_path)
 
         connect_to_wifi()
 
@@ -400,7 +424,7 @@ def main():
         logging.exception("Error in main")
         stop(f"Unknown error: {e}")
 
-    logging.info("Connected to wifi\n")
+    unmount_usb()
 
 
 if __name__ == "__main__":
