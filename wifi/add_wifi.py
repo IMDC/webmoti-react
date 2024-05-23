@@ -272,7 +272,9 @@ def write_config(config_path):
         f.seek(0)
         contents = f.read()
         if config_str in contents:
-            stop("Config is already in wpa_supplicant.conf")
+            logging.info("Config is already in wpa_supplicant.conf")
+            # don't write config, but still continue to restart wifi
+            return
 
         # write config_str to wpa_supplicant.conf with empty line before
         f.write("\n")
@@ -333,7 +335,8 @@ def connect_to_wifi():
                 "wlan0",
                 "-c",
                 "/etc/wpa_supplicant/wpa_supplicant.conf",
-                "-Dnl80211",
+                "-D",
+                "nl80211",
             ],
             check=True,
         )
@@ -352,7 +355,7 @@ def connect_to_wifi():
     fail_msg = "Couldn't connect to wifi"
     poll(CHECK_INTERVAL, CONNECTION_TIMEOUT, check_wifi, fail_msg, poll_msg)
 
-    logging.info("Connected to wifi\n")
+    logging.info("Connected to wifi")
 
 
 def unmount_usb():
@@ -360,21 +363,21 @@ def unmount_usb():
 
     # check if in desktop mode (can unmount manually in desktop mode)
     try:
-        # Xorg process means desktop mode
-        subprocess.check_output(["pgrep", "-x", "Xorg"])
-        logging.info(f"Desktop mode detected, not unmounting usb\n")
-        return
-    except subprocess.CalledProcessError:
-        # not found, continue to unmount usb
-        pass
+        # check for hdmi connection
+        output = subprocess.check_output(["kmsprint"], text=True)
+        if "HDMI" in output and "connected" in output:
+            logging.info("HDMI connection detected, not unmounting USB\n")
+            return
+    except subprocess.CalledProcessError as e:
+        # if error, try to unmount usb
+        logging.error(f"Error running kmsprint: {e}")
 
     try:
         # -l makes it try to unmount as soon as not busy
         subprocess.run(["umount", "-l", USB_PATH], check=True)
+        logging.info("Successfully unmounted usb\n")
     except subprocess.CalledProcessError as e:
         logging.error(f"Failed to unmount the usb: {e}")
-
-    logging.info("Successfully unmounted usb\n")
 
 
 def main():
