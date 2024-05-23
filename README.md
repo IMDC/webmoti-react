@@ -124,7 +124,7 @@ sudo reboot # for testing
         }
     ```
 
-2. Add this to `/etc/network/interfaces`
+2. Add this to `/etc/network/interfaces`. The sleep 5 is needed to avoid a race condition.
 
     ```plaintext
     auto lo
@@ -135,7 +135,8 @@ sudo reboot # for testing
     allow-hotplug wlan0
 
     iface wlan0 inet dhcp
-            pre-up wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf -Dnl80211
+            pre-up sleep 5
+            pre-up wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf -D nl80211
             post-down killall -q wpa_supplicant
     ```
 
