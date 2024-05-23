@@ -1,14 +1,14 @@
-import React from 'react';
+import { useEffect } from 'react';
 
-import Button from '@material-ui/core/Button';
 import { Theme, useMediaQuery } from '@material-ui/core';
-import MicIcon from '../../../icons/MicIcon';
-import MicOffIcon from '../../../icons/MicOffIcon';
+import Button from '@material-ui/core/Button';
 
+import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useLocalAudioToggle from '../../../hooks/useLocalAudioToggle/useLocalAudioToggle';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
-import useChatContext from '../../../hooks/useChatContext/useChatContext';
+import MicIcon from '../../../icons/MicIcon';
+import MicOffIcon from '../../../icons/MicOffIcon';
 
 const enum Mode {
   Professor = 'PROFESSOR',
@@ -25,6 +25,20 @@ export default function ToggleAudioButton(props: { disabled?: boolean; className
   const { conversation } = useChatContext();
   const { room } = useVideoContext();
   const { isProfessor, sendSystemMsg, isWebmotiVideo } = useWebmotiVideoContext();
+
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key === 'm') {
+        toggleAudioEnabled();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyPress);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [toggleAudioEnabled]);
 
   return (
     <Button
