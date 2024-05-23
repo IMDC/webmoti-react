@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { Grid, MenuItem, Select, Slider } from '@material-ui/core';
+import { Grid, IconButton, MenuItem, Select, Slider } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import VolumeDown from '@material-ui/icons/VolumeDown';
@@ -9,6 +9,7 @@ import { JSONObject, Message } from '@twilio/conversations';
 
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
+import InfoIcon from '../../../icons/InfoIcon';
 import soundsFile from '../../../sounds/ClearAnnounceTones.wav';
 import excuse_me_1 from '../../../sounds/speech/excuse_me_professor_1.mp3';
 import excuse_me_2 from '../../../sounds/speech/excuse_me_professor_2.mp3';
@@ -63,9 +64,33 @@ export default function NotifyButton() {
     audio.play();
   }, [soundKey, volume]);
 
+  const getSoundCount = (key: string): [string, number] => {
+    const storageKey = `${key}_count`;
+    const storageValue = localStorage.getItem(storageKey);
+    const count = storageValue ? parseInt(storageValue, 10) : 0;
+    return [storageKey, count];
+  };
+
+  const logSound = () => {
+    // save count in localstorage so it persists
+    const [storageKey, count] = getSoundCount(soundKey);
+    localStorage.setItem(storageKey, (count + 1).toString(10));
+  };
+
+  const showSoundCounts = () => {
+    let msg = '';
+    for (const key of Object.keys(Sounds)) {
+      const [, count] = getSoundCount(key);
+      msg += `${key}: ${count}\n`;
+    }
+
+    alert(msg);
+  };
+
   const notifyProfessor = () => {
     if (!isProfessor) {
       playSetSound();
+      logSound();
       sendSystemMsg(conversation, 'Student needs attention');
     }
   };
@@ -122,6 +147,10 @@ export default function NotifyButton() {
           <VolumeDown />
         </Grid>
       </Grid>
+
+      <IconButton onClick={showSoundCounts}>
+        <InfoIcon />
+      </IconButton>
     </>
   );
 }
