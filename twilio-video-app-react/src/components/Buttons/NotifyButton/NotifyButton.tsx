@@ -120,7 +120,7 @@ export default function NotifyButton() {
   }, [conversation, isProfessor, playSetSound]);
 
   return (
-    <>
+    <Grid container justifyContent="center" alignItems="center">
       <Tooltip title="Click to grab professor's attention">
         <Button onClick={notifyProfessor}>Nudge</Button>
       </Tooltip>
@@ -136,7 +136,7 @@ export default function NotifyButton() {
 
       <Grid container spacing={2}>
         <Grid item>
-          <VolumeUp />
+          <VolumeDown />
         </Grid>
 
         <Grid item xs>
@@ -144,13 +144,13 @@ export default function NotifyButton() {
         </Grid>
 
         <Grid item>
-          <VolumeDown />
+          <VolumeUp />
         </Grid>
       </Grid>
 
       <IconButton onClick={showSoundCounts}>
         <InfoIcon />
       </IconButton>
-    </>
+    </Grid>
   );
 }
