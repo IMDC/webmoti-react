@@ -35,7 +35,11 @@ export default function ChatWindowHeader() {
   return (
     <div className={classes.container}>
       <div className={classes.text}>Chat</div>
-      <button className={classes.closeChatWindow} onClick={() => setIsChatWindowOpen(false)}>
+      <button
+        className={classes.closeChatWindow}
+        onClick={() => setIsChatWindowOpen(false)}
+        aria-label="Close chat window"
+      >
         <CloseIcon />
       </button>
     </div>

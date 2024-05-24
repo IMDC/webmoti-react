@@ -55,7 +55,7 @@ const ModeDisplay = () => {
 
   return (
     <Tooltip title={<Typography style={{ fontSize: '0.8rem', color: 'white' }}>{modeDescription()}</Typography>} arrow>
-      <IconButton size="small" style={{ margin: '8px' }}>
+      <IconButton size="small" style={{ margin: '8px' }} aria-label="Current speaker mode">
         {modeIcon()}
       </IconButton>
     </Tooltip>
