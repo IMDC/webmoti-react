@@ -24,10 +24,6 @@ WPA_PATH = Path("/etc/wpa_supplicant/wpa_supplicant.conf")
 # CUSTOM: From file
 TYPES = ["SECURE", "REGULAR", "OPEN", "CUSTOM"]
 
-# for connecting to wifi
-CONNECTION_TIMEOUT = 60
-CHECK_INTERVAL = 5
-
 
 def md4_hash(input_str):
     h = hashlib.new("md4")
@@ -197,7 +193,7 @@ def get_custom_config(filename):
 
 def stop(msg):
     logging.error(f"{msg}")
-    unmount_usb()
+    eject_usb()
     exit(2)
 
 
@@ -317,8 +313,8 @@ def connect_to_wifi():
             # pgrep returns 0 if found process
             return response.returncode != 0
 
-        WPA_INTERVAL = 3
-        WPA_TIMEOUT = 12
+        WPA_INTERVAL = 2.5
+        WPA_TIMEOUT = 15
         poll_msg = "Restarting wpa_supplicant..."
         fail_msg = "Couldn't stop old wpa_supplicant process"
 
@@ -351,6 +347,8 @@ def connect_to_wifi():
         return response.returncode == 0
 
     # keep checking until wifi connects or timeout
+    CONNECTION_TIMEOUT = 30
+    CHECK_INTERVAL = 2.5
     poll_msg = "Connecting..."
     fail_msg = "Couldn't connect to wifi"
     poll(CHECK_INTERVAL, CONNECTION_TIMEOUT, check_wifi, fail_msg, poll_msg)
@@ -358,35 +356,36 @@ def connect_to_wifi():
     logging.info("Connected to wifi")
 
 
-def unmount_usb():
-    logging.info(f"Unmounting {USB_PATH}...")
+def eject_usb():
+    logging.info(f"Ejecting {USB_PATH}...")
 
-    # check if in desktop mode (can unmount manually in desktop mode)
+    # check if in desktop mode (can eject manually in desktop mode)
     try:
         # check for hdmi connection
         output = subprocess.check_output(["kmsprint"], text=True)
-        if "HDMI" in output and "connected" in output:
-            logging.info("HDMI connection detected, not unmounting USB\n")
+        if "HDMI" in output and "(connected)" in output:
+            logging.info("HDMI connection detected, not ejecting USB\n")
             return
     except subprocess.CalledProcessError as e:
-        # if error, try to unmount usb
+        # if error, still try to eject usb
         logging.error(f"Error running kmsprint: {e}")
 
     try:
+        subprocess.run(["sync"])
         # -l makes it try to unmount as soon as not busy
-        subprocess.run(["umount", "-l", USB_PATH], check=True)
-        logging.info("Successfully unmounted usb\n")
+        subprocess.run(["umount", "-l", str(USB_PATH)], check=True)
+        logging.info("Successfully ejected usb\n")
     except subprocess.CalledProcessError as e:
-        logging.error(f"Failed to unmount the usb: {e}")
+        logging.error(f"Failed to eject the usb: {e}\n")
 
 
 def main():
     def check_usb():
         return USB_PATH.is_dir()
 
-    # wait for usb to mount for 30 seconds
+    # wait for usb to mount for 20 seconds
     USB_INTERVAL = 2.5
-    USB_TIMEOUT = 30
+    USB_TIMEOUT = 20
     success = poll(USB_INTERVAL, USB_TIMEOUT, check_usb, "", "", is_silent=True)
 
     if not success:
@@ -427,7 +426,7 @@ def main():
         logging.exception("Error in main")
         stop(f"Unknown error: {e}")
 
-    unmount_usb()
+    eject_usb()
 
 
 if __name__ == "__main__":
