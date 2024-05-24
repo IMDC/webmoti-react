@@ -17,6 +17,7 @@
   - [dhcpcd method](#dhcpcd-method)
   - [Network Manager alternative](#network-manager-alternative)
 - [Auto wifi setup](#auto-wifi-setup)
+- [Auto wifi](#auto-wifi)
 - [Microphone Function](#microphone-function)
 - [RaiseHand Function](#raisehand-function)
 - [Camera Setup](#camera-setup)
@@ -201,7 +202,7 @@ SUBSYSTEM=="block", \
 ENV{SYSTEMD_WANTS}="usb-auto-wifi.service"
 ```
 
-Then create `# /etc/systemd/system/usb-auto-wifi.service`. Replace USERNAME with `imdc1` or `imdc2`. This service will run after the usb mounts.
+Then create `# /etc/systemd/system/usb-auto-wifi.service`. Replace USERNAME with `imdc1` or `imdc2`. This service will run after the usb mounts. **Note: It won't run if you're plugging it in again after successfully connecting to wifi the first time**
 
 ```ini
 [Unit]
@@ -210,15 +211,23 @@ After=media-USERNAME-Webmoti.mount
 
 [Service]
 ExecStart=/usr/bin/python3 /home/USERNAME/add_wifi.py
-Type=oneshot
-TimeoutSec=300
-RemainAfterExit=yes
+Type=forking
 
 [Install]
 WantedBy=multi-user.target
 ```
 
 Run `sudo systemctl enable usb-auto-wifi.service` to enable the service.
+
+## Auto wifi
+
+This is a way for the raspberry pi boards to connect to a wifi network in headless mode.
+
+1. Get a USB drive and name it `Webmoti`.
+2. Create a file named `wifi.ini` on the USB and fill in the [connection information](./wifi/wifi.ini). Make sure the extension is `ini` and not `txt`.
+3. Plug the USB into the raspberry pi.
+4. Wait for at least 1 minute for it to run.
+5. Unplug it and check the `wifi_debug.log` file on the USB to see if it worked. This file will be created by the raspberry pi.
 
 ## Microphone Function
 
