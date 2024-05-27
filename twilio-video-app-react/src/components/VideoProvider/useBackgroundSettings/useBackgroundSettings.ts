@@ -51,61 +51,53 @@ export interface BackgroundSettings {
   index?: number;
 }
 
-const imageNames: string[] = [
-  'Abstract',
-  'Boho Home',
-  'Bookshelf',
-  'Coffee Shop',
-  'Contemporary',
-  'Cozy Home',
-  'Desert',
-  'Fishing',
-  'Flower',
-  'Kitchen',
-  'Modern Home',
-  'Nature',
-  'Ocean',
-  'Patio',
-  'Plant',
-  'San Francisco',
-];
-
 const images = [
-  AbstractThumb,
-  BohoHomeThumb,
-  BookshelfThumb,
-  CoffeeShopThumb,
-  ContemporaryThumb,
-  CozyHomeThumb,
-  DesertThumb,
-  FishingThumb,
-  FlowerThumb,
-  KitchenThumb,
-  ModernHomeThumb,
-  NatureThumb,
-  OceanThumb,
-  PatioThumb,
-  PlantThumb,
-  SanFranciscoThumb,
-];
-
-const rawImagePaths = [
-  Abstract,
-  BohoHome,
-  Bookshelf,
-  CoffeeShop,
-  Contemporary,
-  CozyHome,
-  Desert,
-  Fishing,
-  Flower,
-  Kitchen,
-  ModernHome,
-  Nature,
-  Ocean,
-  Patio,
-  Plant,
-  SanFrancisco,
+  { name: 'Abstract', thumb: AbstractThumb, rawPath: Abstract, description: 'Blue and orange clouds of smoke' },
+  { name: 'Boho Home', thumb: BohoHomeThumb, rawPath: BohoHome, description: 'Well furnished living room of a house' },
+  { name: 'Bookshelf', thumb: BookshelfThumb, rawPath: Bookshelf, description: 'Five bookshelves filled with books' },
+  {
+    name: 'Coffee Shop',
+    thumb: CoffeeShopThumb,
+    rawPath: CoffeeShop,
+    description: 'Coffee shop counter with a cashier working there',
+  },
+  {
+    name: 'Contemporary',
+    thumb: ContemporaryThumb,
+    rawPath: Contemporary,
+    description: 'A room with luxury furniture and high contrast',
+  },
+  {
+    name: 'Cozy Home',
+    thumb: CozyHomeThumb,
+    rawPath: CozyHome,
+    description: 'A room with minimalist design and some plants',
+  },
+  {
+    name: 'Desert',
+    thumb: DesertThumb,
+    rawPath: Desert,
+    description: 'A large orange sand dune under a cloudy blue sky',
+  },
+  { name: 'Fishing', thumb: FishingThumb, rawPath: Fishing, description: 'A fishing boat and some fish' },
+  { name: 'Flower', thumb: FlowerThumb, rawPath: Flower, description: 'Close up of pink flowers' },
+  { name: 'Kitchen', thumb: KitchenThumb, rawPath: Kitchen, description: 'A clean modern looking kitchen' },
+  {
+    name: 'Modern Home',
+    thumb: ModernHomeThumb,
+    rawPath: ModernHome,
+    description: 'Open concept room with art on the walls',
+  },
+  { name: 'Nature', thumb: NatureThumb, rawPath: Nature, description: 'Red mountains at evening' },
+  { name: 'Ocean', thumb: OceanThumb, rawPath: Ocean, description: 'Clear water washing against a beach' },
+  { name: 'Patio', thumb: PatioThumb, rawPath: Patio, description: 'A table outside a rustic house' },
+  { name: 'Plant', thumb: PlantThumb, rawPath: Plant, description: 'Close up of some wavy leaves' },
+  {
+    name: 'San Francisco',
+    thumb: SanFranciscoThumb,
+    rawPath: SanFrancisco,
+    description: 'The Golden Gate bridge in San Francisco',
+  },
 ];
 
 const isDesktopChrome = /Chrome/.test(navigator.userAgent);
@@ -122,12 +114,11 @@ const getImage = (index: number): Promise<HTMLImageElement> => {
       resolve(img);
     };
     img.onerror = reject;
-    img.src = rawImagePaths[index];
+    img.src = images[index].rawPath;
   });
 };
 
 export const backgroundConfig = {
-  imageNames,
   images,
 };
 

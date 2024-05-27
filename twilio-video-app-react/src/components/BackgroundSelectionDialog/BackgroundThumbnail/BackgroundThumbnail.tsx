@@ -1,8 +1,8 @@
-import React from 'react';
-import clsx from 'clsx';
-import BlurIcon from '@material-ui/icons/BlurOnOutlined';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import BlurIcon from '@material-ui/icons/BlurOnOutlined';
 import NoneIcon from '@material-ui/icons/NotInterestedOutlined';
+import clsx from 'clsx';
+
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 
 export type Thumbnail = 'none' | 'blur' | 'image';
@@ -12,6 +12,7 @@ interface BackgroundThumbnailProps {
   imagePath?: string;
   name?: string;
   index?: number;
+  description?: string;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -95,7 +96,13 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function BackgroundThumbnail({ thumbnail, imagePath, name, index }: BackgroundThumbnailProps) {
+export default function BackgroundThumbnail({
+  thumbnail,
+  imagePath,
+  name,
+  index,
+  description,
+}: BackgroundThumbnailProps) {
   const classes = useStyles();
   const { backgroundSettings, setBackgroundSettings } = useVideoContext();
   const isImage = thumbnail === 'image';
@@ -124,7 +131,7 @@ export default function BackgroundThumbnail({ thumbnail, imagePath, name, index 
           <ThumbnailIcon className={classes.thumbIcon} />
         </div>
       ) : (
-        <img className={clsx(classes.thumbImage, { selected: thumbnailSelected })} src={imagePath} alt={name} />
+        <img className={clsx(classes.thumbImage, { selected: thumbnailSelected })} src={imagePath} alt={description} />
       )}
       <div className={classes.thumbOverlay}>{name}</div>
     </div>

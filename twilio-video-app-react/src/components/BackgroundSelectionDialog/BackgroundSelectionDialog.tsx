@@ -1,10 +1,10 @@
-import React from 'react';
-import BackgroundSelectionHeader from './BackgroundSelectionHeader/BackgroundSelectionHeader';
-import BackgroundThumbnail from './BackgroundThumbnail/BackgroundThumbnail';
 import Drawer from '@material-ui/core/Drawer';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { backgroundConfig } from '../VideoProvider/useBackgroundSettings/useBackgroundSettings';
+
+import BackgroundSelectionHeader from './BackgroundSelectionHeader/BackgroundSelectionHeader';
+import BackgroundThumbnail from './BackgroundThumbnail/BackgroundThumbnail';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
+import { backgroundConfig } from '../VideoProvider/useBackgroundSettings/useBackgroundSettings';
 
 const useStyles = makeStyles((theme: Theme) => ({
   drawer: {
@@ -24,7 +24,6 @@ function BackgroundSelectionDialog() {
   const classes = useStyles();
   const { isBackgroundSelectionOpen, setIsBackgroundSelectionOpen } = useVideoContext();
 
-  const imageNames = backgroundConfig.imageNames;
   const images = backgroundConfig.images;
 
   return (
@@ -44,10 +43,11 @@ function BackgroundSelectionDialog() {
         {images.map((image, index) => (
           <BackgroundThumbnail
             thumbnail={'image'}
-            name={imageNames[index]}
+            name={image.name}
             index={index}
-            imagePath={image}
-            key={image}
+            imagePath={image.thumb}
+            description={image.description}
+            key={image.thumb}
           />
         ))}
       </div>
