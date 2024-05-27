@@ -145,7 +145,7 @@ export default function RoomNameScreen({
   const hasUsername = !window.location.search.includes('customIdentity=true') && user?.displayName;
 
   return (
-    <>
+    <main>
       <Typography variant="h5" className={classes.gutterBottom}>
         Join a Room
       </Typography>
@@ -209,6 +209,6 @@ export default function RoomNameScreen({
           </Button>
         </Grid>
       </form>
-    </>
+    </main>
   );
 }
