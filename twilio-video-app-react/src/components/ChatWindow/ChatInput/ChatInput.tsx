@@ -168,10 +168,16 @@ export default function ChatInput({ conversation, isChatWindowOpen }: ChatInputP
           onChange={handleSendFile}
           value={''}
           accept={ALLOWED_FILE_TYPES}
+          aria-label="File Input"
         />
         <div className={classes.buttonContainer}>
           <div className={classes.fileButtonContainer}>
-            <Button className={classes.button} onClick={() => fileInputRef.current?.click()} disabled={isSendingFile}>
+            <Button
+              className={classes.button}
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isSendingFile}
+              aria-label="Attach File Button"
+            >
               <FileAttachmentIcon />
             </Button>
 

@@ -1,5 +1,5 @@
-import React from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
+
 import CloseIcon from '../../../icons/CloseIcon';
 
 const useStyles = makeStyles(() =>
@@ -35,7 +35,7 @@ export default function BackgroundSelectionHeader({ onClose }: BackgroundSelecti
   return (
     <div className={classes.container}>
       <div className={classes.text}>Backgrounds</div>
-      <button className={classes.closeBackgroundSelection} onClick={onClose}>
+      <button className={classes.closeBackgroundSelection} onClick={onClose} aria-label="Close Backgrounds Panel">
         <CloseIcon />
       </button>
     </div>
