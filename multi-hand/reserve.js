@@ -2,11 +2,11 @@ exports.handler = async function (context, event, callback) {
   const syncServiceSid = context.TWILIO_SYNC_SERVICE_SID;
   const syncMapName = context.SYNC_MAP_NAME;
 
-  try {
-    const syncClient = Runtime.getSync({ serviceName: syncServiceSid });
-    const syncMap = await syncClient.maps(syncMapName);
-    const hands = await syncMap.syncMapItems.list();
+  const syncClient = Runtime.getSync({ serviceName: syncServiceSid });
+  const syncMap = await syncClient.maps(syncMapName);
+  const hands = await syncMap.syncMapItems.list();
 
+  try {
     for (const hand of hands) {
       const data = hand.data;
       if (!data.isReserved) {
