@@ -120,7 +120,7 @@ const IntroContainer = (props: IntroContainerProps) => {
             <div className={classes.logoContainer}>
               <VideoLogo />
               <Typography variant="h6" className={classes.title}>
-                Webmoti
+                WebMoti
               </Typography>
               <Typography variant="h6" className={classes.subtitle}>
                 Make Connections Easier
