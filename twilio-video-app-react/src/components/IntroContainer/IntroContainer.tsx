@@ -1,11 +1,13 @@
 import React from 'react';
+
 import { makeStyles, Theme, Typography } from '@material-ui/core';
-import Swoosh from './swoosh';
-import VideoLogo from './VideoLogo';
-import TwilioLogo from './TwilioLogo';
-import { useAppState } from '../../state';
-import UserMenu from './UserMenu/UserMenu';
 import { useLocation } from 'react-router-dom';
+
+import Swoosh from './swoosh';
+import TwilioLogo from './TwilioLogo';
+import UserMenu from './UserMenu/UserMenu';
+import VideoLogo from './VideoLogo';
+import { useAppState } from '../../state';
 
 const useStyles = makeStyles((theme: Theme) => ({
   background: {
@@ -82,9 +84,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   title: {
     color: 'white',
     margin: '1em 0 0',
+    fontWeight: 'bold',
     [theme.breakpoints.down('sm')]: {
       margin: 0,
       fontSize: '1.1rem',
+    },
+  },
+  subtitle: {
+    color: 'lightgray',
+    margin: '0.5em 0 1em',
+    fontSize: '0.9rem',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '0.8rem',
+      margin: '0.25em 0 0.5em',
     },
   },
 }));
@@ -108,7 +120,10 @@ const IntroContainer = (props: IntroContainerProps) => {
             <div className={classes.logoContainer}>
               <VideoLogo />
               <Typography variant="h6" className={classes.title}>
-                Twilio Programmable Video
+                Webmoti
+              </Typography>
+              <Typography variant="h6" className={classes.subtitle}>
+                Make Connections Easier
               </Typography>
             </div>
           </div>
