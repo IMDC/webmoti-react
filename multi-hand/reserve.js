@@ -9,10 +9,13 @@ exports.handler = async function (context, event, callback) {
   try {
     for (const hand of hands) {
       const data = hand.data;
-      if (!data.isReserved) {
+      // if not reserved, get this hand
+      // or if it is set to reserved but the last hearbeat was > 1 min ago
+      // it means the client disconnected and didn't unset isReserved
+      if (!data.isReserved || Date.now() > data.heartbeat + 60000) {
         // reserve hand
         await syncMap.syncMapItems(hand.key).update({
-          data: { ...data, isReserved: true },
+          data: { ...data, isReserved: true, heartbeat: Date.now() },
         });
 
         // notify client
