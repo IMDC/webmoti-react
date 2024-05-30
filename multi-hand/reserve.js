@@ -1,4 +1,12 @@
 exports.handler = async function (context, event, callback) {
+  const password = event.password;
+  if (password !== context.PASSWORD) {
+    const response = new Twilio.Response();
+    response.setStatusCode(400);
+    response.setBody("Invalid password");
+    return callback(null, response);
+  }
+
   const syncServiceSid = context.TWILIO_SYNC_SERVICE_SID;
   const syncMapName = context.SYNC_MAP_NAME;
 

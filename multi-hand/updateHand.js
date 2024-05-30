@@ -13,26 +13,32 @@ const actions = {
   },
 };
 
-const validateRequest = (handKey, action) => {
-  if (!handKey || !action) {
-    return { isValid: false, msg: "Hand key or action parameter is missing" };
-  }
-
-  if (!Object.keys(actions).includes(action)) {
-    return { isValid: false, msg: "Invalid action" };
-  }
-
-  return { isValid: true };
-};
-
 exports.handler = async function (context, event, callback) {
+  const validateRequest = (handKey, action, password) => {
+    if (!handKey || !action || !password) {
+      return { isValid: false, msg: "Missing parameter" };
+    }
+
+    if (!Object.keys(actions).includes(action)) {
+      return { isValid: false, msg: "Invalid action" };
+    }
+
+    // TODO use current app password instead
+    if (password !== context.PASSWORD) {
+      return { isValid: false, msg: "Invalid password" };
+    }
+
+    return { isValid: true };
+  };
+
   const syncServiceSid = context.TWILIO_SYNC_SERVICE_SID;
   const syncMapName = context.SYNC_MAP_NAME;
 
   const handKey = event.handKey;
   const action = event.action ? event.action.toUpperCase() : undefined;
+  const password = event.password;
 
-  const check = validateRequest(handKey, action);
+  const check = validateRequest(handKey, action, password);
   if (!check.isValid) {
     const response = new Twilio.Response();
     response.setStatusCode(400);
