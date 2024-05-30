@@ -4,7 +4,6 @@ import { makeStyles, Theme, Typography } from '@material-ui/core';
 import { useLocation } from 'react-router-dom';
 
 import Swoosh from './swoosh';
-import TwilioLogo from './TwilioLogo';
 import UserMenu from './UserMenu/UserMenu';
 import VideoLogo from './VideoLogo';
 import { useAppState } from '../../state';
@@ -66,11 +65,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
-  twilioLogo: {
+  webmotiLogo: {
     position: 'absolute',
     top: 0,
     left: 0,
     margin: '20px',
+    opacity: '0.8',
   },
   content: {
     background: 'white',
@@ -112,7 +112,7 @@ const IntroContainer = (props: IntroContainerProps) => {
 
   return (
     <div className={classes.background}>
-      <TwilioLogo className={classes.twilioLogo} />
+      <img src="/logo.svg" alt="Logo" className={classes.webmotiLogo} />
       {user && location.pathname !== '/login' && <UserMenu />}
       <div className={classes.container}>
         <div className={classes.innerContainer}>
