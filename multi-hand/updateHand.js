@@ -30,7 +30,7 @@ exports.handler = async function (context, event, callback) {
   const syncMapName = context.SYNC_MAP_NAME;
 
   const handKey = event.handKey;
-  const action = event.action.toUpperCase();
+  const action = event.action ? event.action.toUpperCase() : undefined;
 
   const check = validateRequest(handKey, action);
   if (!check.isValid) {
