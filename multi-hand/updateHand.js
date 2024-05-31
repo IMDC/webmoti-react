@@ -14,8 +14,8 @@ const actions = {
 };
 
 exports.handler = async function (context, event, callback) {
-  const validateRequest = (handKey, action, password) => {
-    if (!handKey || !action || !password) {
+  const validateRequest = (handKey, action, password, token) => {
+    if (!handKey || !action || !password || !token) {
       return { isValid: false, msg: "Missing parameter" };
     }
 
@@ -37,8 +37,9 @@ exports.handler = async function (context, event, callback) {
   const handKey = event.handKey;
   const action = event.action ? event.action.toUpperCase() : undefined;
   const password = event.password;
+  const token = event.token;
 
-  const check = validateRequest(handKey, action, password);
+  const check = validateRequest(handKey, action, password, token);
   if (!check.isValid) {
     const response = new Twilio.Response();
     response.setStatusCode(400);
@@ -53,6 +54,12 @@ exports.handler = async function (context, event, callback) {
 
   try {
     const hand = await syncMap.syncMapItems(handKey).fetch();
+
+    // this prevents other users from updating other hands
+    if (hand.data.token !== token) {
+      return callback("Invalid token");
+    }
+
     await hand.update({
       data: { ...hand.data, [actionData.field]: actionData.value() },
     });
@@ -60,7 +67,8 @@ exports.handler = async function (context, event, callback) {
     if (e.status === 404) {
       return callback("Invalid hand key");
     }
-
+    
+    console.log(e);
     return callback(actionData.errorMsg);
   }
 

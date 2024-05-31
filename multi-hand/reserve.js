@@ -1,9 +1,15 @@
+const crypto = require("crypto");
+
 exports.handler = async function (context, event, callback) {
   const password = event.password;
   if (password !== context.PASSWORD) {
     const response = new Twilio.Response();
     response.setStatusCode(400);
-    response.setBody("Invalid password");
+    if (password === undefined) {
+      response.setBody("Password is missing");
+    } else {
+      response.setBody("Invalid password");
+    }
     return callback(null, response);
   }
 
@@ -22,15 +28,26 @@ exports.handler = async function (context, event, callback) {
       // it means the client disconnected and didn't unset isReserved
       if (!data.isReserved || Date.now() > data.heartbeat + 60000) {
         // reserve hand
+        const token = crypto.randomBytes(16).toString("hex");
         await syncMap.syncMapItems(hand.key).update({
-          data: { ...data, isReserved: true, heartbeat: Date.now() },
+          data: {
+            ...data,
+            isReserved: true,
+            heartbeat: Date.now(),
+            token: token,
+          },
         });
 
         // notify client
-        return callback(null, { handName: hand.key, urlId: data.urlId });
+        return callback(null, {
+          handName: hand.key,
+          urlId: data.urlId,
+          token: token,
+        });
       }
     }
   } catch (e) {
+    console.log(e);
     return callback("Error reserving hand");
   }
 
