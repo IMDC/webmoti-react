@@ -1,15 +1,33 @@
 const crypto = require("crypto");
 
 exports.handler = async function (context, event, callback) {
+  const validateRequest = (password, identity) => {
+    const missingParams = [];
+    if (!password) missingParams.push("password");
+    if (!identity) missingParams.push("identity");
+    if (missingParams.length > 0) {
+      return {
+        isValid: false,
+        msg: "Missing parameter(s): " + missingParams.join(", "),
+      };
+    }
+
+    // TODO use current app password instead
+    if (password !== context.PASSWORD) {
+      return { isValid: false, msg: "Invalid password" };
+    }
+
+    return { isValid: true };
+  };
+
   const password = event.password;
-  if (password !== context.PASSWORD) {
+  const identity = event.identity;
+
+  const check = validateRequest(password, identity);
+  if (!check.isValid) {
     const response = new Twilio.Response();
     response.setStatusCode(400);
-    if (password === undefined) {
-      response.setBody("Password is missing");
-    } else {
-      response.setBody("Invalid password");
-    }
+    response.setBody(check.msg);
     return callback(null, response);
   }
 
@@ -21,30 +39,44 @@ exports.handler = async function (context, event, callback) {
   const hands = await syncMap.syncMapItems.list();
 
   try {
+    let freeHand = null;
+
     for (const hand of hands) {
       const data = hand.data;
-      // if not reserved, get this hand
-      // or if it is set to reserved but the last hearbeat was > 1 min ago
-      // it means the client disconnected and didn't unset isReserved
-      if (!data.isReserved || Date.now() > data.heartbeat + 60000) {
-        // reserve hand
-        const token = crypto.randomBytes(16).toString("hex");
-        await syncMap.syncMapItems(hand.key).update({
-          data: {
-            ...data,
-            isReserved: true,
-            heartbeat: Date.now(),
-            token: token,
-          },
-        });
 
-        // notify client
-        return callback(null, {
-          handName: hand.key,
-          urlId: data.urlId,
-          token: token,
-        });
+      // if not reserved, get this hand
+      // or if it is set to reserved but the last hearbeat was > 1 min 30 ago
+      // it means the client disconnected and didn't unset isReserved
+      const isHandFree =
+        !data.isReserved || Date.now() > data.heartbeat + 90000;
+
+      if (!isHandFree && data.identity === identity) {
+        return callback("Only one hand can be reserved at a time");
       }
+
+      if (isHandFree) {
+        freeHand = hand;
+      }
+    }
+
+    if (freeHand !== null) {
+      // reserve hand
+      const token = crypto.randomBytes(16).toString("hex");
+      await syncMap.syncMapItems(freeHand.key).update({
+        data: {
+          ...data,
+          isReserved: true,
+          heartbeat: Date.now(),
+          token: token,
+        },
+      });
+
+      // notify client
+      return callback(null, {
+        handName: freeHand.key,
+        urlId: data.urlId,
+        token: token,
+      });
     }
   } catch (e) {
     console.log(e);

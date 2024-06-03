@@ -1,29 +1,17 @@
 const actions = {
   FREE: {
-    updates: [
-      {
-        field: "isReserved",
-        value: () => false,
-      },
-      {
-        field: "token",
-        value: () => null,
-      },
-      {
-        field: "heartbeat",
-        value: () => null,
-      },
-    ],
+    updates: {
+      isReserved: () => false,
+      token: () => null,
+      heartbeat: () => null,
+    },
     successMsg: "Hand successfully freed",
     errorMsg: "Error freeing hand",
   },
   KEEP: {
-    updates: [
-      {
-        field: "heartbeat",
-        value: () => Date.now(),
-      },
-    ],
+    updates: {
+      heartbeat: () => Date.now(),
+    },
     successMsg: "Heartbeat successfully sent",
     errorMsg: "Error sending heartbeat",
   },
@@ -86,13 +74,10 @@ exports.handler = async function (context, event, callback) {
       return callback("Invalid token");
     }
 
-    const newData = actionData.updates.reduce(
-      (acc, update) => ({
-        ...acc,
-        [update.field]: update.value(),
-      }),
-      {}
-    );
+    const newData = {};
+    for (const key in actionData.updates) {
+      newData[key] = actionData.updates[key]();
+    }
 
     await hand.update({ data: { ...hand.data, ...newData } });
   } catch (e) {
