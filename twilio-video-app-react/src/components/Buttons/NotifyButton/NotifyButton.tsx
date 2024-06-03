@@ -15,6 +15,9 @@ import excuse_me_1 from '../../../sounds/speech/excuse_me_professor_1.mp3';
 import excuse_me_2 from '../../../sounds/speech/excuse_me_professor_2.mp3';
 import question_1 from '../../../sounds/speech/i_have_a_question_1.mp3';
 import question_2 from '../../../sounds/speech/i_have_a_question_2.mp3';
+import neutral_excuse_me from '../../../sounds/speech/neutral_excuse_me.mp3';
+import neutral_professor from '../../../sounds/speech/neutral_professor.mp3';
+import neutral_question from '../../../sounds/speech/neutral_question.mp3';
 import professor_1 from '../../../sounds/speech/professor_1.mp3';
 import professor_2 from '../../../sounds/speech/professor_2.mp3';
 import professor_3 from '../../../sounds/speech/professor_3.mp3';
@@ -37,6 +40,9 @@ const Sounds: SoundsMap = {
   Inquisitive1: { sound: professor_1, name: 'Inquisitive 1' },
   Inquisitive2: { sound: professor_2, name: 'Inquisitive 2' },
   Inquisitive3: { sound: professor_3, name: 'Inquisitive 3' },
+  NeutralFormal: { sound: neutral_excuse_me, name: 'Neutral Formal' },
+  NeutralDirect: { sound: neutral_question, name: 'Neutral Direct' },
+  NeutralInquisitive: { sound: neutral_professor, name: 'Neutral Inquisitive' },
 };
 
 export default function NotifyButton() {
