@@ -24,3 +24,5 @@ export const GALLERY_VIEW_MARGIN = 3;
 // webmoti camera names
 export const WEBMOTI_CAMERA_1 = 'Class-View';
 export const WEBMOTI_CAMERA_2 = 'Board-View';
+
+export const REMOTE_IT_URL = 'https://jmn2f42hjgfv.connect.remote.it/raisehand';

@@ -19,7 +19,7 @@ import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWeb
 export default function RaiseHandButton() {
   const { room } = useVideoContext();
   const { conversation } = useChatContext();
-  const { sendSystemMsg, isWebmotiVideo } = useWebmotiVideoContext();
+  const { sendSystemMsg, isWebmotiVideo, sendHandRequest } = useWebmotiVideoContext();
   const [handQueue, setHandQueue] = useState<string[]>([]);
   const [isHandRaised, setIsHandRaised] = useState(false);
   // the anchor is used so the popover knows where to appear on the screen
@@ -39,29 +39,6 @@ export default function RaiseHandButton() {
 
   const handleClosePopover = () => {
     setAnchorEl(null);
-  };
-
-  const url = 'https://jmn2f42hjgfv.connect.remote.it/raisehand';
-
-  const sendHandRequest = async (mode: string, is_silent = false) => {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({ mode }),
-    });
-
-    if (!response.ok && !is_silent) {
-      if (response.status === 503) {
-        // board not connected to wifi
-        alert('Service Offline.');
-      } else {
-        alert(`Unknown error while raising hand: ${response.status}: ${response.statusText}`);
-      }
-    }
-
-    return response;
   };
 
   // this is run when participant joins
@@ -115,7 +92,7 @@ export default function RaiseHandButton() {
     }
 
     setIsHandRaised(!isHandRaised);
-  }, [conversation, handQueue, isHandRaised, room, sendSystemMsg]);
+  }, [conversation, handQueue, isHandRaised, room, sendSystemMsg, sendHandRequest]);
 
   const handleMouseDown = () => {
     if (!isHandRaised) {

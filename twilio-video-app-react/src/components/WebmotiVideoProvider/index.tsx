@@ -1,7 +1,8 @@
-import React, { ReactNode, createContext, useState } from 'react';
+import React, { ReactNode, createContext, useCallback, useState } from 'react';
 
 import { Conversation } from '@twilio/conversations';
-import { WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../../constants';
+
+import { REMOTE_IT_URL, WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../../constants';
 
 interface WebmotiVideoContextType {
   isCameraOneOff: boolean;
@@ -25,6 +26,7 @@ interface WebmotiVideoContextType {
   professorsName: string;
   setProfessorsName: React.Dispatch<React.SetStateAction<string>>;
   sendSystemMsg: (conversation: Conversation | null, msg: string) => void;
+  sendHandRequest: (mode: string, is_silent?: boolean) => Promise<Response>;
 }
 
 const WebmotiVideoContext = createContext<WebmotiVideoContextType | undefined>(undefined);
@@ -80,6 +82,27 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
     conversation?.sendMessage(msg, { attributes: JSON.stringify({ systemMsg: true }) });
   };
 
+  const sendHandRequest = useCallback(async (mode: string, is_silent = false) => {
+    const response = await fetch(REMOTE_IT_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({ mode }),
+    });
+
+    if (!response.ok && !is_silent) {
+      if (response.status === 503) {
+        // board not connected to wifi
+        alert('Service Offline.');
+      } else {
+        alert(`Unknown error while raising hand: ${response.status}: ${response.statusText}`);
+      }
+    }
+
+    return response;
+  }, []);
+
   return (
     <WebmotiVideoContext.Provider
       value={{
@@ -104,6 +127,7 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
         professorsName,
         setProfessorsName,
         sendSystemMsg,
+        sendHandRequest,
       }}
     >
       {children}
