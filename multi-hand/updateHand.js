@@ -1,13 +1,29 @@
 const actions = {
   FREE: {
-    field: "isReserved",
-    value: () => false,
+    updates: [
+      {
+        field: "isReserved",
+        value: () => false,
+      },
+      {
+        field: "token",
+        value: () => null,
+      },
+      {
+        field: "heartbeat",
+        value: () => null,
+      },
+    ],
     successMsg: "Hand successfully freed",
     errorMsg: "Error freeing hand",
   },
   KEEP: {
-    field: "heartbeat",
-    value: () => Date.now(),
+    updates: [
+      {
+        field: "heartbeat",
+        value: () => Date.now(),
+      },
+    ],
     successMsg: "Heartbeat successfully sent",
     errorMsg: "Error sending heartbeat",
   },
@@ -15,12 +31,20 @@ const actions = {
 
 exports.handler = async function (context, event, callback) {
   const validateRequest = (handKey, action, password, token) => {
-    if (!handKey || !action || !password || !token) {
-      return { isValid: false, msg: "Missing parameter" };
+    const missingParams = [];
+    if (!handKey) missingParams.push("handKey");
+    if (!action) missingParams.push("action");
+    if (!password) missingParams.push("password");
+    if (!token) missingParams.push("token");
+    if (missingParams.length > 0) {
+      return {
+        isValid: false,
+        msg: "Missing parameter(s): " + missingParams.join(", "),
+      };
     }
 
     if (!Object.keys(actions).includes(action)) {
-      return { isValid: false, msg: "Invalid action" };
+      return { isValid: false, msg: `Invalid action: ${action}` };
     }
 
     // TODO use current app password instead
@@ -55,19 +79,27 @@ exports.handler = async function (context, event, callback) {
   try {
     const hand = await syncMap.syncMapItems(handKey).fetch();
 
-    // this prevents other users from updating other hands
-    if (hand.data.token !== token) {
+    if (hand.data.token === null) {
+      return callback("Hand is not reserved");
+    } else if (hand.data.token !== token) {
+      // this prevents other users from updating other hands
       return callback("Invalid token");
     }
 
-    await hand.update({
-      data: { ...hand.data, [actionData.field]: actionData.value() },
-    });
+    const newData = actionData.updates.reduce(
+      (acc, update) => ({
+        ...acc,
+        [update.field]: update.value(),
+      }),
+      {}
+    );
+
+    await hand.update({ data: { ...hand.data, ...newData } });
   } catch (e) {
     if (e.status === 404) {
       return callback("Invalid hand key");
     }
-    
+
     console.log(e);
     return callback(actionData.errorMsg);
   }
