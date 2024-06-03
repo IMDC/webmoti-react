@@ -4,6 +4,7 @@ const actions = {
       isReserved: () => false,
       token: () => null,
       heartbeat: () => null,
+      identity: () => null,
     },
     successMsg: "Hand successfully freed",
     errorMsg: "Error freeing hand",

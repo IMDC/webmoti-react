@@ -64,17 +64,18 @@ exports.handler = async function (context, event, callback) {
       const token = crypto.randomBytes(16).toString("hex");
       await syncMap.syncMapItems(freeHand.key).update({
         data: {
-          ...data,
+          ...freeHand.data,
           isReserved: true,
           heartbeat: Date.now(),
           token: token,
+          identity: identity,
         },
       });
 
       // notify client
       return callback(null, {
         handName: freeHand.key,
-        urlId: data.urlId,
+        urlId: freeHand.data.urlId,
         token: token,
       });
     }
