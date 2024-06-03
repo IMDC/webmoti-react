@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="twilio-video-app-react/public/logo.svg" alt="Logo" width="150" height="150"/>
+  <img src="twilio-video-app-react/public/favicon.svg" alt="Logo" width="150" height="150"/>
 </p>
 
 <h1 align="center">WebMoti</h1>

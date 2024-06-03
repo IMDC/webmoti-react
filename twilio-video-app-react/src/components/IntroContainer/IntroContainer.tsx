@@ -112,7 +112,7 @@ const IntroContainer = (props: IntroContainerProps) => {
 
   return (
     <div className={classes.background}>
-      <img src="/logo.svg" alt="Logo" className={classes.webmotiLogo} />
+      <img src="/favicon.svg" alt="Logo" className={classes.webmotiLogo} />
       {user && location.pathname !== '/login' && <UserMenu />}
       <div className={classes.container}>
         <div className={classes.innerContainer}>
