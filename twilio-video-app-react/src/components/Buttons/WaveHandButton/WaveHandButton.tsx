@@ -1,18 +1,28 @@
-import Button from '@material-ui/core/Button';
+import { IconButton } from '@material-ui/core';
+import { EmojiPeople, PanTool } from '@material-ui/icons';
+
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
-export default function RaiseHandButton() {
+export default function WaveHandButton() {
   const { sendHandRequest } = useWebmotiVideoContext();
 
-  const handleClick = async () => {
+  const wave = async () => {
+    await sendHandRequest('WAVE');
+  };
+
+  const wave2 = async () => {
     await sendHandRequest('WAVE2');
   };
 
   return (
     <div>
-      <Button variant="contained" color="primary" onClick={handleClick}>
-        Wave
-      </Button>
+      <IconButton onClick={wave2}>
+        <PanTool />
+      </IconButton>
+
+      <IconButton onClick={wave}>
+        <EmojiPeople />
+      </IconButton>
     </div>
   );
 }

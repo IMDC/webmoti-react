@@ -23,6 +23,7 @@ import ToggleCameraButton2 from '../Buttons/ToggleCameraButton2/ToggleCameraButt
 import ToggleScreenShareButton from '../Buttons/ToggleScreenShareButton/ToggleScreenShareButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import SoundsPopover from '../SoundsPopover/SoundsPopover';
+import WaveHandButton from '../Buttons/WaveHandButton/WaveHandButton';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -144,6 +145,8 @@ export default function MenuBar() {
               {!isSharingScreen && !isMobile && <ToggleScreenShareButton disabled={isReconnecting} />}
               {/* {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />} */}
               <RaiseHandButton />
+
+              <WaveHandButton />
 
               <BoardQualityButton />
 
