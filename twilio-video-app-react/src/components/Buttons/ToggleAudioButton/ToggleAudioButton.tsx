@@ -48,10 +48,10 @@ export default function ToggleAudioButton(props: { disabled?: boolean; className
         if (!isProfessor && !isWebmotiVideo(room?.localParticipant?.identity || '')) {
           if (isAudioEnabled) {
             // if student is muting their mic, enable class mic
-            sendSystemMsg(conversation, `${Mode.Classroom} is active`);
+            sendSystemMsg(conversation, JSON.stringify({ type: 'MODESWITCH', mode: Mode.Classroom }));
           } else {
             // if student unmutes, mute class mic
-            sendSystemMsg(conversation, `${Mode.Virtual} is active`);
+            sendSystemMsg(conversation, JSON.stringify({ type: 'MODESWITCH', mode: Mode.Virtual }));
           }
         }
 

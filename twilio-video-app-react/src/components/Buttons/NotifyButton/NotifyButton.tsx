@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import VolumeDown from '@material-ui/icons/VolumeDown';
 import VolumeUp from '@material-ui/icons/VolumeUp';
-import { JSONObject, Message } from '@twilio/conversations';
+import { Message } from '@twilio/conversations';
 
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
@@ -47,7 +47,7 @@ const Sounds: SoundsMap = {
 
 export default function NotifyButton() {
   const { conversation } = useChatContext();
-  const { sendSystemMsg, isProfessor } = useWebmotiVideoContext();
+  const { sendSystemMsg, isProfessor, checkSystemMsg } = useWebmotiVideoContext();
 
   const [volume, setVolume] = useState(50);
 
@@ -97,22 +97,19 @@ export default function NotifyButton() {
     if (!isProfessor) {
       playSetSound();
       logSound();
-      sendSystemMsg(conversation, 'Student needs attention');
+      sendSystemMsg(conversation, JSON.stringify({ type: 'NOTIFY' }));
     }
   };
 
   useEffect(() => {
     const handleMessageAdded = (message: Message) => {
-      let isSystemMsg = false;
-      const attrObj = message.attributes as JSONObject;
-      if (attrObj.attributes !== undefined) {
-        const attrSysMsg = JSON.parse(attrObj.attributes as string).systemMsg;
-        if (attrSysMsg !== undefined) {
-          isSystemMsg = true;
-        }
+      if (!checkSystemMsg(message)) {
+        return;
       }
 
-      if (isSystemMsg && message.body === 'Student needs attention' && isProfessor) {
+      const msgData = JSON.parse(message.body || '');
+
+      if (msgData.type === 'NOTIFY' && isProfessor) {
         playSetSound();
         message.remove();
       }
@@ -123,7 +120,7 @@ export default function NotifyButton() {
     return () => {
       conversation?.off('messageAdded', handleMessageAdded);
     };
-  }, [conversation, isProfessor, playSetSound]);
+  }, [conversation, isProfessor, playSetSound, checkSystemMsg]);
 
   return (
     <Grid container justifyContent="center" alignItems="center">

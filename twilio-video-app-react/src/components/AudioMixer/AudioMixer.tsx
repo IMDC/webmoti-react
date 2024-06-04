@@ -8,7 +8,7 @@ import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { JSONObject, Message } from '@twilio/conversations';
+import { Message } from '@twilio/conversations';
 
 import { WEBMOTI_CAMERA_1 } from '../../constants';
 import useChatContext from '../../hooks/useChatContext/useChatContext';
@@ -32,7 +32,7 @@ export default function AudioMixer() {
   const { room, muteParticipant } = useVideoContext();
   const { conversation } = useChatContext();
   const [isAudioEnabled, toggleAudioEnabled] = useLocalAudioToggle();
-  const { isProfessor, isAdmin, sendSystemMsg } = useWebmotiVideoContext();
+  const { isProfessor, isAdmin, sendSystemMsg, checkSystemMsg } = useWebmotiVideoContext();
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [alignment, setAlignment] = useState<Mode | null>(null);
@@ -53,11 +53,11 @@ export default function AudioMixer() {
       setAlignment(newAlignment);
 
       if (newAlignment === Mode.Professor) {
-        sendSystemMsg(conversation, `${Mode.Professor} is active`);
+        sendSystemMsg(conversation, JSON.stringify({ type: 'MODESWITCH', mode: Mode.Professor }));
       } else if (newAlignment === Mode.Classroom) {
-        sendSystemMsg(conversation, `${Mode.Classroom} is active`);
+        sendSystemMsg(conversation, JSON.stringify({ type: 'MODESWITCH', mode: Mode.Classroom }));
       } else {
-        sendSystemMsg(conversation, `${Mode.Virtual} is active`);
+        sendSystemMsg(conversation, JSON.stringify({ type: 'MODESWITCH', mode: Mode.Virtual }));
       }
     }
   };
@@ -96,85 +96,59 @@ export default function AudioMixer() {
 
   useEffect(() => {
     const handleMessageAdded = (message: Message) => {
-      // parse attributes
-      let isSystemMsg = false;
-      const attrObj = message.attributes as JSONObject;
-      if (attrObj.attributes !== undefined) {
-        const attrSysMsg = JSON.parse(attrObj.attributes as string).systemMsg;
-        if (attrSysMsg !== undefined) {
-          isSystemMsg = true;
-        }
+      if (!checkSystemMsg(message)) {
+        return;
       }
 
-      if (isSystemMsg) {
-        const pattern = `^(${Mode.Professor}|${Mode.Classroom}|${Mode.Virtual}) is active$`;
-        const regex = new RegExp(pattern);
-        const match = message.body?.match(regex);
+      const msgData = JSON.parse(message.body || '');
 
-        if (match) {
-          const [, newMode] = match;
+      if (msgData.type === 'MODESWITCH') {
+        switch (msgData.mode) {
+          case Mode.Professor:
+            // - disable mic (to prevent double audio)
+            // - disable speakers (optional)
+            setClassMicState(false);
+            setProfSpeakerState(false);
+            break;
 
-          switch (newMode) {
-            case Mode.Professor:
-              // - disable mic (to prevent double audio)
-              // - disable speakers (optional)
-              setClassMicState(false);
-              setProfSpeakerState(false);
-              break;
+          case Mode.Classroom:
+            // for in person students
+            // - enable mic
+            // - disable speakers (mandatory)
+            setClassMicState(true);
+            setProfSpeakerState(false);
+            break;
 
-            case Mode.Classroom:
-              // for in person students
-              // - enable mic
-              // - disable speakers (mandatory)
-              setClassMicState(true);
-              setProfSpeakerState(false);
-              break;
-
-            default:
-              // for online students
-              // - disable mic
-              // - enable speakers
-              setClassMicState(false);
-              setProfSpeakerState(true);
-          }
-
-          // delete msg so it's not shown when rejoining
-          message.remove();
-          return;
+          default:
+            // for online students
+            // - disable mic
+            // - enable speakers
+            setClassMicState(false);
+            setProfSpeakerState(true);
         }
 
-        const pattern2 = `^Toggle (${Devices.ProfSpeaker}|${Devices.ClassMic})$`;
-        const regex2 = new RegExp(pattern2);
-        const match2 = message.body?.match(regex2);
+        // delete msg so it's not shown when rejoining
+        message.remove();
 
-        if (match2) {
-          const [, target] = match2;
-
-          if (target === Devices.ProfSpeaker) {
-            setProfSpeakerState(!isProfSpeakerEnabled);
-          } else {
-            setClassMicState(!isClassMicEnabled);
-          }
-
-          message.remove();
-          return;
+        return;
+      } else if (msgData.type === 'TOGGLEDEVICE') {
+        if (msgData.device === Devices.ProfSpeaker) {
+          setProfSpeakerState(!isProfSpeakerEnabled);
+        } else {
+          setClassMicState(!isClassMicEnabled);
         }
 
-        const pattern3 = `^Mute (.+)$`;
-        const regex3 = new RegExp(pattern3);
-        const match3 = message.body?.match(regex3);
+        message.remove();
 
-        if (match3) {
-          const [, target] = match3;
-
-          // if this participant was muted
-          if (target === name) {
-            toggleAudioEnabled();
-          }
-
-          message.remove();
-          return;
+        return;
+      } else if (msgData.type === 'MUTEDEVICE') {
+        // if this participant was muted
+        if (msgData.device === name) {
+          toggleAudioEnabled();
         }
+
+        message.remove();
+        return;
       }
     };
 
@@ -191,10 +165,11 @@ export default function AudioMixer() {
     isProfSpeakerEnabled,
     name,
     toggleAudioEnabled,
+    checkSystemMsg,
   ]);
 
   const handleMuteBtnClick = () => {
-    sendSystemMsg(conversation, `Mute ${input}`);
+    sendSystemMsg(conversation, JSON.stringify({ type: 'MUTEDEVICE', device: input }));
   };
 
   // only show mixer if prof or admin
@@ -250,7 +225,9 @@ export default function AudioMixer() {
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => sendSystemMsg(conversation, `Toggle ${Devices.ClassMic}`)}
+                  onClick={() =>
+                    sendSystemMsg(conversation, JSON.stringify({ type: 'TOGGLEDEVICE', device: Devices.ClassMic }))
+                  }
                 >
                   {isClassMicEnabled ? <MicIcon /> : <MicOffIcon />}
                   <Typography variant="body2">Class Mic</Typography>
@@ -261,7 +238,9 @@ export default function AudioMixer() {
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => sendSystemMsg(conversation, `Toggle ${Devices.ProfSpeaker}`)}
+                  onClick={() =>
+                    sendSystemMsg(conversation, JSON.stringify({ type: 'TOGGLEDEVICE', device: Devices.ProfSpeaker }))
+                  }
                 >
                   {isProfSpeakerEnabled ? <VolumeUpIcon /> : <VolumeOffIcon />}
                   <Typography variant="body2">Prof Speakers</Typography>

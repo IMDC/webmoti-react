@@ -1,6 +1,6 @@
 import React, { ReactNode, createContext, useCallback, useState } from 'react';
 
-import { Conversation } from '@twilio/conversations';
+import { Conversation, JSONObject, Message } from '@twilio/conversations';
 
 import { REMOTE_IT_URL, WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../../constants';
 
@@ -27,6 +27,7 @@ interface WebmotiVideoContextType {
   setProfessorsName: React.Dispatch<React.SetStateAction<string>>;
   sendSystemMsg: (conversation: Conversation | null, msg: string) => void;
   sendHandRequest: (mode: string, is_silent?: boolean) => Promise<Response>;
+  checkSystemMsg: (message: Message) => boolean;
 }
 
 const WebmotiVideoContext = createContext<WebmotiVideoContextType | undefined>(undefined);
@@ -103,6 +104,23 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
     return response;
   }, []);
 
+  const checkSystemMsg = useCallback((message: Message) => {
+    // parse attributes of msg
+    const attrObj = message.attributes as JSONObject;
+    if (attrObj.attributes === undefined) {
+      // no attributes (not system msg)
+      return false;
+    }
+
+    const attrSysMsg = JSON.parse(attrObj.attributes as string).systemMsg;
+    if (attrSysMsg !== undefined) {
+      // not system msg
+      return true;
+    }
+
+    return false;
+  }, []);
+
   return (
     <WebmotiVideoContext.Provider
       value={{
@@ -128,6 +146,7 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
         setProfessorsName,
         sendSystemMsg,
         sendHandRequest,
+        checkSystemMsg,
       }}
     >
       {children}

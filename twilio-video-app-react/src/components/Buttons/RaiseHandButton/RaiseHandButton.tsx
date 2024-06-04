@@ -10,7 +10,7 @@ import Popover from '@material-ui/core/Popover';
 import { useTheme } from '@material-ui/core/styles';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { JSONObject, Message } from '@twilio/conversations';
+import { Message } from '@twilio/conversations';
 
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
@@ -19,7 +19,7 @@ import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWeb
 export default function RaiseHandButton() {
   const { room } = useVideoContext();
   const { conversation } = useChatContext();
-  const { sendSystemMsg, isWebmotiVideo, sendHandRequest } = useWebmotiVideoContext();
+  const { sendSystemMsg, isWebmotiVideo, sendHandRequest, checkSystemMsg } = useWebmotiVideoContext();
   const [handQueue, setHandQueue] = useState<string[]>([]);
   const [isHandRaised, setIsHandRaised] = useState(false);
   // the anchor is used so the popover knows where to appear on the screen
@@ -72,10 +72,10 @@ export default function RaiseHandButton() {
 
     if (mode === 'RAISE' && !handQueue.includes(name)) {
       // raise hand
-      sendSystemMsg(conversation, `${name} raised hand`);
+      sendSystemMsg(conversation, JSON.stringify({ type: 'HAND', identity: name, action: 'RAISE' }));
       setHandQueue(prevQueue => [...prevQueue, name]);
     } else if (mode === 'LOWER') {
-      sendSystemMsg(conversation, `${name} lowered hand`);
+      sendSystemMsg(conversation, JSON.stringify({ type: 'HAND', identity: name, action: 'LOWER' }));
       setHandQueue(prevQueue => prevQueue.filter(participantName => participantName !== name));
 
       // start countdown timer for hand
@@ -138,37 +138,33 @@ export default function RaiseHandButton() {
   // listen for raise hand msg and update queue
   useEffect(() => {
     const handleMessageAdded = (message: Message) => {
-      // parse attributes
-      let isSystemMsg = false;
-      const attrObj = message.attributes as JSONObject;
-      if (attrObj.attributes !== undefined) {
-        const attrSysMsg = JSON.parse(attrObj.attributes as string).systemMsg;
-        if (attrSysMsg !== undefined) {
-          isSystemMsg = true;
-        }
+      if (!checkSystemMsg(message)) {
+        return;
       }
 
-      if (isSystemMsg) {
-        const match = message.body?.match(/^(.+) (raised|lowered) hand$/);
+      const msgData = JSON.parse(message.body || '');
 
-        if (match) {
-          const [, name, action] = match;
-
-          if (message.author === name) {
-            setHandQueue((prevQueue: string[]) => {
-              if (action === 'raised' && !prevQueue.includes(name)) {
-                return [...prevQueue, name];
-              } else if (action === 'lowered') {
-                return prevQueue.filter(e => e !== name);
-              }
-              return prevQueue;
-            });
-
-            // delete hand msg so it's not shown when rejoining
-            message.remove();
-          }
-        }
+      if (msgData.type !== 'HAND') {
+        // not hand msg
+        return;
       }
+
+      if (message.author !== msgData.idenity) {
+        // msg was sent by someone else
+        return;
+      }
+
+      setHandQueue((prevQueue: string[]) => {
+        if (msgData.action === 'RAISE' && !prevQueue.includes(msgData.idenity)) {
+          return [...prevQueue, msgData.idenity];
+        } else if (msgData.action === 'LOWER') {
+          return prevQueue.filter(e => e !== msgData.idenity);
+        }
+        return prevQueue;
+      });
+
+      // delete hand msg so it's not shown when rejoining
+      message.remove();
     };
 
     conversation?.on('messageAdded', handleMessageAdded);
@@ -176,7 +172,7 @@ export default function RaiseHandButton() {
     return () => {
       conversation?.off('messageAdded', handleMessageAdded);
     };
-  }, [conversation]);
+  }, [conversation, checkSystemMsg]);
 
   return (
     <div>
