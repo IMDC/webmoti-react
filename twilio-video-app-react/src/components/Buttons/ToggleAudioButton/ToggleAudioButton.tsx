@@ -9,6 +9,7 @@ import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import MicIcon from '../../../icons/MicIcon';
 import MicOffIcon from '../../../icons/MicOffIcon';
+import { MsgTypes } from '../../../constants';
 
 const enum Mode {
   Professor = 'PROFESSOR',
@@ -48,10 +49,10 @@ export default function ToggleAudioButton(props: { disabled?: boolean; className
         if (!isProfessor && !isWebmotiVideo(room?.localParticipant?.identity || '')) {
           if (isAudioEnabled) {
             // if student is muting their mic, enable class mic
-            sendSystemMsg(conversation, JSON.stringify({ type: 'MODESWITCH', mode: Mode.Classroom }));
+            sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.ModeSwitch, mode: Mode.Classroom }));
           } else {
             // if student unmutes, mute class mic
-            sendSystemMsg(conversation, JSON.stringify({ type: 'MODESWITCH', mode: Mode.Virtual }));
+            sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.ModeSwitch, mode: Mode.Virtual }));
           }
         }
 

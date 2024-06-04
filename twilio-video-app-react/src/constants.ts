@@ -26,3 +26,16 @@ export const WEBMOTI_CAMERA_1 = 'Class-View';
 export const WEBMOTI_CAMERA_2 = 'Board-View';
 
 export const REMOTE_IT_URL = 'https://jmn2f42hjgfv.connect.remote.it/raisehand';
+
+export const enum MsgTypes {
+  Hand = 'HAND',
+  ModeSwitch = 'MODESWITCH',
+  ToggleDevice = 'TOGGLEDEVICE',
+  MuteDevice = 'MUTEDEVICE',
+  Notify = 'NOTIFY',
+}
+
+export const enum HandActions {
+  Raise = 'RAISE',
+  Lower = 'LOWER',
+}

@@ -16,6 +16,7 @@ import useLocalAudioToggle from '../../hooks/useLocalAudioToggle/useLocalAudioTo
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import theme from '../../theme';
+import { MsgTypes } from '../../constants';
 
 const enum Mode {
   Professor = 'PROFESSOR',
@@ -53,11 +54,11 @@ export default function AudioMixer() {
       setAlignment(newAlignment);
 
       if (newAlignment === Mode.Professor) {
-        sendSystemMsg(conversation, JSON.stringify({ type: 'MODESWITCH', mode: Mode.Professor }));
+        sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.ModeSwitch, mode: Mode.Professor }));
       } else if (newAlignment === Mode.Classroom) {
-        sendSystemMsg(conversation, JSON.stringify({ type: 'MODESWITCH', mode: Mode.Classroom }));
+        sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.ModeSwitch, mode: Mode.Classroom }));
       } else {
-        sendSystemMsg(conversation, JSON.stringify({ type: 'MODESWITCH', mode: Mode.Virtual }));
+        sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.ModeSwitch, mode: Mode.Virtual }));
       }
     }
   };
@@ -102,7 +103,7 @@ export default function AudioMixer() {
 
       const msgData = JSON.parse(message.body || '');
 
-      if (msgData.type === 'MODESWITCH') {
+      if (msgData.type === MsgTypes.ModeSwitch) {
         switch (msgData.mode) {
           case Mode.Professor:
             // - disable mic (to prevent double audio)
@@ -131,7 +132,7 @@ export default function AudioMixer() {
         message.remove();
 
         return;
-      } else if (msgData.type === 'TOGGLEDEVICE') {
+      } else if (msgData.type === MsgTypes.ToggleDevice) {
         if (msgData.device === Devices.ProfSpeaker) {
           setProfSpeakerState(!isProfSpeakerEnabled);
         } else {
@@ -141,7 +142,7 @@ export default function AudioMixer() {
         message.remove();
 
         return;
-      } else if (msgData.type === 'MUTEDEVICE') {
+      } else if (msgData.type === MsgTypes.MuteDevice) {
         // if this participant was muted
         if (msgData.device === name) {
           toggleAudioEnabled();
@@ -169,7 +170,7 @@ export default function AudioMixer() {
   ]);
 
   const handleMuteBtnClick = () => {
-    sendSystemMsg(conversation, JSON.stringify({ type: 'MUTEDEVICE', device: input }));
+    sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.MuteDevice, device: input }));
   };
 
   // only show mixer if prof or admin
@@ -226,7 +227,10 @@ export default function AudioMixer() {
                   variant="contained"
                   color="primary"
                   onClick={() =>
-                    sendSystemMsg(conversation, JSON.stringify({ type: 'TOGGLEDEVICE', device: Devices.ClassMic }))
+                    sendSystemMsg(
+                      conversation,
+                      JSON.stringify({ type: MsgTypes.ToggleDevice, device: Devices.ClassMic })
+                    )
                   }
                 >
                   {isClassMicEnabled ? <MicIcon /> : <MicOffIcon />}
@@ -239,7 +243,10 @@ export default function AudioMixer() {
                   variant="contained"
                   color="primary"
                   onClick={() =>
-                    sendSystemMsg(conversation, JSON.stringify({ type: 'TOGGLEDEVICE', device: Devices.ProfSpeaker }))
+                    sendSystemMsg(
+                      conversation,
+                      JSON.stringify({ type: MsgTypes.ToggleDevice, device: Devices.ProfSpeaker })
+                    )
                   }
                 >
                   {isProfSpeakerEnabled ? <VolumeUpIcon /> : <VolumeOffIcon />}

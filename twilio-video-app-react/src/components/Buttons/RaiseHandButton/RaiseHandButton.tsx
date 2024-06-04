@@ -12,9 +12,11 @@ import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Message } from '@twilio/conversations';
 
+import { HandActions } from '../../../constants';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
+import { MsgTypes } from '../../../constants';
 
 export default function RaiseHandButton() {
   const { room } = useVideoContext();
@@ -63,19 +65,33 @@ export default function RaiseHandButton() {
 
   const toggleHand = useCallback(async () => {
     const name = room?.localParticipant?.identity || 'Participant';
-    const mode = isHandRaised ? 'LOWER' : 'RAISE';
+    const mode = isHandRaised ? HandActions.Lower : HandActions.Raise;
 
     // send request
     setIsLoading(true);
     await sendHandRequest(mode);
     setIsLoading(false);
 
-    if (mode === 'RAISE' && !handQueue.includes(name)) {
+    if (mode === HandActions.Raise && !handQueue.includes(name)) {
       // raise hand
-      sendSystemMsg(conversation, JSON.stringify({ type: 'HAND', identity: name, action: 'RAISE' }));
+      sendSystemMsg(
+        conversation,
+        JSON.stringify({
+          type: MsgTypes.Hand,
+          identity: name,
+          action: HandActions.Raise,
+        })
+      );
       setHandQueue(prevQueue => [...prevQueue, name]);
-    } else if (mode === 'LOWER') {
-      sendSystemMsg(conversation, JSON.stringify({ type: 'HAND', identity: name, action: 'LOWER' }));
+    } else if (mode === HandActions.Lower) {
+      sendSystemMsg(
+        conversation,
+        JSON.stringify({
+          type: MsgTypes.Hand,
+          identity: name,
+          action: HandActions.Lower,
+        })
+      );
       setHandQueue(prevQueue => prevQueue.filter(participantName => participantName !== name));
 
       // start countdown timer for hand
@@ -144,7 +160,7 @@ export default function RaiseHandButton() {
 
       const msgData = JSON.parse(message.body || '');
 
-      if (msgData.type !== 'HAND') {
+      if (msgData.type !== MsgTypes.Hand) {
         // not hand msg
         return;
       }
@@ -155,9 +171,9 @@ export default function RaiseHandButton() {
       }
 
       setHandQueue((prevQueue: string[]) => {
-        if (msgData.action === 'RAISE' && !prevQueue.includes(msgData.idenity)) {
+        if (msgData.action === HandActions.Raise && !prevQueue.includes(msgData.idenity)) {
           return [...prevQueue, msgData.idenity];
-        } else if (msgData.action === 'LOWER') {
+        } else if (msgData.action === HandActions.Lower) {
           return prevQueue.filter(e => e !== msgData.idenity);
         }
         return prevQueue;

@@ -21,6 +21,7 @@ import neutral_question from '../../../sounds/speech/neutral_question.mp3';
 import professor_1 from '../../../sounds/speech/professor_1.mp3';
 import professor_2 from '../../../sounds/speech/professor_2.mp3';
 import professor_3 from '../../../sounds/speech/professor_3.mp3';
+import { MsgTypes } from '../../../constants';
 
 interface SoundEntry {
   sound: string;
@@ -97,7 +98,7 @@ export default function NotifyButton() {
     if (!isProfessor) {
       playSetSound();
       logSound();
-      sendSystemMsg(conversation, JSON.stringify({ type: 'NOTIFY' }));
+      sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.Notify }));
     }
   };
 
@@ -109,7 +110,7 @@ export default function NotifyButton() {
 
       const msgData = JSON.parse(message.body || '');
 
-      if (msgData.type === 'NOTIFY' && isProfessor) {
+      if (msgData.type === MsgTypes.Notify && isProfessor) {
         playSetSound();
         message.remove();
       }
