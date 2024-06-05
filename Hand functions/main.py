@@ -1,3 +1,4 @@
+import enum
 import logging
 import signal
 import socket
@@ -8,9 +9,19 @@ from urllib.parse import parse_qs
 
 from RPi import GPIO
 
+
+class Mode(enum.Enum):
+    WAVE2 = "WAVE2"
+    WAVE = "WAVE"
+    TOGGLE = "TOGGLE"
+    RAISE = "RAISE"
+    LOWER = "LOWER"
+    RERAISE = "RERAISE"
+    INIT = "INIT"
+
+
 PORT = 80
 
-MODES = ["WAVE2", "WAVE", "TOGGLE", "RAISE", "LOWER", "INIT"]
 MAX_ANGLE = 160
 MIN_ANGLE = 0
 HALFWAY_ANGLE = 140
@@ -58,14 +69,14 @@ def raise_hand(mode):
     global is_hand_raised
     logging.info(f"Raising hand with mode: {mode}")
 
-    if mode == "WAVE2":
+    if mode == Mode.WAVE2:
         wave()
         wave()
 
-    elif mode == "WAVE":
+    elif mode == Mode.WAVE:
         wave()
 
-    elif mode == "TOGGLE":
+    elif mode == Mode.TOGGLE:
         if is_hand_raised:
             set_servo_angle(MIN_ANGLE)
         else:
@@ -74,15 +85,19 @@ def raise_hand(mode):
             # start_reset_timer()
         is_hand_raised = not is_hand_raised
 
-    elif mode == "RAISE":
+    elif mode == Mode.RAISE:
         set_servo_angle(HALFWAY_ANGLE)
         is_hand_raised = True
 
-    elif mode == "LOWER":
+    elif mode == Mode.LOWER:
         set_servo_angle(MIN_ANGLE)
         is_hand_raised = False
 
-    elif mode == "INIT":
+    elif mode == Mode.RERAISE:
+        set_servo_angle(MIN_ANGLE)
+        set_servo_angle(HALFWAY_ANGLE)
+
+    elif mode == Mode.INIT:
         # this is to initialize the remote.it connection to speed up future requests
         logging.info("Initializing remote.it connection")
 
@@ -118,16 +133,19 @@ def handle_request(conn):
             _, body = split
             params = parse_qs(body)
             # default is wave if no params sent
-            mode = params.get("mode", ["WAVE2"])[0].upper()
+            mode = params.get("mode", [Mode.WAVE2.name])[0].upper()
         else:
             # no body in request
-            mode = "WAVE2"
+            mode = Mode.WAVE2.name
 
-        if mode not in MODES:
+        try:
+            mode_enum = Mode[mode]
+        except KeyError:
             logging.error(f"Invalid mode received: {mode}")
             send_response(conn, "Invalid mode", "400 Bad Request")
             return
-        raise_hand(mode)
+
+        raise_hand(mode_enum)
 
     # Load and serve the HTML page
     body = get_html()
