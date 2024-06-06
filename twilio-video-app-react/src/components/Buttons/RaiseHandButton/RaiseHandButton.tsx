@@ -13,10 +13,10 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Message } from '@twilio/conversations';
 
 import { HandActions } from '../../../constants';
+import { MsgTypes } from '../../../constants';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
-import { MsgTypes } from '../../../constants';
 
 export default function RaiseHandButton() {
   const { room } = useVideoContext();
@@ -69,7 +69,21 @@ export default function RaiseHandButton() {
 
     // send request
     setIsLoading(true);
-    await sendHandRequest(mode);
+
+    const isFirst = handQueue[0] === name;
+
+    if (handQueue.length === 0 || (handQueue.length === 1 && mode === HandActions.Lower)) {
+      // no one in queue or you're the only one in queue lowering your hand
+      await sendHandRequest(mode);
+    } else if (handQueue.length > 1 && isFirst && mode === HandActions.Lower) {
+      // you're in first place and lowering hand
+      // there are other people in the queue, so don't lower hand, reraise instead
+      await sendHandRequest(HandActions.ReRaise);
+    } else {
+      // do nothing here
+      // (if the hand is already raised by someone else, leave it)
+    }
+
     setIsLoading(false);
 
     if (mode === HandActions.Raise && !handQueue.includes(name)) {
@@ -165,16 +179,16 @@ export default function RaiseHandButton() {
         return;
       }
 
-      if (message.author !== msgData.idenity) {
+      if (message.author !== msgData.identity) {
         // msg was sent by someone else
         return;
       }
 
       setHandQueue((prevQueue: string[]) => {
-        if (msgData.action === HandActions.Raise && !prevQueue.includes(msgData.idenity)) {
-          return [...prevQueue, msgData.idenity];
+        if (msgData.action === HandActions.Raise && !prevQueue.includes(msgData.identity)) {
+          return [...prevQueue, msgData.identity];
         } else if (msgData.action === HandActions.Lower) {
-          return prevQueue.filter(e => e !== msgData.idenity);
+          return prevQueue.filter(e => e !== msgData.identity);
         }
         return prevQueue;
       });

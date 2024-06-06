@@ -38,4 +38,5 @@ export const enum MsgTypes {
 export const enum HandActions {
   Raise = 'RAISE',
   Lower = 'LOWER',
+  ReRaise = 'RERAISE',
 }
