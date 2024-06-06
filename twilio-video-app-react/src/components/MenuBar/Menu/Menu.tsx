@@ -1,26 +1,43 @@
-import React, { useState, useRef } from 'react';
-import AboutDialog from '../../AboutDialog/AboutDialog';
-import BackgroundIcon from '../../../icons/BackgroundIcon';
+import { useState, useRef } from 'react';
+
+import {
+  Button,
+  styled,
+  Theme,
+  useMediaQuery,
+  Menu as MenuContainer,
+  MenuItem,
+  Typography,
+  makeStyles,
+  createStyles,
+  Grid,
+  Tooltip,
+} from '@material-ui/core';
 import CollaborationViewIcon from '@material-ui/icons/AccountBox';
-import DeviceSelectionDialog from '../../DeviceSelectionDialog/DeviceSelectionDialog';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import GridViewIcon from '@material-ui/icons/Apps';
-import InfoIconOutlined from '../../../icons/InfoIconOutlined';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import SearchIcon from '@material-ui/icons/Search';
+import { isSupported } from '@twilio/video-processors';
+import { VideoRoomMonitor } from '@twilio/video-room-monitor';
+
+import useChatContext from '../../../hooks/useChatContext/useChatContext';
+import useFlipCameraToggle from '../../../hooks/useFlipCameraToggle/useFlipCameraToggle';
+import useIsRecording from '../../../hooks/useIsRecording/useIsRecording';
+import useRoomState from '../../../hooks/useRoomState/useRoomState';
+import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
+import BackgroundIcon from '../../../icons/BackgroundIcon';
+import FlipCameraIcon from '../../../icons/FlipCameraIcon';
+import InfoIconOutlined from '../../../icons/InfoIconOutlined';
+import ScreenShareIcon from '../../../icons/ScreenShareIcon';
+import SettingsIcon from '../../../icons/SettingsIcon';
 import StartRecordingIcon from '../../../icons/StartRecordingIcon';
 import StopRecordingIcon from '../../../icons/StopRecordingIcon';
-import SearchIcon from '@material-ui/icons/Search';
-import SettingsIcon from '../../../icons/SettingsIcon';
-import { Button, styled, Theme, useMediaQuery, Menu as MenuContainer, MenuItem, Typography } from '@material-ui/core';
-import { isSupported } from '@twilio/video-processors';
-
 import { useAppState } from '../../../state';
-import useChatContext from '../../../hooks/useChatContext/useChatContext';
-import useIsRecording from '../../../hooks/useIsRecording/useIsRecording';
-import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
-import FlipCameraIcon from '../../../icons/FlipCameraIcon';
-import useFlipCameraToggle from '../../../hooks/useFlipCameraToggle/useFlipCameraToggle';
-import { VideoRoomMonitor } from '@twilio/video-room-monitor';
+import AboutDialog from '../../AboutDialog/AboutDialog';
+import DeviceSelectionDialog from '../../DeviceSelectionDialog/DeviceSelectionDialog';
+import useScreenShareParticipant from '../../../hooks/useScreenShareParticipant/useScreenShareParticipant';
+import { isMobile } from '../../../utils';
 
 export const IconContainer = styled('div')({
   display: 'flex',
@@ -29,8 +46,61 @@ export const IconContainer = styled('div')({
   marginRight: '0.3em',
 });
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    screenShareBanner: {
+      position: 'fixed',
+      zIndex: 8,
+      bottom: `${theme.footerHeight}px`,
+      left: 0,
+      right: 0,
+      height: '104px',
+      background: 'rgba(0, 0, 0, 0.5)',
+      '& h6': {
+        color: 'white',
+      },
+      '& button': {
+        background: 'white',
+        color: theme.brand,
+        border: `2px solid ${theme.brand}`,
+        margin: '0 2em',
+        '&:hover': {
+          color: '#600101',
+          border: `2px solid #600101`,
+          background: '#FFE9E7',
+        },
+      },
+    },
+  })
+);
+
+export const SCREEN_SHARE_TEXT = 'Share Screen';
+export const STOP_SCREEN_SHARE_TEXT = 'Stop Sharing Screen';
+export const SHARE_IN_PROGRESS_TEXT = 'Cannot share screen when another user is sharing';
+export const SHARE_NOT_SUPPORTED_TEXT = 'Screen sharing is not supported with this browser';
+
 export default function Menu(props: { buttonClassName?: string }) {
-  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
+  const isMobileBreakpoint = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
+
+  const classes = useStyles();
+
+  const roomState = useRoomState();
+  const isReconnecting = roomState === 'reconnecting';
+
+  const screenShareParticipant = useScreenShareParticipant();
+  const disableScreenShareButton = Boolean(screenShareParticipant);
+  const isScreenShareSupported = navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia;
+  const isScreenShareDisabled = disableScreenShareButton || !isScreenShareSupported;
+
+  let tooltipMessage = '';
+
+  if (disableScreenShareButton) {
+    tooltipMessage = SHARE_IN_PROGRESS_TEXT;
+  }
+
+  if (!isScreenShareSupported) {
+    tooltipMessage = SHARE_NOT_SUPPORTED_TEXT;
+  }
 
   const [aboutOpen, setAboutOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -39,13 +109,20 @@ export default function Menu(props: { buttonClassName?: string }) {
   const { isFetching, updateRecordingRules, roomType, setIsGalleryViewActive, isGalleryViewActive } = useAppState();
   const { setIsChatWindowOpen } = useChatContext();
   const isRecording = useIsRecording();
-  const { room, setIsBackgroundSelectionOpen } = useVideoContext();
+  const { room, setIsBackgroundSelectionOpen, isSharingScreen, toggleScreenShare } = useVideoContext();
 
   const anchorRef = useRef<HTMLButtonElement>(null);
   const { flipCameraDisabled, toggleFacingMode, flipCameraSupported } = useFlipCameraToggle();
 
   return (
     <>
+      {isSharingScreen && (
+        <Grid container justifyContent="center" alignItems="center" className={classes.screenShareBanner}>
+          <Typography variant="h6">You are sharing your screen</Typography>
+          <Button onClick={() => toggleScreenShare()}>Stop Sharing</Button>
+        </Grid>
+      )}
+
       <Button
         onClick={() => setMenuOpen(isOpen => !isOpen)}
         ref={anchorRef}
@@ -53,7 +130,7 @@ export default function Menu(props: { buttonClassName?: string }) {
         aria-label="More options"
         data-cy-more-button
       >
-        {isMobile ? (
+        {isMobileBreakpoint ? (
           <MoreIcon />
         ) : (
           <>
@@ -71,7 +148,7 @@ export default function Menu(props: { buttonClassName?: string }) {
           horizontal: 'left',
         }}
         transformOrigin={{
-          vertical: isMobile ? -55 : 'bottom',
+          vertical: isMobileBreakpoint ? -55 : 'bottom',
           horizontal: 'center',
         }}
       >
@@ -81,7 +158,6 @@ export default function Menu(props: { buttonClassName?: string }) {
           </IconContainer>
           <Typography variant="body1">Audio and Video Settings</Typography>
         </MenuItem>
-
         {isSupported && (
           <MenuItem
             onClick={() => {
@@ -96,7 +172,6 @@ export default function Menu(props: { buttonClassName?: string }) {
             <Typography variant="body1">Backgrounds</Typography>
           </MenuItem>
         )}
-
         {flipCameraSupported && (
           <MenuItem disabled={flipCameraDisabled} onClick={toggleFacingMode}>
             <IconContainer>
@@ -105,7 +180,6 @@ export default function Menu(props: { buttonClassName?: string }) {
             <Typography variant="body1">Flip Camera</Typography>
           </MenuItem>
         )}
-
         {roomType !== 'peer-to-peer' && roomType !== 'go' && (
           <MenuItem
             disabled={isFetching}
@@ -123,7 +197,6 @@ export default function Menu(props: { buttonClassName?: string }) {
             <Typography variant="body1">{isRecording ? 'Stop' : 'Start'} Recording</Typography>
           </MenuItem>
         )}
-
         <MenuItem
           onClick={() => {
             VideoRoomMonitor.toggleMonitor();
@@ -135,6 +208,22 @@ export default function Menu(props: { buttonClassName?: string }) {
           </IconContainer>
           <Typography variant="body1">Room Monitor</Typography>
         </MenuItem>
+
+        {!isSharingScreen && !isMobile && (
+          <Tooltip
+            title={tooltipMessage}
+            placement="top"
+            PopperProps={{ disablePortal: true }}
+            style={{ cursor: isScreenShareDisabled ? 'not-allowed' : 'pointer' }}
+          >
+            <MenuItem onClick={toggleScreenShare} disabled={isReconnecting}>
+              <IconContainer>
+                <ScreenShareIcon />
+              </IconContainer>
+              <Typography variant="body1">{SCREEN_SHARE_TEXT}</Typography>
+            </MenuItem>
+          </Tooltip>
+        )}
 
         <MenuItem
           onClick={() => {
