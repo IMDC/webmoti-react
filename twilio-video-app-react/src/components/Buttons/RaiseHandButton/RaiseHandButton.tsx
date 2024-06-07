@@ -1,15 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { Tooltip } from '@material-ui/core';
-import Badge from '@material-ui/core/Badge';
+import { Grid, Theme, Tooltip, createStyles, makeStyles } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Popover from '@material-ui/core/Popover';
-import { useTheme } from '@material-ui/core/styles';
+import { EmojiPeople } from '@material-ui/icons';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Message } from '@twilio/conversations';
 
 import { HandActions } from '../../../constants';
@@ -18,30 +15,57 @@ import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    handQueueBanner: {
+      position: 'fixed',
+      zIndex: 8,
+      bottom: `${theme.footerHeight}px`,
+      left: 0,
+      right: 0,
+      height: '104px',
+    },
+    handQueue: {
+      background: 'white',
+      borderRadius: '16px',
+      padding: theme.spacing(2),
+      boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9)',
+    },
+    centerIcon: {
+      marginRight: '5px',
+      verticalAlign: 'middle',
+    },
+    firstInQueue: {
+      backgroundColor: theme.palette.primary.main,
+      color: '#fff',
+      fontWeight: 'bold',
+    },
+    progress: {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      marginTop: -12,
+      marginLeft: -12,
+    },
+  })
+);
+
 export default function RaiseHandButton() {
+  const classes = useStyles();
+
   const { room } = useVideoContext();
   const { conversation } = useChatContext();
+
   const { sendSystemMsg, isWebmotiVideo, sendHandRequest, checkSystemMsg } = useWebmotiVideoContext();
+
   const [handQueue, setHandQueue] = useState<string[]>([]);
   const [isHandRaised, setIsHandRaised] = useState(false);
-  // the anchor is used so the popover knows where to appear on the screen
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const buttonCountdownDuration = 30;
   const [countdown, setCountdown] = useState(0);
 
   const [buttonIntervalID, setButtonIntervalID] = useState<NodeJS.Timeout | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-
-  const theme = useTheme();
-
-  const handleOpenPopover = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClosePopover = () => {
-    setAnchorEl(null);
-  };
 
   // this is run when participant joins
   useEffect(() => {
@@ -206,6 +230,26 @@ export default function RaiseHandButton() {
 
   return (
     <div>
+      {/* hand queue */}
+      {handQueue.length > 0 && (
+        <Grid container justifyContent="center" alignItems="center" className={classes.handQueueBanner}>
+          <Box display="flex" flexWrap="wrap" p={1} className={classes.handQueue}>
+            {/* for each raised hand, display in queue */}
+            {handQueue.map((participantName, idx) => (
+              <Box key={idx} m={0.5}>
+                {idx === 0 && (
+                  <>
+                    <EmojiPeople className={classes.centerIcon} />
+                    <ArrowRightIcon color="primary" className={classes.centerIcon} />
+                  </>
+                )}
+                <Chip label={participantName} className={idx === 0 ? classes.firstInQueue : ''} />
+              </Box>
+            ))}
+          </Box>
+        </Grid>
+      )}
+
       {/* main raise hand button */}
       <Tooltip title={isHandRaised ? 'Release to lower hand' : 'Click & hold to raise hand'}>
         <span>
@@ -218,69 +262,19 @@ export default function RaiseHandButton() {
             disabled={isLoading || countdown > 0}
           >
             {isHandRaised ? 'Lower Hand' : 'Raise Hand'}
-            {isLoading && (
-              <CircularProgress
-                size={24}
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  marginTop: -12,
-                  marginLeft: -12,
-                }}
-              />
-            )}
+            {isLoading && <CircularProgress size={24} className={classes.progress} />}
 
             {countdown > 0 && (
               <CircularProgress
                 variant="determinate"
                 value={(countdown / buttonCountdownDuration) * 100}
                 size={24}
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  marginTop: -12,
-                  marginLeft: -12,
-                }}
+                className={classes.progress}
               />
             )}
           </Button>
         </span>
       </Tooltip>
-
-      {/* indicator that shows how many hands are raised */}
-      {/* need to set overlap to avoid warning */}
-      <Badge badgeContent={handQueue.length} overlap="rectangular" color="secondary">
-        {/* hand icon button, click to open queue */}
-        <Button onClick={handleOpenPopover} color="default">
-          Hands Raised <ExpandMoreIcon />
-        </Button>
-      </Badge>
-
-      {/* hand queue popover */}
-      <Popover
-        open={Boolean(anchorEl)}
-        anchorEl={anchorEl}
-        onClose={handleClosePopover}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Box display="flex" flexWrap="wrap" p={1}>
-          {/* for each raised hand, display in queue */}
-          {handQueue.map((participantName, idx) => (
-            <Box key={idx} m={0.5}>
-              {idx === 0 && <ArrowRightIcon color="primary" style={{ marginRight: '5px', verticalAlign: 'middle' }} />}
-              <Chip
-                label={participantName}
-                style={
-                  idx === 0 ? { backgroundColor: theme.palette.primary.main, color: '#fff', fontWeight: 'bold' } : {}
-                }
-              />
-            </Box>
-          ))}
-        </Box>
-      </Popover>
     </div>
   );
 }
