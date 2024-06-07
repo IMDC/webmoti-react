@@ -3,9 +3,9 @@ import { useState } from 'react';
 import { Button, Popover } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import NotifyButton from '../Buttons/NotifyButton/NotifyButton';
+import NotifyButton from '../../Buttons/NotifyButton/NotifyButton';
 
-export default function SoundsPopover() {
+export default function SoundsMenu() {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {

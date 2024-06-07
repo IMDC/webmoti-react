@@ -1,33 +1,25 @@
-import React, { useState } from 'react';
-
-import { Button, Grid, Hidden, Popover, Typography } from '@material-ui/core';
+import { Grid, Hidden, Typography } from '@material-ui/core';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+import ControlsMenu from './ControlsMenu/ControlsMenu';
 import Menu from './Menu/Menu';
+import SoundsMenu from './SoundsMenu/SoundsMenu';
 import useParticipants from '../../hooks/useParticipants/useParticipants';
 import useRoomState from '../../hooks/useRoomState/useRoomState';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import AudioMixer from '../AudioMixer/AudioMixer';
 import ModeDisplay from '../AudioMixer/ModeDisplay';
 import BoardQualityButton from '../Buttons/BoardQualityButton/BoardQualityButton';
-import ChangeZoomButton from '../Buttons/ChangeZoomButton/ChangeZoomButton';
 import EndCallButton from '../Buttons/EndCallButton/EndCallButton';
-import MuteClassroomButton from '../Buttons/MuteClassroomButton/MuteClassroomButton';
 import RaiseHandButton from '../Buttons/RaiseHandButton/RaiseHandButton';
 import ToggleAudioButton from '../Buttons/ToggleAudioButton/ToggleAudioButton';
-import ToggleCameraButton from '../Buttons/ToggleCameraButton/ToggleCameraButton';
-import ToggleCameraButton2 from '../Buttons/ToggleCameraButton2/ToggleCameraButton2';
+
 // import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import WaveHandButton from '../Buttons/WaveHandButton/WaveHandButton';
-import SoundsPopover from '../SoundsPopover/SoundsPopover';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    cameraControlsPopover: {
-      padding: theme.spacing(2),
-    },
     container: {
       backgroundColor: theme.palette.background.default,
       bottom: 0,
@@ -58,15 +50,6 @@ export default function MenuBar() {
   const isReconnecting = roomState === 'reconnecting';
   const { room } = useVideoContext();
   const participants = useParticipants();
-  const [cameraControlsAnchorEl, setCameraControlsAnchorEl] = useState<HTMLElement | null>(null);
-
-  const handleCameraControlsClick = (event: React.MouseEvent<HTMLElement>) => {
-    setCameraControlsAnchorEl(event.currentTarget);
-  };
-
-  const handleCameraControlsClose = () => {
-    setCameraControlsAnchorEl(null);
-  };
 
   return (
     <footer className={classes.container}>
@@ -83,40 +66,19 @@ export default function MenuBar() {
             <ModeDisplay />
             <ToggleAudioButton disabled={isReconnecting} />
             <ToggleVideoButton disabled={isReconnecting} />
-            <Button onClick={handleCameraControlsClick}>
-              Classroom Controls <ExpandMoreIcon />
-            </Button>
-            <Popover
-              open={Boolean(cameraControlsAnchorEl)}
-              anchorEl={cameraControlsAnchorEl}
-              onClose={handleCameraControlsClose}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'center',
-              }}
-              transformOrigin={{
-                vertical: 'bottom',
-                horizontal: 'center',
-              }}
-            >
-              <div className={classes.cameraControlsPopover}>
-                <MuteClassroomButton />
-                <ToggleCameraButton />
-                <ToggleCameraButton2 />
-                <ChangeZoomButton />
-              </div>
-            </Popover>
 
-            <AudioMixer></AudioMixer>
+            <ControlsMenu />
+
+            <AudioMixer />
 
             {/* {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />} */}
+
             <RaiseHandButton />
-
             <WaveHandButton />
-
             <BoardQualityButton />
 
-            <SoundsPopover />
+            <SoundsMenu />
+
             <Hidden mdDown>
               <Menu />
             </Hidden>
