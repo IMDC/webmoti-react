@@ -9,14 +9,10 @@ import useRoomState from '../../hooks/useRoomState/useRoomState';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import AudioMixer from '../AudioMixer/AudioMixer';
 import ModeDisplay from '../AudioMixer/ModeDisplay';
-import BoardQualityButton from '../Buttons/BoardQualityButton/BoardQualityButton';
 import EndCallButton from '../Buttons/EndCallButton/EndCallButton';
 import RaiseHandButton from '../Buttons/RaiseHandButton/RaiseHandButton';
 import ToggleAudioButton from '../Buttons/ToggleAudioButton/ToggleAudioButton';
-
-// import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
-import WaveHandButton from '../Buttons/WaveHandButton/WaveHandButton';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -74,8 +70,6 @@ export default function MenuBar() {
             {/* {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />} */}
 
             <RaiseHandButton />
-            <WaveHandButton />
-            <BoardQualityButton />
 
             <SoundsMenu />
 

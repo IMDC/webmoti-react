@@ -7,6 +7,8 @@ import ChangeZoomButton from '../../Buttons/ChangeZoomButton/ChangeZoomButton';
 import MuteClassroomButton from '../../Buttons/MuteClassroomButton/MuteClassroomButton';
 import ToggleCameraButton from '../../Buttons/ToggleCameraButton/ToggleCameraButton';
 import ToggleCameraButton2 from '../../Buttons/ToggleCameraButton2/ToggleCameraButton2';
+import BoardQualityButton from '../../Buttons/BoardQualityButton/BoardQualityButton';
+import WaveHandButton from '../../Buttons/WaveHandButton/WaveHandButton';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -52,6 +54,8 @@ export default function ControlsMenu() {
           <ToggleCameraButton />
           <ToggleCameraButton2 />
           <ChangeZoomButton />
+          <BoardQualityButton />
+          <WaveHandButton />
         </div>
       </Popover>
     </>
