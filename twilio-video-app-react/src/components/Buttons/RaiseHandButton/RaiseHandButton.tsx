@@ -15,6 +15,8 @@ import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
+const maxQueueDisplay = 5;
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     handQueueBanner: {
@@ -234,8 +236,8 @@ export default function RaiseHandButton() {
       {handQueue.length > 0 && (
         <Grid container justifyContent="center" alignItems="center" className={classes.handQueueBanner}>
           <Box display="flex" flexWrap="wrap" p={1} className={classes.handQueue}>
-            {/* for each raised hand, display in queue */}
-            {handQueue.map((participantName, idx) => (
+            {/* for each raised hand up to maxQueueDisplay, display in queue */}
+            {handQueue.slice(0, maxQueueDisplay).map((participantName, idx) => (
               <Box key={idx} m={0.5}>
                 {idx === 0 && (
                   <>
@@ -246,6 +248,13 @@ export default function RaiseHandButton() {
                 <Chip label={participantName} className={idx === 0 ? classes.firstInQueue : ''} />
               </Box>
             ))}
+
+            {/* if more participants, show how many more */}
+            {handQueue.length > maxQueueDisplay && (
+              <Box m={0.5}>
+                <Chip label={`+${handQueue.length - maxQueueDisplay} more`} />
+              </Box>
+            )}
           </Box>
         </Grid>
       )}
