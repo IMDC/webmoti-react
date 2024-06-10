@@ -42,10 +42,12 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function MenuBar() {
   const classes = useStyles();
-  const roomState = useRoomState();
-  const isReconnecting = roomState === 'reconnecting';
+
   const { room } = useVideoContext();
   const participants = useParticipants();
+  const roomState = useRoomState();
+
+  const isReconnecting = roomState === 'reconnecting';
 
   return (
     <footer className={classes.container}>
@@ -57,19 +59,21 @@ export default function MenuBar() {
             </Typography>
           </Grid>
         </Hidden>
+
         <Grid item>
           <Grid container justifyContent="center" alignItems="center">
             <ModeDisplay />
+
             <ToggleAudioButton disabled={isReconnecting} />
             <ToggleVideoButton disabled={isReconnecting} />
+
+            <RaiseHandButton />
 
             <ControlsMenu />
 
             <AudioMixer />
 
             {/* {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />} */}
-
-            <RaiseHandButton />
 
             <SoundsMenu />
 
@@ -78,6 +82,7 @@ export default function MenuBar() {
             </Hidden>
           </Grid>
         </Grid>
+
         <Hidden mdDown>
           <Grid style={{ flex: 1 }}>
             <Grid container justifyContent="flex-end">

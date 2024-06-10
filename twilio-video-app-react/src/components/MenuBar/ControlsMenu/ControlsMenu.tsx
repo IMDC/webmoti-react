@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Button, Popover, Theme, createStyles, makeStyles } from '@material-ui/core';
+import { Button, Divider, Grid, Popover, Theme, createStyles, makeStyles } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import ChangeZoomButton from '../../Buttons/ChangeZoomButton/ChangeZoomButton';
@@ -50,12 +50,35 @@ export default function ControlsMenu() {
         }}
       >
         <div className={classes.cameraControlsPopover}>
-          <MuteClassroomButton />
-          <ToggleCameraButton />
-          <ToggleCameraButton2 />
-          <ChangeZoomButton />
-          <BoardQualityButton />
-          <WaveHandButton />
+          <Grid container justifyContent="center" alignItems="center" direction="column">
+            <Grid item>
+              <MuteClassroomButton />
+            </Grid>
+
+            <Grid item>
+              <Divider />
+              <Grid container spacing={2} justifyContent="center" alignItems="center">
+                <Grid item>
+                  <ToggleCameraButton />
+                </Grid>
+                <Grid item>
+                  <ToggleCameraButton2 />
+                </Grid>
+              </Grid>
+            </Grid>
+
+            <Grid item>
+              <ChangeZoomButton />
+            </Grid>
+
+            <Grid item>
+              <BoardQualityButton />
+            </Grid>
+
+            <Grid item>
+              <WaveHandButton />
+            </Grid>
+          </Grid>
         </div>
       </Popover>
     </>
