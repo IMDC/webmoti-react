@@ -44,9 +44,11 @@ export default function useScreenShareToggle(room: Room | null, onError: ErrorCa
           .catch(onError);
       })
       .catch(error => {
+        const blockMsg = 'The request is not allowed by the user agent or the platform in the current context.';
         // Don't display an error if the user closes the screen share dialog
         if (
           error.message === 'Permission denied by system' ||
+          error.message === blockMsg ||
           (error.name !== 'AbortError' && error.name !== 'NotAllowedError')
         ) {
           console.error(error);
