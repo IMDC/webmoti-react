@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import Button from '@material-ui/core/Button';
-import { Theme, useMediaQuery, Dialog, DialogContent } from '@material-ui/core';
-import ChatIcon from '../../../icons/ChatIcon';
-import clsx from 'clsx';
+import { useEffect, useState } from 'react';
+
+import { Theme, useMediaQuery } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import clsx from 'clsx';
+
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
+import ChatIcon from '../../../icons/ChatIcon';
 
 export const ANIMATION_DURATION = 700;
 
@@ -42,21 +44,6 @@ const useStyles = makeStyles({
     animation: `$expand ${ANIMATION_DURATION}ms ease-out`,
     animationIterationCount: 1,
   },
-  popUp: {
-    textAlign: 'center',
-    marginTop: '30px',
-    padding: '24px',
-    paddingLeft: '80px',
-    paddingRight: '80px',
-  },
-  closeButton: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    marginBottom: '8px',
-    position: 'absolute',
-    top: '8px',
-    right: '8px',
-  },
   '@keyframes expand': {
     '0%': {
       transform: 'scale(0.1, 0.1)',
@@ -74,10 +61,12 @@ const useStyles = makeStyles({
 
 export default function ToggleChatButton() {
   const classes = useStyles();
-  const [shouldAnimate, setShouldAnimate] = useState(false);
-  const [isPopUpOpen, setIsPopUpOpen] = useState(false);
+
   const { isChatWindowOpen, setIsChatWindowOpen, conversation, hasUnreadMessages } = useChatContext();
   const { setIsBackgroundSelectionOpen } = useVideoContext();
+
+  const [shouldAnimate, setShouldAnimate] = useState(false);
+
   const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
 
   const toggleChatWindow = () => {
@@ -85,13 +74,8 @@ export default function ToggleChatButton() {
     setIsBackgroundSelectionOpen(false);
   };
 
-  const handlePopUpClose = () => {
-    setIsPopUpOpen(false);
-  };
-
   useEffect(() => {
     if (shouldAnimate) {
-      setIsPopUpOpen(true);
       setTimeout(() => setShouldAnimate(false), ANIMATION_DURATION);
     }
   }, [shouldAnimate]);
@@ -122,19 +106,6 @@ export default function ToggleChatButton() {
       >
         {isMobile ? '' : 'Chat'}
       </Button>
-
-      {/* Pop-up */}
-      {/* <Dialog open={isPopUpOpen} onClose={handlePopUpClose}>
-        <DialogContent className={clsx(classes.popUp)}>
-          <div className={classes.closeButton}>
-            <Button color="primary" onClick={handlePopUpClose}>
-              Close
-            </Button>
-          </div>
-          <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '16px' }}>New Message Received!</div>
-          <div style={{ marginBottom: '30px' }}>Open the chat to respond.</div>
-        </DialogContent>
-      </Dialog> */}
     </>
   );
 }

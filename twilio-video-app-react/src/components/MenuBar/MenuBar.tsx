@@ -13,6 +13,7 @@ import EndCallButton from '../Buttons/EndCallButton/EndCallButton';
 import RaiseHandButton from '../Buttons/RaiseHandButton/RaiseHandButton';
 import ToggleAudioButton from '../Buttons/ToggleAudioButton/ToggleAudioButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
+import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -73,9 +74,9 @@ export default function MenuBar() {
 
             <AudioMixer />
 
-            {/* {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />} */}
-
             <SoundsMenu />
+
+            {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />}
 
             <Hidden mdDown>
               <Menu />
