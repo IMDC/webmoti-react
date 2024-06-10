@@ -8,6 +8,8 @@ import clsx from 'clsx';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import ChatIcon from '../../../icons/ChatIcon';
+import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
+import { Message } from '@twilio/conversations';
 
 export const ANIMATION_DURATION = 700;
 
@@ -64,6 +66,7 @@ export default function ToggleChatButton() {
 
   const { isChatWindowOpen, setIsChatWindowOpen, conversation, hasUnreadMessages } = useChatContext();
   const { setIsBackgroundSelectionOpen } = useVideoContext();
+  const { checkSystemMsg } = useWebmotiVideoContext();
 
   const [shouldAnimate, setShouldAnimate] = useState(false);
 
@@ -82,13 +85,21 @@ export default function ToggleChatButton() {
 
   useEffect(() => {
     if (conversation && !isChatWindowOpen) {
-      const handleNewMessage = () => setShouldAnimate(true);
+      const handleNewMessage = (message: Message) => {
+        // don't show new msg animation for system messages
+        if (checkSystemMsg(message)) {
+          return;
+        }
+
+        setShouldAnimate(true);
+      };
+
       conversation.on('messageAdded', handleNewMessage);
       return () => {
         conversation.off('messageAdded', handleNewMessage);
       };
     }
-  }, [conversation, isChatWindowOpen]);
+  }, [conversation, isChatWindowOpen, checkSystemMsg]);
 
   return (
     <>
