@@ -97,14 +97,16 @@ export default function RaiseHandButton() {
     setIsLoading(true);
 
     const isFirst = handQueue[0] === name;
+    // don't alert if not raising hand, unnecessary
+    const isSilent = mode !== HandActions.Raise;
 
     if (handQueue.length === 0 || (handQueue.length === 1 && mode === HandActions.Lower)) {
       // no one in queue or you're the only one in queue lowering your hand
-      await sendHandRequest(mode);
+      await sendHandRequest(mode, isSilent);
     } else if (handQueue.length > 1 && isFirst && mode === HandActions.Lower) {
       // you're in first place and lowering hand
       // there are other people in the queue, so don't lower hand, reraise instead
-      await sendHandRequest(HandActions.ReRaise);
+      await sendHandRequest(HandActions.ReRaise, isSilent);
     } else {
       // do nothing here
       // (if the hand is already raised by someone else, leave it)

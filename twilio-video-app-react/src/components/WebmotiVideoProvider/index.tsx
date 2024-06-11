@@ -3,6 +3,7 @@ import React, { ReactNode, createContext, useCallback, useState } from 'react';
 import { Conversation, JSONObject, Message } from '@twilio/conversations';
 
 import { REMOTE_IT_URL, WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../../constants';
+import { useAppState } from '../../state';
 
 interface WebmotiVideoContextType {
   isCameraOneOff: boolean;
@@ -48,6 +49,8 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminName, setAdminName] = useState('');
 
+  const { setError } = useAppState();
+
   const toggleWebmotiVideo = (camera: string) => {
     if (camera === WEBMOTI_CAMERA_1) {
       setIsCameraOneOff(prev => !prev);
@@ -83,26 +86,29 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
     conversation?.sendMessage(msg, { attributes: JSON.stringify({ systemMsg: true }) });
   };
 
-  const sendHandRequest = useCallback(async (mode: string, is_silent = false) => {
-    const response = await fetch(REMOTE_IT_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({ mode }),
-    });
+  const sendHandRequest = useCallback(
+    async (mode: string, is_silent = false) => {
+      const response = await fetch(REMOTE_IT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({ mode }),
+      });
 
-    if (!response.ok && !is_silent) {
-      if (response.status === 503) {
-        // board not connected to wifi
-        alert('Service Offline.');
-      } else {
-        alert(`Unknown error while raising hand: ${response.status}: ${response.statusText}`);
+      if (!response.ok && !is_silent) {
+        if (response.status === 503) {
+          // board not connected to wifi
+          setError(Error('WebMoti is offline'));
+        } else {
+          setError(Error(`Unknown error while raising hand: ${response.status}: ${response.statusText}`));
+        }
       }
-    }
 
-    return response;
-  }, []);
+      return response;
+    },
+    [setError]
+  );
 
   const checkSystemMsg = useCallback((message: Message) => {
     // parse attributes of msg
