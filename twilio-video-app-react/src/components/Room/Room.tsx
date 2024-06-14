@@ -1,7 +1,9 @@
+import React, { useEffect, useRef } from 'react';
+
 import { Theme, makeStyles, useMediaQuery, useTheme } from '@material-ui/core';
 import clsx from 'clsx';
-import React, { useEffect, useRef } from 'react';
 import { Room as IRoom, Participant } from 'twilio-video';
+
 import useChatContext from '../../hooks/useChatContext/useChatContext';
 import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/useScreenShareParticipant';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
@@ -30,7 +32,13 @@ const useStyles = makeStyles((theme: Theme) => {
         gridTemplateRows: `calc(100% - ${totalMobileSidebarHeight}) ${totalMobileSidebarHeight}`,
       },
     },
-    rightDrawerOpen: { gridTemplateColumns: `1fr ${theme.sidebarWidth}px ${theme.rightDrawerWidth}px` },
+    rightDrawerOpen: {
+      gridTemplateColumns: `1fr ${theme.sidebarWidth}px ${theme.rightDrawerWidth}px`,
+      // this fixes chat window going down too far
+      [theme.breakpoints.down('md')]: {
+        height: '95%',
+      },
+    },
   };
 });
 
