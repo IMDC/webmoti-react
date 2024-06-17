@@ -52,6 +52,9 @@ const useStyles = makeStyles((theme: Theme) =>
       position: 'fixed',
       zIndex: 8,
       bottom: `${theme.footerHeight}px`,
+      [theme.breakpoints.down('md')]: {
+        bottom: `${theme.mobileFooterHeight}px`,
+      },
       left: 0,
       right: 0,
       height: '104px',
@@ -124,7 +127,7 @@ export default function Menu(props: { buttonClassName?: string }) {
       )}
 
       <Button
-        onClick={() => setMenuOpen(isOpen => !isOpen)}
+        onClick={() => setMenuOpen((isOpen) => !isOpen)}
         ref={anchorRef}
         className={props.buttonClassName}
         aria-label="More options"
@@ -141,7 +144,7 @@ export default function Menu(props: { buttonClassName?: string }) {
       </Button>
       <MenuContainer
         open={menuOpen}
-        onClose={() => setMenuOpen(isOpen => !isOpen)}
+        onClose={() => setMenuOpen((isOpen) => !isOpen)}
         anchorEl={anchorRef.current}
         anchorOrigin={{
           vertical: 'top',
@@ -227,7 +230,7 @@ export default function Menu(props: { buttonClassName?: string }) {
 
         <MenuItem
           onClick={() => {
-            setIsGalleryViewActive(isGallery => !isGallery);
+            setIsGalleryViewActive((isGallery) => !isGallery);
             setMenuOpen(false);
           }}
         >
