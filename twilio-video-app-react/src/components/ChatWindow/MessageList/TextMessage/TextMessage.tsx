@@ -1,8 +1,7 @@
-import React from 'react';
-import clsx from 'clsx';
 import { Link } from '@material-ui/core';
-import linkify from 'linkify-it';
 import { makeStyles } from '@material-ui/core/styles';
+import clsx from 'clsx';
+import LinkifyIt from 'linkify-it';
 
 const useStyles = makeStyles({
   messageContainer: {
@@ -26,8 +25,10 @@ interface TextMessageProps {
   isLocalParticipant: boolean;
 }
 
+const linkify = new LinkifyIt();
+
 function addLinks(text: string) {
-  const matches = linkify().match(text);
+  const matches = linkify.match(text);
   if (!matches) return text;
 
   const results = [];
