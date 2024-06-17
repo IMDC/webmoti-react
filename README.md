@@ -6,7 +6,7 @@
 
 [Project Tasks](https://github.com/orgs/IMDC/projects/2)
 
-- [Twilio App](#twilio-app)
+- [Twilio React App](#twilio-react-app)
   - [Setup](#setup)
   - [Running the App locally for developement](#running-the-app-locally-for-developement)
     - [Local setup](#local-setup)
@@ -27,7 +27,9 @@
 - [Camera Setup](#camera-setup)
 - [ZOOM APP (OLD)](#zoom-app-old)
 
-## Twilio App
+## Twilio React App
+
+Original app: <https://github.com/twilio/twilio-video-app-react#readme>
 
 ### Setup
 
