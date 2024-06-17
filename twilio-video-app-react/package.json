@@ -109,7 +109,7 @@
     "delete": "twilio rtc:apps:video:delete",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
-    "prepare": "husky"
+    "prepare": "cd .. && husky twilio-video-app-react/.husky"
   },
   "eslintConfig": {
     "extends": [
