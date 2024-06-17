@@ -31,7 +31,6 @@
     "firebase": "^10.12.2",
     "firebase-admin": "^12.1.1",
     "fscreen": "^1.2.0",
-    "husky": "^9.0.11",
     "linkify-it": "^5.0.0",
     "lint-staged": "^15.2.7",
     "lodash.throttle": "^4.1.1",
@@ -69,6 +68,7 @@
     "enzyme-adapter-react-16": "^1.15.2",
     "enzyme-to-json": "^3.4.4",
     "eslint-plugin-import": "^2.29.1",
+    "husky": "^9.0.11",
     "isomorphic-fetch": "^3.0.0",
     "jest-junit": "^9.0.0",
     "mocha": "^10.2.0",
@@ -108,7 +108,8 @@
     "view": "twilio rtc:apps:video:view",
     "delete": "twilio rtc:apps:video:delete",
     "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "prepare": "husky"
   },
   "eslintConfig": {
     "extends": [
@@ -140,11 +141,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "proxy": "http://localhost:8081/",
   "jest": {
