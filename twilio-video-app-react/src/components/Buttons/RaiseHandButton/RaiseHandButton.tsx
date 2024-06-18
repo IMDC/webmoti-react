@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Grid, Theme, Tooltip, createStyles, makeStyles } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
@@ -69,6 +69,8 @@ export default function RaiseHandButton() {
   const [buttonIntervalID, setButtonIntervalID] = useState<NodeJS.Timeout | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const isRaising = useRef(false);
+
   // this is run when participant joins
   useEffect(() => {
     const initRemoteIt = async () => {
@@ -89,74 +91,78 @@ export default function RaiseHandButton() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const toggleHand = useCallback(async () => {
-    const name = room?.localParticipant?.identity || 'Participant';
-    const mode = isHandRaised ? HandActions.Lower : HandActions.Raise;
+  const setHand = useCallback(
+    async (mode: HandActions) => {
+      isRaising.current = true;
+      const name = room?.localParticipant?.identity || 'Participant';
 
-    // send request
-    setIsLoading(true);
+      // send request
+      setIsLoading(true);
 
-    const isFirst = handQueue[0] === name;
-    // don't alert if not raising hand, unnecessary
-    const isSilent = mode !== HandActions.Raise;
+      const isFirst = handQueue[0] === name;
+      // don't alert if not raising hand, unnecessary
+      const isSilent = mode !== HandActions.Raise;
 
-    if (handQueue.length === 0 || (handQueue.length === 1 && mode === HandActions.Lower)) {
-      // no one in queue or you're the only one in queue lowering your hand
-      await sendHandRequest(mode, isSilent);
-    } else if (handQueue.length > 1 && isFirst && mode === HandActions.Lower) {
-      // you're in first place and lowering hand
-      // there are other people in the queue, so don't lower hand, reraise instead
-      await sendHandRequest(HandActions.ReRaise, isSilent);
-    } else {
-      // do nothing here
-      // (if the hand is already raised by someone else, leave it)
-    }
+      if (handQueue.length === 0 || (handQueue.length === 1 && mode === HandActions.Lower)) {
+        // no one in queue or you're the only one in queue lowering your hand
+        await sendHandRequest(mode, isSilent);
+      } else if (handQueue.length > 1 && isFirst && mode === HandActions.Lower) {
+        // you're in first place and lowering hand
+        // there are other people in the queue, so don't lower hand, reraise instead
+        await sendHandRequest(HandActions.ReRaise, isSilent);
+      } else {
+        // do nothing here
+        // (if the hand is already raised by someone else, leave it)
+      }
 
-    setIsLoading(false);
+      setIsLoading(false);
 
-    if (mode === HandActions.Raise && !handQueue.includes(name)) {
-      // raise hand
-      sendSystemMsg(
-        conversation,
-        JSON.stringify({
-          type: MsgTypes.Hand,
-          identity: name,
-          action: HandActions.Raise,
-        })
-      );
-      setHandQueue(prevQueue => [...prevQueue, name]);
-    } else if (mode === HandActions.Lower) {
-      sendSystemMsg(
-        conversation,
-        JSON.stringify({
-          type: MsgTypes.Hand,
-          identity: name,
-          action: HandActions.Lower,
-        })
-      );
-      setHandQueue(prevQueue => prevQueue.filter(participantName => participantName !== name));
+      if (mode === HandActions.Raise && !handQueue.includes(name)) {
+        // raise hand
+        sendSystemMsg(
+          conversation,
+          JSON.stringify({
+            type: MsgTypes.Hand,
+            identity: name,
+            action: HandActions.Raise,
+          })
+        );
+        setHandQueue((prevQueue) => [...prevQueue, name]);
+      } else if (mode === HandActions.Lower) {
+        sendSystemMsg(
+          conversation,
+          JSON.stringify({
+            type: MsgTypes.Hand,
+            identity: name,
+            action: HandActions.Lower,
+          })
+        );
+        setHandQueue((prevQueue) => prevQueue.filter((participantName) => participantName !== name));
 
-      // start countdown timer for hand
-      setCountdown(buttonCountdownDuration);
-      const intervalId = setInterval(() => {
-        setCountdown(prevCountdown => {
-          if (prevCountdown <= 1) {
-            clearInterval(intervalId);
-            return 0;
-          }
-          return prevCountdown - 1;
-        });
-      }, 1000);
-    }
+        // start countdown timer for hand
+        setCountdown(buttonCountdownDuration);
+        const intervalId = setInterval(() => {
+          setCountdown((prevCountdown) => {
+            if (prevCountdown <= 1) {
+              clearInterval(intervalId);
+              return 0;
+            }
+            return prevCountdown - 1;
+          });
+        }, 1000);
+      }
 
-    setIsHandRaised(!isHandRaised);
-  }, [conversation, handQueue, isHandRaised, room, sendSystemMsg, sendHandRequest]);
+      setIsHandRaised(mode === HandActions.Raise);
+      isRaising.current = false;
+    },
+    [conversation, handQueue, room, sendSystemMsg, sendHandRequest]
+  );
 
   const handleMouseDown = () => {
     if (!isHandRaised) {
       // Start a timeout when the mouse is held down
       const timeoutId = setTimeout(() => {
-        toggleHand(); // Only raise hand if held for more than 500ms
+        setHand(HandActions.Raise); // Only raise hand if held for more than 500ms
       }, 500);
       setButtonIntervalID(timeoutId);
     }
@@ -164,15 +170,24 @@ export default function RaiseHandButton() {
 
   useEffect(() => {
     const handleGlobalMouseUp = () => {
+      if (isRaising.current) {
+        // if mouse is released right after raising hand, it won't lower
+        setTimeout(() => {
+          // schedule hand lower after a short delay
+          setHand(HandActions.Lower);
+        }, 500);
+      }
+
       if (isHandRaised) {
-        toggleHand();
+        setHand(HandActions.Lower);
       }
     };
 
     const handleKeyPress = (event: KeyboardEvent) => {
       // shortcut is r key
       if (event.key === 'r') {
-        toggleHand();
+        const raiseMode = isHandRaised ? HandActions.Lower : HandActions.Raise;
+        setHand(raiseMode);
       }
     };
 
@@ -183,7 +198,7 @@ export default function RaiseHandButton() {
       document.removeEventListener('mouseup', handleGlobalMouseUp);
       document.removeEventListener('keydown', handleKeyPress);
     };
-  }, [isHandRaised, toggleHand]);
+  }, [isHandRaised, setHand]);
 
   const handleMouseUp = () => {
     // Clear the timeout if the mouse is released
@@ -216,7 +231,7 @@ export default function RaiseHandButton() {
         if (msgData.action === HandActions.Raise && !prevQueue.includes(msgData.identity)) {
           return [...prevQueue, msgData.identity];
         } else if (msgData.action === HandActions.Lower) {
-          return prevQueue.filter(e => e !== msgData.identity);
+          return prevQueue.filter((e) => e !== msgData.identity);
         }
         return prevQueue;
       });
