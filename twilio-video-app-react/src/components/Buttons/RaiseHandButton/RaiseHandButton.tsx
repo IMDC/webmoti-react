@@ -14,6 +14,7 @@ import { MsgTypes } from '../../../constants';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
+import ShortcutIndicator from '../../ShortcutIndicator/ShortcutIndicator';
 
 const maxQueueDisplay = 5;
 
@@ -289,6 +290,8 @@ export default function RaiseHandButton() {
           >
             {isHandRaised ? 'Lower Hand' : 'Raise Hand'}
             {isLoading && <CircularProgress size={24} className={classes.progress} />}
+
+            <ShortcutIndicator />
 
             {countdown > 0 && (
               <CircularProgress
