@@ -56,13 +56,16 @@ class RaiseHandRequest(BaseModel):
 
 
 @router.get("/raisehand")
-async def wave_hand_endpoint():
+def wave_hand_endpoint():
     raise_hand(Mode.WAVE)
     return {"status": "Hand waved"}
 
 
+# these endpoints aren't async because they deal with hardware
+# and we don't want multiple requests at the same time
+
 @router.post("/raisehand")
-async def raise_hand_endpoint(request: RaiseHandRequest):
+def raise_hand_endpoint(request: RaiseHandRequest):
     mode = request.mode.upper()
 
     try:

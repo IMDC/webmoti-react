@@ -6,6 +6,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from routes.raisehand import router as raisehand_router
 from utils import setup_gpio, setup_handlers, setup_logging
+from constants import PORT
 
 # dev:
 # cd '..\Hand functions\app\'
@@ -28,4 +29,4 @@ if __name__ == "__main__":
     # setup_logging()
     setup_handlers()
 
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host="127.0.0.1", port=PORT)
