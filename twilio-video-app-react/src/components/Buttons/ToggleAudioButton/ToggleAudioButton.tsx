@@ -10,6 +10,7 @@ import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWeb
 import MicIcon from '../../../icons/MicIcon';
 import MicOffIcon from '../../../icons/MicOffIcon';
 import { MsgTypes } from '../../../constants';
+import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
 const enum Mode {
   Professor = 'PROFESSOR',
@@ -20,7 +21,7 @@ const enum Mode {
 export default function ToggleAudioButton(props: { disabled?: boolean; className?: string }) {
   const [isAudioEnabled, toggleAudioEnabled] = useLocalAudioToggle();
   const { localTracks } = useVideoContext();
-  const hasAudioTrack = localTracks.some(track => track.kind === 'audio');
+  const hasAudioTrack = localTracks.some((track) => track.kind === 'audio');
   const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
 
   const { conversation } = useChatContext();
@@ -42,27 +43,29 @@ export default function ToggleAudioButton(props: { disabled?: boolean; className
   }, [toggleAudioEnabled]);
 
   return (
-    <Button
-      className={props.className}
-      onClick={() => {
-        // only switch modes when virtual student toggles audio
-        if (!isProfessor && !isWebmotiVideo(room?.localParticipant?.identity || '')) {
-          if (isAudioEnabled) {
-            // if student is muting their mic, enable class mic
-            sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.ModeSwitch, mode: Mode.Classroom }));
-          } else {
-            // if student unmutes, mute class mic
-            sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.ModeSwitch, mode: Mode.Virtual }));
+    <ShortcutTooltip shortcut="A" isCtrlDown>
+      <Button
+        className={props.className}
+        onClick={() => {
+          // only switch modes when virtual student toggles audio
+          if (!isProfessor && !isWebmotiVideo(room?.localParticipant?.identity || '')) {
+            if (isAudioEnabled) {
+              // if student is muting their mic, enable class mic
+              sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.ModeSwitch, mode: Mode.Classroom }));
+            } else {
+              // if student unmutes, mute class mic
+              sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.ModeSwitch, mode: Mode.Virtual }));
+            }
           }
-        }
 
-        toggleAudioEnabled();
-      }}
-      disabled={!hasAudioTrack || props.disabled}
-      startIcon={isAudioEnabled ? <MicIcon /> : <MicOffIcon />}
-      data-cy-audio-toggle
-    >
-      {!hasAudioTrack ? 'No Audio' : !isMobile ? (isAudioEnabled ? 'Mute' : 'Unmute') : ''}
-    </Button>
+          toggleAudioEnabled();
+        }}
+        disabled={!hasAudioTrack || props.disabled}
+        startIcon={isAudioEnabled ? <MicIcon /> : <MicOffIcon />}
+        data-cy-audio-toggle
+      >
+        {!hasAudioTrack ? 'No Audio' : !isMobile ? (isAudioEnabled ? 'Mute' : 'Unmute') : ''}
+      </Button>
+    </ShortcutTooltip>
   );
 }

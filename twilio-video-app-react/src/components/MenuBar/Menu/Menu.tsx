@@ -38,6 +38,7 @@ import AboutDialog from '../../AboutDialog/AboutDialog';
 import DeviceSelectionDialog from '../../DeviceSelectionDialog/DeviceSelectionDialog';
 import useScreenShareParticipant from '../../../hooks/useScreenShareParticipant/useScreenShareParticipant';
 import { isMobile } from '../../../utils';
+import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
 export const IconContainer = styled('div')({
   display: 'flex',
@@ -126,22 +127,25 @@ export default function Menu(props: { buttonClassName?: string }) {
         </Grid>
       )}
 
-      <Button
-        onClick={() => setMenuOpen((isOpen) => !isOpen)}
-        ref={anchorRef}
-        className={props.buttonClassName}
-        aria-label="More options"
-        data-cy-more-button
-      >
-        {isMobileBreakpoint ? (
-          <MoreIcon />
-        ) : (
-          <>
-            More
-            <ExpandMoreIcon />
-          </>
-        )}
-      </Button>
+      <ShortcutTooltip shortcut="M" isCtrlDown>
+        <Button
+          onClick={() => setMenuOpen((isOpen) => !isOpen)}
+          ref={anchorRef}
+          className={props.buttonClassName}
+          aria-label="More options"
+          data-cy-more-button
+        >
+          {isMobileBreakpoint ? (
+            <MoreIcon />
+          ) : (
+            <>
+              More
+              <ExpandMoreIcon />
+            </>
+          )}
+        </Button>
+      </ShortcutTooltip>
+
       <MenuContainer
         open={menuOpen}
         onClose={() => setMenuOpen((isOpen) => !isOpen)}

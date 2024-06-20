@@ -9,6 +9,7 @@ import ToggleCameraButton from '../../Buttons/ToggleCameraButton/ToggleCameraBut
 import ToggleCameraButton2 from '../../Buttons/ToggleCameraButton2/ToggleCameraButton2';
 import BoardQualityButton from '../../Buttons/BoardQualityButton/BoardQualityButton';
 import WaveHandButton from '../../Buttons/WaveHandButton/WaveHandButton';
+import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,9 +34,12 @@ export default function ControlsMenu() {
 
   return (
     <>
-      <Button onClick={handleCameraControlsClick}>
-        Controls <ExpandMoreIcon />
-      </Button>
+      <ShortcutTooltip shortcut="O" isCtrlDown>
+        <Button onClick={handleCameraControlsClick}>
+          Controls <ExpandMoreIcon />
+        </Button>
+      </ShortcutTooltip>
+
       <Popover
         open={Boolean(cameraControlsAnchorEl)}
         anchorEl={cameraControlsAnchorEl}

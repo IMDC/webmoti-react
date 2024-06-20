@@ -291,7 +291,7 @@ export default function RaiseHandButton() {
             {isHandRaised ? 'Lower Hand' : 'Raise Hand'}
             {isLoading && <CircularProgress size={24} className={classes.progress} />}
 
-            <ShortcutIndicator />
+            <ShortcutIndicator shortcut="H" isCtrlDown />
 
             {countdown > 0 && (
               <CircularProgress

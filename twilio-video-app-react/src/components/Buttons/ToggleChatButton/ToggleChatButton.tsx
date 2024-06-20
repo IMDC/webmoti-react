@@ -10,6 +10,7 @@ import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import ChatIcon from '../../../icons/ChatIcon';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import { Message } from '@twilio/conversations';
+import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
 export const ANIMATION_DURATION = 700;
 
@@ -103,20 +104,23 @@ export default function ToggleChatButton() {
 
   return (
     <>
-      <Button
-        data-cy-chat-button
-        onClick={toggleChatWindow}
-        disabled={!conversation}
-        startIcon={
-          <div className={classes.iconContainer}>
-            <ChatIcon />
-            <div className={clsx(classes.ring, { [classes.animateRing]: shouldAnimate })} />
-            <div className={clsx(classes.circle, { [classes.hasUnreadMessages]: hasUnreadMessages })} />
-          </div>
-        }
-      >
-        {isMobile ? '' : 'Chat'}
-      </Button>
+      <ShortcutTooltip shortcut="C" isCtrlDown>
+        <Button
+          data-cy-chat-button
+          onClick={toggleChatWindow}
+          disabled={!conversation}
+          variant="outlined"
+          startIcon={
+            <div className={classes.iconContainer}>
+              <ChatIcon />
+              <div className={clsx(classes.ring, { [classes.animateRing]: shouldAnimate })} />
+              <div className={clsx(classes.circle, { [classes.hasUnreadMessages]: hasUnreadMessages })} />
+            </div>
+          }
+        >
+          {isMobile ? '' : 'Chat'}
+        </Button>
+      </ShortcutTooltip>
     </>
   );
 }

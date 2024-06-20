@@ -4,6 +4,7 @@ import { Button, Popover } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import NotifyButton from '../../Buttons/NotifyButton/NotifyButton';
+import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
 export default function SoundsMenu() {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -18,9 +19,11 @@ export default function SoundsMenu() {
 
   return (
     <>
-      <Button onClick={handleButtonClick}>
-        Sounds <ExpandMoreIcon />
-      </Button>
+      <ShortcutTooltip shortcut="S" isCtrlDown>
+        <Button onClick={handleButtonClick}>
+          Sounds <ExpandMoreIcon />
+        </Button>
+      </ShortcutTooltip>
 
       <Popover
         open={Boolean(anchorEl)}

@@ -7,6 +7,7 @@ import VideoOnIcon from '../../../icons/VideoOnIcon';
 
 import useDevices from '../../../hooks/useDevices/useDevices';
 import useLocalVideoToggle from '../../../hooks/useLocalVideoToggle/useLocalVideoToggle';
+import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
 export default function ToggleVideoButton(props: { disabled?: boolean; className?: string }) {
   const [isVideoEnabled, toggleVideoEnabled] = useLocalVideoToggle();
@@ -22,13 +23,15 @@ export default function ToggleVideoButton(props: { disabled?: boolean; className
   }, [toggleVideoEnabled]);
 
   return (
-    <Button
-      className={props.className}
-      onClick={toggleVideo}
-      disabled={!hasVideoInputDevices || props.disabled}
-      startIcon={isVideoEnabled ? <VideoOnIcon /> : <VideoOffIcon />}
-    >
-      {!hasVideoInputDevices ? 'No Video' : !isMobile ? (isVideoEnabled ? 'Stop My Video' : 'Start My Video') : ''}
-    </Button>
+    <ShortcutTooltip shortcut="V" isCtrlDown>
+      <Button
+        className={props.className}
+        onClick={toggleVideo}
+        disabled={!hasVideoInputDevices || props.disabled}
+        startIcon={isVideoEnabled ? <VideoOnIcon /> : <VideoOffIcon />}
+      >
+        {!hasVideoInputDevices ? 'No Video' : !isMobile ? (isVideoEnabled ? 'Stop My Video' : 'Start My Video') : ''}
+      </Button>
+    </ShortcutTooltip>
   );
 }
