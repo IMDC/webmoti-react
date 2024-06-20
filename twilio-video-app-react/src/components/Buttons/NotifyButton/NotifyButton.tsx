@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import { Grid, IconButton, MenuItem, Select, Slider } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import Tooltip from '@material-ui/core/Tooltip';
 import VolumeDown from '@material-ui/icons/VolumeDown';
 import VolumeUp from '@material-ui/icons/VolumeUp';
 import { Message } from '@twilio/conversations';
@@ -22,6 +21,7 @@ import professor_1 from '../../../sounds/speech/professor_1.mp3';
 import professor_2 from '../../../sounds/speech/professor_2.mp3';
 import professor_3 from '../../../sounds/speech/professor_3.mp3';
 import { MsgTypes } from '../../../constants';
+import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
 interface SoundEntry {
   sound: string;
@@ -125,9 +125,9 @@ export default function NotifyButton() {
 
   return (
     <Grid container justifyContent="center" alignItems="center">
-      <Tooltip title="Click to grab professor's attention">
+      <ShortcutTooltip shortcut="N" isCtrlDown>
         <Button onClick={notifyProfessor}>Nudge</Button>
-      </Tooltip>
+      </ShortcutTooltip>
 
       <Select value={soundKey} label="Sound" onChange={handleChange}>
         {/* add all sounds as menu items */}

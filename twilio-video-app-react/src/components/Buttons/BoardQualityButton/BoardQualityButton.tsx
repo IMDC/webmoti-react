@@ -3,6 +3,7 @@ import { RemoteVideoTrack } from 'twilio-video';
 
 import { WEBMOTI_CAMERA_2 } from '../../../constants';
 import useParticipants from '../../../hooks/useParticipants/useParticipants';
+import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
 export default function BoardQualityButton() {
   const participants = useParticipants();
@@ -42,5 +43,9 @@ export default function BoardQualityButton() {
     }
   };
 
-  return <Button onClick={setQuality}>Quality</Button>;
+  return (
+    <ShortcutTooltip shortcut="Q" isCtrlDown>
+      <Button onClick={setQuality}>Quality</Button>
+    </ShortcutTooltip>
+  );
 }

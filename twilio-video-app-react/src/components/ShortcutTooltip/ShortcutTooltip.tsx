@@ -1,4 +1,4 @@
-import { Tooltip, withStyles } from '@material-ui/core';
+import { Fade, Tooltip, withStyles } from '@material-ui/core';
 import ShortcutIndicator from '../ShortcutIndicator/ShortcutIndicator';
 import { ReactElement } from 'react';
 
@@ -18,7 +18,11 @@ interface ShortcutTooltipProps {
 
 export default function ShortcutTooltip({ children, shortcut, isCtrlDown = false }: ShortcutTooltipProps) {
   return (
-    <LightTooltip title={<ShortcutIndicator shortcut={shortcut} isCtrlDown={isCtrlDown} isInTooltip={true} />}>
+    <LightTooltip
+      TransitionComponent={Fade}
+      TransitionProps={{ timeout: 150 }}
+      title={<ShortcutIndicator shortcut={shortcut} isCtrlDown={isCtrlDown} isInTooltip={true} />}
+    >
       {children}
     </LightTooltip>
   );

@@ -2,6 +2,7 @@ import { IconButton } from '@material-ui/core';
 import { EmojiPeople, PanTool } from '@material-ui/icons';
 
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
+import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
 export default function WaveHandButton() {
   const { sendHandRequest } = useWebmotiVideoContext();
@@ -16,13 +17,17 @@ export default function WaveHandButton() {
 
   return (
     <div>
-      <IconButton onClick={wave2}>
-        <PanTool />
-      </IconButton>
+      <ShortcutTooltip shortcut="P" isCtrlDown>
+        <IconButton onClick={wave2}>
+          <PanTool />
+        </IconButton>
+      </ShortcutTooltip>
 
-      <IconButton onClick={wave}>
-        <EmojiPeople />
-      </IconButton>
+      <ShortcutTooltip shortcut="L" isCtrlDown>
+        <IconButton onClick={wave}>
+          <EmojiPeople />
+        </IconButton>
+      </ShortcutTooltip>
     </div>
   );
 }

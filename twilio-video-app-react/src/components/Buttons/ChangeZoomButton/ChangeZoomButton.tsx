@@ -2,6 +2,7 @@ import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
+import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
 export default function ChangeZoomButton() {
   const { zoom, setZoomLevel } = useWebmotiVideoContext();
@@ -20,9 +21,15 @@ export default function ChangeZoomButton() {
 
   return (
     <ButtonGroup>
-      <Button onClick={decreaseZoom}>-</Button>
+      <ShortcutTooltip shortcut="-" isCtrlDown>
+        <Button onClick={decreaseZoom}>-</Button>
+      </ShortcutTooltip>
+
       <Button disabled>{zoom}</Button>
-      <Button onClick={increaseZoom}>+</Button>
+
+      <ShortcutTooltip shortcut="+" isCtrlDown>
+        <Button onClick={increaseZoom}>+</Button>
+      </ShortcutTooltip>
     </ButtonGroup>
   );
 }

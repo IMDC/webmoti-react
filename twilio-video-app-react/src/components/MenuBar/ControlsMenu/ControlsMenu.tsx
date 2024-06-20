@@ -56,17 +56,23 @@ export default function ControlsMenu() {
         <div className={classes.cameraControlsPopover}>
           <Grid container justifyContent="center" alignItems="center" direction="column">
             <Grid item>
-              <MuteClassroomButton />
+              <ShortcutTooltip shortcut="R" isCtrlDown>
+                <MuteClassroomButton />
+              </ShortcutTooltip>
             </Grid>
 
             <Grid item>
               <Divider />
               <Grid container spacing={2} justifyContent="center" alignItems="center">
                 <Grid item>
-                  <ToggleCameraButton />
+                  <ShortcutTooltip shortcut="W" isCtrlDown>
+                    <ToggleCameraButton />
+                  </ShortcutTooltip>
                 </Grid>
                 <Grid item>
-                  <ToggleCameraButton2 />
+                  <ShortcutTooltip shortcut="B" isCtrlDown>
+                    <ToggleCameraButton2 />
+                  </ShortcutTooltip>
                 </Grid>
               </Grid>
             </Grid>
