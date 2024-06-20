@@ -1,18 +1,20 @@
 import pathlib
 
 import uvicorn
+from constants import PORT
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+from routes.queue_ws import router as queue_router
 from routes.raisehand import router as raisehand_router
 from utils import setup_gpio, setup_handlers, setup_logging
-from constants import PORT
 
 # dev:
 # cd '..\Hand functions\app\'
 # fastapi dev main.py
 app = FastAPI()
 app.include_router(raisehand_router)
+app.include_router(queue_router)
 
 
 static_path = pathlib.Path(__file__).parent / "static"
