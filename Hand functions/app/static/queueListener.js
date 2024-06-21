@@ -7,5 +7,7 @@ eventSource.onmessage = function (event) {
 
   if (queue.length > 0) {
     document.getElementById("head").textContent = queue[0];
+  } else {
+    document.getElementById("head").textContent = "";
   }
 };

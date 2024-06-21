@@ -15,6 +15,7 @@ PORT = 80
 
 MAX_ANGLE = 160
 MIN_ANGLE = 0
+# go farther than halfway so camera isn't blocked
 HALFWAY_ANGLE = 140
 
 SERVO_PIN = 12

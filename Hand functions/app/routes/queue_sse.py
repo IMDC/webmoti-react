@@ -16,6 +16,13 @@ def add_to_queue(identity: str):
         queue_event.set()
 
 
+def remove_from_queue(identity: str):
+    if identity in queue:
+        queue.remove(identity)
+        queue_event.set()
+    return len(queue)
+
+
 def get_queue():
     data = json.dumps(queue.copy())
     return {"data": data}

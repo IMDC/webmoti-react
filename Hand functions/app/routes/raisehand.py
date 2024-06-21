@@ -2,10 +2,11 @@ import logging
 from typing import Optional
 
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel
 
 from constants import HALFWAY_ANGLE, MAX_ANGLE, MIN_ANGLE, Mode
-from routes.queue_sse import add_to_queue
+from routes.queue_sse import add_to_queue, remove_from_queue
 from utils import servo_controller
 
 router = APIRouter(prefix="/api")
@@ -81,6 +82,20 @@ def raise_hand_endpoint(request: RaiseHandRequest):
 
     if mode_enum == Mode.RAISE:
         add_to_queue(identity)
+        # don't raise hand if already raised
+        if is_hand_raised:
+            mode_enum = None
 
-    raise_hand(mode_enum)
-    return {"status": "Hand raised", "mode": mode_enum.name}
+    elif mode_enum == Mode.LOWER:
+        if not is_hand_raised:
+            return PlainTextResponse(content="Hand isn't raised", status_code=400)
+
+        queue_length = remove_from_queue(identity)
+        # if there are still people in the queue, reraise
+        if queue_length > 0:
+            mode_enum = Mode.RERAISE
+
+    if mode_enum is not None:
+        raise_hand(mode_enum)
+
+    return PlainTextResponse(content="OK", status_code=200)
