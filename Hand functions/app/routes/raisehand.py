@@ -4,14 +4,15 @@ from typing import Optional
 from constants import HALFWAY_ANGLE, MAX_ANGLE, MIN_ANGLE, Mode
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+from routes.queue_sse import add_to_queue
 from utils import servo_controller
 
-router = APIRouter()
+router = APIRouter(prefix="/api")
 
 is_hand_raised = False
 
 
-def raise_hand(mode):
+def raise_hand(mode: Mode):
     def wave():
         servo_controller.set_angle(MAX_ANGLE)
         servo_controller.set_angle(MIN_ANGLE)
@@ -53,6 +54,7 @@ def raise_hand(mode):
 
 class RaiseHandRequest(BaseModel):
     mode: Optional[str] = Mode.WAVE2.name
+    identity: str
 
 
 @router.get("/raisehand")
@@ -64,15 +66,20 @@ def wave_hand_endpoint():
 # these endpoints aren't async because they deal with hardware
 # and we don't want multiple requests at the same time
 
+
 @router.post("/raisehand")
 def raise_hand_endpoint(request: RaiseHandRequest):
     mode = request.mode.upper()
+    identity = request.identity
 
     try:
         mode_enum = Mode[mode]
     except KeyError:
         logging.error(f"Invalid mode received: {mode}")
         raise HTTPException(status_code=400, detail="Invalid mode")
+
+    if mode_enum == Mode.RAISE:
+        add_to_queue(identity)
 
     raise_hand(mode_enum)
     return {"status": "Hand raised", "mode": mode_enum.name}

@@ -3,9 +3,10 @@ import pathlib
 import uvicorn
 from constants import PORT
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
-from routes.queue_ws import router as queue_router
+from routes.queue_sse import router as queue_router
 from routes.raisehand import router as raisehand_router
 from utils import setup_gpio, setup_handlers, setup_logging
 
@@ -15,6 +16,13 @@ from utils import setup_gpio, setup_handlers, setup_logging
 app = FastAPI()
 app.include_router(raisehand_router)
 app.include_router(queue_router)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 static_path = pathlib.Path(__file__).parent / "static"
