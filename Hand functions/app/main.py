@@ -1,11 +1,13 @@
 import pathlib
 
 import uvicorn
-from constants import PORT
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+
+from constants import PORT
 from routes.queue_sse import router as queue_router
 from routes.raisehand import router as raisehand_router
 from utils import setup_gpio, setup_handlers, setup_logging
@@ -25,13 +27,15 @@ app.add_middleware(
 )
 
 
-static_path = pathlib.Path(__file__).parent / "static"
-app.mount("/static", StaticFiles(directory=static_path), name="static")
+dir_path = pathlib.Path(__file__).parent
+
+app.mount("/static", StaticFiles(directory=(dir_path / "static")), name="static")
+templates = Jinja2Templates(directory=(dir_path / "templates"))
 
 
-@app.get("/", response_class=FileResponse)
-async def root():
-    return FileResponse(static_path / "index.html")
+@app.get("/", response_class=HTMLResponse)
+async def root(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 
 if __name__ == "__main__":

@@ -1,9 +1,10 @@
 import logging
 from typing import Optional
 
-from constants import HALFWAY_ANGLE, MAX_ANGLE, MIN_ANGLE, Mode
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+
+from constants import HALFWAY_ANGLE, MAX_ANGLE, MIN_ANGLE, Mode
 from routes.queue_sse import add_to_queue
 from utils import servo_controller
 
