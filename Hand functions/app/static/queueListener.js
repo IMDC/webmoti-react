@@ -16,18 +16,9 @@ eventSource.onmessage = (event) => {
   }
 };
 
-const stringToColour = (str) => {
-  let hash = 0;
-  str.split("").forEach((char) => {
-    hash = char.charCodeAt(0) + ((hash << 5) - hash);
-  });
-  let colour = "#";
-  for (let i = 0; i < 3; i++) {
-    let value = (hash >> (i * 8)) & 0xff;
-    // make all colours light for contrast
-    const minBrightness = 75;
-    value = Math.max(value, minBrightness);
-    colour += value.toString(16).padStart(2, "0");
-  }
-  return colour;
+const stringToColour = (stringInput) => {
+  let stringUniqueHash = [...stringInput].reduce((acc, char) => {
+    return char.charCodeAt(0) + ((acc << 5) - acc);
+  }, 0);
+  return `hsl(${stringUniqueHash % 360}, 100%, 75%)`;
 };
