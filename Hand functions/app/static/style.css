@@ -15,7 +15,9 @@ body {
 #head {
   font-weight: 700;
   text-align: center;
-  font-size: 200px;
+  font-size: 12vw;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 #counter {
@@ -28,5 +30,5 @@ body {
   line-height: 1;
 
   color: #1db954;
-  font-size: 150px;
+  font-size: 12vw;
 }
