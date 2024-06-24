@@ -12,6 +12,7 @@
     - [Local setup](#local-setup)
   - [Deploying](#deploying)
   - [Webmoti URL server](#webmoti-url-server)
+- [Hand server](#hand-server)
 - [Standalone Join](#standalone-join)
   - [Info](#info)
   - [Setting up the scripts](#setting-up-the-scripts)
@@ -90,6 +91,14 @@ The raspberry pi boards are able to always know the latest url and password by
  sending a request to this server (twilio-video-app-react/server/get_url.js).
  This is hosted as a twilio serverless function and can be edited in the
  [twilio console](https://console.twilio.com/us1/develop/functions/services).
+
+## Hand server
+
+Run server in dev mode:
+
+```bash
+fastapi dev main.py
+```
 
 ## Standalone Join
 
