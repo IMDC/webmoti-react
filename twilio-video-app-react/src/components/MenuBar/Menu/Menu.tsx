@@ -39,6 +39,7 @@ import DeviceSelectionDialog from '../../DeviceSelectionDialog/DeviceSelectionDi
 import useScreenShareParticipant from '../../../hooks/useScreenShareParticipant/useScreenShareParticipant';
 import { isMobile } from '../../../utils';
 import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
+import { useHotkeys } from 'react-hotkeys-hook';
 
 export const IconContainer = styled('div')({
   display: 'flex',
@@ -118,6 +119,15 @@ export default function Menu(props: { buttonClassName?: string }) {
   const anchorRef = useRef<HTMLButtonElement>(null);
   const { flipCameraDisabled, toggleFacingMode, flipCameraSupported } = useFlipCameraToggle();
 
+  const toggleMenu = () => {
+    setMenuOpen((isOpen) => !isOpen);
+  };
+
+  useHotkeys('ctrl+o', (event) => {
+    event.preventDefault();
+    toggleMenu();
+  });
+
   return (
     <>
       {isSharingScreen && (
@@ -127,9 +137,9 @@ export default function Menu(props: { buttonClassName?: string }) {
         </Grid>
       )}
 
-      <ShortcutTooltip shortcut="M" isCtrlDown>
+      <ShortcutTooltip shortcut="O" isCtrlDown>
         <Button
-          onClick={() => setMenuOpen((isOpen) => !isOpen)}
+          onClick={toggleMenu}
           ref={anchorRef}
           className={props.buttonClassName}
           aria-label="More options"

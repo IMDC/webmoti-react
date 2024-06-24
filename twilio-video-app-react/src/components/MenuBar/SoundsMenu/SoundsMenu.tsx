@@ -1,12 +1,15 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { Button, Popover } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { useHotkeys } from 'react-hotkeys-hook';
 
 import NotifyButton from '../../Buttons/NotifyButton/NotifyButton';
 import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
 export default function SoundsMenu() {
+  const openBtnRef = useRef(null);
+
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -17,10 +20,19 @@ export default function SoundsMenu() {
     setAnchorEl(null);
   };
 
+  useHotkeys('ctrl+s', (event) => {
+    event.preventDefault();
+    if (anchorEl) {
+      handlePopoverClose();
+    } else {
+      setAnchorEl(openBtnRef.current);
+    }
+  });
+
   return (
     <>
       <ShortcutTooltip shortcut="S" isCtrlDown>
-        <Button onClick={handleButtonClick}>
+        <Button ref={openBtnRef} onClick={handleButtonClick}>
           Sounds <ExpandMoreIcon />
         </Button>
       </ShortcutTooltip>

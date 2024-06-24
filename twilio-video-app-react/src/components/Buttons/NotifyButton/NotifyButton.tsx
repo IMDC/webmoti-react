@@ -5,7 +5,9 @@ import Button from '@material-ui/core/Button';
 import VolumeDown from '@material-ui/icons/VolumeDown';
 import VolumeUp from '@material-ui/icons/VolumeUp';
 import { Message } from '@twilio/conversations';
+import { useHotkeys } from 'react-hotkeys-hook';
 
+import { MsgTypes } from '../../../constants';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import InfoIcon from '../../../icons/InfoIcon';
@@ -20,7 +22,6 @@ import neutral_question from '../../../sounds/speech/neutral_question.mp3';
 import professor_1 from '../../../sounds/speech/professor_1.mp3';
 import professor_2 from '../../../sounds/speech/professor_2.mp3';
 import professor_3 from '../../../sounds/speech/professor_3.mp3';
-import { MsgTypes } from '../../../constants';
 import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
 interface SoundEntry {
@@ -102,6 +103,11 @@ export default function NotifyButton() {
     }
   };
 
+  useHotkeys('ctrl+a', (event) => {
+    event.preventDefault();
+    notifyProfessor();
+  });
+
   useEffect(() => {
     const handleMessageAdded = (message: Message) => {
       if (!checkSystemMsg(message)) {
@@ -125,7 +131,7 @@ export default function NotifyButton() {
 
   return (
     <Grid container justifyContent="center" alignItems="center">
-      <ShortcutTooltip shortcut="N" isCtrlDown>
+      <ShortcutTooltip shortcut="A" isCtrlDown>
         <Button onClick={notifyProfessor}>Nudge</Button>
       </ShortcutTooltip>
 

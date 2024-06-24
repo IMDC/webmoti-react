@@ -1,4 +1,5 @@
 import Button from '@material-ui/core/Button';
+import { useHotkeys } from 'react-hotkeys-hook';
 import { RemoteVideoTrack } from 'twilio-video';
 
 import { WEBMOTI_CAMERA_2 } from '../../../constants';
@@ -7,6 +8,11 @@ import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
 export default function BoardQualityButton() {
   const participants = useParticipants();
+
+  useHotkeys('ctrl+q', (event) => {
+    event.preventDefault();
+    setQuality();
+  });
 
   const setQuality = () => {
     for (const participant of participants) {

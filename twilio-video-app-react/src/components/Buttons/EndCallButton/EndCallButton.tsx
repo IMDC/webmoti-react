@@ -1,7 +1,7 @@
+import { Button } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import clsx from 'clsx';
-
-import { Button } from '@material-ui/core';
+import { useHotkeys } from 'react-hotkeys-hook';
 
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
@@ -24,17 +24,20 @@ export default function EndCallButton(props: { className?: string }) {
   const { room } = useVideoContext();
   const { conversation } = useChatContext();
 
+  const endCall = () => {
+    room!.disconnect();
+    // also leave conversation to allow rejoin with same name
+    conversation?.leave();
+  };
+
+  useHotkeys('ctrl+d', (event) => {
+    event.preventDefault();
+    endCall();
+  });
+
   return (
     <ShortcutTooltip shortcut="D" isCtrlDown>
-      <Button
-        onClick={() => {
-          room!.disconnect();
-          // also leave conversation to allow rejoin with same name
-          conversation?.leave();
-        }}
-        className={clsx(classes.button, props.className)}
-        data-cy-disconnect
-      >
+      <Button onClick={endCall} className={clsx(classes.button, props.className)} data-cy-disconnect>
         Disconnect
       </Button>
     </ShortcutTooltip>

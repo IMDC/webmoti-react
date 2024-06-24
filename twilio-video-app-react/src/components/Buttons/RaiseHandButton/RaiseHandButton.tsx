@@ -8,6 +8,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { EmojiPeople } from '@material-ui/icons';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import { Message } from '@twilio/conversations';
+import { useHotkeys } from 'react-hotkeys-hook';
 
 import { HandActions } from '../../../constants';
 import { MsgTypes } from '../../../constants';
@@ -169,6 +170,12 @@ export default function RaiseHandButton() {
     }
   };
 
+  useHotkeys('ctrl+h', (event) => {
+    event.preventDefault();
+    const raiseMode = isHandRaised ? HandActions.Lower : HandActions.Raise;
+    setHand(raiseMode);
+  });
+
   useEffect(() => {
     const handleGlobalMouseUp = () => {
       if (isRaising.current) {
@@ -184,20 +191,10 @@ export default function RaiseHandButton() {
       }
     };
 
-    const handleKeyPress = (event: KeyboardEvent) => {
-      // shortcut is r key
-      if (event.key === 'r') {
-        const raiseMode = isHandRaised ? HandActions.Lower : HandActions.Raise;
-        setHand(raiseMode);
-      }
-    };
-
     document.addEventListener('mouseup', handleGlobalMouseUp);
-    document.addEventListener('keydown', handleKeyPress);
 
     return () => {
       document.removeEventListener('mouseup', handleGlobalMouseUp);
-      document.removeEventListener('keydown', handleKeyPress);
     };
   }, [isHandRaised, setHand]);
 

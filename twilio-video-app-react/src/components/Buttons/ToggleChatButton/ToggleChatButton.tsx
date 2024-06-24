@@ -3,13 +3,14 @@ import { useEffect, useState } from 'react';
 import { Theme, useMediaQuery } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+import { Message } from '@twilio/conversations';
 import clsx from 'clsx';
+import { useHotkeys } from 'react-hotkeys-hook';
 
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
-import ChatIcon from '../../../icons/ChatIcon';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
-import { Message } from '@twilio/conversations';
+import ChatIcon from '../../../icons/ChatIcon';
 import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
 export const ANIMATION_DURATION = 700;
@@ -102,9 +103,14 @@ export default function ToggleChatButton() {
     }
   }, [conversation, isChatWindowOpen, checkSystemMsg]);
 
+  useHotkeys('ctrl+t', (event) => {
+    event.preventDefault();
+    toggleChatWindow();
+  });
+
   return (
     <>
-      <ShortcutTooltip shortcut="C" isCtrlDown>
+      <ShortcutTooltip shortcut="T" isCtrlDown>
         <Button
           data-cy-chat-button
           onClick={toggleChatWindow}

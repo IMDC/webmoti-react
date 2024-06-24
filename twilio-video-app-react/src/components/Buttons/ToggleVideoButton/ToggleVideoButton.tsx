@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 
 import Button from '@material-ui/core/Button';
 import { Theme, useMediaQuery } from '@material-ui/core';
@@ -8,12 +8,18 @@ import VideoOnIcon from '../../../icons/VideoOnIcon';
 import useDevices from '../../../hooks/useDevices/useDevices';
 import useLocalVideoToggle from '../../../hooks/useLocalVideoToggle/useLocalVideoToggle';
 import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
+import { useHotkeys } from 'react-hotkeys-hook';
 
 export default function ToggleVideoButton(props: { disabled?: boolean; className?: string }) {
   const [isVideoEnabled, toggleVideoEnabled] = useLocalVideoToggle();
   const lastClickTimeRef = useRef(0);
   const { hasVideoInputDevices } = useDevices();
   const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+
+  useHotkeys('ctrl+v', (event) => {
+    event.preventDefault();
+    toggleVideo();
+  });
 
   const toggleVideo = useCallback(() => {
     if (Date.now() - lastClickTimeRef.current > 500) {

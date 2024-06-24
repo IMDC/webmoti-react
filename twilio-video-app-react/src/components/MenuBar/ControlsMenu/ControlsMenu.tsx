@@ -1,13 +1,14 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { Button, Divider, Grid, Popover, Theme, createStyles, makeStyles } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { useHotkeys } from 'react-hotkeys-hook';
 
+import BoardQualityButton from '../../Buttons/BoardQualityButton/BoardQualityButton';
 import ChangeZoomButton from '../../Buttons/ChangeZoomButton/ChangeZoomButton';
 import MuteClassroomButton from '../../Buttons/MuteClassroomButton/MuteClassroomButton';
 import ToggleCameraButton from '../../Buttons/ToggleCameraButton/ToggleCameraButton';
 import ToggleCameraButton2 from '../../Buttons/ToggleCameraButton2/ToggleCameraButton2';
-import BoardQualityButton from '../../Buttons/BoardQualityButton/BoardQualityButton';
 import WaveHandButton from '../../Buttons/WaveHandButton/WaveHandButton';
 import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
@@ -21,6 +22,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function ControlsMenu() {
   const classes = useStyles();
+  const openBtnRef = useRef(null);
 
   const [cameraControlsAnchorEl, setCameraControlsAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -32,10 +34,19 @@ export default function ControlsMenu() {
     setCameraControlsAnchorEl(null);
   };
 
+  useHotkeys('ctrl+c', (event) => {
+    event.preventDefault();
+    if (cameraControlsAnchorEl) {
+      handleCameraControlsClose();
+    } else {
+      setCameraControlsAnchorEl(openBtnRef.current);
+    }
+  });
+
   return (
     <>
-      <ShortcutTooltip shortcut="O" isCtrlDown>
-        <Button onClick={handleCameraControlsClick}>
+      <ShortcutTooltip shortcut="C" isCtrlDown>
+        <Button ref={openBtnRef} onClick={handleCameraControlsClick}>
           Controls <ExpandMoreIcon />
         </Button>
       </ShortcutTooltip>
@@ -56,23 +67,17 @@ export default function ControlsMenu() {
         <div className={classes.cameraControlsPopover}>
           <Grid container justifyContent="center" alignItems="center" direction="column">
             <Grid item>
-              <ShortcutTooltip shortcut="R" isCtrlDown>
-                <MuteClassroomButton />
-              </ShortcutTooltip>
+              <MuteClassroomButton />
             </Grid>
 
             <Grid item>
               <Divider />
               <Grid container spacing={2} justifyContent="center" alignItems="center">
                 <Grid item>
-                  <ShortcutTooltip shortcut="W" isCtrlDown>
-                    <ToggleCameraButton />
-                  </ShortcutTooltip>
+                  <ToggleCameraButton />
                 </Grid>
                 <Grid item>
-                  <ShortcutTooltip shortcut="B" isCtrlDown>
-                    <ToggleCameraButton2 />
-                  </ShortcutTooltip>
+                  <ToggleCameraButton2 />
                 </Grid>
               </Grid>
             </Grid>

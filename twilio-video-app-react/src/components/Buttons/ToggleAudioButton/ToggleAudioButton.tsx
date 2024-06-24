@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-
 import { Theme, useMediaQuery } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 
@@ -11,6 +9,7 @@ import MicIcon from '../../../icons/MicIcon';
 import MicOffIcon from '../../../icons/MicOffIcon';
 import { MsgTypes } from '../../../constants';
 import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
+import { useHotkeys } from 'react-hotkeys-hook';
 
 const enum Mode {
   Professor = 'PROFESSOR',
@@ -28,22 +27,13 @@ export default function ToggleAudioButton(props: { disabled?: boolean; className
   const { room } = useVideoContext();
   const { isProfessor, sendSystemMsg, isWebmotiVideo } = useWebmotiVideoContext();
 
-  useEffect(() => {
-    const handleKeyPress = (event: KeyboardEvent) => {
-      if (event.key === 'm') {
-        toggleAudioEnabled();
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyPress);
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyPress);
-    };
-  }, [toggleAudioEnabled]);
+  useHotkeys('ctrl+m', (event) => {
+    event.preventDefault();
+    toggleAudioEnabled();
+  });
 
   return (
-    <ShortcutTooltip shortcut="A" isCtrlDown>
+    <ShortcutTooltip shortcut="M" isCtrlDown>
       <Button
         className={props.className}
         onClick={() => {
