@@ -4,4 +4,4 @@ standalone-join/node_modules
 .env
 .vscode/
 .todo
-test.rest
+hand_server.log

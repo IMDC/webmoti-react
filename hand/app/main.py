@@ -2,7 +2,6 @@ import pathlib
 
 import uvicorn
 from fastapi import FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -10,22 +9,12 @@ from fastapi.templating import Jinja2Templates
 from constants import PORT
 from routes.queue_sse import router as queue_router
 from routes.raisehand import router as raisehand_router
-from utils import setup_gpio, setup_handlers, setup_logging
+from utils import setup_handlers, setup_logging
 
-# dev:
-# cd '..\Hand functions\app\'
-# fastapi dev main.py
 app = FastAPI()
+
 app.include_router(raisehand_router)
 app.include_router(queue_router)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 
 dir_path = pathlib.Path(__file__).parent
 
@@ -39,8 +28,6 @@ async def root(request: Request):
 
 
 if __name__ == "__main__":
-    # setup_gpio()
-    # setup_logging()
+    setup_logging()
     setup_handlers()
-
     uvicorn.run(app, host="127.0.0.1", port=PORT)
