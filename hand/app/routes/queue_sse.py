@@ -7,16 +7,26 @@ from sse_starlette.sse import EventSourceResponse
 router = APIRouter(prefix="/api")
 
 queue = []
-queue_event = asyncio.Event()
+queue_event = None
+
+
+# this is for an error when asyncio.Event is created in a different event loop.
+# it delays creating it until used so it uses the uvicorn event loop
+def ensure_event():
+    global queue_event
+    if queue_event is None:
+        queue_event = asyncio.Event()
 
 
 def add_to_queue(identity: str):
+    ensure_event()
     if identity not in queue:
         queue.append(identity)
         queue_event.set()
 
 
 def remove_from_queue(identity: str):
+    ensure_event()
     if identity in queue:
         queue.remove(identity)
         queue_event.set()
@@ -29,6 +39,7 @@ def get_queue():
 
 
 async def event_generator():
+    ensure_event()
     # send queue immediately when they connect
     yield get_queue()
 
