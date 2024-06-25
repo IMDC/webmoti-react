@@ -73,17 +73,18 @@ export default function RaiseHandButton() {
 
   const isRaising = useRef(false);
 
+  const name = room?.localParticipant?.identity || 'Participant';
+
   // this is run when participant joins
   useEffect(() => {
     const initRemoteIt = async () => {
-      const name = room?.localParticipant?.identity || 'Participant';
       // don't init remote it if not student
       if (isWebmotiVideo(name)) {
         return;
       }
 
       // the service can be offline here, it's just to make the initial connection
-      const response = await sendHandRequest('INIT', true);
+      const response = await sendHandRequest('INIT', null, true);
 
       console.log(`Remote.It init: ${response.status}`);
     };
@@ -96,49 +97,27 @@ export default function RaiseHandButton() {
   const setHand = useCallback(
     async (mode: HandActions) => {
       isRaising.current = true;
-      const name = room?.localParticipant?.identity || 'Participant';
 
-      // send request
       setIsLoading(true);
-
-      const isFirst = handQueue[0] === name;
       // don't alert if not raising hand, unnecessary
       const isSilent = mode !== HandActions.Raise;
-
-      if (handQueue.length === 0 || (handQueue.length === 1 && mode === HandActions.Lower)) {
-        // no one in queue or you're the only one in queue lowering your hand
-        await sendHandRequest(mode, isSilent);
-      } else if (handQueue.length > 1 && isFirst && mode === HandActions.Lower) {
-        // you're in first place and lowering hand
-        // there are other people in the queue, so don't lower hand, reraise instead
-        await sendHandRequest(HandActions.ReRaise, isSilent);
-      } else {
-        // do nothing here
-        // (if the hand is already raised by someone else, leave it)
-      }
-
+      await sendHandRequest(mode, name, isSilent);
       setIsLoading(false);
 
+      sendSystemMsg(
+        conversation,
+        JSON.stringify({
+          type: MsgTypes.Hand,
+          identity: name,
+          action: mode,
+        })
+      );
+
       if (mode === HandActions.Raise && !handQueue.includes(name)) {
-        // raise hand
-        sendSystemMsg(
-          conversation,
-          JSON.stringify({
-            type: MsgTypes.Hand,
-            identity: name,
-            action: HandActions.Raise,
-          })
-        );
+        // put in queue
         setHandQueue((prevQueue) => [...prevQueue, name]);
       } else if (mode === HandActions.Lower) {
-        sendSystemMsg(
-          conversation,
-          JSON.stringify({
-            type: MsgTypes.Hand,
-            identity: name,
-            action: HandActions.Lower,
-          })
-        );
+        // remove from queue
         setHandQueue((prevQueue) => prevQueue.filter((participantName) => participantName !== name));
 
         // start countdown timer for hand
@@ -157,7 +136,7 @@ export default function RaiseHandButton() {
       setIsHandRaised(mode === HandActions.Raise);
       isRaising.current = false;
     },
-    [conversation, handQueue, room, sendSystemMsg, sendHandRequest]
+    [conversation, handQueue, sendSystemMsg, sendHandRequest, name]
   );
 
   const handleMouseDown = () => {

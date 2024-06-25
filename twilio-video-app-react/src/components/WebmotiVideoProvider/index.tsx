@@ -27,7 +27,7 @@ interface WebmotiVideoContextType {
   professorsName: string;
   setProfessorsName: React.Dispatch<React.SetStateAction<string>>;
   sendSystemMsg: (conversation: Conversation | null, msg: string) => void;
-  sendHandRequest: (mode: string, is_silent?: boolean) => Promise<Response>;
+  sendHandRequest: (mode: string, identity?: string | null, is_silent?: boolean) => Promise<Response>;
   checkSystemMsg: (message: Message) => boolean;
 }
 
@@ -53,9 +53,9 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
 
   const toggleWebmotiVideo = (camera: string) => {
     if (camera === WEBMOTI_CAMERA_1) {
-      setIsCameraOneOff(prev => !prev);
+      setIsCameraOneOff((prev) => !prev);
     } else {
-      setIsCameraTwoOff(prev => !prev);
+      setIsCameraTwoOff((prev) => !prev);
     }
   };
 
@@ -87,13 +87,16 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
   };
 
   const sendHandRequest = useCallback(
-    async (mode: string, is_silent = false) => {
+    async (mode: string, identity: string | null = null, is_silent = false) => {
       const response = await fetch(REMOTE_IT_URL, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Type': 'application/json',
         },
-        body: new URLSearchParams({ mode }),
+        body: JSON.stringify({
+          mode: mode,
+          identity: identity,
+        }),
       });
 
       if (!response.ok && !is_silent) {
@@ -101,7 +104,13 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
           // board not connected to wifi
           setError(Error('WebMoti is offline'));
         } else {
-          setError(Error(`Unknown error while raising hand: ${response.status}: ${response.statusText}`));
+          try {
+            const errorBody = await response.json();
+            const errorMessage = JSON.stringify(errorBody);
+            setError(Error(`${response.status} error: ${errorMessage}`));
+          } catch (error) {
+            setError(Error(`${response.status} error: Failed to parse error message`));
+          }
         }
       }
 
