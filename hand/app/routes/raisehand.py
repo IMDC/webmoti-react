@@ -2,7 +2,7 @@ import logging
 from typing import Optional
 
 from fastapi import APIRouter, HTTPException
-from fastapi.responses import PlainTextResponse
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from constants import HALFWAY_ANGLE, MAX_ANGLE, MIN_ANGLE, Mode
@@ -55,8 +55,8 @@ def raise_hand(mode: Mode):
 
 
 class RaiseHandRequest(BaseModel):
-    mode: Optional[str] = Mode.WAVE2.name
-    identity: str
+    mode: str
+    identity: Optional[str] = None
 
 
 @router.get("/raisehand")
@@ -80,6 +80,11 @@ def raise_hand_endpoint(request: RaiseHandRequest):
         logging.error(f"Invalid mode received: {mode}")
         raise HTTPException(status_code=400, detail="Invalid mode")
 
+    if (mode_enum in [Mode.RAISE, Mode.LOWER]) and not request.identity:
+        raise HTTPException(
+            status_code=400, detail=f"Identity is required for mode: {mode}"
+        )
+
     if mode_enum == Mode.RAISE:
         add_to_queue(identity)
         # don't raise hand if already raised
@@ -88,7 +93,7 @@ def raise_hand_endpoint(request: RaiseHandRequest):
 
     elif mode_enum == Mode.LOWER:
         if not is_hand_raised:
-            return PlainTextResponse(content="Hand isn't raised", status_code=400)
+            return HTTPException(status_code=400, detail="Hand isn't raised")
 
         queue_length = remove_from_queue(identity)
         # if there are still people in the queue, reraise
@@ -98,4 +103,4 @@ def raise_hand_endpoint(request: RaiseHandRequest):
     if mode_enum is not None:
         raise_hand(mode_enum)
 
-    return PlainTextResponse(content="OK", status_code=200)
+    return JSONResponse(content={"message": "OK"}, status_code=200)
