@@ -1,22 +1,20 @@
 #!/bin/bash
 
-DOWNLOADS_DIR="$HOME/Downloads"
-ZIP_FILE="webmoti-W.I.P-main.zip"
-EXTRACTED_DIR="$DOWNLOADS_DIR/webmoti-W.I.P-main"
-TARGET_DIR="$HOME/app"
+DOWNLOAD_DIR="$HOME/Downloads"
+DOWNLOAD_NAME="$DOWNLOAD_DIR/webmoti-W.I.P-main"
 
-if [ -f "$DOWNLOADS_DIR/$ZIP_FILE" ]; then
-    rm -rf "$EXTRACTED_DIR"
-    rm -rf "$TARGET_DIR"
+if [ -f "$DOWNLOAD_NAME.zip" ]; then
+    rm -rf "$DOWNLOAD_NAME"
+    rm -rf "$HOME/app"
 
-    unzip "$DOWNLOADS_DIR/$ZIP_FILE" -d "$DOWNLOADS_DIR"
+    unzip "$DOWNLOAD_NAME.zip" -d "$DOWNLOAD_DIR"
 
     # copy app dir to home
-    cp -r "$EXTRACTED_DIR/hand/app" "$TARGET_DIR"
+    cp -r "$DOWNLOAD_NAME/hand/app" "$HOME"
 
     # remove zip
-    rm -rf "$EXTRACTED_DIR"
-    rm "$DOWNLOADS_DIR/$ZIP_FILE"
+    rm -rf "$DOWNLOAD_NAME"
+    rm "$DOWNLOAD_NAME.zip"
 else
-    echo "Zip file not found in $DOWNLOADS_DIR"
+    echo "Zip file not found in $DOWNLOAD_DIR"
 fi
