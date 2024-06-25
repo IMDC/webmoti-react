@@ -60,17 +60,16 @@ class RaiseHandRequest(BaseModel):
 
 
 @router.get("/raisehand")
-def wave_hand_endpoint():
+async def wave_hand_endpoint():
     raise_hand(Mode.WAVE)
     return {"status": "Hand waved"}
 
 
-# these endpoints aren't async because they deal with hardware
-# and we don't want multiple requests at the same time
+# TODO lock these to one at a time
 
 
 @router.post("/raisehand")
-def raise_hand_endpoint(request: RaiseHandRequest):
+async def raise_hand_endpoint(request: RaiseHandRequest):
     mode = request.mode.upper()
     identity = request.identity
 
@@ -86,7 +85,7 @@ def raise_hand_endpoint(request: RaiseHandRequest):
         )
 
     if mode_enum == Mode.RAISE:
-        add_to_queue(identity)
+        await add_to_queue(identity)
         # don't raise hand if already raised
         if is_hand_raised:
             mode_enum = None
@@ -95,7 +94,7 @@ def raise_hand_endpoint(request: RaiseHandRequest):
         if not is_hand_raised:
             return HTTPException(status_code=400, detail="Hand isn't raised")
 
-        queue_length = remove_from_queue(identity)
+        queue_length = await remove_from_queue(identity)
         # if there are still people in the queue, reraise
         if queue_length > 0:
             mode_enum = Mode.RERAISE
