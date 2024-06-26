@@ -12,23 +12,90 @@ body {
   justify-content: center;
 }
 
-#head {
-  font-weight: 700;
-  text-align: center;
-  font-size: 12vw;
-  word-break: break-word;
-  overflow-wrap: break-word;
-}
-
 #counter {
   position: absolute;
   top: 0;
   left: 0;
 
   margin: 0;
-  padding: 50px;
+  padding: 10px;
   line-height: 1;
 
   color: #1db954;
   font-size: 12vw;
+}
+
+#queue {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 1fr;
+  grid-template-rows: 0.1fr 1fr 0.1fr;
+  grid-template-areas:
+    "upper-left above upper-right"
+    "left head right"
+    "lower-left below lower-right";
+  justify-content: center;
+  align-items: center;
+  column-gap: 20px;
+}
+
+#upper-left,
+#above,
+#upper-right,
+#left,
+#head,
+#right,
+#lower-left,
+#below,
+#lower-right {
+  text-align: center;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  opacity: 0.7;
+}
+
+#head {
+  grid-area: head;
+  font-weight: 700;
+  font-size: 7vw;
+  opacity: 1;
+}
+
+#above {
+  grid-area: above;
+  font-size: 4.5vw;
+}
+
+#upper-right {
+  grid-area: upper-right;
+  font-size: 3.5vw;
+}
+
+#right {
+  grid-area: right;
+  font-size: 3vw;
+}
+
+#lower-right {
+  grid-area: lower-right;
+  font-size: 2.5vw;
+}
+
+#below {
+  grid-area: below;
+  font-size: 2vw;
+}
+
+#lower-left {
+  grid-area: lower-left;
+  font-size: 1.5vw;
+}
+
+#left {
+  grid-area: left;
+  font-size: 1vw;
+}
+
+#upper-left {
+  grid-area: upper-left;
+  font-size: 1vw;
 }

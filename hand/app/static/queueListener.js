@@ -5,14 +5,28 @@ eventSource.onmessage = (event) => {
 
   document.getElementById("counter").textContent = queue.length;
 
-  const headElement = document.getElementById("head");
+  const positions = [
+    "head",
+    "above",
+    "upper-right",
+    "right",
+    "lower-right",
+    "below",
+    "lower-left",
+    "left",
+    "upper-left",
+  ];
 
-  if (queue.length > 0) {
-    const head = queue[0];
-    headElement.textContent = head;
-    headElement.style.textDecoration = `underline ${stringToColour(head)}`;
-  } else {
-    headElement.textContent = "";
+  for (const [idx, position] of positions.entries()) {
+    const element = document.getElementById(position);
+
+    if (queue.length > idx) {
+      const name = queue[idx];
+      element.textContent = name;
+      element.style.textDecoration = `underline ${stringToColour(name)}`;
+    } else {
+      element.textContent = "";
+    }
   }
 };
 
