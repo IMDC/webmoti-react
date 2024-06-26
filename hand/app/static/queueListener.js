@@ -1,32 +1,44 @@
 const eventSource = new EventSource("/api/queue");
 
+const currentItems = new Map();
+
+const addName = (name) => {
+  const newItem = document.createElement("li");
+  newItem.textContent = name;
+  newItem.style.textDecoration = `underline ${stringToColour(name)}`;
+
+  document.getElementById("queue").appendChild(newItem);
+  // timeout needed so animation plays
+  setTimeout(() => newItem.classList.add("show"), 10);
+  currentItems.set(name, newItem);
+};
+
+const removeName = (name) => {
+  const element = currentItems.get(name);
+  if (!element) {
+    return;
+  }
+  element.classList.remove("show");
+  setTimeout(() => element.remove(), 400);
+  currentItems.delete(name);
+};
+
 eventSource.onmessage = (event) => {
-  const queue = JSON.parse(event.data);
+  const newQueue = new Set(JSON.parse(event.data));
+  document.getElementById("counter").textContent = newQueue.size;
 
-  document.getElementById("counter").textContent = queue.length;
+  // find added or removed items from queue update
+  const additions = new Set([...newQueue].filter((x) => !currentItems.has(x)));
+  const removals = new Set(
+    [...currentItems.keys()].filter((x) => !newQueue.has(x))
+  );
 
-  const positions = [
-    "head",
-    "above",
-    "upper-right",
-    "right",
-    "lower-right",
-    "below",
-    "lower-left",
-    "left",
-    "upper-left",
-  ];
+  for (const name of additions) {
+    addName(name);
+  }
 
-  for (const [idx, position] of positions.entries()) {
-    const element = document.getElementById(position);
-
-    if (queue.length > idx) {
-      const name = queue[idx];
-      element.textContent = name;
-      element.style.textDecoration = `underline ${stringToColour(name)}`;
-    } else {
-      element.textContent = "";
-    }
+  for (const name of removals) {
+    removeName(name);
   }
 };
 
