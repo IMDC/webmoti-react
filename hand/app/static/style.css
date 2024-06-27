@@ -5,53 +5,84 @@ body {
 
   height: 100vh;
   margin: 0;
-  padding: 50px;
 
   display: flex;
   justify-content: center;
   box-sizing: border-box;
+
+  overflow: hidden;
 }
 
 #counter {
   position: absolute;
-  top: 0;
-  left: 0;
+  bottom: 0;
+  right: 0;
 
   margin: 0;
-  padding: 10px;
-  line-height: 1;
+  padding-right: 2vw;
 
   color: #1db954;
-  font-size: 12vw;
+  font-size: 15vw;
 }
 
 #queue {
   list-style: none;
-  width: 80vw;
+  padding: 0;
+  margin: 3vw;
+  width: 100vw;
 }
 
 #queue li {
-  margin-top: 0;
+  margin-bottom: 0;
   overflow: hidden;
   max-height: 0;
 
   font-weight: 700;
   text-align: center;
-  font-size: 12vw;
   word-break: break-word;
   overflow-wrap: break-word;
-}
 
-#queue li.show {
-  margin-top: 0.5rem;
-  max-height: 15vw;
-}
-
-.fade li {
-  transition: all 0.4s ease-out;
   opacity: 0;
 }
 
-.fade li.show {
+.transition-no-size {
+  transition: margin-bottom 0.4s ease-out, max-height 0.4s ease-out,
+    opacity 0.4s ease-out;
+}
+
+.queue-0 {
+  font-size: 12vw;
+}
+
+#queue .show-0 {
+  margin-bottom: 2rem;
+  max-height: 15vw;
   opacity: 1;
+}
+
+.queue-1 {
+  font-size: 8vw;
+}
+
+#queue .show-1 {
+  max-height: 10vw;
+  opacity: 0.9;
+}
+
+.queue-2 {
+  font-size: 6vw;
+}
+
+#queue .show-2 {
+  max-height: 8vw;
+  opacity: 0.8;
+}
+
+.queue-3 {
+  font-size: 5vw;
+}
+
+#queue .show-3 {
+  max-height: 7vw;
+  opacity: 0.7;
 }

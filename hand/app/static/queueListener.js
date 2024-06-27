@@ -1,16 +1,40 @@
 const eventSource = new EventSource("/api/queue");
 
 const currentItems = new Map();
+const queue = document.getElementById("queue");
+
+// in ms
+const animationTime = 400;
+
+const updateQueueStyles = () => {
+  // this keeps all styles in queue updated when an item is added/removed
+  Array.from(currentItems.values()).forEach((element, index) => {
+    element.className = "";
+    // queue-3 and show-3 are the lowest ones
+    const styleNumber = Math.min(index, 3);
+    element.classList.add("queue-" + styleNumber, "show-" + styleNumber);
+  });
+};
 
 const addName = (name) => {
   const newItem = document.createElement("li");
   newItem.textContent = name;
   newItem.style.textDecoration = `underline ${stringToColour(name)}`;
 
-  document.getElementById("queue").appendChild(newItem);
-  // timeout needed so animation plays
-  setTimeout(() => newItem.classList.add("show"), 10);
+  queue.appendChild(newItem);
   currentItems.set(name, newItem);
+
+  // timeout needed so animation plays
+  setTimeout(() => {
+    updateQueueStyles();
+    // prevent font-size animation when item added
+    newItem.classList.add("transition-no-size");
+
+    setTimeout(() => {
+      newItem.classList.remove("transition-no-size");
+      newItem.style.transition = "all 0.4s ease-out";
+    }, animationTime);
+  }, 10);
 };
 
 const removeName = (name) => {
@@ -18,9 +42,17 @@ const removeName = (name) => {
   if (!element) {
     return;
   }
-  element.classList.remove("show");
-  setTimeout(() => element.remove(), 400);
+
+  // hide current item
+  const position = Array.from(currentItems.keys()).indexOf(name);
+  element.classList.remove(`show-${position}`);
+
+  // keep other items updated
   currentItems.delete(name);
+  updateQueueStyles();
+
+  // remove from page when animation finishes
+  setTimeout(() => element.remove(), animationTime);
 };
 
 eventSource.onmessage = (event) => {
