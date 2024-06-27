@@ -7,6 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from constants import PORT
+from routes.notifications import router as notifications_router
 from routes.queue_sse import router as queue_router
 from routes.raisehand import router as raisehand_router
 from utils import setup_handlers, setup_logging
@@ -15,6 +16,7 @@ app = FastAPI()
 
 app.include_router(raisehand_router)
 app.include_router(queue_router)
+app.include_router(notifications_router)
 
 dir_path = pathlib.Path(__file__).parent
 
