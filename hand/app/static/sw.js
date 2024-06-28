@@ -36,5 +36,5 @@ self.addEventListener("activate", async () => {
 });
 
 self.addEventListener("push", (e) => {
-  self.registration.showNotification("Hi", { body: e.data.text() });
+  self.registration.showNotification("WebMoti", { body: e.data.text() });
 });

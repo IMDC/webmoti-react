@@ -23,6 +23,8 @@ async def add_to_queue(identity: str):
     if identity not in queue:
         queue.append(identity)
         queue_event.set()
+        return True
+    return False
 
 
 async def remove_from_queue(identity: str):

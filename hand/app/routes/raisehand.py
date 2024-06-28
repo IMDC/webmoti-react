@@ -6,6 +6,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from constants import HALFWAY_ANGLE, MAX_ANGLE, MIN_ANGLE, Mode
+from routes.notifications import send_notification
 from routes.queue_sse import add_to_queue, remove_from_queue
 from utils import servo_controller
 
@@ -85,21 +86,22 @@ async def raise_hand_endpoint(request: RaiseHandRequest):
         )
 
     if mode_enum == Mode.RAISE:
-        await add_to_queue(identity)
-        # don't raise hand if already raised
-        if is_hand_raised:
-            mode_enum = None
+        success = await add_to_queue(identity)
+        if success:
+            send_notification(identity)
+        else:
+            # don't raise hand if already raised
+            raise HTTPException(status_code=400, detail="Hand is already raised")
 
     elif mode_enum == Mode.LOWER:
         if not is_hand_raised:
-            return HTTPException(status_code=400, detail="Hand isn't raised")
+            raise HTTPException(status_code=400, detail="Hand isn't raised")
 
         queue_length = await remove_from_queue(identity)
         # if there are still people in the queue, reraise
         if queue_length > 0:
             mode_enum = Mode.RERAISE
 
-    if mode_enum is not None:
-        raise_hand(mode_enum)
+    raise_hand(mode_enum)
 
     return JSONResponse(content={"message": "OK"}, status_code=200)
