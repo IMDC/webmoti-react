@@ -36,5 +36,11 @@ self.addEventListener("activate", async () => {
 });
 
 self.addEventListener("push", (e) => {
-  self.registration.showNotification("WebMoti", { body: e.data.text() });
+  self.registration.showNotification("WebMoti", {
+    body: e.data.text(),
+    // vibrate for 500ms, pause for 200ms 3 times
+    vibrate: [500, 200, 500, 200, 500],
+    // the tag makes new notifications replace old ones
+    tag: "webmoti",
+  });
 });

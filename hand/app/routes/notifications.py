@@ -37,7 +37,7 @@ async def send_notification(name):
         return
 
     for subscription in subscriptions:
-        push(subscription, f"{name} has a question!")
+        await push(subscription, f"{name} has a question!")
 
 
 @router.post("/save-subscription")
