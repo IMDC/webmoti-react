@@ -15,7 +15,7 @@ router = APIRouter(prefix="/api")
 is_hand_raised = False
 
 
-def raise_hand(mode: Mode):
+async def raise_hand(mode: Mode):
     def wave():
         servo_controller.set_angle(MAX_ANGLE)
         servo_controller.set_angle(MIN_ANGLE)
@@ -96,7 +96,7 @@ async def raise_hand_endpoint(request: RaiseHandRequest):
     if mode_enum == Mode.RAISE:
         success = await add_to_queue(identity)
         if success:
-            send_notification(identity)
+            await send_notification(identity)
         else:
             # don't raise hand if already raised
             raise HTTPException(status_code=400, detail="Hand is already raised")
@@ -110,6 +110,6 @@ async def raise_hand_endpoint(request: RaiseHandRequest):
         if queue_length > 0:
             mode_enum = Mode.RERAISE
 
-    raise_hand(mode_enum)
+    await raise_hand(mode_enum)
 
     return JSONResponse(content={"message": "OK"}, status_code=200)

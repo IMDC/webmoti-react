@@ -19,10 +19,32 @@ body {
   right: 0;
 
   margin: 0;
-  padding-right: 2vw;
+  line-height: 0.8;
+  padding: 2vw;
 
   color: #1db954;
   font-size: 15vw;
+}
+
+#notificationButton {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
+  padding: 2vw;
+  width: 5vw;
+
+  cursor: pointer;
+}
+
+.gray-filter {
+  filter: invert(91%) sepia(0%) saturate(99%) hue-rotate(174deg) brightness(82%)
+    contrast(77%);
+}
+
+.blue-filter {
+  filter: invert(58%) sepia(57%) saturate(6535%) hue-rotate(194deg)
+    brightness(104%) contrast(101%);
 }
 
 #queue {

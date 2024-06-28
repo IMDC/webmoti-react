@@ -17,7 +17,8 @@ vapid_email = os.getenv("VAPID_EMAIL")
 subscriptions: List[Dict] = []
 
 
-def send_notification(name):
+# this is async so it doesn't block
+async def send_notification(name):
     if not subscriptions:
         logging.error("No subscriptions found")
         return

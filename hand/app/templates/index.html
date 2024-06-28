@@ -16,10 +16,23 @@
   </head>
 
   <body>
-    <h1 id="counter"></h1>
-    <ul id="queue"></ul>
+    <h1
+      id="counter"
+      aria-live="polite"
+      aria-label="Number of people in queue"
+    ></h1>
 
-    <button onclick="main()">Enable</button>
+    <ul id="queue" aria-live="polite" aria-label="Queue list"></ul>
+
+    <img
+      id="notificationButton"
+      class="gray-filter"
+      src="{{ url_for('static', path='notification-bell.svg') }}"
+      alt="Notification button"
+      tabindex="0"
+      role="button"
+      aria-label="Click to enable notifications"
+    />
 
     <script src="{{ url_for('static', path='queueListener.js') }}"></script>
     <script src="{{ url_for('static', path='notifications.js') }}"></script>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- notification by Landan Lloyd from 
+     https://thenounproject.com/browse/icons/term/notification/
+     (CC BY 3.0)
+-->
+<svg
+   viewBox="0 0 100 125"
+   version="1.1"
+   x="0px"
+   y="0px"
+   id="svg3"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <defs
+     id="defs3" />
+  <title
+     id="title1">Bell v2.6</title>
+  <desc
+     id="desc1">Created with Sketch.</desc>
+  <g
+     stroke="none"
+     stroke-width="1"
+     fill="none"
+     fill-rule="evenodd"
+     id="g2"
+     transform="matrix(1.8920188,0,0,1.8920188,-44.60094,-32.10094)">
+    <g
+       fill="#000000"
+       id="g1">
+      <path
+         d="M 45.5,29.066792 C 37.736477,31.064044 32,38.108738 32,46.499249 V 58.498257 C 32,59.603789 31.101739,60.5 30.002087,60.5 27.791795,60.5 26,62.295356 26,64.5 c 0,2.209139 1.794052,4 4.009893,4 H 69.990107 C 72.20471,68.5 74,66.704644 74,64.5 c 0,-2.209139 -1.800198,-4 -4.002087,-4 C 68.894496,60.5 68,59.610738 68,58.498257 V 46.499249 C 68,38.112059 62.264719,31.064723 54.5,29.066867 V 27.000854 C 54.5,24.509248 52.485281,22.5 50,22.5 c -2.480224,0 -4.5,2.015101 -4.5,4.500854 z M 43,70.5 h 14 c 0,3.865993 -3.134007,7 -7,7 -3.865993,0 -7,-3.134007 -7,-7 z"
+         id="path1" />
+    </g>
+  </g>
+  <metadata
+     id="metadata1">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>Bell v2.6</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+</svg>
