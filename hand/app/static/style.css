@@ -56,6 +56,7 @@ body {
 
 #queue li {
   margin-bottom: 0;
+  margin-top: 0;
   overflow: hidden;
   max-height: 0;
 
@@ -68,18 +69,20 @@ body {
 }
 
 .transition-no-size {
-  transition: margin-bottom 0.4s ease-out, max-height 0.4s ease-out,
-    opacity 0.4s ease-out;
+  transition: margin-top 0.4s ease-out, margin-bottom 0.4s ease-out,
+    max-height 0.4s ease-out, opacity 0.4s ease-out;
 }
 
 .queue-0 {
-  font-size: 12vw;
+  font-size: 14vw;
 }
 
 #queue .show-0 {
-  margin-bottom: 2rem;
-  max-height: 15vw;
+  max-height: 17vw;
   opacity: 1;
+
+  margin-top: 2rem;
+  margin-bottom: 6rem;
 }
 
 .queue-1 {
@@ -88,23 +91,29 @@ body {
 
 #queue .show-1 {
   max-height: 10vw;
-  opacity: 0.9;
+  opacity: 0.8;
+
+  margin-top: 2rem;
 }
 
 .queue-2 {
-  font-size: 6vw;
-}
-
-#queue .show-2 {
-  max-height: 8vw;
-  opacity: 0.8;
-}
-
-.queue-3 {
   font-size: 5vw;
 }
 
-#queue .show-3 {
+#queue .show-2 {
   max-height: 7vw;
   opacity: 0.7;
+
+  margin-top: 2rem;
+}
+
+.queue-3 {
+  font-size: 3vw;
+}
+
+#queue .show-3 {
+  max-height: 6vw;
+  opacity: 0.6;
+
+  margin-top: 2rem;
 }
