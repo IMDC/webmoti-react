@@ -85,6 +85,14 @@ async def raise_hand_endpoint(request: RaiseHandRequest):
             status_code=400, detail=f"Identity is required for mode: {mode}"
         )
 
+    if mode_enum in [Mode.WAVE, Mode.WAVE2, Mode.TOGGLE] and is_hand_raised:
+        raise HTTPException(
+            status_code=400, detail=f"Can't {mode_enum} while hand is raised"
+        )
+
+    if mode_enum == Mode.RERAISE:
+        raise HTTPException(status_code=400, detail=f"RERAISE mode not allowed")
+
     if mode_enum == Mode.RAISE:
         success = await add_to_queue(identity)
         if success:
