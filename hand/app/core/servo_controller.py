@@ -26,7 +26,7 @@ class ServoController:
             # convert angle to duty cycle (2 to 12)
             duty_cycle = (angle / 18) + 2
             self.pwm.ChangeDutyCycle(duty_cycle)
-            asyncio.sleep(1.5)
+            await asyncio.sleep(1.5)
 
     def stop(self):
         if is_rasp_pi:
