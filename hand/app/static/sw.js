@@ -15,11 +15,14 @@ const urlBase64ToUint8Array = (base64String) => {
 };
 
 const saveSubscription = async (subscription) => {
-  const response = await fetch("http://localhost:80/api/save-subscription", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(subscription),
-  });
+  const response = await fetch(
+    "https://jmn2f42hjgfv.connect.remote.it/api/save-subscription",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(subscription),
+    }
+  );
 
   return response.json();
 };
