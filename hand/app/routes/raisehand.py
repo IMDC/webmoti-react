@@ -5,54 +5,12 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-from constants import HALFWAY_ANGLE, MAX_ANGLE, MIN_ANGLE, Mode
+from constants import Mode
 from routes.notifications import send_notification
 from routes.queue_sse import add_to_queue, remove_from_queue
-from utils import servo_controller
+from utils import raise_hand, servo_controller
 
 router = APIRouter(prefix="/api")
-
-is_hand_raised = False
-
-
-async def raise_hand(mode: Mode):
-    def wave():
-        servo_controller.set_angle(MAX_ANGLE)
-        servo_controller.set_angle(MIN_ANGLE)
-
-    global is_hand_raised
-    logging.info(f"Raising hand with mode: {mode}")
-
-    if mode == Mode.WAVE2:
-        wave()
-        wave()
-
-    elif mode == Mode.WAVE:
-        wave()
-
-    elif mode == Mode.TOGGLE:
-        if is_hand_raised:
-            servo_controller.set_angle(MIN_ANGLE)
-        else:
-            # go farther than halfway so camera isn't blocked
-            servo_controller.set_angle(HALFWAY_ANGLE)
-        is_hand_raised = not is_hand_raised
-
-    elif mode == Mode.RAISE:
-        servo_controller.set_angle(HALFWAY_ANGLE)
-        is_hand_raised = True
-
-    elif mode == Mode.LOWER:
-        servo_controller.set_angle(MIN_ANGLE)
-        is_hand_raised = False
-
-    elif mode == Mode.RERAISE:
-        servo_controller.set_angle(MIN_ANGLE)
-        servo_controller.set_angle(HALFWAY_ANGLE)
-
-    elif mode == Mode.INIT:
-        # this is to initialize the remote.it connection to speed up future requests
-        logging.info("Initializing remote.it connection")
 
 
 class RaiseHandRequest(BaseModel):
@@ -85,7 +43,10 @@ async def raise_hand_endpoint(request: RaiseHandRequest):
             status_code=400, detail=f"Identity is required for mode: {mode}"
         )
 
-    if mode_enum in [Mode.WAVE, Mode.WAVE2, Mode.TOGGLE] and is_hand_raised:
+    if (
+        mode_enum in [Mode.WAVE, Mode.WAVE2, Mode.TOGGLE]
+        and servo_controller.is_hand_raised
+    ):
         raise HTTPException(
             status_code=400, detail=f"Can't {mode_enum} while hand is raised"
         )
@@ -102,7 +63,7 @@ async def raise_hand_endpoint(request: RaiseHandRequest):
             raise HTTPException(status_code=400, detail="Hand is already raised")
 
     elif mode_enum == Mode.LOWER:
-        if not is_hand_raised:
+        if not servo_controller.is_hand_raised:
             raise HTTPException(status_code=400, detail="Hand isn't raised")
 
         queue_length = await remove_from_queue(identity)
