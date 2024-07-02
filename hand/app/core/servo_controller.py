@@ -1,5 +1,5 @@
+import asyncio
 import platform
-from time import sleep
 
 from constants import SERVO_PIN
 
@@ -21,12 +21,12 @@ class ServoController:
 
         self.is_hand_raised = False
 
-    def set_angle(self, angle):
+    async def set_angle(self, angle):
         if is_rasp_pi:
-            # Convert angle to duty cycle (2 to 12)
+            # convert angle to duty cycle (2 to 12)
             duty_cycle = (angle / 18) + 2
             self.pwm.ChangeDutyCycle(duty_cycle)
-            sleep(1.5)
+            asyncio.sleep(1.5)
 
     def stop(self):
         if is_rasp_pi:
