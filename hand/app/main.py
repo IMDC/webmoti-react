@@ -12,6 +12,7 @@ from core.utils import setup_handlers, setup_logging
 from routes.notifications import router as notifications_router
 from routes.queue_sse import router as queue_router
 from routes.raisehand import router as raisehand_router
+from routes.raisehand_ws import router as raisehand_ws_router
 
 app = FastAPI()
 
@@ -23,9 +24,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(raisehand_router)
-app.include_router(queue_router)
-app.include_router(notifications_router)
+routers = (
+    raisehand_router,
+    queue_router,
+    notifications_router,
+    raisehand_ws_router,
+)
+
+for router in routers:
+    app.include_router(router)
+
 
 dir_path = pathlib.Path(__file__).parent
 
