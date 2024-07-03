@@ -10,18 +10,23 @@ let timeoutId;
 
 const updateQueueStyles = () => {
   // this keeps all styles in queue updated when an item is added/removed
-  Array.from(currentItems.values()).forEach((element, index) => {
+  let index = 0;
+  currentItems.forEach((element, name) => {
     element.className = "";
     // queue-3 and show-3 are the lowest ones
     const styleNumber = Math.min(index, 3);
     element.classList.add("queue-" + styleNumber, "show-" + styleNumber);
+
+    if (index === 0) {
+      element.style.color = stringToColour(name);
+    }
+    index++;
   });
 };
 
 const addName = (name) => {
   const newItem = document.createElement("li");
   newItem.textContent = name;
-  newItem.style.textDecoration = `underline ${stringToColour(name)}`;
 
   queue.appendChild(newItem);
   currentItems.set(name, newItem);
