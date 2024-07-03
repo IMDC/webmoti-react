@@ -3,18 +3,14 @@ body {
   font-family: "Inter", sans-serif;
   color: #fff;
 
-  height: 100vh;
   margin: 0;
-
   display: flex;
   justify-content: center;
   box-sizing: border-box;
-
-  overflow: hidden;
 }
 
 #counter {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   right: 0;
 
@@ -27,7 +23,7 @@ body {
 }
 
 #notificationButton {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 0;
 
@@ -57,7 +53,6 @@ body {
 #queue li {
   margin-bottom: 0;
   margin-top: 0;
-  overflow: hidden;
   max-height: 0;
 
   font-weight: 700;

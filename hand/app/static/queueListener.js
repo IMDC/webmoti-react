@@ -6,6 +6,8 @@ const queue = document.getElementById("queue");
 // in ms
 const animationTime = 400;
 
+let timeoutId;
+
 const updateQueueStyles = () => {
   // this keeps all styles in queue updated when an item is added/removed
   Array.from(currentItems.values()).forEach((element, index) => {
@@ -80,3 +82,17 @@ const stringToColour = (stringInput) => {
   }, 0);
   return `hsl(${stringUniqueHash % 360}, 100%, 75%)`;
 };
+
+const handleScroll = () => {
+  clearTimeout(timeoutId);
+
+  // scroll to the top after 2 min
+  timeoutId = setTimeout(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, 120000);
+};
+
+window.addEventListener("scroll", handleScroll);
