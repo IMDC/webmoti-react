@@ -20,14 +20,18 @@ export default function SoundsMenu() {
     setAnchorEl(null);
   };
 
-  useHotkeys('ctrl+s', (event) => {
-    event.preventDefault();
-    if (anchorEl) {
-      handlePopoverClose();
-    } else {
-      setAnchorEl(openBtnRef.current);
-    }
-  });
+  useHotkeys(
+    'ctrl+s',
+    (event) => {
+      event.preventDefault();
+      if (anchorEl) {
+        handlePopoverClose();
+      } else {
+        setAnchorEl(openBtnRef.current);
+      }
+    },
+    { keyup: true }
+  );
 
   return (
     <>

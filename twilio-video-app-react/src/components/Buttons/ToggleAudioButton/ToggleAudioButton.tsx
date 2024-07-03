@@ -27,10 +27,14 @@ export default function ToggleAudioButton(props: { disabled?: boolean; className
   const { room } = useVideoContext();
   const { isProfessor, sendSystemMsg, isWebmotiVideo } = useWebmotiVideoContext();
 
-  useHotkeys('ctrl+m', (event) => {
-    event.preventDefault();
-    toggleAudioEnabled();
-  });
+  useHotkeys(
+    'ctrl+m',
+    (event) => {
+      event.preventDefault();
+      toggleAudioEnabled();
+    },
+    { keyup: true }
+  );
 
   return (
     <ShortcutTooltip shortcut="M" isCtrlDown>

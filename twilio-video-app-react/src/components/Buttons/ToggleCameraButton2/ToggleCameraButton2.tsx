@@ -12,10 +12,14 @@ export default function ToggleCameraButton(props: { className?: string }) {
     toggleWebmotiVideo(WEBMOTI_CAMERA_2);
   };
 
-  useHotkeys('ctrl+2', (event) => {
-    event.preventDefault();
-    toggleCamera2();
-  });
+  useHotkeys(
+    'ctrl+2',
+    (event) => {
+      event.preventDefault();
+      toggleCamera2();
+    },
+    { keyup: true }
+  );
 
   return (
     <ShortcutTooltip shortcut="2" isCtrlDown>

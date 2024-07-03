@@ -123,10 +123,14 @@ export default function Menu(props: { buttonClassName?: string }) {
     setMenuOpen((isOpen) => !isOpen);
   };
 
-  useHotkeys('ctrl+o', (event) => {
-    event.preventDefault();
-    toggleMenu();
-  });
+  useHotkeys(
+    'ctrl+o',
+    (event) => {
+      event.preventDefault();
+      toggleMenu();
+    },
+    { keyup: true }
+  );
 
   return (
     <>

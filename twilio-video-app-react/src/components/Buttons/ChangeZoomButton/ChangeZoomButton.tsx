@@ -20,15 +20,23 @@ export default function ChangeZoomButton() {
     }
   };
 
-  useHotkeys('ctrl+[', (event) => {
-    event.preventDefault();
-    decreaseZoom();
-  });
+  useHotkeys(
+    'ctrl+[',
+    (event) => {
+      event.preventDefault();
+      decreaseZoom();
+    },
+    { keyup: true }
+  );
 
-  useHotkeys('ctrl+]', (event) => {
-    event.preventDefault();
-    increaseZoom();
-  });
+  useHotkeys(
+    'ctrl+]',
+    (event) => {
+      event.preventDefault();
+      increaseZoom();
+    },
+    { keyup: true }
+  );
 
   return (
     <ButtonGroup>

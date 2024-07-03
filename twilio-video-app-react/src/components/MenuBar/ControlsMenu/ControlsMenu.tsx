@@ -34,14 +34,18 @@ export default function ControlsMenu() {
     setCameraControlsAnchorEl(null);
   };
 
-  useHotkeys('ctrl+c', (event) => {
-    event.preventDefault();
-    if (cameraControlsAnchorEl) {
-      handleCameraControlsClose();
-    } else {
-      setCameraControlsAnchorEl(openBtnRef.current);
-    }
-  });
+  useHotkeys(
+    'ctrl+c',
+    (event) => {
+      event.preventDefault();
+      if (cameraControlsAnchorEl) {
+        handleCameraControlsClose();
+      } else {
+        setCameraControlsAnchorEl(openBtnRef.current);
+      }
+    },
+    { keyup: true }
+  );
 
   return (
     <>

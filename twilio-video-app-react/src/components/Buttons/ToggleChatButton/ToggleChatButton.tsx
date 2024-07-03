@@ -103,10 +103,14 @@ export default function ToggleChatButton() {
     }
   }, [conversation, isChatWindowOpen, checkSystemMsg]);
 
-  useHotkeys('ctrl+t', (event) => {
-    event.preventDefault();
-    toggleChatWindow();
-  });
+  useHotkeys(
+    'ctrl+t',
+    (event) => {
+      event.preventDefault();
+      toggleChatWindow();
+    },
+    { keyup: true }
+  );
 
   return (
     <>

@@ -149,11 +149,15 @@ export default function RaiseHandButton() {
     }
   };
 
-  useHotkeys('ctrl+h', (event) => {
-    event.preventDefault();
-    const raiseMode = isHandRaised ? HandActions.Lower : HandActions.Raise;
-    setHand(raiseMode);
-  });
+  useHotkeys(
+    'ctrl+h',
+    (event) => {
+      event.preventDefault();
+      const raiseMode = isHandRaised ? HandActions.Lower : HandActions.Raise;
+      setHand(raiseMode);
+    },
+    { keyup: true }
+  );
 
   useEffect(() => {
     const handleGlobalMouseUp = () => {

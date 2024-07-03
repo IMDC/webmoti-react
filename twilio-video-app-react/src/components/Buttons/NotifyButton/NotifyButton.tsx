@@ -103,10 +103,14 @@ export default function NotifyButton() {
     }
   };
 
-  useHotkeys('ctrl+a', (event) => {
-    event.preventDefault();
-    notifyProfessor();
-  });
+  useHotkeys(
+    'ctrl+a',
+    (event) => {
+      event.preventDefault();
+      notifyProfessor();
+    },
+    { keyup: true }
+  );
 
   useEffect(() => {
     const handleMessageAdded = (message: Message) => {

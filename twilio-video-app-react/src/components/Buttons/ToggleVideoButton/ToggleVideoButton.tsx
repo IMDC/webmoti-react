@@ -16,10 +16,14 @@ export default function ToggleVideoButton(props: { disabled?: boolean; className
   const { hasVideoInputDevices } = useDevices();
   const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
 
-  useHotkeys('ctrl+v', (event) => {
-    event.preventDefault();
-    toggleVideo();
-  });
+  useHotkeys(
+    'ctrl+v',
+    (event) => {
+      event.preventDefault();
+      toggleVideo();
+    },
+    { keyup: true }
+  );
 
   const toggleVideo = useCallback(() => {
     if (Date.now() - lastClickTimeRef.current > 500) {

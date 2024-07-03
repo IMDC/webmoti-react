@@ -10,10 +10,14 @@ export default function ToggleCameraButton() {
   const { room, muteParticipant } = useVideoContext();
   const { isMuted, toggleClassroomMute } = useWebmotiVideoContext();
 
-  useHotkeys('ctrl+l', (event) => {
-    event.preventDefault();
-    toggleMute();
-  });
+  useHotkeys(
+    'ctrl+l',
+    (event) => {
+      event.preventDefault();
+      toggleMute();
+    },
+    { keyup: true }
+  );
 
   const toggleMute = () => {
     // get classroom participant

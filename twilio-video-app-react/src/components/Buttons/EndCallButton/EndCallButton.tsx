@@ -30,10 +30,14 @@ export default function EndCallButton(props: { className?: string }) {
     conversation?.leave();
   };
 
-  useHotkeys('ctrl+d', (event) => {
-    event.preventDefault();
-    endCall();
-  });
+  useHotkeys(
+    'ctrl+d',
+    (event) => {
+      event.preventDefault();
+      endCall();
+    },
+    { keyup: true }
+  );
 
   return (
     <ShortcutTooltip shortcut="D" isCtrlDown>

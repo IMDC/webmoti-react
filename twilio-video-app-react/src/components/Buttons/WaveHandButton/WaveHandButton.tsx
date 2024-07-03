@@ -25,15 +25,23 @@ export default function WaveHandButton() {
     setIsLoading2(false);
   };
 
-  useHotkeys('ctrl+3', (event) => {
-    event.preventDefault();
-    wave2();
-  });
+  useHotkeys(
+    'ctrl+3',
+    (event) => {
+      event.preventDefault();
+      wave2();
+    },
+    { keyup: true }
+  );
 
-  useHotkeys('ctrl+4', (event) => {
-    event.preventDefault();
-    wave();
-  });
+  useHotkeys(
+    'ctrl+4',
+    (event) => {
+      event.preventDefault();
+      wave();
+    },
+    { keyup: true }
+  );
 
   return (
     <Grid container spacing={2} justifyContent="center" alignItems="center">

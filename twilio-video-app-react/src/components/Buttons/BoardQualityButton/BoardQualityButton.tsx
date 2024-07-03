@@ -9,10 +9,14 @@ import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 export default function BoardQualityButton() {
   const participants = useParticipants();
 
-  useHotkeys('ctrl+q', (event) => {
-    event.preventDefault();
-    setQuality();
-  });
+  useHotkeys(
+    'ctrl+q',
+    (event) => {
+      event.preventDefault();
+      setQuality();
+    },
+    { keyup: true }
+  );
 
   const setQuality = () => {
     for (const participant of participants) {
