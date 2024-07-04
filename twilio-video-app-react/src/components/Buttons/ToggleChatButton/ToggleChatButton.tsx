@@ -115,21 +115,23 @@ export default function ToggleChatButton() {
   return (
     <>
       <ShortcutTooltip shortcut="T" isCtrlDown>
-        <Button
-          data-cy-chat-button
-          onClick={toggleChatWindow}
-          disabled={!conversation}
-          variant="outlined"
-          startIcon={
-            <div className={classes.iconContainer}>
-              <ChatIcon />
-              <div className={clsx(classes.ring, { [classes.animateRing]: shouldAnimate })} />
-              <div className={clsx(classes.circle, { [classes.hasUnreadMessages]: hasUnreadMessages })} />
-            </div>
-          }
-        >
-          {isMobile ? '' : 'Chat'}
-        </Button>
+        <span>
+          <Button
+            data-cy-chat-button
+            onClick={toggleChatWindow}
+            disabled={!conversation}
+            variant="outlined"
+            startIcon={
+              <div className={classes.iconContainer}>
+                <ChatIcon />
+                <div className={clsx(classes.ring, { [classes.animateRing]: shouldAnimate })} />
+                <div className={clsx(classes.circle, { [classes.hasUnreadMessages]: hasUnreadMessages })} />
+              </div>
+            }
+          >
+            {isMobile ? '' : 'Chat'}
+          </Button>
+        </span>
       </ShortcutTooltip>
     </>
   );

@@ -47,21 +47,25 @@ export default function WaveHandButton() {
     <Grid container spacing={2} justifyContent="center" alignItems="center">
       <Grid item>
         <ShortcutTooltip shortcut="3" isCtrlDown>
-          <Button onClick={wave} disabled={isLoading1} variant="contained">
-            Wave
-            <PanTool />
-            {isLoading1 && <CircularProgress size={24} />}
-          </Button>
+          <span>
+            <Button onClick={wave} disabled={isLoading1} variant="contained">
+              Wave
+              <PanTool />
+              {isLoading1 && <CircularProgress size={24} />}
+            </Button>
+          </span>
         </ShortcutTooltip>
       </Grid>
 
       <Grid item>
         <ShortcutTooltip shortcut="4" isCtrlDown>
-          <Button onClick={wave2} disabled={isLoading2} variant="contained">
-            Wave 2
-            <EmojiPeople />
-            {isLoading2 && <CircularProgress size={24} />}
-          </Button>
+          <span>
+            <Button onClick={wave2} disabled={isLoading2} variant="contained">
+              Wave 2
+              <EmojiPeople />
+              {isLoading2 && <CircularProgress size={24} />}
+            </Button>
+          </span>
         </ShortcutTooltip>
       </Grid>
     </Grid>

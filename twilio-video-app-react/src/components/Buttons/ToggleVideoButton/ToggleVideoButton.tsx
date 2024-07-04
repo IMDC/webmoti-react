@@ -34,14 +34,16 @@ export default function ToggleVideoButton(props: { disabled?: boolean; className
 
   return (
     <ShortcutTooltip shortcut="V" isCtrlDown>
-      <Button
-        className={props.className}
-        onClick={toggleVideo}
-        disabled={!hasVideoInputDevices || props.disabled}
-        startIcon={isVideoEnabled ? <VideoOnIcon /> : <VideoOffIcon />}
-      >
-        {!hasVideoInputDevices ? 'No Video' : !isMobile ? (isVideoEnabled ? 'Stop My Video' : 'Start My Video') : ''}
-      </Button>
+      <span>
+        <Button
+          className={props.className}
+          onClick={toggleVideo}
+          disabled={!hasVideoInputDevices || props.disabled}
+          startIcon={isVideoEnabled ? <VideoOnIcon /> : <VideoOffIcon />}
+        >
+          {!hasVideoInputDevices ? 'No Video' : !isMobile ? (isVideoEnabled ? 'Stop My Video' : 'Start My Video') : ''}
+        </Button>
+      </span>
     </ShortcutTooltip>
   );
 }

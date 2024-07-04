@@ -38,28 +38,30 @@ export default function ToggleAudioButton(props: { disabled?: boolean; className
 
   return (
     <ShortcutTooltip shortcut="M" isCtrlDown>
-      <Button
-        className={props.className}
-        onClick={() => {
-          // only switch modes when virtual student toggles audio
-          if (!isProfessor && !isWebmotiVideo(room?.localParticipant?.identity || '')) {
-            if (isAudioEnabled) {
-              // if student is muting their mic, enable class mic
-              sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.ModeSwitch, mode: Mode.Classroom }));
-            } else {
-              // if student unmutes, mute class mic
-              sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.ModeSwitch, mode: Mode.Virtual }));
+      <span>
+        <Button
+          className={props.className}
+          onClick={() => {
+            // only switch modes when virtual student toggles audio
+            if (!isProfessor && !isWebmotiVideo(room?.localParticipant?.identity || '')) {
+              if (isAudioEnabled) {
+                // if student is muting their mic, enable class mic
+                sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.ModeSwitch, mode: Mode.Classroom }));
+              } else {
+                // if student unmutes, mute class mic
+                sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.ModeSwitch, mode: Mode.Virtual }));
+              }
             }
-          }
 
-          toggleAudioEnabled();
-        }}
-        disabled={!hasAudioTrack || props.disabled}
-        startIcon={isAudioEnabled ? <MicIcon /> : <MicOffIcon />}
-        data-cy-audio-toggle
-      >
-        {!hasAudioTrack ? 'No Audio' : !isMobile ? (isAudioEnabled ? 'Mute' : 'Unmute') : ''}
-      </Button>
+            toggleAudioEnabled();
+          }}
+          disabled={!hasAudioTrack || props.disabled}
+          startIcon={isAudioEnabled ? <MicIcon /> : <MicOffIcon />}
+          data-cy-audio-toggle
+        >
+          {!hasAudioTrack ? 'No Audio' : !isMobile ? (isAudioEnabled ? 'Mute' : 'Unmute') : ''}
+        </Button>
+      </span>
     </ShortcutTooltip>
   );
 }
