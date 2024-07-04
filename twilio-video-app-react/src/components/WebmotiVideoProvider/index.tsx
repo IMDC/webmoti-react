@@ -2,7 +2,7 @@ import React, { ReactNode, createContext, useCallback, useState } from 'react';
 
 import { Conversation, JSONObject, Message } from '@twilio/conversations';
 
-import { REMOTE_IT_URL, WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../../constants';
+import { SERVER_URL, WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../../constants';
 import { useAppState } from '../../state';
 
 interface WebmotiVideoContextType {
@@ -88,7 +88,7 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
 
   const sendHandRequest = useCallback(
     async (mode: string, identity: string | null = null, is_silent = false) => {
-      const response = await fetch(REMOTE_IT_URL, {
+      const response = await fetch(`${SERVER_URL}/raisehand`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

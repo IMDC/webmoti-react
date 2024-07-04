@@ -1,14 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, CircularProgress, Grid, makeStyles } from '@material-ui/core';
-import clsx from 'clsx';
-import { Conversation } from '@twilio/conversations';
-import FileAttachmentIcon from '../../../icons/FileAttachmentIcon';
-import { isMobile } from '../../../utils';
-import SendMessageIcon from '../../../icons/SendMessageIcon';
-import Snackbar from '../../Snackbar/Snackbar';
-import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 
-const useStyles = makeStyles(theme => ({
+import { Button, CircularProgress, Grid, makeStyles } from '@material-ui/core';
+import TextareaAutosize from '@material-ui/core/TextareaAutosize';
+import HearingIcon from '@material-ui/icons/Hearing';
+import { Conversation } from '@twilio/conversations';
+import clsx from 'clsx';
+
+import FileAttachmentIcon from '../../../icons/FileAttachmentIcon';
+import SendMessageIcon from '../../../icons/SendMessageIcon';
+import { isMobile } from '../../../utils';
+import Snackbar from '../../Snackbar/Snackbar';
+import { useAppState } from '../../../state';
+
+const useStyles = makeStyles((theme) => ({
   chatInputContainer: {
     borderTop: '1px solid #e4e7e9',
     borderBottom: '1px solid #e4e7e9',
@@ -77,6 +81,8 @@ export default function ChatInput({ conversation, isChatWindowOpen }: ChatInputP
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isTextareaFocused, setIsTextareaFocused] = useState(false);
 
+  const { setError } = useAppState();
+
   useEffect(() => {
     if (isChatWindowOpen) {
       // When the chat window is opened, we will focus on the text input.
@@ -127,6 +133,44 @@ export default function ChatInput({ conversation, isChatWindowOpen }: ChatInputP
     }
   };
 
+  const fetchSpeech = async (text: string) => {
+    const options = {
+      method: 'POST',
+      headers: { Accept: 'audio/mpeg', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: text }),
+    };
+
+    try {
+      const response = await fetch('http://localhost:80/api/tts', options);
+
+      if (response.ok) {
+        return await response.blob();
+      } else {
+        throw new Error();
+      }
+    } catch {
+      setError(Error('Failed to fetch speech'));
+      return null;
+    }
+  };
+
+  const handleTtsButton = async () => {
+    if (!isValidMessage) {
+      return;
+    }
+
+    const msg = messageBody.trim();
+
+    const audioBlob = await fetchSpeech(msg);
+
+    if (audioBlob) {
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      audio.play();
+      setMessageBody('');
+    }
+  };
+
   return (
     <div className={classes.chatInputContainer}>
       <Snackbar
@@ -171,6 +215,10 @@ export default function ChatInput({ conversation, isChatWindowOpen }: ChatInputP
           aria-label="File Input"
         />
         <div className={classes.buttonContainer}>
+          <Button className={classes.button} onClick={handleTtsButton} color="primary" variant="contained">
+            <HearingIcon />
+          </Button>
+
           <div className={classes.fileButtonContainer}>
             <Button
               className={classes.button}

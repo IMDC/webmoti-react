@@ -2,14 +2,12 @@ import logging
 import os
 from typing import Dict, List
 
-from dotenv import load_dotenv
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 from pywebpush import WebPushException, webpush
 
 router = APIRouter(prefix="/api")
 
-load_dotenv()
 
 vapid_private_key = os.getenv("VAPID_PRIVATE_KEY")
 vapid_email = os.getenv("VAPID_EMAIL")

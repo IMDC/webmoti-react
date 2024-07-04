@@ -1,11 +1,15 @@
 import pathlib
 
 import uvicorn
+from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+
+load_dotenv()
+
 
 from constants import PORT
 from core.logger import LOGGING_CONFIG
@@ -14,6 +18,7 @@ from routes.notifications import router as notifications_router
 from routes.queue_sse import router as queue_router
 from routes.raisehand import router as raisehand_router
 from routes.raisehand_ws import router as raisehand_ws_router
+from routes.tts import router as tts_router
 
 app = FastAPI()
 
@@ -30,6 +35,7 @@ routers = (
     queue_router,
     notifications_router,
     raisehand_ws_router,
+    tts_router,
 )
 
 for router in routers:

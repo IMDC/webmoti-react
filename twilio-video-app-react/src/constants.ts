@@ -25,7 +25,7 @@ export const GALLERY_VIEW_MARGIN = 3;
 export const WEBMOTI_CAMERA_1 = 'Class-View';
 export const WEBMOTI_CAMERA_2 = 'Board-View';
 
-export const REMOTE_IT_URL = 'https://jmn2f42hjgfv.connect.remote.it/api/raisehand';
+export const SERVER_URL = 'https://jmn2f42hjgfv.connect.remote.it/api';
 
 export const enum MsgTypes {
   Hand = 'HAND',
