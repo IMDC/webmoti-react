@@ -2,7 +2,7 @@ import React, { ReactNode, createContext, useCallback, useState } from 'react';
 
 import { Conversation, JSONObject, Message } from '@twilio/conversations';
 
-import { SERVER_URL, WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../../constants';
+import { Events, SERVER_URL, WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../../constants';
 import { useAppState } from '../../state';
 
 interface WebmotiVideoContextType {
@@ -67,7 +67,7 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
       if (level === 1) {
         setPan({ x: 0, y: 0 });
       } else {
-        const event = new CustomEvent('webmotizoomchanged', { detail: { zoomLevel: level } });
+        const event = new CustomEvent(Events.ZoomChanged, { detail: { zoomLevel: level } });
         window.dispatchEvent(event);
       }
     }

@@ -1,17 +1,21 @@
-import React from 'react';
+import { useEffect, useRef } from 'react';
+
+import { Fireworks } from '@fireworks-js/react';
+import type { FireworksHandlers } from '@fireworks-js/react';
+import { IconButton, makeStyles, createStyles, Theme, useTheme, useMediaQuery } from '@material-ui/core';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import ArrowForward from '@material-ui/icons/ArrowForward';
-import clsx from 'clsx';
-import { GALLERY_VIEW_ASPECT_RATIO, GALLERY_VIEW_MARGIN } from '../../constants';
-import { IconButton, makeStyles, createStyles, Theme } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
-import Participant from '../Participant/Participant';
-import useGalleryViewLayout from '../../hooks/useGalleryViewLayout/useGalleryViewLayout';
-import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
-import useParticipantsContext from '../../hooks/useParticipantsContext/useParticipantsContext';
+import clsx from 'clsx';
+
 import { usePagination } from './usePagination/usePagination';
+import { Events, GALLERY_VIEW_ASPECT_RATIO, GALLERY_VIEW_MARGIN } from '../../constants';
 import useDominantSpeaker from '../../hooks/useDominantSpeaker/useDominantSpeaker';
+import useGalleryViewLayout from '../../hooks/useGalleryViewLayout/useGalleryViewLayout';
+import useParticipantsContext from '../../hooks/useParticipantsContext/useParticipantsContext';
+import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../state';
+import Participant from '../Participant/Participant';
 
 const CONTAINER_GUTTER = '50px';
 
@@ -97,18 +101,47 @@ export function GalleryView() {
   const participantWidth = `${participantVideoWidth}px`;
   const participantHeight = `${Math.floor(participantVideoWidth * GALLERY_VIEW_ASPECT_RATIO)}px`;
 
+  const theme = useTheme();
+  const isMdBreakpoint = useMediaQuery(theme.breakpoints.down('md'));
+
+  const fireworksRef = useRef<FireworksHandlers>(null);
+
+  const displayFireworks = () => {
+    if (!fireworksRef.current) return;
+
+    if (!fireworksRef.current.isRunning) {
+      fireworksRef.current.start();
+    }
+
+    // stop fireworks after 5 seconds
+    setTimeout(() => {
+      fireworksRef.current?.stop();
+    }, 5000);
+  };
+
+  useEffect(() => {
+    const handleFireworksEvent = () => {
+      displayFireworks();
+    };
+
+    document.addEventListener(Events.Fireworks, handleFireworksEvent);
+    return () => {
+      document.removeEventListener(Events.Fireworks, handleFireworksEvent);
+    };
+  }, []);
+
   return (
     <div className={classes.container}>
       <div className={clsx(classes.buttonContainer, classes.buttonContainerLeft)}>
         {!(currentPage === 1) && (
-          <IconButton className={classes.paginationButton} onClick={() => setCurrentPage(page => page - 1)}>
+          <IconButton className={classes.paginationButton} onClick={() => setCurrentPage((page) => page - 1)}>
             <ArrowBack />
           </IconButton>
         )}
       </div>
       <div className={clsx(classes.buttonContainer, classes.buttonContainerRight)}>
         {!(currentPage === totalPages) && (
-          <IconButton className={classes.paginationButton} onClick={() => setCurrentPage(page => page + 1)}>
+          <IconButton className={classes.paginationButton} onClick={() => setCurrentPage((page) => page + 1)}>
             <ArrowForward />
           </IconButton>
         )}
@@ -128,8 +161,23 @@ export function GalleryView() {
           />
         )}
       </div>
+
+      <Fireworks
+        ref={fireworksRef}
+        options={{ opacity: 0.5 }}
+        autostart={false}
+        style={{
+          top: isMdBreakpoint ? theme.mobileTopBarHeight : 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          position: 'fixed',
+          background: theme.galleryViewBackgroundColor,
+        }}
+      />
+
       <div className={classes.participantContainer} ref={containerRef}>
-        {paginatedParticipants.map(participant => (
+        {paginatedParticipants.map((participant) => (
           <div
             key={participant.sid}
             style={{ width: participantWidth, height: participantHeight, margin: GALLERY_VIEW_MARGIN }}

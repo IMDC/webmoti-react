@@ -40,3 +40,9 @@ export const enum HandActions {
   Lower = 'LOWER',
   ReRaise = 'RERAISE',
 }
+
+// custom event names
+export const enum Events {
+  ZoomChanged = 'webmotizoomchanged',
+  Fireworks = 'fireworks',
+}

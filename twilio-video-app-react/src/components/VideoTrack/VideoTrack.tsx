@@ -8,6 +8,7 @@ import useVideoTrackDimensions from '../../hooks/useVideoTrackDimensions/useVide
 import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
 import { IVideoTrack } from '../../types';
+import { Events } from '../../constants';
 
 const Video = styled('video')({
   width: '100%',
@@ -50,7 +51,7 @@ export default function VideoTrack({ track, isLocal, priority, isWebmotiVideo = 
 
       const clamp = (num: number, min: number, max: number) => Math.min(Math.max(num, min), max);
 
-      setPan(prev => ({
+      setPan((prev) => ({
         x: clamp(prev.x + deltaX, -maxPanOffset.x, maxPanOffset.x),
         y: clamp(prev.y + deltaY, -maxPanOffset.y, maxPanOffset.y),
       }));
@@ -109,10 +110,10 @@ export default function VideoTrack({ track, isLocal, priority, isWebmotiVideo = 
   useEffect(() => {
     if (isWebmotiVideo) {
       const handleZoomChange = () => setMaxPan();
-      window.addEventListener('webmotizoomchanged', handleZoomChange);
+      window.addEventListener(Events.ZoomChanged, handleZoomChange);
 
       return () => {
-        window.removeEventListener('webmotizoomchanged', handleZoomChange);
+        window.removeEventListener(Events.ZoomChanged, handleZoomChange);
       };
     }
   }, [setMaxPan, isWebmotiVideo]);

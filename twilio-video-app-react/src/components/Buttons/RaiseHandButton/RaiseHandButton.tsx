@@ -10,7 +10,7 @@ import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import { Message } from '@twilio/conversations';
 import { useHotkeys } from 'react-hotkeys-hook';
 
-import { HandActions } from '../../../constants';
+import { Events, HandActions } from '../../../constants';
 import { MsgTypes } from '../../../constants';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
@@ -144,6 +144,9 @@ export default function RaiseHandButton() {
       // Start a timeout when the mouse is held down
       const timeoutId = setTimeout(() => {
         setHand(HandActions.Raise); // Only raise hand if held for more than 500ms
+
+        const event = new CustomEvent(Events.Fireworks);
+        document.dispatchEvent(event);
       }, 500);
       setButtonIntervalID(timeoutId);
     }
