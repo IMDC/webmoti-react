@@ -7,13 +7,10 @@ from models import RaiseHandRequest
 from routes.notifications import send_notification
 from routes.queue_sse import add_to_queue, remove_from_queue
 
-# TODO lock raise_hand to one at a time
-
 
 async def raise_hand(mode: Mode):
     async def wave():
-        await servo_controller.set_angle(MAX_ANGLE)
-        await servo_controller.set_angle(MIN_ANGLE)
+        await servo_controller.set_angle_twice(MAX_ANGLE, MIN_ANGLE)
 
     logging.info(f"Raising hand with mode: {mode}")
 
@@ -42,8 +39,7 @@ async def raise_hand(mode: Mode):
         servo_controller.is_hand_raised = False
 
     elif mode == Mode.RERAISE:
-        await servo_controller.set_angle(MIN_ANGLE)
-        await servo_controller.set_angle(HALFWAY_ANGLE)
+        await servo_controller.set_angle_twice(MIN_ANGLE, HALFWAY_ANGLE)
 
     elif mode == Mode.INIT:
         # this is to initialize the remote.it connection to speed up future requests

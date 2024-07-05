@@ -31,7 +31,7 @@ async def push(subscription, message):
 # this is async so it doesn't block
 async def send_notification(name):
     if not subscriptions:
-        logging.error("No subscriptions found")
+        logging.info("No subscriptions found")
         return
 
     for subscription in subscriptions:
