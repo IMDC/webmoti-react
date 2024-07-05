@@ -2,15 +2,18 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { Button, CircularProgress, Grid, makeStyles } from '@material-ui/core';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
+import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import HearingIcon from '@material-ui/icons/Hearing';
 import { Conversation } from '@twilio/conversations';
 import clsx from 'clsx';
 
 import FileAttachmentIcon from '../../../icons/FileAttachmentIcon';
 import SendMessageIcon from '../../../icons/SendMessageIcon';
+import { useAppState } from '../../../state';
 import { isMobile } from '../../../utils';
 import Snackbar from '../../Snackbar/Snackbar';
-import { useAppState } from '../../../state';
+import TTSMessage from '../TTSMessage';
 
 const useStyles = makeStyles((theme) => ({
   chatInputContainer: {
@@ -39,10 +42,15 @@ const useStyles = makeStyles((theme) => ({
   buttonContainer: {
     margin: '1em 0 0 1em',
     display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%',
   },
   fileButtonContainer: {
     position: 'relative',
     marginRight: '1em',
+  },
+  chatButtonContainer: {
+    display: 'flex',
   },
   fileButtonLoadingSpinner: {
     position: 'absolute',
@@ -66,12 +74,21 @@ const useStyles = makeStyles((theme) => ({
 interface ChatInputProps {
   conversation: Conversation;
   isChatWindowOpen: boolean;
+  isTTSModeOn?: boolean;
+  toggleTTSMode?: () => void;
+  addTTSMsg?: (message: TTSMessage) => void;
 }
 
 const ALLOWED_FILE_TYPES =
   'audio/*, image/*, text/*, video/*, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document .xslx, .ppt, .pdf, .key, .svg, .csv';
 
-export default function ChatInput({ conversation, isChatWindowOpen }: ChatInputProps) {
+export default function ChatInput({
+  conversation,
+  isChatWindowOpen,
+  toggleTTSMode,
+  addTTSMsg,
+  isTTSModeOn = false,
+}: ChatInputProps) {
   const classes = useStyles();
   const [messageBody, setMessageBody] = useState('');
   const [isSendingFile, setIsSendingFile] = useState(false);
@@ -80,6 +97,8 @@ export default function ChatInput({ conversation, isChatWindowOpen }: ChatInputP
   const textInputRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isTextareaFocused, setIsTextareaFocused] = useState(false);
+
+  const [isTTSLoading, setIsTTSLoading] = useState(false);
 
   const { setError } = useAppState();
 
@@ -133,27 +152,6 @@ export default function ChatInput({ conversation, isChatWindowOpen }: ChatInputP
     }
   };
 
-  const fetchSpeech = async (text: string) => {
-    const options = {
-      method: 'POST',
-      headers: { Accept: 'audio/mpeg', 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: text }),
-    };
-
-    try {
-      const response = await fetch('http://localhost:80/api/tts', options);
-
-      if (response.ok) {
-        return await response.blob();
-      } else {
-        throw new Error();
-      }
-    } catch {
-      setError(Error('Failed to fetch speech'));
-      return null;
-    }
-  };
-
   const handleTtsButton = async () => {
     if (!isValidMessage) {
       return;
@@ -161,13 +159,22 @@ export default function ChatInput({ conversation, isChatWindowOpen }: ChatInputP
 
     const msg = messageBody.trim();
 
-    const audioBlob = await fetchSpeech(msg);
+    setIsTTSLoading(true);
+    const ttsMsg = new TTSMessage(msg);
 
-    if (audioBlob) {
-      const audioUrl = URL.createObjectURL(audioBlob);
-      const audio = new Audio(audioUrl);
-      audio.play();
+    try {
+      await ttsMsg.fetchSpeech();
+
+      ttsMsg.play();
+      if (addTTSMsg) {
+        addTTSMsg(ttsMsg);
+      }
+
       setMessageBody('');
+    } catch {
+      setError(Error('Failed to fetch speech'));
+    } finally {
+      setIsTTSLoading(false);
     }
   };
 
@@ -215,33 +222,58 @@ export default function ChatInput({ conversation, isChatWindowOpen }: ChatInputP
           aria-label="File Input"
         />
         <div className={classes.buttonContainer}>
-          <Button className={classes.button} onClick={handleTtsButton} color="primary" variant="contained">
-            <HearingIcon />
+          <Button className={classes.button} onClick={toggleTTSMode} color="primary">
+            {isTTSModeOn ? (
+              <>
+                <ArrowLeftIcon />
+                Chat
+              </>
+            ) : (
+              <>
+                TTS
+                <ArrowRightIcon />
+              </>
+            )}
           </Button>
 
-          <div className={classes.fileButtonContainer}>
+          {isTTSModeOn ? (
             <Button
               className={classes.button}
-              onClick={() => fileInputRef.current?.click()}
-              disabled={isSendingFile}
-              aria-label="Attach File Button"
+              onClick={handleTtsButton}
+              disabled={!isValidMessage || isTTSLoading}
+              color="primary"
+              variant="contained"
             >
-              <FileAttachmentIcon />
+              <HearingIcon />
+              {isTTSLoading && <CircularProgress size={24} className={classes.fileButtonLoadingSpinner} />}
             </Button>
+          ) : (
+            <div className={classes.chatButtonContainer}>
+              <div className={classes.fileButtonContainer}>
+                <Button
+                  className={classes.button}
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isSendingFile}
+                  aria-label="Attach File Button"
+                >
+                  <FileAttachmentIcon />
+                </Button>
 
-            {isSendingFile && <CircularProgress size={24} className={classes.fileButtonLoadingSpinner} />}
-          </div>
+                {isSendingFile && <CircularProgress size={24} className={classes.fileButtonLoadingSpinner} />}
+              </div>
 
-          <Button
-            className={classes.button}
-            onClick={() => handleSendMessage(messageBody)}
-            color="primary"
-            variant="contained"
-            disabled={!isValidMessage}
-            data-cy-send-message-button
-          >
-            <SendMessageIcon />
-          </Button>
+              <Button
+                className={classes.button}
+                onClick={() => handleSendMessage(messageBody)}
+                color="primary"
+                variant="contained"
+                disabled={!isValidMessage}
+                data-cy-send-message-button
+              >
+                <SendMessageIcon />
+              </Button>
+            </div>
+          )}
         </div>
       </Grid>
     </div>

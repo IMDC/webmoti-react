@@ -18,11 +18,18 @@ const useStyles = makeStyles({
   isLocalParticipant: {
     backgroundColor: '#CCE4FF',
   },
+  isTTSMsg: {
+    backgroundColor: '#5A639C',
+    color: '#FFFFFF',
+    cursor: 'pointer',
+  },
 });
 
 interface TextMessageProps {
   body: string;
   isLocalParticipant: boolean;
+  isTTSMsg?: boolean;
+  onClick?: () => void;
 }
 
 const linkify = new LinkifyIt();
@@ -49,15 +56,17 @@ function addLinks(text: string) {
   return results;
 }
 
-export default function TextMessage({ body, isLocalParticipant }: TextMessageProps) {
+export default function TextMessage({ body, isLocalParticipant, onClick, isTTSMsg = false }: TextMessageProps) {
   const classes = useStyles();
 
   return (
     <div>
       <div
         className={clsx(classes.messageContainer, {
-          [classes.isLocalParticipant]: isLocalParticipant,
+          [classes.isLocalParticipant]: isLocalParticipant && !isTTSMsg,
+          [classes.isTTSMsg]: isTTSMsg,
         })}
+        onClick={onClick}
       >
         <div>{addLinks(body)}</div>
       </div>

@@ -1,9 +1,12 @@
-import React from 'react';
+import { useState } from 'react';
+
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import ChatWindowHeader from './ChatWindowHeader/ChatWindowHeader';
-import ChatInput from './ChatInput/ChatInput';
 import clsx from 'clsx';
+
+import ChatInput from './ChatInput/ChatInput';
+import ChatWindowHeader from './ChatWindowHeader/ChatWindowHeader';
 import MessageList from './MessageList/MessageList';
+import TTSMessage from './TTSMessage';
 import useChatContext from '../../hooks/useChatContext/useChatContext';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -37,11 +40,29 @@ export default function ChatWindow() {
   const classes = useStyles();
   const { isChatWindowOpen, messages, conversation } = useChatContext();
 
+  const [isTTSModeOn, setIsTTSModeOn] = useState(false);
+
+  const [ttsMessages, setTTSMessages] = useState<TTSMessage[]>([]);
+
+  const toggleTTSMode = () => {
+    setIsTTSModeOn(!isTTSModeOn);
+  };
+
+  const addTTSMsg = (message: TTSMessage) => {
+    setTTSMessages([...ttsMessages, message]);
+  };
+
   return (
     <aside className={clsx(classes.chatWindowContainer, { [classes.hide]: !isChatWindowOpen })}>
       <ChatWindowHeader />
-      <MessageList messages={messages} />
-      <ChatInput conversation={conversation!} isChatWindowOpen={isChatWindowOpen} />
+      <MessageList messages={messages} ttsMessages={ttsMessages} isTTSModeOn={isTTSModeOn} />
+      <ChatInput
+        conversation={conversation!}
+        isChatWindowOpen={isChatWindowOpen}
+        isTTSModeOn={isTTSModeOn}
+        toggleTTSMode={toggleTTSMode}
+        addTTSMsg={addTTSMsg}
+      />
     </aside>
   );
 }
