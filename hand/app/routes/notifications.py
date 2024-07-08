@@ -2,7 +2,7 @@ import logging
 import os
 from typing import Dict, List
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import JSONResponse
 from pywebpush import WebPushException, webpush
 
@@ -12,6 +12,7 @@ router = APIRouter(prefix="/api")
 vapid_private_key = os.getenv("VAPID_PRIVATE_KEY")
 vapid_email = os.getenv("VAPID_EMAIL")
 
+# this is stored in memory vs a db because we don't want subs to persist
 subscriptions: List[Dict] = []
 
 
@@ -39,7 +40,10 @@ async def send_notification(name):
 
 
 @router.post("/save-subscription")
-async def raise_hand_endpoint(request: Request):
+async def save_subscription_endpoint(request: Request):
+    if vapid_private_key is None or vapid_email is None:
+        raise HTTPException(status_code=500, detail="Missing env variable")
+
     subscription = await request.json()
     subscriptions.append(subscription)
     # confirmation message

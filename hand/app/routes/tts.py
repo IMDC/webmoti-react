@@ -1,7 +1,7 @@
 import os
 
 import httpx
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 
 from models import TTSRequest
@@ -16,6 +16,9 @@ CHUNK_SIZE = 1024
 
 @router.post("/tts")
 async def tts_endpoint(request: TTSRequest):
+    if elevenlabs_api_key is None:
+        raise HTTPException(status_code=500, detail="Missing api key")
+
     # Matilda voice
     voice_id = "XrExE9yKIg1WjnnlVkGX"
     url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
