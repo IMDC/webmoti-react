@@ -12,7 +12,13 @@
     - [Local setup](#local-setup)
   - [Deploying](#deploying)
   - [Webmoti URL server](#webmoti-url-server)
+  - [App features](#app-features)
 - [Hand server](#hand-server)
+  - [Server setup](#server-setup)
+  - [Running the hand server](#running-the-hand-server)
+- [Queue](#queue)
+  - [Auto open queue (on Windows tablet)](#auto-open-queue-on-windows-tablet)
+- [Tactile notifications](#tactile-notifications)
 - [Standalone Join](#standalone-join)
   - [Info](#info)
   - [Setting up the scripts](#setting-up-the-scripts)
@@ -92,13 +98,106 @@ The raspberry pi boards are able to always know the latest url and password by
  This is hosted as a twilio serverless function and can be edited in the
  [twilio console](https://console.twilio.com/us1/develop/functions/services).
 
+### App features
+
+- Hold to raise hand
+  - Hand queue
+  - Fireworks
+- Classroom controls
+  - Audio/video
+  - Board view zoom and pan
+  - Increase video quality (1080p)
+  - Wave hand mode
+- Sounds menu
+  - Nudge professor
+  - Select sound
+  - Volume control
+- Shortcuts
+- Admin/prof mixer controls
+- Muting system for feedback
+- Text to speech
+  - TTS chat history
+  - Click to replay
+- Chat
+- Noise cancellation
+- Speaker view
+- Share screen
+- Backgrounds
+
 ## Hand server
+
+### Server setup
+
+Install requirements:
+
+```bash
+pip install -r requirements.txt
+```
+
+Create .env file in project root:
+
+```bash
+VAPID_PRIVATE_KEY=
+VAPID_EMAIL=mailto:webmoti2@gmail.com
+ELEVENLABS_API_KEY=
+```
+
+Vapid key pairs (for push notifications) can be generated using `npx web-push generate-vapid-keys`
+
+### Running the hand server
 
 Run server in dev mode:
 
 ```bash
 fastapi dev main.py
 ```
+
+Run on raspberry pi:
+
+```bash
+sudo python -E main.py
+```
+
+## Queue
+
+![Queue favicon](hand/app/static/favicon.svg)
+
+The hand queue website is hosted from the hand server and is meant to be displayed
+ on a tablet for the professor.
+
+It gets real time updates from the hand server using server-sent events.
+
+The notification button on the bottom left turns on push notifications from the
+ hand server. This shouldn't be done on the tablet, but on a separate phone.
+
+### Auto open queue (on Windows tablet)
+
+The tablet automatically opens the hand queue website and keeps its screen on
+ using an Autohotkey script.
+
+1. Install AutoHotkey v2
+2. Open startup folder:
+    - Press `Win + R`
+    - Open `shell:startup`
+3. Create a shortcut to the [auto open script](hand/auto-open.ahk)
+4. It will run on boot now. You can also double click the script to run it.
+
+## Tactile notifications
+
+Tactile notifications are helpful for when the prof doesn't hear or see the
+ hand raising.
+
+To enable notifications, open the hand queue website on a phone and click the
+ notification bell. You should receive a confirmation notification if it works properly.
+
+This uses push notifications instead of local notifications so it will work even
+ when the phone is asleep. This allows the prof to put their phone in their
+  pocket and get notified whenever the hand raises.
+
+Some phones like Samsung have very aggressive battery optimization and might
+ stop the browser from running in the background when the phone goes to sleep.
+ This will stop push notifications.
+ You can change some battery settings so this doesn't happen.
 
 ## Standalone Join
 
