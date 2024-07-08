@@ -2,8 +2,8 @@ import { useRef, useState } from 'react';
 
 import { Button, Divider, Grid, Popover, Theme, createStyles, makeStyles } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { useHotkeys } from 'react-hotkeys-hook';
 
+import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
 import BoardQualityButton from '../../Buttons/BoardQualityButton/BoardQualityButton';
 import ChangeZoomButton from '../../Buttons/ChangeZoomButton/ChangeZoomButton';
 import MuteClassroomButton from '../../Buttons/MuteClassroomButton/MuteClassroomButton';
@@ -34,18 +34,13 @@ export default function ControlsMenu() {
     setCameraControlsAnchorEl(null);
   };
 
-  useHotkeys(
-    'ctrl+c',
-    (event) => {
-      event.preventDefault();
-      if (cameraControlsAnchorEl) {
-        handleCameraControlsClose();
-      } else {
-        setCameraControlsAnchorEl(openBtnRef.current);
-      }
-    },
-    { keyup: true }
-  );
+  useSetupHotkeys('ctrl+c', () => {
+    if (cameraControlsAnchorEl) {
+      handleCameraControlsClose();
+    } else {
+      setCameraControlsAnchorEl(openBtnRef.current);
+    }
+  });
 
   return (
     <>

@@ -2,8 +2,8 @@ import { useRef, useState } from 'react';
 
 import { Button, Popover } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { useHotkeys } from 'react-hotkeys-hook';
 
+import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
 import NotifyButton from '../../Buttons/NotifyButton/NotifyButton';
 import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
@@ -20,18 +20,13 @@ export default function SoundsMenu() {
     setAnchorEl(null);
   };
 
-  useHotkeys(
-    'ctrl+s',
-    (event) => {
-      event.preventDefault();
-      if (anchorEl) {
-        handlePopoverClose();
-      } else {
-        setAnchorEl(openBtnRef.current);
-      }
-    },
-    { keyup: true }
-  );
+  useSetupHotkeys('ctrl+s', () => {
+    if (anchorEl) {
+      handlePopoverClose();
+    } else {
+      setAnchorEl(openBtnRef.current);
+    }
+  });
 
   return (
     <>

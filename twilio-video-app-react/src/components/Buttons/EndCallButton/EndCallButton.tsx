@@ -1,9 +1,9 @@
 import { Button } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import clsx from 'clsx';
-import { useHotkeys } from 'react-hotkeys-hook';
 
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
+import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
@@ -30,17 +30,12 @@ export default function EndCallButton(props: { className?: string }) {
     conversation?.leave();
   };
 
-  useHotkeys(
-    'ctrl+d',
-    (event) => {
-      event.preventDefault();
-      endCall();
-    },
-    { keyup: true }
-  );
+  useSetupHotkeys('ctrl+shift+d', () => {
+    endCall();
+  });
 
   return (
-    <ShortcutTooltip shortcut="D" isCtrlDown>
+    <ShortcutTooltip shortcut="D" isCtrlDown isShiftDown>
       <Button onClick={endCall} className={clsx(classes.button, props.className)} data-cy-disconnect>
         Disconnect
       </Button>

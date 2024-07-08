@@ -5,9 +5,9 @@ import { makeStyles } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { Message } from '@twilio/conversations';
 import clsx from 'clsx';
-import { useHotkeys } from 'react-hotkeys-hook';
 
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
+import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import ChatIcon from '../../../icons/ChatIcon';
@@ -103,18 +103,14 @@ export default function ToggleChatButton() {
     }
   }, [conversation, isChatWindowOpen, checkSystemMsg]);
 
-  useHotkeys(
-    'ctrl+t',
-    (event) => {
-      event.preventDefault();
-      toggleChatWindow();
-    },
-    { keyup: true }
-  );
+  useSetupHotkeys('ctrl+shift+t', () => {
+    // this won't work when chat window is open because it gets focused
+    toggleChatWindow();
+  });
 
   return (
     <>
-      <ShortcutTooltip shortcut="T" isCtrlDown>
+      <ShortcutTooltip shortcut="T" isCtrlDown isShiftDown>
         <span>
           <Button
             data-cy-chat-button

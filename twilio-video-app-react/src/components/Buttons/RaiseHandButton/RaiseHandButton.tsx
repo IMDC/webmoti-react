@@ -8,11 +8,11 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { EmojiPeople } from '@material-ui/icons';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import { Message } from '@twilio/conversations';
-import { useHotkeys } from 'react-hotkeys-hook';
 
 import { Events, HandActions } from '../../../constants';
 import { MsgTypes } from '../../../constants';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
+import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import ShortcutIndicator from '../../ShortcutIndicator/ShortcutIndicator';
@@ -152,15 +152,10 @@ export default function RaiseHandButton() {
     }
   };
 
-  useHotkeys(
-    'ctrl+h',
-    (event) => {
-      event.preventDefault();
-      const raiseMode = isHandRaised ? HandActions.Lower : HandActions.Raise;
-      setHand(raiseMode);
-    },
-    { keyup: true }
-  );
+  useSetupHotkeys('ctrl+h', () => {
+    const raiseMode = isHandRaised ? HandActions.Lower : HandActions.Raise;
+    setHand(raiseMode);
+  });
 
   useEffect(() => {
     const handleGlobalMouseUp = () => {

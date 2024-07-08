@@ -1,7 +1,7 @@
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
-import { useHotkeys } from 'react-hotkeys-hook';
 
+import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
@@ -20,23 +20,13 @@ export default function ChangeZoomButton() {
     }
   };
 
-  useHotkeys(
-    'ctrl+[',
-    (event) => {
-      event.preventDefault();
-      decreaseZoom();
-    },
-    { keyup: true }
-  );
+  useSetupHotkeys('ctrl+[', () => {
+    decreaseZoom();
+  });
 
-  useHotkeys(
-    'ctrl+]',
-    (event) => {
-      event.preventDefault();
-      increaseZoom();
-    },
-    { keyup: true }
-  );
+  useSetupHotkeys('ctrl+]', () => {
+    increaseZoom();
+  });
 
   return (
     <ButtonGroup>

@@ -14,14 +14,22 @@ interface ShortcutTooltipProps {
   children: ReactElement;
   shortcut: string;
   isCtrlDown?: boolean;
+  isShiftDown?: boolean;
 }
 
-export default function ShortcutTooltip({ children, shortcut, isCtrlDown = false }: ShortcutTooltipProps) {
+export default function ShortcutTooltip({
+  children,
+  shortcut,
+  isCtrlDown = false,
+  isShiftDown = false,
+}: ShortcutTooltipProps) {
   return (
     <LightTooltip
       TransitionComponent={Fade}
       TransitionProps={{ timeout: 150 }}
-      title={<ShortcutIndicator shortcut={shortcut} isCtrlDown={isCtrlDown} isInTooltip={true} />}
+      title={
+        <ShortcutIndicator shortcut={shortcut} isCtrlDown={isCtrlDown} isShiftDown={isShiftDown} isInTooltip={true} />
+      }
     >
       {children}
     </LightTooltip>

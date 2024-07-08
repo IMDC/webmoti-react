@@ -5,10 +5,10 @@ import Button from '@material-ui/core/Button';
 import VolumeDown from '@material-ui/icons/VolumeDown';
 import VolumeUp from '@material-ui/icons/VolumeUp';
 import { Message } from '@twilio/conversations';
-import { useHotkeys } from 'react-hotkeys-hook';
 
 import { MsgTypes } from '../../../constants';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
+import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import InfoIcon from '../../../icons/InfoIcon';
 import soundsFile from '../../../sounds/ClearAnnounceTones.wav';
@@ -103,14 +103,9 @@ export default function NotifyButton() {
     }
   };
 
-  useHotkeys(
-    'ctrl+a',
-    (event) => {
-      event.preventDefault();
-      notifyProfessor();
-    },
-    { keyup: true }
-  );
+  useSetupHotkeys('ctrl+a', () => {
+    notifyProfessor();
+  });
 
   useEffect(() => {
     const handleMessageAdded = (message: Message) => {

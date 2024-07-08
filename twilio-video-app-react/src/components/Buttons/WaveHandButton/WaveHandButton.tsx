@@ -2,8 +2,8 @@ import { useState } from 'react';
 
 import { Button, CircularProgress, Grid } from '@material-ui/core';
 import { EmojiPeople, PanTool } from '@material-ui/icons';
-import { useHotkeys } from 'react-hotkeys-hook';
 
+import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
@@ -25,23 +25,13 @@ export default function WaveHandButton() {
     setIsLoading2(false);
   };
 
-  useHotkeys(
-    'ctrl+3',
-    (event) => {
-      event.preventDefault();
-      wave2();
-    },
-    { keyup: true }
-  );
+  useSetupHotkeys('ctrl+3', () => {
+    wave();
+  });
 
-  useHotkeys(
-    'ctrl+4',
-    (event) => {
-      event.preventDefault();
-      wave();
-    },
-    { keyup: true }
-  );
+  useSetupHotkeys('ctrl+4', () => {
+    wave2();
+  });
 
   return (
     <Grid container spacing={2} justifyContent="center" alignItems="center">

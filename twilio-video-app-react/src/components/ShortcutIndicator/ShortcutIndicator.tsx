@@ -18,17 +18,22 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
+  shortcutText: {
+    letterSpacing: '0.1em',
+  },
 }));
 
 interface ShortcutIndicatorProps {
   shortcut: string;
   isCtrlDown?: boolean;
+  isShiftDown?: boolean;
   isInTooltip?: boolean;
 }
 
 export default function ShortcutIndicator({
   shortcut,
   isCtrlDown = false,
+  isShiftDown = false,
   isInTooltip = false,
 }: ShortcutIndicatorProps) {
   const classes = useStyles();
@@ -42,8 +47,9 @@ export default function ShortcutIndicator({
       variant="outlined"
     >
       <CardContent className={classes.cardContent}>
-        <Typography variant="caption">
+        <Typography variant="caption" className={classes.shortcutText}>
           {isCtrlDown ? '⌘' : ''}
+          {isShiftDown ? '⇧' : ''}
           {shortcut}
         </Typography>
       </CardContent>

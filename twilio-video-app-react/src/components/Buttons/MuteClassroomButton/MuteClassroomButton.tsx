@@ -1,7 +1,7 @@
 import Button from '@material-ui/core/Button';
-import { useHotkeys } from 'react-hotkeys-hook';
 
 import { WEBMOTI_CAMERA_1 } from '../../../constants';
+import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
@@ -10,14 +10,9 @@ export default function ToggleCameraButton() {
   const { room, muteParticipant } = useVideoContext();
   const { isMuted, toggleClassroomMute } = useWebmotiVideoContext();
 
-  useHotkeys(
-    'ctrl+l',
-    (event) => {
-      event.preventDefault();
-      toggleMute();
-    },
-    { keyup: true }
-  );
+  useSetupHotkeys('ctrl+l', () => {
+    toggleMute();
+  });
 
   const toggleMute = () => {
     // get classroom participant

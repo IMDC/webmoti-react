@@ -25,6 +25,8 @@ import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useFlipCameraToggle from '../../../hooks/useFlipCameraToggle/useFlipCameraToggle';
 import useIsRecording from '../../../hooks/useIsRecording/useIsRecording';
 import useRoomState from '../../../hooks/useRoomState/useRoomState';
+import useScreenShareParticipant from '../../../hooks/useScreenShareParticipant/useScreenShareParticipant';
+import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import BackgroundIcon from '../../../icons/BackgroundIcon';
 import FlipCameraIcon from '../../../icons/FlipCameraIcon';
@@ -34,12 +36,10 @@ import SettingsIcon from '../../../icons/SettingsIcon';
 import StartRecordingIcon from '../../../icons/StartRecordingIcon';
 import StopRecordingIcon from '../../../icons/StopRecordingIcon';
 import { useAppState } from '../../../state';
+import { isMobile } from '../../../utils';
 import AboutDialog from '../../AboutDialog/AboutDialog';
 import DeviceSelectionDialog from '../../DeviceSelectionDialog/DeviceSelectionDialog';
-import useScreenShareParticipant from '../../../hooks/useScreenShareParticipant/useScreenShareParticipant';
-import { isMobile } from '../../../utils';
 import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
-import { useHotkeys } from 'react-hotkeys-hook';
 
 export const IconContainer = styled('div')({
   display: 'flex',
@@ -123,14 +123,9 @@ export default function Menu(props: { buttonClassName?: string }) {
     setMenuOpen((isOpen) => !isOpen);
   };
 
-  useHotkeys(
-    'ctrl+o',
-    (event) => {
-      event.preventDefault();
-      toggleMenu();
-    },
-    { keyup: true }
-  );
+  useSetupHotkeys('ctrl+o', () => {
+    toggleMenu();
+  });
 
   return (
     <>

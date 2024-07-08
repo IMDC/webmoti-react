@@ -1,7 +1,7 @@
 import Button from '@material-ui/core/Button';
-import { useHotkeys } from 'react-hotkeys-hook';
 
 import { WEBMOTI_CAMERA_2 } from '../../../constants';
+import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
@@ -12,14 +12,9 @@ export default function ToggleCameraButton(props: { className?: string }) {
     toggleWebmotiVideo(WEBMOTI_CAMERA_2);
   };
 
-  useHotkeys(
-    'ctrl+2',
-    (event) => {
-      event.preventDefault();
-      toggleCamera2();
-    },
-    { keyup: true }
-  );
+  useSetupHotkeys('ctrl+2', () => {
+    toggleCamera2();
+  });
 
   return (
     <ShortcutTooltip shortcut="2" isCtrlDown>
