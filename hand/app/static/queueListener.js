@@ -5,7 +5,6 @@ const currentItems = new Map();
 const queue = document.getElementById("queue");
 const counter = document.getElementById("counter");
 const spinner = document.getElementById("spinner");
-const notificationBtn = document.getElementById("notificationButton");
 
 // in ms
 const animationTime = 400;
@@ -90,7 +89,8 @@ eventSource.onopen = () => {
   spinner.style.display = "none";
   queue.style.display = "block";
   counter.style.display = "block";
-  notificationBtn.style.display = "block";
+  // notificationBtn is used in notifications.js
+  document.getElementById("notificationButton").style.display = "block";
 };
 
 eventSource.onerror = () => {
@@ -98,7 +98,7 @@ eventSource.onerror = () => {
   spinner.style.display = "block";
   queue.style.display = "none";
   counter.style.display = "none";
-  notificationBtn.style.display = "none";
+  document.getElementById("notificationButton").style.display = "none";
 };
 
 const stringToColour = (stringInput) => {

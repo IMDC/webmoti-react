@@ -24,6 +24,13 @@ const saveSubscription = async (subscription) => {
     }
   );
 
+  // show notification if save subscription fails
+  if (!response.ok) {
+    self.registration.showNotification("WebMoti", {
+      body: `${response.status} error - Failed to save subscription`,
+    });
+  }
+
   return response.json();
 };
 
