@@ -1,8 +1,7 @@
-import React from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
-import CloseIcon from '../../../icons/CloseIcon';
 
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
+import CloseIcon from '../../../icons/CloseIcon';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -28,13 +27,17 @@ const useStyles = makeStyles(() =>
   })
 );
 
-export default function ChatWindowHeader() {
+interface ChatWindowHeaderProps {
+  isTTSModeOn?: boolean;
+}
+
+export default function ChatWindowHeader({ isTTSModeOn = false }: ChatWindowHeaderProps) {
   const classes = useStyles();
   const { setIsChatWindowOpen } = useChatContext();
 
   return (
     <div className={classes.container}>
-      <div className={classes.text}>Chat</div>
+      <div className={classes.text}>{isTTSModeOn ? 'TTS' : 'Chat'}</div>
       <button
         className={classes.closeChatWindow}
         onClick={() => setIsChatWindowOpen(false)}

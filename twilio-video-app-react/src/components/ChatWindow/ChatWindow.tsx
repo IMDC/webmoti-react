@@ -54,7 +54,7 @@ export default function ChatWindow() {
 
   return (
     <aside className={clsx(classes.chatWindowContainer, { [classes.hide]: !isChatWindowOpen })}>
-      <ChatWindowHeader />
+      <ChatWindowHeader isTTSModeOn={isTTSModeOn} />
       <MessageList messages={messages} ttsMessages={ttsMessages} isTTSModeOn={isTTSModeOn} />
       <ChatInput
         conversation={conversation!}

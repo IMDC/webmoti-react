@@ -16,7 +16,7 @@ interface MessageListProps {
   isTTSModeOn?: boolean;
 }
 
-const getFormattedTime = (message?: Message) =>
+const getFormattedTime = (message?: Message | TTSMessage) =>
   message?.dateCreated?.toLocaleTimeString('en-us', { hour: 'numeric', minute: 'numeric' }).toLowerCase();
 
 const showChatMessages = (messages: Message[], localParticipant: LocalParticipant) => {
@@ -43,14 +43,14 @@ const showChatMessages = (messages: Message[], localParticipant: LocalParticipan
 
 const showTTSMessages = (messages: TTSMessage[]) => {
   return messages.map((message, idx) => {
-    // const time = getFormattedTime(message)!;
-    // const previousTime = getFormattedTime(messages[idx - 1]);
+    const time = getFormattedTime(message)!;
+    const previousTime = getFormattedTime(messages[idx - 1]);
 
-    // const shouldDisplayMessageInfo = time !== previousTime;
+    const shouldDisplayMessageInfo = time !== previousTime;
 
     return (
       <React.Fragment key={idx}>
-        {/* {shouldDisplayMessageInfo && <MessageInfo author={message.author!} isLocalParticipant dateCreated={time} />} */}
+        {shouldDisplayMessageInfo && <MessageInfo isLocalParticipant dateCreated={time} />}
         {/* need to use arrow function here because messages uses "this" property */}
         <TextMessage body={message.text!} onClick={() => message.play()} isLocalParticipant isTTSMsg />
       </React.Fragment>

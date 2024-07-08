@@ -1,9 +1,11 @@
 export default class TTSMessage {
   text: string;
+  dateCreated: Date;
   audio: HTMLAudioElement | null = null;
 
   constructor(text: string) {
     this.text = text;
+    this.dateCreated = new Date();
   }
 
   async fetchSpeech(): Promise<void> {
