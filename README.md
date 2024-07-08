@@ -11,7 +11,6 @@
   - [Running the App locally for developement](#running-the-app-locally-for-developement)
     - [Local setup](#local-setup)
   - [Deploying](#deploying)
-  - [Webmoti URL server](#webmoti-url-server)
   - [App features](#app-features)
 - [Hand server](#hand-server)
   - [Server setup](#server-setup)
@@ -20,8 +19,10 @@
   - [Auto open queue (on Windows tablet)](#auto-open-queue-on-windows-tablet)
 - [Tactile notifications](#tactile-notifications)
 - [Standalone Join](#standalone-join)
+  - [Webmoti URL server](#webmoti-url-server)
   - [Info](#info)
-  - [Setting up the scripts](#setting-up-the-scripts)
+  - [Setting up standalone join](#setting-up-standalone-join)
+    - [Create .env in home directory](#create-env-in-home-directory)
     - [Code changes](#code-changes)
     - [Autorun](#autorun)
 - [Connecting raspberry pi to secure networks (like TMU)](#connecting-raspberry-pi-to-secure-networks-like-tmu)
@@ -90,13 +91,6 @@ Deploy the app: `npm run deploy`. The deployed app will use the `group`
 See deployed app info (like url and expiration): `npm run view`
 
 Undeploy the app: `npm run delete`
-
-### Webmoti URL server
-
-The raspberry pi boards are able to always know the latest url and password by
- sending a request to this server (twilio-video-app-react/server/get_url.js).
- This is hosted as a twilio serverless function and can be edited in the
- [twilio console](https://console.twilio.com/us1/develop/functions/services).
 
 ### App features
 
@@ -195,14 +189,20 @@ This uses push notifications instead of local notifications so it will work even
   pocket and get notified whenever the hand raises.
 
 Some phones like Samsung have very aggressive battery optimization and might
- stop the browser from running in the background when the phone goes to sleep.
- This will stop push notifications.
- You can change some battery settings so this doesn't happen.
+ stop push notifications when the phone is asleep.
+ You can change some battery settings so this doesn't happen. (<https://dontkillmyapp.com/>)
 
 ## Standalone Join
 
 Both raspberry pi boards automatically join the twilio room when they're booted
  using a js script (standalone-join/main.js).
+
+### Webmoti URL server
+
+The raspberry pi boards are able to always know the latest url and password by
+ sending a request to this server (twilio-video-app-react/server/get_url.js).
+ This is hosted as a twilio serverless function and can be edited in the
+ [twilio console](https://console.twilio.com/us1/develop/functions/services).
 
 ### Info
 
@@ -210,7 +210,18 @@ Both raspberry pi boards automatically join the twilio room when they're booted
 - imdc1: Board-View (Hand)
 - imdc2: Class-View (Directional mic)
 
-### Setting up the scripts
+### Setting up standalone join
+
+#### Create .env in home directory
+
+Get the auth token from the [Twilio Console](https://www.twilio.com/console).
+
+The url server is the current Remote.It link.
+
+```bash
+TWILIO_AUTH_TOKEN=
+URL_SERVER=
+```
 
 #### Code changes
 
