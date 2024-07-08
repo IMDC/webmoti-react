@@ -1,7 +1,11 @@
 const eventSource = new EventSource("/api/queue");
 
 const currentItems = new Map();
+
 const queue = document.getElementById("queue");
+const counter = document.getElementById("counter");
+const spinner = document.getElementById("spinner");
+const notificationBtn = document.getElementById("notificationButton");
 
 // in ms
 const animationTime = 400;
@@ -64,7 +68,7 @@ const removeName = (name) => {
 
 eventSource.onmessage = (event) => {
   const newQueue = new Set(JSON.parse(event.data));
-  document.getElementById("counter").textContent = newQueue.size;
+  counter.textContent = newQueue.size;
 
   // find added or removed items from queue update
   const additions = new Set([...newQueue].filter((x) => !currentItems.has(x)));
@@ -79,6 +83,22 @@ eventSource.onmessage = (event) => {
   for (const name of removals) {
     removeName(name);
   }
+};
+
+eventSource.onopen = () => {
+  // hide spinner when connected
+  spinner.style.display = "none";
+  queue.style.display = "block";
+  counter.style.display = "block";
+  notificationBtn.style.display = "block";
+};
+
+eventSource.onerror = () => {
+  // show spinner and hide other elements
+  spinner.style.display = "block";
+  queue.style.display = "none";
+  counter.style.display = "none";
+  notificationBtn.style.display = "none";
 };
 
 const stringToColour = (stringInput) => {
