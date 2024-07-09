@@ -25,15 +25,13 @@
     - [Create .env in home directory](#create-env-in-home-directory)
     - [Code changes](#code-changes)
     - [Autorun](#autorun)
+- [Microphone Function](#microphone-function)
+- [RaiseHand Function](#raisehand-function)
 - [Connecting raspberry pi to secure networks (like TMU)](#connecting-raspberry-pi-to-secure-networks-like-tmu)
   - [dhcpcd method](#dhcpcd-method)
   - [Network Manager alternative](#network-manager-alternative)
 - [Auto wifi setup](#auto-wifi-setup)
 - [Auto wifi](#auto-wifi)
-- [Microphone Function](#microphone-function)
-- [RaiseHand Function](#raisehand-function)
-- [Camera Setup](#camera-setup)
-- [ZOOM APP (OLD)](#zoom-app-old)
 
 ## Twilio React App
 
@@ -238,6 +236,27 @@ pm2 save
 sudo reboot # for testing
 ```
 
+## Microphone Function
+
+- code is hosted locally on a PICO.
+- Two main files main.py and index.html.
+- The PICO board needs both files but will autorun the file main.py.
+- Once code and local hotspot is running from the PICO; Use any touchscreen
+ device to connect to this network and hosted webpage.
+- Clicking on any of the 5x4 grid boxes will allow proper communication to the microphone.
+
+## RaiseHand Function
+
+- Two files hosted locally on a PICO
+- Main.py and index.html
+- Runs on hotspot connection via Raspberry Pi plugged in via ETH
+- Once connection is made allow that connection to be made globally via: <https://www.remote.it/getting-started/raspberry-pi>
+- your routing for the link on the board must be `[WEBPAGE IP].com/raisehand` and
+ the Service URL must be `http://localhost/raisehand`. Once properly entered
+ remote.it will provide a live link.
+- Raising your hand is now possible via the locally hosted code, hotspot connection,
+ and proper remote.it IP routing.
+
 ## Connecting raspberry pi to secure networks (like TMU)
 
 ### dhcpcd method
@@ -378,34 +397,3 @@ This is a way for the raspberry pi boards to connect to a wifi network
 4. Wait for at least 1 minute for it to run.
 5. Unplug it and check the `wifi_debug.log` file on the USB to see if it worked.
  This file will be created by the raspberry pi.
-
-## Microphone Function
-
-- code is hosted locally on a PICO.
-- Two main files main.py and index.html.
-- The PICO board needs both files but will autorun the file main.py.
-- Once code and local hotspot is running from the PICO; Use any touchscreen
- device to connect to this network and hosted webpage.
-- Clicking on any of the 5x4 grid boxes will allow proper communication to the microphone.
-
-## RaiseHand Function
-
-- Two files hosted locally on a PICO
-- Main.py and index.html
-- Runs on hotspot connection via Raspberry Pi plugged in via ETH
-- Once connection is made allow that connection to be made globally via: <https://www.remote.it/getting-started/raspberry-pi>
-- your routing for the link on the board must be `[WEBPAGE IP].com/raisehand` and
- the Service URL must be `http://localhost/raisehand`. Once properly entered
- remote.it will provide a live link.
-- Raising your hand is now possible via the locally hosted code, hotspot connection,
- and proper remote.it IP routing.
-
-## Camera Setup
-
-- Follow the intstructions as stated in the txt file located
- within the Rasp-pi Zoom folder.
-
-## ZOOM APP (OLD)
-
-- The Zoom App (web-moti-alpha) can be properly configured via the following
- youtube tutorial: <https://shorturl.at/ijHT9>
