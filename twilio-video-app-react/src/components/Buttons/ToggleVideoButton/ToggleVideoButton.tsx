@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react';
 
-import { Theme, useMediaQuery } from '@material-ui/core';
+import { useMediaQuery, useTheme } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 
 import useDevices from '../../../hooks/useDevices/useDevices';
@@ -14,7 +14,9 @@ export default function ToggleVideoButton(props: { disabled?: boolean; className
   const [isVideoEnabled, toggleVideoEnabled] = useLocalVideoToggle();
   const lastClickTimeRef = useRef(0);
   const { hasVideoInputDevices } = useDevices();
-  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useSetupHotkeys('ctrl+v', () => {
     toggleVideo();

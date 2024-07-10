@@ -1,4 +1,4 @@
-import { Theme, useMediaQuery } from '@material-ui/core';
+import { useMediaQuery, useTheme } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 
 import { MsgTypes } from '../../../constants';
@@ -19,12 +19,13 @@ const enum Mode {
 
 export default function ToggleAudioButton(props: { disabled?: boolean; className?: string }) {
   const [isAudioEnabled, toggleAudioEnabled] = useLocalAudioToggle();
-  const { localTracks } = useVideoContext();
+  const { localTracks, room } = useVideoContext();
   const hasAudioTrack = localTracks.some((track) => track.kind === 'audio');
-  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const { conversation } = useChatContext();
-  const { room } = useVideoContext();
   const { isProfessor, sendSystemMsg, isWebmotiVideo } = useWebmotiVideoContext();
 
   useSetupHotkeys('ctrl+m', () => {
