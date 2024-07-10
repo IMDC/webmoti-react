@@ -1,3 +1,5 @@
+#Requires AutoHotkey v2.0
+
 Run("https://jmn2f42hjgfv.connect.remote.it/")
 
 Sleep(2000)
