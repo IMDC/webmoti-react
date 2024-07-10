@@ -13,10 +13,10 @@ class Mode(enum.Enum):
 
 PORT = 80
 
-MAX_ANGLE = 160
-MIN_ANGLE = 0
+MAX_ANGLE = 30
+MIN_ANGLE = 180
 # go farther than halfway so camera isn't blocked
-HALFWAY_ANGLE = 140
+HALFWAY_ANGLE = 90
 
 SERVO_PIN = 12
 
