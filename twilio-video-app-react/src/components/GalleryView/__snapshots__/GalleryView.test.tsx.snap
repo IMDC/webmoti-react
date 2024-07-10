@@ -39,6 +39,24 @@ exports[`the GalleryView component should render correctly 1`] = `
       size="small"
     />
   </div>
+  <ForwardRef
+    autostart={false}
+    options={
+      Object {
+        "opacity": 0.5,
+      }
+    }
+    style={
+      Object {
+        "background": undefined,
+        "height": "100%",
+        "left": 0,
+        "position": "fixed",
+        "top": 0,
+        "width": "100%",
+      }
+    }
+  />
   <div
     className="makeStyles-participantContainer-2"
   >
