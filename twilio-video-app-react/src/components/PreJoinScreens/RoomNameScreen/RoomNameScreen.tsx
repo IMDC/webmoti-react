@@ -1,4 +1,5 @@
-import React, { ChangeEvent, FormEvent, useContext } from 'react';
+import { ChangeEvent, FormEvent } from 'react';
+
 import {
   Typography,
   makeStyles,
@@ -10,8 +11,9 @@ import {
   FormControlLabel,
   Theme,
 } from '@material-ui/core';
+
 import { useAppState } from '../../../state';
-import WebmotiVideoContext from '../../WebmotiVideoProvider';
+import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
@@ -48,37 +50,18 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface RoomNameScreenProps {
   name: string;
   roomName: string;
-  isProfessor: boolean;
-  isAdmin: boolean;
   setName: (name: string) => void;
   setRoomName: (roomName: string) => void;
-  setIsProfessor: (isProfessor: boolean) => void;
-  setIsAdmin: (isAdmin: boolean) => void;
   handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
-export default function RoomNameScreen({
-  name,
-  roomName,
-  isProfessor,
-  isAdmin,
-  setName,
-  setRoomName,
-  setIsProfessor,
-  setIsAdmin,
-  handleSubmit,
-}: RoomNameScreenProps) {
+export default function RoomNameScreen({ name, roomName, setName, setRoomName, handleSubmit }: RoomNameScreenProps) {
   const classes = useStyles();
   const { user } = useAppState();
   const correctProfessorPassword = 'professor123';
   const correctAdminPassword = 'admin456';
-  // const [professorPasswordError, setProfessorPasswordError] = useState(false);
-  // const [adminPasswordError, setAdminPasswordError] = useState(false);
-  const webmotiContext = useContext(WebmotiVideoContext);
 
-  if (!webmotiContext) {
-    throw new Error('WebmotiVideoContext is undefined');
-  }
+  const { isProfessor, isAdmin, setIsProfessor, setProfessorsName, setAdmin, setAdminName } = useWebmotiVideoContext();
 
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
@@ -94,9 +77,7 @@ export default function RoomNameScreen({
       askProfessorPassword();
     } else {
       setIsProfessor(false);
-      webmotiContext.setIsProfessor(false);
-      webmotiContext.setProfessorsName('');
-      // setProfessorPasswordError(false);
+      setProfessorsName('');
     }
   };
 
@@ -107,11 +88,7 @@ export default function RoomNameScreen({
     }
     if (password === correctProfessorPassword) {
       setIsProfessor(true);
-      webmotiContext.setIsProfessor(true);
-      webmotiContext.setProfessorsName(name);
-      // setProfessorPasswordError(false);
-    } else {
-      // setProfessorPasswordError(true);
+      setProfessorsName(name);
     }
   };
 
@@ -120,10 +97,8 @@ export default function RoomNameScreen({
     if (isChecked) {
       askAdminPassword();
     } else {
-      setIsAdmin(false);
-      webmotiContext.setAdmin(false);
-      webmotiContext.setAdminName('');
-      // setAdminPasswordError(false);
+      setAdmin(false);
+      setAdminName('');
     }
   };
 
@@ -133,12 +108,8 @@ export default function RoomNameScreen({
       password = prompt('Incorrect admin password! Please try again:');
     }
     if (password === correctAdminPassword) {
-      setIsAdmin(true);
-      webmotiContext.setAdmin(true);
-      webmotiContext.setAdminName(name);
-      // setAdminPasswordError(false);
-    } else {
-      // setAdminPasswordError(true);
+      setAdmin(true);
+      setAdminName(name);
     }
   };
 

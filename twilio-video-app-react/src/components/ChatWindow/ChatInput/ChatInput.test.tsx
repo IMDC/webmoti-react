@@ -1,4 +1,3 @@
-import React from 'react';
 import { mount, shallow } from 'enzyme';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 
@@ -9,8 +8,14 @@ import SendMessageIcon from '../../../icons/SendMessageIcon';
 import Snackbar from '../../Snackbar/Snackbar';
 import * as utils from '../../../utils';
 import { setImmediate } from 'timers';
+import { useAppState } from '../../../state';
+import { TwilioError } from 'twilio-video';
 
 jest.mock('@material-ui/core/useMediaQuery');
+jest.mock('../../../state');
+
+const mockUseAppState = useAppState as jest.Mock<any>;
+mockUseAppState.mockImplementation(() => ({ setError: (_: TwilioError | Error | null) => {} }));
 
 const mockHandleSendMessage = jest.fn<any, (string | FormData)[]>(() => Promise.resolve());
 
@@ -26,19 +31,9 @@ describe('the ChatInput component', () => {
     const wrapper = shallow(
       <ChatInput conversation={{ sendMessage: mockHandleSendMessage } as any} isChatWindowOpen={true} />
     );
-    expect(
-      wrapper
-        .find(SendMessageIcon)
-        .parent()
-        .prop('disabled')
-    ).toBe(true);
+    expect(wrapper.find(SendMessageIcon).parent().prop('disabled')).toBe(true);
     wrapper.find(TextareaAutosize).simulate('change', { target: { value: 'I am a message!!!' } });
-    expect(
-      wrapper
-        .find(SendMessageIcon)
-        .parent()
-        .prop('disabled')
-    ).toBe(false);
+    expect(wrapper.find(SendMessageIcon).parent().prop('disabled')).toBe(false);
   });
 
   it('should disable the send message button when message only contains whitespace', () => {
@@ -46,12 +41,7 @@ describe('the ChatInput component', () => {
       <ChatInput conversation={{ sendMessage: mockHandleSendMessage } as any} isChatWindowOpen={true} />
     );
     wrapper.find(TextareaAutosize).simulate('change', { target: { value: '         ' } });
-    expect(
-      wrapper
-        .find(SendMessageIcon)
-        .parent()
-        .prop('disabled')
-    ).toBe(true);
+    expect(wrapper.find(SendMessageIcon).parent().prop('disabled')).toBe(true);
   });
 
   it('should call the correct function when send message button is clicked', () => {
@@ -59,10 +49,7 @@ describe('the ChatInput component', () => {
       <ChatInput conversation={{ sendMessage: mockHandleSendMessage } as any} isChatWindowOpen={true} />
     );
     wrapper.find(TextareaAutosize).simulate('change', { target: { value: ' I am a message!!! \n ' } });
-    wrapper
-      .find(SendMessageIcon)
-      .parent()
-      .simulate('click');
+    wrapper.find(SendMessageIcon).parent().simulate('click');
     expect(mockHandleSendMessage).toHaveBeenCalledWith('I am a message!!!');
   });
 
@@ -122,59 +109,34 @@ describe('the ChatInput component', () => {
 
     wrapper.find(TextareaAutosize).simulate('focus');
 
-    expect(
-      wrapper
-        .find(TextareaAutosize)
-        .parent()
-        .prop('className')
-    ).toContain('isTextareaFocused');
+    expect(wrapper.find(TextareaAutosize).parent().prop('className')).toContain('isTextareaFocused');
 
     wrapper.find(TextareaAutosize).simulate('blur');
 
-    expect(
-      wrapper
-        .find(TextareaAutosize)
-        .parent()
-        .prop('className')
-    ).not.toContain('isTextareaFocused');
+    expect(wrapper.find(TextareaAutosize).parent().prop('className')).not.toContain('isTextareaFocused');
   });
 
-  it('should disable the file input button and display a loading spinner while sending a file', done => {
+  it('should disable the file input button and display a loading spinner while sending a file', (done) => {
     const wrapper = shallow(
       <ChatInput conversation={{ sendMessage: mockHandleSendMessage } as any} isChatWindowOpen={true} />
     );
 
     expect(wrapper.find(CircularProgress).exists()).toBe(false);
-    expect(
-      wrapper
-        .find(FileAttachmentIcon)
-        .parent()
-        .prop('disabled')
-    ).toBe(false);
+    expect(wrapper.find(FileAttachmentIcon).parent().prop('disabled')).toBe(false);
 
     wrapper.find('input[type="file"]').simulate('change', { target: { files: ['mockFile'] } });
 
     expect(wrapper.find(CircularProgress).exists()).toBe(true);
-    expect(
-      wrapper
-        .find(FileAttachmentIcon)
-        .parent()
-        .prop('disabled')
-    ).toBe(true);
+    expect(wrapper.find(FileAttachmentIcon).parent().prop('disabled')).toBe(true);
 
     setImmediate(() => {
       expect(wrapper.find(CircularProgress).exists()).toBe(false);
-      expect(
-        wrapper
-          .find(FileAttachmentIcon)
-          .parent()
-          .prop('disabled')
-      ).toBe(false);
+      expect(wrapper.find(FileAttachmentIcon).parent().prop('disabled')).toBe(false);
       done();
     });
   });
 
-  it('should display an error when there is a problem sending a file', done => {
+  it('should display an error when there is a problem sending a file', (done) => {
     mockHandleSendMessage.mockImplementationOnce(() => Promise.reject({}));
     const wrapper = shallow(
       <ChatInput conversation={{ sendMessage: mockHandleSendMessage } as any} isChatWindowOpen={true} />
@@ -190,7 +152,7 @@ describe('the ChatInput component', () => {
     });
   });
 
-  it('should display a "file is too large" error when there is a 413 error code', done => {
+  it('should display a "file is too large" error when there is a 413 error code', (done) => {
     mockHandleSendMessage.mockImplementationOnce(() => Promise.reject({ code: 413 }));
     const wrapper = shallow(
       <ChatInput conversation={{ sendMessage: mockHandleSendMessage } as any} isChatWindowOpen={true} />
@@ -211,10 +173,7 @@ describe('the ChatInput component', () => {
       <ChatInput conversation={{ sendMessage: mockHandleSendMessage } as any} isChatWindowOpen={false} />
     );
 
-    const textareaEl: HTMLTextAreaElement = wrapper
-      .find('textarea')
-      .at(0)
-      .getDOMNode();
+    const textareaEl: HTMLTextAreaElement = wrapper.find('textarea').at(0).getDOMNode();
 
     jest.spyOn(textareaEl, 'focus');
     expect(textareaEl.focus).toHaveBeenCalledTimes(0);

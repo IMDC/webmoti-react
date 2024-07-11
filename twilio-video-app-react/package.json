@@ -96,6 +96,7 @@
     "build": "node ./scripts/build.js",
     "gcp-build": "",
     "test": "cross-env TZ=utc jest --config jest.config.js",
+    "test-bail": "cross-env TZ=utc jest --config jest.config.js --bail",
     "eject": "react-scripts eject",
     "lint": "eslint src server",
     "lint-fix-imports": "eslint --config .eslintrc_on_save.json --fix",

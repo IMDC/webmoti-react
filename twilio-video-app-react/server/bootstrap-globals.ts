@@ -26,7 +26,11 @@ export class TwilioResponse {
   }
 }
 
-const Runtime = {
+interface RuntimeType {
+  getAssets: () => { [key: string]: { path: string } };
+}
+
+const Runtime: RuntimeType = {
   getAssets: () => ({
     '/auth-handler.js': {
       path: __dirname + '/auth-handler',
@@ -39,15 +43,10 @@ interface TwilioGlobal extends Twilio {
 }
 
 declare global {
-  namespace NodeJS {
-    interface Global {
-      Runtime: typeof Runtime;
-      Twilio: TwilioGlobal;
-    }
-  }
+  var Twilio: TwilioGlobal;
+  var Runtime: RuntimeType;
 }
 
-// Bootstrap globals
 global.Twilio = require('twilio');
 global.Twilio.Response = TwilioResponse;
 global.Runtime = Runtime;

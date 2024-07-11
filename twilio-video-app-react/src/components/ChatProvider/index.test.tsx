@@ -23,6 +23,8 @@ const mockOnError = jest.fn();
 const mockRoom = { sid: 'mockRoomSid' };
 const wrapper: React.FC = ({ children }) => <ChatProvider>{children}</ChatProvider>;
 
+const mockMessage = { body: 'newMockMessage', attributes: {} };
+
 describe('the ChatProvider component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -72,10 +74,10 @@ describe('the ChatProvider component', () => {
     await waitForNextUpdate();
 
     act(() => {
-      mockConversation.emit('messageAdded', 'newMockMessage');
+      mockConversation.emit('messageAdded', mockMessage);
     });
 
-    expect(result.current.messages).toEqual(['mockMessage', 'newMockMessage']);
+    expect(result.current.messages).toEqual(['mockMessage', mockMessage]);
   });
 
   it('should set hasUnreadMessages to true when initial messages are loaded while the chat window is closed', async () => {
@@ -122,7 +124,7 @@ describe('the ChatProvider component', () => {
     expect(result.current.hasUnreadMessages).toBe(false);
 
     act(() => {
-      mockConversation.emit('messageAdded', 'mockmessage');
+      mockConversation.emit('messageAdded', mockMessage);
     });
 
     expect(result.current.hasUnreadMessages).toBe(true);
@@ -143,7 +145,7 @@ describe('the ChatProvider component', () => {
     // Open chat window and receive message
     act(() => {
       result.current.setIsChatWindowOpen(true);
-      mockConversation.emit('messageAdded', 'mockmessage');
+      mockConversation.emit('messageAdded', mockMessage);
     });
 
     expect(result.current.hasUnreadMessages).toBe(false);
@@ -176,7 +178,7 @@ describe('the ChatProvider component', () => {
     );
   });
 
-  it('should call onError when there is an error getting the conversation', done => {
+  it('should call onError when there is an error getting the conversation', (done) => {
     mockConversationsClient.getConversationByUniqueName.mockImplementationOnce(() => Promise.reject('mockError'));
     const { result } = renderHook(useChatContext, { wrapper });
 

@@ -1,11 +1,17 @@
-import React from 'react';
-import RoomNameScreen from './RoomNameScreen';
-import { shallow } from 'enzyme';
 import { TextField } from '@material-ui/core';
+import { shallow } from 'enzyme';
+
+import RoomNameScreen from './RoomNameScreen';
+import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import { useAppState } from '../../../state';
 
 jest.mock('../../../state');
+jest.mock('../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
+
 const mockUseAppState = useAppState as jest.Mock<any>;
+
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
+mockUseWebmotiVideoContext.mockImplementation(() => ({}));
 
 describe('the RoomNameScreen component', () => {
   it('should render correctly when there is no logged-in user', () => {
@@ -14,12 +20,8 @@ describe('the RoomNameScreen component', () => {
       <RoomNameScreen
         name="test"
         roomName="testRoom"
-        isProfessor={false}
-        isAdmin={false}
         setName={() => {}}
         setRoomName={() => {}}
-        setIsProfessor={() => {}}
-        setIsAdmin={() => {}}
         handleSubmit={() => {}}
       />
     );
@@ -34,12 +36,8 @@ describe('the RoomNameScreen component', () => {
       <RoomNameScreen
         name="test"
         roomName="testRoom"
-        isProfessor={false}
-        isAdmin={false}
         setName={() => {}}
         setRoomName={() => {}}
-        setIsProfessor={() => {}}
-        setIsAdmin={() => {}}
         handleSubmit={() => {}}
       />
     );
@@ -63,12 +61,8 @@ describe('the RoomNameScreen component', () => {
       <RoomNameScreen
         name="test"
         roomName="testRoom"
-        isProfessor={false}
-        isAdmin={false}
         setName={() => {}}
         setRoomName={() => {}}
-        setIsProfessor={() => {}}
-        setIsAdmin={() => {}}
         handleSubmit={() => {}}
       />
     );

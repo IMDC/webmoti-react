@@ -1,24 +1,29 @@
-import React from 'react';
-import AvatarIcon from '../../icons/AvatarIcon';
+import { shallow } from 'enzyme';
+
 import ParticipantInfo from './ParticipantInfo';
 import PinIcon from './PinIcon/PinIcon';
-import { shallow } from 'enzyme';
-import { useAppState } from '../../state';
 import useIsTrackSwitchedOff from '../../hooks/useIsTrackSwitchedOff/useIsTrackSwitchedOff';
 import useParticipantIsReconnecting from '../../hooks/useParticipantIsReconnecting/useParticipantIsReconnecting';
 import usePublications from '../../hooks/usePublications/usePublications';
+import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
+import AvatarIcon from '../../icons/AvatarIcon';
 import ScreenShareIcon from '../../icons/ScreenShareIcon';
+import { useAppState } from '../../state';
 
 jest.mock('../../state');
 jest.mock('../../hooks/useParticipantNetworkQualityLevel/useParticipantNetworkQualityLevel', () => () => 4);
 jest.mock('../../hooks/usePublications/usePublications');
 jest.mock('../../hooks/useIsTrackSwitchedOff/useIsTrackSwitchedOff');
 jest.mock('../../hooks/useParticipantIsReconnecting/useParticipantIsReconnecting');
+jest.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 
 const mockUseAppState = useAppState as jest.Mock<any>;
 const mockUsePublications = usePublications as jest.Mock<any>;
 const mockUseIsTrackSwitchedOff = useIsTrackSwitchedOff as jest.Mock<any>;
 const mockUseParticipantIsReconnecting = useParticipantIsReconnecting as jest.Mock<boolean>;
+
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
+mockUseWebmotiVideoContext.mockImplementation(() => ({ isCameraOneOff: () => false, isCameraTwoOff: () => false }));
 
 mockUseAppState.mockImplementation(() => ({ isGalleryViewActive: false }));
 

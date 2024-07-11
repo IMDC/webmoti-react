@@ -1,11 +1,14 @@
 import { FormEvent, useEffect, useState } from 'react';
+
 import { useParams } from 'react-router-dom';
-import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
-import { useAppState } from '../../state';
-import IntroContainer from '../IntroContainer/IntroContainer';
+
 import DeviceSelectionScreen from './DeviceSelectionScreen/DeviceSelectionScreen';
 import MediaErrorSnackbar from './MediaErrorSnackbar/MediaErrorSnackbar';
 import RoomNameScreen from './RoomNameScreen/RoomNameScreen';
+import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
+import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
+import { useAppState } from '../../state';
+import IntroContainer from '../IntroContainer/IntroContainer';
 
 export enum Steps {
   roomNameStep,
@@ -15,14 +18,14 @@ export enum Steps {
 export default function PreJoinScreens() {
   const { user } = useAppState();
   const { getAudioAndVideoTracks } = useVideoContext();
+  const { isProfessor } = useWebmotiVideoContext();
+
   const { URLRoomName } = useParams<{ URLRoomName?: string }>();
   const [step, setStep] = useState(Steps.roomNameStep);
 
   const [name, setName] = useState<string>(user?.displayName || '');
   // default room is "Classroom"
   const [roomName, setRoomName] = useState<string>('Classroom');
-  const [isProfessor, setIsProfessor] = useState<boolean>(false);
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   const [mediaError, setMediaError] = useState<Error>();
 
@@ -37,7 +40,7 @@ export default function PreJoinScreens() {
 
   useEffect(() => {
     if (step === Steps.deviceSelectionStep && !mediaError) {
-      getAudioAndVideoTracks().catch(error => {
+      getAudioAndVideoTracks().catch((error) => {
         console.log('Error acquiring local media:');
         console.dir(error);
         setMediaError(error);
@@ -69,12 +72,8 @@ export default function PreJoinScreens() {
         <RoomNameScreen
           name={name}
           roomName={roomName}
-          isProfessor={isProfessor}
-          isAdmin={isAdmin}
           setName={setName}
           setRoomName={setRoomName}
-          setIsProfessor={setIsProfessor}
-          setIsAdmin={setIsAdmin}
           handleSubmit={handleSubmit}
         />
       )}

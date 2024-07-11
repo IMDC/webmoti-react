@@ -1,9 +1,11 @@
 import { act, renderHook } from '@testing-library/react-hooks';
-import { getDeviceInfo, isPermissionDenied } from '../../../utils';
+import Video from 'twilio-video';
+
+import useLocalTracks from './useLocalTracks';
 import { SELECTED_AUDIO_INPUT_KEY, SELECTED_VIDEO_INPUT_KEY, DEFAULT_VIDEO_CONSTRAINTS } from '../../../constants';
 import { useAppState } from '../../../state';
-import useLocalTracks from './useLocalTracks';
-import Video from 'twilio-video';
+import { getDeviceInfo, isPermissionDenied } from '../../../utils';
+
 
 jest.mock('../../../state');
 jest.mock('../../../utils');
@@ -47,15 +49,15 @@ describe('the useLocalTracks hook', () => {
         },
         video: {
           frameRate: 24,
-          width: 1280,
-          height: 720,
+          width: 1920,
+          height: 1080,
           name: 'camera-123456',
         },
       });
     });
 
     it('should not create a local video track when camera permission has been denied', async () => {
-      mockIsPermissionDenied.mockImplementation(name => Promise.resolve(name === 'camera'));
+      mockIsPermissionDenied.mockImplementation((name) => Promise.resolve(name === 'camera'));
       const { result } = renderHook(useLocalTracks);
 
       await act(async () => {
@@ -74,7 +76,7 @@ describe('the useLocalTracks hook', () => {
     });
 
     it('should not create a local audio track when microphone permission has been denied', async () => {
-      mockIsPermissionDenied.mockImplementation(name => Promise.resolve(name === 'microphone'));
+      mockIsPermissionDenied.mockImplementation((name) => Promise.resolve(name === 'microphone'));
       const { result } = renderHook(useLocalTracks);
 
       await act(async () => {
@@ -85,8 +87,8 @@ describe('the useLocalTracks hook', () => {
         audio: false,
         video: {
           frameRate: 24,
-          width: 1280,
-          height: 720,
+          width: 1920,
+          height: 1080,
           name: 'camera-123456',
         },
       });
@@ -130,8 +132,8 @@ describe('the useLocalTracks hook', () => {
         },
         video: {
           frameRate: 24,
-          width: 1280,
-          height: 720,
+          width: 1920,
+          height: 1080,
           name: 'camera-123456',
           deviceId: {
             exact: 'mockVideoDeviceId',
@@ -158,8 +160,8 @@ describe('the useLocalTracks hook', () => {
         },
         video: {
           frameRate: 24,
-          width: 1280,
-          height: 720,
+          width: 1920,
+          height: 1080,
           name: 'camera-123456',
         },
       });
@@ -212,8 +214,8 @@ describe('the useLocalTracks hook', () => {
         audio: false,
         video: {
           frameRate: 24,
-          width: 1280,
-          height: 720,
+          width: 1920,
+          height: 1080,
           name: 'camera-123456',
         },
       });
@@ -304,7 +306,7 @@ describe('the useLocalTracks hook', () => {
         await waitForValueToChange(() => result.current.localTracks.length);
       });
 
-      const initialVideoTrack = result.current.localTracks.find(track => track.kind === 'video');
+      const initialVideoTrack = result.current.localTracks.find((track) => track.kind === 'video');
       expect(initialVideoTrack!.stop).not.toHaveBeenCalled();
       expect(initialVideoTrack).toBeTruthy();
 
@@ -312,7 +314,7 @@ describe('the useLocalTracks hook', () => {
         result.current.removeLocalVideoTrack();
       });
 
-      expect(result.current.localTracks.some(track => track.kind === 'video')).toBe(false);
+      expect(result.current.localTracks.some((track) => track.kind === 'video')).toBe(false);
       expect(initialVideoTrack!.stop).toHaveBeenCalled();
     });
   });
@@ -327,7 +329,7 @@ describe('the useLocalTracks hook', () => {
         await waitForValueToChange(() => result.current.localTracks.length);
       });
 
-      const initialAudioTrack = result.current.localTracks.find(track => track.kind === 'audio');
+      const initialAudioTrack = result.current.localTracks.find((track) => track.kind === 'audio');
       expect(initialAudioTrack!.stop).not.toHaveBeenCalled();
       expect(initialAudioTrack).toBeTruthy();
 
@@ -335,7 +337,7 @@ describe('the useLocalTracks hook', () => {
         result.current.removeLocalAudioTrack();
       });
 
-      expect(result.current.localTracks.some(track => track.kind === 'audio')).toBe(false);
+      expect(result.current.localTracks.some((track) => track.kind === 'audio')).toBe(false);
       expect(initialAudioTrack!.stop).toHaveBeenCalled();
     });
   });

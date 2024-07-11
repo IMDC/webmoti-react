@@ -1,13 +1,18 @@
-import React from 'react';
 import { render } from '@testing-library/react';
+
 import VideoTrack from './VideoTrack';
 import useVideoTrackDimensions from '../../hooks/useVideoTrackDimensions/useVideoTrackDimensions';
+import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
 jest.mock('../../hooks/useMediaStreamTrack/useMediaStreamTrack');
-
 jest.mock('../../hooks/useVideoTrackDimensions/useVideoTrackDimensions');
+jest.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
+
 const mockUseVideoTrackDimensions = useVideoTrackDimensions as jest.Mock<any>;
 mockUseVideoTrackDimensions.mockImplementation(() => ({ width: 200, height: 100 }));
+
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
+mockUseWebmotiVideoContext.mockImplementation(() => ({ setMaxPan: () => {} }));
 
 describe('the VideoTrack component', () => {
   const mockTrack = {

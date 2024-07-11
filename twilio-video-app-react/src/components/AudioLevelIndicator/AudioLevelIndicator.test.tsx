@@ -1,11 +1,15 @@
-import React from 'react';
 import { shallow } from 'enzyme';
 
 import AudioLevelIndicator from './AudioLevelIndicator';
 import MicOff from '@material-ui/icons/MicOff';
 import useIsTrackEnabled from '../../hooks/useIsTrackEnabled/useIsTrackEnabled';
+import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
 jest.mock('../../hooks/useIsTrackEnabled/useIsTrackEnabled');
+jest.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
+
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
+mockUseWebmotiVideoContext.mockImplementation(() => ({ isMuted: () => true }));
 
 const mockUseIsTrackEnabled = useIsTrackEnabled as jest.Mock<boolean>;
 
@@ -19,12 +23,7 @@ describe('the AudioLevelIndicator component', () => {
     });
 
     it('should change the color of the mute icon when color prop is used', () => {
-      expect(
-        wrapper
-          .find('[data-test-audio-mute-icon]')
-          .find({ fill: '#123456' })
-          .exists()
-      ).toBeTruthy();
+      expect(wrapper.find('[data-test-audio-mute-icon]').find({ fill: '#123456' }).exists()).toBeTruthy();
     });
   });
 
@@ -38,12 +37,7 @@ describe('the AudioLevelIndicator component', () => {
     });
 
     it('should change the color of the audio level icon when color prop is used', () => {
-      expect(
-        wrapper
-          .find('[data-test-audio-indicator]')
-          .find({ fill: '#123456' })
-          .exists()
-      ).toBeTruthy();
+      expect(wrapper.find('[data-test-audio-indicator]').find({ fill: '#123456' }).exists()).toBeTruthy();
     });
   });
 });

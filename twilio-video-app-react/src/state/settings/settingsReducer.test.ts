@@ -9,7 +9,7 @@ describe('the settingsReducer', () => {
       maxAudioBitrate: '16000',
       trackSwitchOffMode: undefined,
       clientTrackSwitchOffControl: 'auto',
-      contentPreferencesMode: 'auto',
+      contentPreferencesMode: 'manual',
     });
   });
 
@@ -20,7 +20,7 @@ describe('the settingsReducer', () => {
       dominantSpeakerPriority: 'standard',
       maxAudioBitrate: '16000',
       clientTrackSwitchOffControl: 'auto',
-      contentPreferencesMode: 'auto',
+      contentPreferencesMode: 'manual',
       trackSwitchOffMode: undefined,
     });
   });

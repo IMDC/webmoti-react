@@ -61,8 +61,14 @@ describe('the useFirebaseAuth hook', () => {
     result.current.signIn();
     await waitForNextUpdate();
     await result.current.getToken('testuser', 'testroom');
+
+    const headers = new Headers({
+      Authorization: 'idToken',
+      'Content-Type': 'application/json',
+    });
+
     expect(window.fetch).toHaveBeenCalledWith('http://test-endpoint.com/token', {
-      headers: { _headers: { authorization: ['idToken'], 'content-type': ['application/json'] } },
+      headers,
       body: '{"user_identity":"testuser","room_name":"testroom","create_conversation":true}',
       method: 'POST',
     });
