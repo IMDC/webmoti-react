@@ -14,5 +14,10 @@ export default defineConfig({
       return setupNodeEvents(on, config);
     },
     baseUrl: 'http://localhost:3000',
+    // this avoids responsive layout changes
+    viewportWidth: 1400,
+    viewportHeight: 800,
+    // don't clear browser each test
+    testIsolation: false,
   },
 });

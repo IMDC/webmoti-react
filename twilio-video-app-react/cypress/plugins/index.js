@@ -29,6 +29,9 @@ module.exports = (on, config) => {
       });
       await page.goto(config.baseUrl);
       await page.type('#input-user-name', name);
+      // clear "Classroom" from room name
+      await page.focus('#input-room-name');
+      await page.evaluate(() => (document.querySelector('#input-room-name').value = ''));
       await page.type('#input-room-name', roomName);
       await page.click('[type="submit"]');
       await page.waitForSelector('[data-cy-join-now]:not([disabled])');
@@ -36,17 +39,17 @@ module.exports = (on, config) => {
       await page.waitForSelector('[data-cy-main-participant] video');
       return Promise.resolve(null);
     },
-    toggleParticipantAudio: async name => {
+    toggleParticipantAudio: async (name) => {
       const page = participants[name];
       await page.click('[data-cy-audio-toggle]');
       return Promise.resolve(null);
     },
-    shareParticipantScreen: async name => {
+    shareParticipantScreen: async (name) => {
       const page = participants[name];
       await page.click('[data-cy-share-screen]');
       return Promise.resolve(null);
     },
-    removeParticipant: async name => {
+    removeParticipant: async (name) => {
       const page = participants[name];
       await page.click('[data-cy-disconnect]');
       await page.close();
@@ -54,11 +57,11 @@ module.exports = (on, config) => {
       return Promise.resolve(null);
     },
     removeAllParticipants: () => {
-      return Promise.all(Object.keys(participants).map(name => participantFunctions.removeParticipant(name))).then(
+      return Promise.all(Object.keys(participants).map((name) => participantFunctions.removeParticipant(name))).then(
         () => null
       );
     },
-    participantCloseBrowser: async name => {
+    participantCloseBrowser: async (name) => {
       const page = participants[name];
       await page.close({ runBeforeUnload: true });
       delete participants[name];

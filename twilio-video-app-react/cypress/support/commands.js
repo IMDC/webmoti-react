@@ -10,6 +10,8 @@ Cypress.Commands.add('joinRoom', (username, roomname) => {
     },
   });
   cy.get('#input-user-name').type(username);
+  // clear default value of "Classroom"
+  cy.get('#input-room-name').clear();
   cy.get('#input-room-name').type(roomname);
   cy.get('[type="submit"]').click();
   cy.get('[data-cy-join-now]').click();
