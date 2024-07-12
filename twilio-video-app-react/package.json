@@ -69,6 +69,7 @@
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "enzyme-to-json": "^3.4.4",
+    "eslint-plugin-cypress": "^3.3.0",
     "eslint-plugin-import": "^2.29.1",
     "husky": "^9.0.11",
     "isomorphic-fetch": "^3.0.0",
@@ -116,7 +117,11 @@
   },
   "eslintConfig": {
     "extends": [
-      "react-app"
+      "react-app",
+      "plugin:cypress/recommended"
+    ],
+    "plugins": [
+      "cypress"
     ],
     "rules": {
       "no-shadow": "off",
@@ -131,7 +136,10 @@
           "import/no-anonymous-default-export": "off"
         }
       }
-    ]
+    ],
+    "env": {
+      "cypress/globals": true
+    }
   },
   "browserslist": {
     "production": [

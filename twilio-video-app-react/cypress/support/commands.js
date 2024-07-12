@@ -5,7 +5,7 @@ Cypress.Commands.add('joinRoom', (username, roomname) => {
   // Gallery View by default, so here we activate Speaker View before visiting the app so
   // that the tests can pass.
   cy.visit('/', {
-    onBeforeLoad: window => {
+    onBeforeLoad: (window) => {
       window.localStorage.setItem('gallery-view-active-key', false);
     },
   });
@@ -17,6 +17,7 @@ Cypress.Commands.add('joinRoom', (username, roomname) => {
 });
 
 Cypress.Commands.add('leaveRoom', () => {
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(500);
   cy.get('body').click(); // Makes controls reappear
   cy.get('footer [data-cy-disconnect]').click();
@@ -27,7 +28,7 @@ Cypress.Commands.add('leaveRoom', () => {
 Cypress.Commands.add('shouldBeColor', { prevSubject: 'element' }, (subject, color) => {
   cy.wrap(subject)
     .find('video')
-    .then($video => {
+    .then(($video) => {
       cy.readFile(`cypress/fixtures/${color}.png`, 'base64').should('be.sameVideoFile', $video);
     });
 });
@@ -35,27 +36,20 @@ Cypress.Commands.add('shouldBeColor', { prevSubject: 'element' }, (subject, colo
 Cypress.Commands.add('shouldBeSameVideoAs', { prevSubject: 'element' }, (subject, participant) => {
   cy.wrap(subject)
     .find('video')
-    .then($video =>
-      cy
-        .get(participant)
-        .find('video')
-        .should('be.sameVideoTrack', $video)
-    );
+    .then(($video) => cy.get(participant).find('video').should('be.sameVideoTrack', $video));
 });
 
-Cypress.Commands.add('getParticipant', name => cy.get(`[data-cy-participant="${name}"]`));
+Cypress.Commands.add('getParticipant', (name) => cy.get(`[data-cy-participant="${name}"]`));
 
 function getParticipantAudioTrackName(name, window) {
-  const participant = Array.from(window.twilioRoom.participants.values()).find(
-    participant => participant.identity === name
-  );
+  const participant = Array.from(window.twilioRoom.participants.values()).find((p) => p.identity === name);
   const audioTrack = Array.from(participant.audioTracks.values())[0].track;
   return audioTrack.name;
 }
 
-Cypress.Commands.add('shouldBeMakingSound', { prevSubject: 'element' }, subject => {
-  const resolveValue = $el =>
-    detectSound($el[0]).then(value => {
+Cypress.Commands.add('shouldBeMakingSound', { prevSubject: 'element' }, (subject) => {
+  const resolveValue = ($el) =>
+    detectSound($el[0]).then((value) => {
       return cy.verifyUpcomingAssertions(
         value,
         {},
@@ -66,7 +60,7 @@ Cypress.Commands.add('shouldBeMakingSound', { prevSubject: 'element' }, subject 
     });
 
   cy.window()
-    .then(win => {
+    .then((win) => {
       const participantIdentity = subject.attr('data-cy-participant');
       const trackName = getParticipantAudioTrackName(participantIdentity, win);
       return win.document.querySelector(`[data-cy-audio-track-name="${trackName}"]`);

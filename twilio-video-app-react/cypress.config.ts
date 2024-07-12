@@ -1,4 +1,5 @@
-import { defineConfig } from 'cypress'
+import { defineConfig } from 'cypress';
+import setupNodeEvents from './cypress/plugins/index.js';
 
 export default defineConfig({
   video: false,
@@ -9,11 +10,9 @@ export default defineConfig({
   },
   retries: 2,
   e2e: {
-    // We've imported your old cypress plugins here.
-    // You may want to clean this up later by importing these.
     setupNodeEvents(on, config) {
-      return require('./cypress/plugins/index.js')(on, config)
+      return setupNodeEvents(on, config);
     },
     baseUrl: 'http://localhost:3000',
   },
-})
+});
