@@ -5,7 +5,6 @@ import clsx from 'clsx';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
-import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,10 +34,8 @@ export default function EndCallButton(props: { className?: string }) {
   });
 
   return (
-    <ShortcutTooltip shortcut="D" isCtrlDown isShiftDown>
-      <Button onClick={endCall} className={clsx(classes.button, props.className)} data-cy-disconnect>
-        Disconnect
-      </Button>
-    </ShortcutTooltip>
+    <Button onClick={endCall} className={clsx(classes.button, props.className)} data-cy-disconnect>
+      Disconnect
+    </Button>
   );
 }

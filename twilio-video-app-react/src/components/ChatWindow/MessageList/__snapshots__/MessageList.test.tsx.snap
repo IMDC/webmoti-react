@@ -155,10 +155,10 @@ exports[`the messageList component should render correctly 1`] = `
           </div>
         </div>
         <div
-          class="makeStyles-messageContainer-9"
+          class="makeStyles-messageContainer-10"
         >
           <div
-            class="makeStyles-iconContainer-10"
+            class="makeStyles-iconContainer-11"
           >
             <svg
               fill="none"
@@ -212,15 +212,15 @@ exports[`the messageList component should render correctly 1`] = `
             </svg>
           </div>
           <div
-            class="makeStyles-mediaInfo-11"
+            class="makeStyles-mediaInfo-12"
           >
             <p
-              class="makeStyles-filename-12"
+              class="makeStyles-filename-13"
             >
               test1.txt
             </p>
             <p
-              class="makeStyles-size-13"
+              class="makeStyles-size-14"
             >
               120.56 KB
                - Click to open

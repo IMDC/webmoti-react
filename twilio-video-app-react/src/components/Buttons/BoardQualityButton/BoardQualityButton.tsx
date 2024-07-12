@@ -50,7 +50,7 @@ export default function BoardQualityButton() {
 
   return (
     <ShortcutTooltip shortcut="Q" isCtrlDown>
-      <Button onClick={setQuality}>Quality</Button>
+      <Button onClick={setQuality}>1080p Quality</Button>
     </ShortcutTooltip>
   );
 }

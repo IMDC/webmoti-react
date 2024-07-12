@@ -1,15 +1,18 @@
-import React from 'react';
-import { act } from 'react-dom/test-utils';
-import { Button } from '@material-ui/core';
 import { EventEmitter } from 'events';
+
+import { Button } from '@material-ui/core';
 import { shallow, mount } from 'enzyme';
+import { act } from 'react-dom/test-utils';
 
 import ToggleChatButton, { ANIMATION_DURATION } from './ToggleChatButton';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
+import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
 jest.mock('../../../hooks/useChatContext/useChatContext');
 jest.mock('../../../hooks/useVideoContext/useVideoContext');
+jest.mock('../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
+
 const mockUseChatContext = useChatContext as jest.Mock<any>;
 const mockUseVideoContext = useVideoContext as jest.Mock<any>;
 
@@ -23,6 +26,9 @@ mockUseChatContext.mockImplementation(() => ({
 
 const mockSetIsBackgroundSelectionOpen = jest.fn();
 mockUseVideoContext.mockImplementation(() => ({ setIsBackgroundSelectionOpen: mockSetIsBackgroundSelectionOpen }));
+
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
+mockUseWebmotiVideoContext.mockImplementation(() => ({ checkSystemMsg: () => false }));
 
 describe('the ToggleChatButton component', () => {
   it('should be enabled when a conversation is present', () => {
@@ -55,7 +61,7 @@ describe('the ToggleChatButton component', () => {
     }));
 
     const wrapper = mount(<ToggleChatButton />);
-    const notificationCircle = wrapper.findWhere(node => node.prop('className')?.includes('circle'));
+    const notificationCircle = wrapper.findWhere((node) => node.prop('className')?.includes('circle'));
     expect(notificationCircle.prop('className')).toContain('hasUnreadMessages');
   });
 
@@ -68,7 +74,7 @@ describe('the ToggleChatButton component', () => {
     }));
 
     const wrapper = mount(<ToggleChatButton />);
-    const notificationCircle = wrapper.findWhere(node => node.prop('className')?.includes('circle'));
+    const notificationCircle = wrapper.findWhere((node) => node.prop('className')?.includes('circle'));
     expect(notificationCircle.prop('className')).not.toContain('hasUnreadMessages');
   });
 
@@ -81,7 +87,7 @@ describe('the ToggleChatButton component', () => {
     }));
 
     const wrapper = mount(<ToggleChatButton />);
-    let notificationRing = wrapper.findWhere(node => node.prop('className')?.includes('ring'));
+    let notificationRing = wrapper.findWhere((node) => node.prop('className')?.includes('ring'));
     expect(notificationRing.prop('className')).not.toContain('animate');
 
     act(() => {
@@ -89,7 +95,7 @@ describe('the ToggleChatButton component', () => {
     });
     wrapper.update();
 
-    notificationRing = wrapper.findWhere(node => node.prop('className')?.includes('ring'));
+    notificationRing = wrapper.findWhere((node) => node.prop('className')?.includes('ring'));
     expect(notificationRing.prop('className')).toContain('animate');
 
     act(() => {
@@ -97,7 +103,7 @@ describe('the ToggleChatButton component', () => {
     });
     wrapper.update();
 
-    notificationRing = wrapper.findWhere(node => node.prop('className')?.includes('ring'));
+    notificationRing = wrapper.findWhere((node) => node.prop('className')?.includes('ring'));
     expect(notificationRing.prop('className')).not.toContain('animate');
   });
 
@@ -109,7 +115,7 @@ describe('the ToggleChatButton component', () => {
     }));
 
     const wrapper = mount(<ToggleChatButton />);
-    let notificationRing = wrapper.findWhere(node => node.prop('className')?.includes('ring'));
+    let notificationRing = wrapper.findWhere((node) => node.prop('className')?.includes('ring'));
     expect(notificationRing.prop('className')).not.toContain('animate');
 
     act(() => {
@@ -117,7 +123,7 @@ describe('the ToggleChatButton component', () => {
     });
     wrapper.update();
 
-    notificationRing = wrapper.findWhere(node => node.prop('className')?.includes('ring'));
+    notificationRing = wrapper.findWhere((node) => node.prop('className')?.includes('ring'));
     expect(notificationRing.prop('className')).not.toContain('animate');
   });
 });

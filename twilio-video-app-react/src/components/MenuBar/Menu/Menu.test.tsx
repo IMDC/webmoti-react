@@ -1,21 +1,22 @@
-import React from 'react';
-import AboutDialog from '../../AboutDialog/AboutDialog';
 import { Button, MenuItem } from '@material-ui/core';
-import DeviceSelectionDialog from '../../DeviceSelectionDialog/DeviceSelectionDialog';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import FlipCameraIcon from '../../../icons/FlipCameraIcon';
-import Menu from './Menu';
 import MenuContainer from '@material-ui/core/Menu';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import { shallow } from 'enzyme';
 import { render, fireEvent, waitForElement } from '@testing-library/react';
+import { shallow } from 'enzyme';
 
-import { useAppState } from '../../../state';
+import Menu from './Menu';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useFlipCameraToggle from '../../../hooks/useFlipCameraToggle/useFlipCameraToggle';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import useIsRecording from '../../../hooks/useIsRecording/useIsRecording';
 import useLocalVideoToggle from '../../../hooks/useLocalVideoToggle/useLocalVideoToggle';
+import useRoomState from '../../../hooks/useRoomState/useRoomState';
+import useScreenShareParticipant from '../../../hooks/useScreenShareParticipant/useScreenShareParticipant';
+import FlipCameraIcon from '../../../icons/FlipCameraIcon';
+import { useAppState } from '../../../state';
+import AboutDialog from '../../AboutDialog/AboutDialog';
+import DeviceSelectionDialog from '../../DeviceSelectionDialog/DeviceSelectionDialog';
 
 jest.mock('../../../hooks/useFlipCameraToggle/useFlipCameraToggle');
 jest.mock('@material-ui/core/useMediaQuery');
@@ -27,6 +28,8 @@ jest.mock('../../../hooks/useVideoContext/useVideoContext', () => () => ({
 jest.mock('../../../hooks/useIsRecording/useIsRecording');
 jest.mock('../../../hooks/useChatContext/useChatContext');
 jest.mock('../../../hooks/useLocalVideoToggle/useLocalVideoToggle');
+jest.mock('../../../hooks/useRoomState/useRoomState');
+jest.mock('../../../hooks/useScreenShareParticipant/useScreenShareParticipant');
 
 const mockUseFlipCameraToggle = useFlipCameraToggle as jest.Mock<any>;
 const mockUseMediaQuery = useMediaQuery as jest.Mock<boolean>;
@@ -38,6 +41,12 @@ const mockUseLocalVideoToggle = useLocalVideoToggle as jest.Mock<any>;
 const mockToggleChatWindow = jest.fn();
 mockUseChatContext.mockImplementation(() => ({ setIsChatWindowOpen: mockToggleChatWindow }));
 mockUseLocalVideoToggle.mockImplementation(() => [true, () => {}]);
+
+const mockUseRoomState = useRoomState as jest.Mock<any>;
+mockUseRoomState.mockImplementation(() => 'connected');
+
+const mockUseScreenShareParticipant = useScreenShareParticipant as jest.Mock<any>;
+mockUseScreenShareParticipant.mockImplementation(() => 'mockParticipant');
 
 describe('the Menu component', () => {
   let mockUpdateRecordingRules: jest.Mock<any>;
@@ -167,12 +176,7 @@ describe('the Menu component', () => {
         mockUseAppState.mockImplementationOnce(() => ({ isFetching: true }));
         const wrapper = shallow(<Menu />);
 
-        expect(
-          wrapper
-            .find(MenuItem)
-            .at(1)
-            .prop('disabled')
-        ).toBe(true);
+        expect(wrapper.find(MenuItem).at(1).prop('disabled')).toBe(true);
       });
     });
   });
@@ -196,20 +200,14 @@ describe('the Menu component', () => {
     it('should open the AboutDialog when the About button is clicked', () => {
       const wrapper = shallow(<Menu />);
       expect(wrapper.find(AboutDialog).prop('open')).toBe(false);
-      wrapper
-        .find(MenuItem)
-        .at(4)
-        .simulate('click');
+      wrapper.find(MenuItem).at(5).simulate('click');
       expect(wrapper.find(AboutDialog).prop('open')).toBe(true);
     });
 
     it('should open the DeviceSelectionDialog when the Settings button is clicked', () => {
       const wrapper = shallow(<Menu />);
       expect(wrapper.find(DeviceSelectionDialog).prop('open')).toBe(false);
-      wrapper
-        .find(MenuItem)
-        .at(0)
-        .simulate('click');
+      wrapper.find(MenuItem).at(0).simulate('click');
       expect(wrapper.find(DeviceSelectionDialog).prop('open')).toBe(true);
     });
 
@@ -269,12 +267,7 @@ describe('the Menu component', () => {
     it('should render non-disabled Flip Camera button when flipCameraSupported is true', () => {
       const wrapper = shallow(<Menu />);
       expect(wrapper.find(FlipCameraIcon).exists()).toBe(true);
-      expect(
-        wrapper
-          .find(MenuItem)
-          .at(1)
-          .prop('disabled')
-      ).toBe(false);
+      expect(wrapper.find(MenuItem).at(1).prop('disabled')).toBe(false);
     });
 
     it('should render a disabled Flip Camera button when flipCameraSupported is true, and flipCameraDisabled is true', () => {
@@ -284,12 +277,7 @@ describe('the Menu component', () => {
       }));
       const wrapper = shallow(<Menu />);
       expect(wrapper.find(FlipCameraIcon).exists()).toBe(true);
-      expect(
-        wrapper
-          .find(MenuItem)
-          .at(1)
-          .prop('disabled')
-      ).toBe(true);
+      expect(wrapper.find(MenuItem).at(1).prop('disabled')).toBe(true);
     });
 
     it('should not render Flip Camera button when flipCameraSupported is false', () => {

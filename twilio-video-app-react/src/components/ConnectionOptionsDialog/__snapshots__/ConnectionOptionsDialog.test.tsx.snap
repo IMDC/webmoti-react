@@ -204,7 +204,7 @@ exports[`the ConnectionOptionsDialog component when connected to a room should r
             label="contentPreferencesMode"
             name="contentPreferencesMode"
             onChange={[Function]}
-            value="auto"
+            value="manual"
           >
             <WithStyles(ForwardRef(MenuItem))
               value="auto"
@@ -458,7 +458,7 @@ exports[`the ConnectionOptionsDialog component when not connected to a room shou
             label="contentPreferencesMode"
             name="contentPreferencesMode"
             onChange={[Function]}
-            value="auto"
+            value="manual"
           >
             <WithStyles(ForwardRef(MenuItem))
               value="auto"

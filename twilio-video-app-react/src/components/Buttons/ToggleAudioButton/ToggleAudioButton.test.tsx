@@ -1,13 +1,15 @@
-import { mount } from 'enzyme';
-import useLocalAudioToggle from '../../../hooks/useLocalAudioToggle/useLocalAudioToggle';
+import EventEmitter from 'events';
 
+import { Button } from '@material-ui/core';
+import { mount } from 'enzyme';
+
+import ToggleAudioButton from './ToggleAudioButton';
+import useChatContext from '../../../hooks/useChatContext/useChatContext';
+import useLocalAudioToggle from '../../../hooks/useLocalAudioToggle/useLocalAudioToggle';
+import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
+import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import MicIcon from '../../../icons/MicIcon';
 import MicOffIcon from '../../../icons/MicOffIcon';
-import ToggleAudioButton from './ToggleAudioButton';
-import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
-import useChatContext from '../../../hooks/useChatContext/useChatContext';
-import EventEmitter from 'events';
-import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
 jest.mock('../../../hooks/useLocalAudioToggle/useLocalAudioToggle');
 jest.mock('../../../hooks/useVideoContext/useVideoContext');
@@ -48,14 +50,14 @@ describe('the ToggleAudioButton component', () => {
     const wrapper = mount(<ToggleAudioButton />);
     expect(wrapper.find(MicIcon).length).toEqual(1);
     expect(wrapper.text()).toContain('No Audio');
-    expect(wrapper.find('button').prop('disabled')).toBeTruthy();
+    expect(wrapper.find(Button).prop('disabled')).toBeTruthy();
   });
 
   it('should call the correct toggle function when clicked', () => {
     const mockFn = jest.fn();
     mockUseLocalAudioToggle.mockImplementation(() => [false, mockFn]);
     const wrapper = mount(<ToggleAudioButton />);
-    wrapper.find('button').simulate('click');
+    wrapper.find(Button).simulate('click');
     expect(mockFn).toHaveBeenCalled();
   });
 });

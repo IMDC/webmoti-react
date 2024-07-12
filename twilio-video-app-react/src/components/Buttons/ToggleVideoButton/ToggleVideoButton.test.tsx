@@ -1,10 +1,11 @@
+import { Button } from '@material-ui/core';
 import { mount } from 'enzyme';
-import useLocalVideoToggle from '../../../hooks/useLocalVideoToggle/useLocalVideoToggle';
 
 import ToggleVideoButton from './ToggleVideoButton';
+import useDevices from '../../../hooks/useDevices/useDevices';
+import useLocalVideoToggle from '../../../hooks/useLocalVideoToggle/useLocalVideoToggle';
 import VideoOffIcon from '../../../icons/VideoOffIcon';
 import VideoOnIcon from '../../../icons/VideoOnIcon';
-import useDevices from '../../../hooks/useDevices/useDevices';
 
 jest.mock('../../../hooks/useDevices/useDevices');
 jest.mock('../../../hooks/useLocalVideoToggle/useLocalVideoToggle');
@@ -36,7 +37,7 @@ describe('the ToggleVideoButton component', () => {
     mockUseDevices.mockImplementationOnce(() => ({ hasVideoInputDevices: false }));
     const wrapper = mount(<ToggleVideoButton />);
     expect(wrapper.find(VideoOnIcon)).toHaveLength(1);
-    expect(wrapper.find('button').prop('disabled')).toEqual(true);
+    expect(wrapper.find(Button).prop('disabled')).toEqual(true);
     expect(wrapper.text()).toBe('No Video');
   });
 
@@ -44,7 +45,7 @@ describe('the ToggleVideoButton component', () => {
     const mockFn = jest.fn();
     mockUseLocalVideoToggle.mockImplementation(() => [false, mockFn]);
     const wrapper = mount(<ToggleVideoButton />);
-    wrapper.find('button').simulate('click');
+    wrapper.find(Button).simulate('click');
     expect(mockFn).toHaveBeenCalled();
   });
 
@@ -53,11 +54,11 @@ describe('the ToggleVideoButton component', () => {
     mockUseLocalVideoToggle.mockImplementation(() => [false, mockFn]);
     const wrapper = mount(<ToggleVideoButton />);
     Date.now = () => 100000;
-    wrapper.find('button').simulate('click'); // Should register
+    wrapper.find(Button).simulate('click'); // Should register
     Date.now = () => 100500;
-    wrapper.find('button').simulate('click'); // Should be ignored
+    wrapper.find(Button).simulate('click'); // Should be ignored
     Date.now = () => 100501;
-    wrapper.find('button').simulate('click'); // Should register
+    wrapper.find(Button).simulate('click'); // Should register
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 });

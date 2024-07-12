@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { Theme, useMediaQuery } from '@material-ui/core';
+import { useMediaQuery, useTheme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { Message } from '@twilio/conversations';
@@ -11,7 +11,6 @@ import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import ChatIcon from '../../../icons/ChatIcon';
-import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
 export const ANIMATION_DURATION = 700;
 
@@ -72,7 +71,8 @@ export default function ToggleChatButton() {
 
   const [shouldAnimate, setShouldAnimate] = useState(false);
 
-  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const toggleChatWindow = () => {
     setIsChatWindowOpen(!isChatWindowOpen);
@@ -109,26 +109,20 @@ export default function ToggleChatButton() {
   });
 
   return (
-    <>
-      <ShortcutTooltip shortcut="T" isCtrlDown isShiftDown>
-        <span>
-          <Button
-            data-cy-chat-button
-            onClick={toggleChatWindow}
-            disabled={!conversation}
-            variant="outlined"
-            startIcon={
-              <div className={classes.iconContainer}>
-                <ChatIcon />
-                <div className={clsx(classes.ring, { [classes.animateRing]: shouldAnimate })} />
-                <div className={clsx(classes.circle, { [classes.hasUnreadMessages]: hasUnreadMessages })} />
-              </div>
-            }
-          >
-            {isMobile ? '' : 'Chat'}
-          </Button>
-        </span>
-      </ShortcutTooltip>
-    </>
+    <Button
+      data-cy-chat-button
+      onClick={toggleChatWindow}
+      disabled={!conversation}
+      variant="outlined"
+      startIcon={
+        <div className={classes.iconContainer}>
+          <ChatIcon />
+          <div className={clsx(classes.ring, { [classes.animateRing]: shouldAnimate })} />
+          <div className={clsx(classes.circle, { [classes.hasUnreadMessages]: hasUnreadMessages })} />
+        </div>
+      }
+    >
+      {isMobile ? '' : 'Chat'}
+    </Button>
   );
 }

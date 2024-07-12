@@ -12,8 +12,9 @@ import ModeDisplay from '../AudioMixer/ModeDisplay';
 import EndCallButton from '../Buttons/EndCallButton/EndCallButton';
 import RaiseHandButton from '../Buttons/RaiseHandButton/RaiseHandButton';
 import ToggleAudioButton from '../Buttons/ToggleAudioButton/ToggleAudioButton';
-import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
+import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
+import ShortcutTooltip from '../ShortcutTooltip/ShortcutTooltip';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -76,7 +77,13 @@ export default function MenuBar() {
 
             <SoundsMenu />
 
-            {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />}
+            {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && (
+              <ShortcutTooltip shortcut="T" isCtrlDown isShiftDown>
+                <span>
+                  <ToggleChatButton />
+                </span>
+              </ShortcutTooltip>
+            )}
 
             <Hidden mdDown>
               <Menu />
@@ -87,7 +94,9 @@ export default function MenuBar() {
         <Hidden mdDown>
           <Grid style={{ flex: 1 }}>
             <Grid container justifyContent="flex-end">
-              <EndCallButton />
+              <ShortcutTooltip shortcut="D" isCtrlDown isShiftDown>
+                <EndCallButton />
+              </ShortcutTooltip>
             </Grid>
           </Grid>
         </Hidden>

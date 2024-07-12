@@ -1,14 +1,18 @@
+import { setImmediate } from 'timers';
+
 import React from 'react';
+
+import { mount, shallow } from 'enzyme';
 import { act } from 'react-dom/test-utils';
+import { useParams } from 'react-router-dom';
+
 import DeviceSelectionScreen from './DeviceSelectionScreen/DeviceSelectionScreen';
 import MediaErrorSnackbar from './MediaErrorSnackbar/MediaErrorSnackbar';
-import { mount, shallow } from 'enzyme';
 import PreJoinScreens from './PreJoinScreens';
 import RoomNameScreen from './RoomNameScreen/RoomNameScreen';
-import { useParams } from 'react-router-dom';
-import { useAppState } from '../../state';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
-import { setImmediate } from 'timers';
+import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
+import { useAppState } from '../../state';
 
 // @ts-ignore
 delete window.location;
@@ -31,9 +35,18 @@ const mockUseAppState = useAppState as jest.Mock<any>;
 const mockUseParams = useParams as jest.Mock<any>;
 const mockUseVideoContext = useVideoContext as jest.Mock<any>;
 
-jest.mock('../IntroContainer/IntroContainer', () => ({ children }: { children: React.ReactNode }) => children);
+jest.mock(
+  '../IntroContainer/IntroContainer',
+  () =>
+    ({ children }: { children: React.ReactNode }) =>
+      children
+);
 jest.mock('./RoomNameScreen/RoomNameScreen', () => () => null);
 jest.mock('./DeviceSelectionScreen/DeviceSelectionScreen', () => () => null);
+jest.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
+
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
+mockUseWebmotiVideoContext.mockImplementation(() => ({}));
 
 describe('the PreJoinScreens component', () => {
   beforeEach(jest.clearAllMocks);
