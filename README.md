@@ -12,6 +12,9 @@
     - [Local setup](#local-setup)
   - [Deploying](#deploying)
   - [App features](#app-features)
+  - [Testing](#testing)
+    - [Unit Tests](#unit-tests)
+    - [E2E Tests](#e2e-tests)
 - [Hand server](#hand-server)
   - [Server setup](#server-setup)
   - [Running the hand server](#running-the-hand-server)
@@ -115,6 +118,40 @@ Undeploy the app: `npm run delete`
 - Speaker view
 - Share screen
 - Backgrounds
+
+### Testing
+
+#### Unit Tests
+
+```bash
+# run all tests
+npm test
+```
+
+```bash
+# run until fail
+npm run test-bail
+```
+
+```bash
+# run specific test
+npx cross-env TZ=utc jest --config jest.config.js TEST_PATH
+```
+
+#### E2E Tests
+
+```bash
+# make sure server is running
+npm start
+# open cypress web ui
+npm run cypress:open
+```
+
+Run cypress tests:
+
+1. E2E Testing
+2. Choose any browser
+3. Click `twilio-video.cy.js`
 
 ## Hand server
 
