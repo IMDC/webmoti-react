@@ -15,6 +15,7 @@
   - [Testing](#testing)
     - [Unit Tests](#unit-tests)
     - [E2E Tests](#e2e-tests)
+  - [Storybook](#storybook)
 - [Hand server](#hand-server)
   - [Server setup](#server-setup)
   - [Running the hand server](#running-the-hand-server)
@@ -152,6 +153,14 @@ Run cypress tests:
 1. E2E Testing
 2. Choose any browser
 3. Click `twilio-video.cy.js`
+
+### Storybook
+
+For testing the UI with interactive controls
+
+```bash
+npm run storybook
+```
 
 ## Hand server
 
