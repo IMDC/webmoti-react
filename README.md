@@ -275,7 +275,7 @@ URL_SERVER=
 #### Autorun
 
 ```sh
-pm2 start main.js
+pm2 start autojoin.js
 pm2 startup systemd
 # copy paste outputted command
 pm2 save

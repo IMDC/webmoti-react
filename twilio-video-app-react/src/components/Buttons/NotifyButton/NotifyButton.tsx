@@ -17,7 +17,7 @@ import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 interface NotifyButtonProps {
   setSoundKey: Dispatch<SetStateAction<string>>;
   setVolume: Dispatch<SetStateAction<number>>;
-  playSetSound: () => void;
+  playSetSound: (soundStr?: string) => void;
   soundKey: string;
   volume: number;
 }
@@ -68,7 +68,7 @@ export default function NotifyButton({ setSoundKey, setVolume, playSetSound, sou
     }
 
     logSound();
-    sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.Notify }));
+    sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.Notify, sound: soundKey }));
   };
 
   useSetupHotkeys('ctrl+a', () => {

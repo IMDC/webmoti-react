@@ -78,13 +78,17 @@ export default function SoundsMenu() {
     }
   });
 
-  const playSetSound = useCallback(() => {
-    const sound = Sounds[soundKey];
-    const audio = new Audio(sound.sound);
-    // volume is 0 to 1 but slider is 1 to 100
-    audio.volume = volume / 100;
-    audio.play();
-  }, [soundKey, volume]);
+  const playSetSound = useCallback(
+    (soundStr?: string) => {
+      const key = soundStr ? soundStr : soundKey;
+      const sound = Sounds[key];
+      const audio = new Audio(sound.sound);
+      // volume is 0 to 1 but slider is 1 to 100
+      audio.volume = volume / 100;
+      audio.play();
+    },
+    [soundKey, volume]
+  );
 
   useEffect(() => {
     const handleMessageAdded = (message: Message) => {
@@ -95,7 +99,7 @@ export default function SoundsMenu() {
       const msgData = JSON.parse(message.body || '');
 
       if (msgData.type === MsgTypes.Notify && name === WEBMOTI_CAMERA_1) {
-        playSetSound();
+        playSetSound(msgData.sound);
         message.remove();
       }
     };
