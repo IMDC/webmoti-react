@@ -1,3 +1,5 @@
+import { SERVER_URL } from '../../constants';
+
 export default class TTSMessage {
   text: string;
   dateCreated: Date;
@@ -15,7 +17,7 @@ export default class TTSMessage {
       body: JSON.stringify({ text: this.text }),
     };
 
-    const response = await fetch('http://localhost:80/api/tts', options);
+    const response = await fetch(`${SERVER_URL}/tts`, options);
 
     if (response.ok) {
       const blob = await response.blob();
