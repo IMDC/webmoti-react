@@ -15,6 +15,7 @@ import ToggleAudioButton from '../Buttons/ToggleAudioButton/ToggleAudioButton';
 import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import ShortcutTooltip from '../ShortcutTooltip/ShortcutTooltip';
+import ToggleCaptionsButton from '../Buttons/ToggleCaptionsButton/ToggleCaptionsButton';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -68,6 +69,8 @@ export default function MenuBar() {
 
             <ToggleAudioButton disabled={isReconnecting} />
             <ToggleVideoButton disabled={isReconnecting} />
+
+            <ToggleCaptionsButton />
 
             <RaiseHandButton />
 
