@@ -1,5 +1,6 @@
 import logging
 import pathlib
+import time
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from google.cloud.speech_v1 import (
@@ -15,9 +16,11 @@ router = APIRouter(prefix="/api")
 creds_path = pathlib.Path(__file__).parent / "webmoti-sa.json"
 credentials = service_account.Credentials.from_service_account_file(str(creds_path))
 
+# https://cloud.google.com/speech-to-text/docs/speech-to-text-requests#streaming-recognition
+
 
 @router.websocket("/ws/stt")
-async def stt_websocket(websocket: WebSocket):
+async def stt_websocket(websocket: WebSocket, identity: str):
     await websocket.accept()
 
     # client needs to be defined here so in same event loop?
@@ -46,14 +49,33 @@ async def stt_websocket(websocket: WebSocket):
 
             yield StreamingRecognizeRequest(audio_content=data)
 
-    requests = request_generator()
+    # to avoid backtracking and inaccurate responses
+    STABILITY_THRESHOLD = 0.8
+
+    caption_id = 0
 
     try:
-        stream = await speech_client.streaming_recognize(requests=requests)
+        stream = await speech_client.streaming_recognize(requests=request_generator())
         async for response in stream:
             for result in response.results:
-                transcript = result.alternatives[0].transcript
-                print(transcript)
-                # await websocket.send_text(transcript)
+
+                # is_final has stability of 0.0
+                if result.stability > STABILITY_THRESHOLD or result.is_final:
+                    transcript = result.alternatives[0].transcript
+                    # print(transcript, result.is_final, result.stability)
+
+                    await websocket.send_json(
+                        {
+                            "caption_id": caption_id,
+                            "transcript": transcript,
+                            "identity": identity,
+                            "timestamp": int(time.time()),
+                        }
+                    )
+
+                    if result.is_final:
+                        # caption segment is complete
+                        caption_id += 1
+
     except WebSocketDisconnect:
         logging.info("WebSocket client disconnected")
