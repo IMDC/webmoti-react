@@ -16,8 +16,6 @@ router = APIRouter(prefix="/api")
 creds_path = pathlib.Path(__file__).parent / "webmoti-sa.json"
 credentials = service_account.Credentials.from_service_account_file(str(creds_path))
 
-# https://cloud.google.com/speech-to-text/docs/speech-to-text-requests#streaming-recognition
-
 
 @router.websocket("/ws/stt")
 async def stt_websocket(websocket: WebSocket, identity: str):
@@ -43,9 +41,12 @@ async def stt_websocket(websocket: WebSocket, identity: str):
         while True:
             data = await websocket.receive_bytes()
 
-            # if not data:
-            #     # TODO handle timeout (client initiated bytes?)
-            #     break
+            # TODO if len(data) == 60, send "0"
+            # OR if == 0, send "0"
+
+            if data == b"ENDCONN":
+                logging.info("Close connection message received")
+                break
 
             yield StreamingRecognizeRequest(audio_content=data)
 
@@ -55,9 +56,22 @@ async def stt_websocket(websocket: WebSocket, identity: str):
     caption_id = 0
     is_first_result = True
 
+    # api reference: https://goo.gl/tjCPAU
+
     try:
         stream = await speech_client.streaming_recognize(requests=request_generator())
         async for response in stream:
+            if not response.results:
+                continue
+
+            # TODO
+            # The `results` list is consecutive. For streaming, we only care about
+            # the first result being considered, since once it's `is_final`, it
+            # moves on to considering the next utterance.
+            # result = response.results[0]
+            # if not result.alternatives:
+            #     continue
+
             for result in response.results:
 
                 # is_final has stability of 0.0
