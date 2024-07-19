@@ -53,6 +53,7 @@ async def stt_websocket(websocket: WebSocket, identity: str):
     STABILITY_THRESHOLD = 0.8
 
     caption_id = 0
+    is_first_result = True
 
     try:
         stream = await speech_client.streaming_recognize(requests=request_generator())
@@ -60,22 +61,31 @@ async def stt_websocket(websocket: WebSocket, identity: str):
             for result in response.results:
 
                 # is_final has stability of 0.0
-                if result.stability > STABILITY_THRESHOLD or result.is_final:
+                # also always use first result to minimize delay
+                if (
+                    result.stability > STABILITY_THRESHOLD
+                    or result.is_final
+                    or is_first_result
+                ):
                     transcript = result.alternatives[0].transcript
                     # print(transcript, result.is_final, result.stability)
 
                     await websocket.send_json(
                         {
-                            "caption_id": caption_id,
+                            "captionId": caption_id,
                             "transcript": transcript,
                             "identity": identity,
-                            "timestamp": int(time.time()),
+                            "timestamp": round(time.time() * 1000),
                         }
                     )
+
+                    if is_first_result:
+                        is_first_result = False
 
                     if result.is_final:
                         # caption segment is complete
                         caption_id += 1
+                        is_first_result = True
 
     except WebSocketDisconnect:
         logging.info("WebSocket client disconnected")
