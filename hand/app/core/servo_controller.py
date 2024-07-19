@@ -28,7 +28,10 @@ class ServoController:
             # convert angle to duty cycle (2 to 12)
             duty_cycle = (angle / 18) + 2
             self.pwm.ChangeDutyCycle(duty_cycle)
-            await asyncio.sleep(1.5)
+            # 1 seconds is around the time to travel 180 degrees
+            await asyncio.sleep(1)
+            # relax servo to stop erratic movements
+            self.pwm.ChangeDutyCycle(0)
 
     async def set_angle(self, angle):
         async with self.lock:
