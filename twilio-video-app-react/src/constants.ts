@@ -26,6 +26,7 @@ export const WEBMOTI_CAMERA_1 = 'Student-View';
 export const WEBMOTI_CAMERA_2 = 'Board-View';
 
 export const SERVER_URL = 'https://jmn2f42hjgfv.connect.remote.it/api';
+export const WS_URL = 'ws://localhost:80/api/ws';
 
 export const enum MsgTypes {
   Hand = 'HAND',

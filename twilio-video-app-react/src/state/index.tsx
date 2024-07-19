@@ -31,6 +31,8 @@ export interface StateContextType {
   setIsKrispEnabled: React.Dispatch<React.SetStateAction<boolean>>;
   isKrispInstalled: boolean;
   setIsKrispInstalled: React.Dispatch<React.SetStateAction<boolean>>;
+  displayCaptions: boolean;
+  setDisplayCaptions: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const StateContext = createContext<StateContextType>(null!);
@@ -55,6 +57,7 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
     'max-gallery-participants-key',
     6
   );
+  const [displayCaptions, setDisplayCaptions] = useState(false);
 
   const [isKrispEnabled, setIsKrispEnabled] = useState(false);
   const [isKrispInstalled, setIsKrispInstalled] = useState(false);
@@ -76,6 +79,8 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
     setIsKrispEnabled,
     isKrispInstalled,
     setIsKrispInstalled,
+    displayCaptions,
+    setDisplayCaptions,
   } as StateContextType;
 
   if (process.env.REACT_APP_SET_AUTH === 'firebase') {

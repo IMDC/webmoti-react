@@ -15,11 +15,12 @@ import MainParticipant from '../MainParticipant/MainParticipant';
 import { MobileGalleryView } from '../MobileGalleryView/MobileGalleryView';
 import { ParticipantAudioTracks } from '../ParticipantAudioTracks/ParticipantAudioTracks';
 import ParticipantList from '../ParticipantList/ParticipantList';
+import { CaptionRenderer } from '../CaptionRenderer/CaptionRenderer';
 
 const useStyles = makeStyles((theme: Theme) => {
-  const totalMobileSidebarHeight = `${theme.sidebarMobileHeight +
-    theme.sidebarMobilePadding * 2 +
-    theme.participantBorderWidth}px`;
+  const totalMobileSidebarHeight = `${
+    theme.sidebarMobileHeight + theme.sidebarMobilePadding * 2 + theme.participantBorderWidth
+  }px`;
   return {
     container: {
       position: 'relative',
@@ -119,6 +120,7 @@ export default function Room() {
 
       <ChatWindow />
       <BackgroundSelectionDialog />
+      <CaptionRenderer />
     </div>
   );
 }

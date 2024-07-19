@@ -3,9 +3,11 @@ import { ClosedCaption } from '@material-ui/icons';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { LocalAudioTrack } from 'twilio-video';
 
+import { WS_URL } from '../../../constants';
 import useIsTrackEnabled from '../../../hooks/useIsTrackEnabled/useIsTrackEnabled';
 import useMediaStreamTrack from '../../../hooks/useMediaStreamTrack/useMediaStreamTrack';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
+import { useAppState } from '../../../state';
 
 const isIOS = /iPhone|iPad/.test(navigator.userAgent);
 
@@ -19,14 +21,17 @@ export default function ToggleCaptionsButton() {
 
   const identity = room?.localParticipant?.identity || 'Participant';
 
-  const WS_URL = 'ws://localhost:80/api/ws/stt';
-  const { sendMessage, readyState } = useWebSocket(WS_URL, {
+  const { displayCaptions, setDisplayCaptions } = useAppState();
+
+  const { sendMessage, readyState } = useWebSocket(`${WS_URL}/stt`, {
     queryParams: { identity },
     share: true,
     // shouldReconnect: (closeEvent) => true,
   });
 
   const toggleCaptions = async () => {
+    setDisplayCaptions(!displayCaptions)
+
     if (localAudioTrack && mediaStreamTrack && isTrackEnabled) {
       const newMediaStream = new MediaStream([isIOS ? mediaStreamTrack.clone() : mediaStreamTrack]);
 
