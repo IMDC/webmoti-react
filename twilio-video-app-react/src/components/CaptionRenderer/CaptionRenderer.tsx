@@ -37,7 +37,6 @@ export function CaptionRenderer() {
   const { lastJsonMessage } = useWebSocket(`${WS_URL}/stt`, {
     queryParams: { identity },
     share: true,
-    // shouldReconnect: (closeEvent) => true,
   });
 
   const registerResult = useCallback((captionResult: Caption) => {

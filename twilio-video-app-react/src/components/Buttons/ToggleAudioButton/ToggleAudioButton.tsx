@@ -29,28 +29,37 @@ export default function ToggleAudioButton(props: { disabled?: boolean; className
   const { isProfessor, sendSystemMsg, isWebmotiVideo } = useWebmotiVideoContext();
 
   useSetupHotkeys('ctrl+m', () => {
-    toggleAudioEnabled();
+    handleAudioToggle();
   });
+
+  const handleAudioToggle = () => {
+    const toggleEvent = new CustomEvent('audiotoggle', {
+      detail: {
+        enabled: !isAudioEnabled,
+      },
+    });
+    window.dispatchEvent(toggleEvent);
+
+    // only switch modes when virtual student toggles audio
+    if (!isProfessor && !isWebmotiVideo(room?.localParticipant?.identity || '')) {
+      if (isAudioEnabled) {
+        // if student is muting their mic, enable class mic
+        sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.ModeSwitch, mode: Mode.Classroom }));
+      } else {
+        // if student unmutes, mute class mic
+        sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.ModeSwitch, mode: Mode.Virtual }));
+      }
+    }
+
+    toggleAudioEnabled();
+  };
 
   return (
     <ShortcutTooltip shortcut="M" isCtrlDown>
       <span>
         <Button
           className={props.className}
-          onClick={() => {
-            // only switch modes when virtual student toggles audio
-            if (!isProfessor && !isWebmotiVideo(room?.localParticipant?.identity || '')) {
-              if (isAudioEnabled) {
-                // if student is muting their mic, enable class mic
-                sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.ModeSwitch, mode: Mode.Classroom }));
-              } else {
-                // if student unmutes, mute class mic
-                sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.ModeSwitch, mode: Mode.Virtual }));
-              }
-            }
-
-            toggleAudioEnabled();
-          }}
+          onClick={handleAudioToggle}
           disabled={!hasAudioTrack || props.disabled}
           startIcon={isAudioEnabled ? <MicIcon /> : <MicOffIcon />}
           data-cy-audio-toggle
