@@ -25,9 +25,13 @@ const useStyles = makeStyles({
   },
 });
 
+interface CaptionMap {
+  [identity: string]: Caption[];
+}
+
 export function CaptionRenderer() {
   const classes = useStyles();
-  const [captions, setCaptions] = useState<Caption[]>([]);
+  const [captions, setCaptions] = useState<CaptionMap>({});
 
   const { displayCaptions } = useAppState();
 
@@ -41,19 +45,25 @@ export function CaptionRenderer() {
 
   const registerResult = useCallback((captionResult: Caption) => {
     setCaptions((prevCaptions) => {
-      // make a copy of the caption array, keeping only the 4 most recent captions
-      const arrayCopy = prevCaptions.slice(-4);
+      const updatedCaptions = { ...prevCaptions };
+      const captionIdentity = captionResult.identity;
 
-      const existingID = arrayCopy.find((item) => item.captionId === captionResult.captionId);
-      if (existingID) {
-        // overwrite interim results
-        const existingIdIndex = arrayCopy.indexOf(existingID);
-        arrayCopy[existingIdIndex] = captionResult;
-      } else {
-        arrayCopy.push(captionResult);
+      if (!updatedCaptions[captionIdentity]) {
+        updatedCaptions[captionIdentity] = [];
       }
 
-      return arrayCopy;
+      const existingIndex = updatedCaptions[captionIdentity].findIndex(
+        (item) => item.captionId === captionResult.captionId
+      );
+      if (existingIndex !== -1) {
+        // overwrite interim results
+        updatedCaptions[captionIdentity][existingIndex] = captionResult;
+      } else {
+        // keep only the 4 most recent captions
+        updatedCaptions[captionIdentity] = [...updatedCaptions[captionIdentity], captionResult].slice(-4);
+      }
+
+      return updatedCaptions;
     });
   }, []);
 
@@ -69,12 +79,17 @@ export function CaptionRenderer() {
     const intervalId = setInterval(() => {
       setCaptions((prevCaptions) => {
         const now = Date.now();
-        const filteredCaptions = prevCaptions.filter((caption) => caption.timestamp > now - 10000);
-        if (filteredCaptions.length !== prevCaptions.length) {
-          return filteredCaptions;
-        } else {
-          return prevCaptions;
-        }
+        const identities = Object.keys(prevCaptions);
+        const updatedCaptions: CaptionMap = {};
+
+        identities.forEach(captionIdentity => {
+          const filteredCaptions = prevCaptions[captionIdentity].filter(caption => caption.timestamp > now - 10000);
+          if (filteredCaptions.length > 0) {
+            updatedCaptions[captionIdentity] = filteredCaptions;
+          }
+        });
+
+        return updatedCaptions;
       });
     }, 1000);
     return () => {
@@ -86,11 +101,14 @@ export function CaptionRenderer() {
 
   return (
     <div className={classes.captionContainer}>
-      {captions.map((caption) => (
-        <div>
-          <Typography variant="h6" key={caption.captionId} className={classes.caption}>
-            {caption.identity}: {caption.transcript}
-          </Typography>
+      {Object.entries(captions).map(([captionIdentity, captionsArray]) => (
+        <div key={captionIdentity}>
+          <Typography variant="h6" className={classes.caption}>{captionIdentity}:</Typography>
+          {captionsArray.map((caption) => (
+            <Typography variant="h6" key={caption.captionId} className={classes.caption}>
+              {caption.transcript}
+            </Typography>
+          ))}
         </div>
       ))}
     </div>

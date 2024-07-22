@@ -84,6 +84,8 @@ export default function ToggleCaptionsButton() {
       startRecording();
     }
 
+    // TODO fix bug where rejoin and can't start captions
+
     setDisplayCaptions(!displayCaptions);
   };
 

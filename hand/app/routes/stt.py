@@ -122,12 +122,12 @@ async def run_stt(websocket, identity):
                     or is_first_result
                 ):
                     transcript = result.alternatives[0].transcript
-                    # print(transcript, result.is_final, result.stability)
 
                     await manager.broadcast(
                         {
                             "type": "caption",
-                            "captionId": caption_id,
+                            # this avoids overlapping caption ids for different users
+                            "captionId": f"{identity}{caption_id}",
                             "transcript": transcript,
                             "identity": identity,
                             "timestamp": round(time.time() * 1000),
