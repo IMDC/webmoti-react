@@ -15,7 +15,7 @@ CHUNK_SIZE = 1024
 
 
 @router.post("/tts")
-async def tts_endpoint(request: TTSRequest):
+async def tts_endpoint(request: TTSRequest) -> StreamingResponse:
     if elevenlabs_api_key is None:
         raise HTTPException(status_code=500, detail="Missing api key")
 

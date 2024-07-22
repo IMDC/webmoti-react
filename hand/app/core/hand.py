@@ -8,8 +8,8 @@ from routes.notifications import send_notification
 from routes.queue_sse import add_to_queue, remove_from_queue
 
 
-async def raise_hand(mode: Mode):
-    async def wave():
+async def raise_hand(mode: Mode) -> None:
+    async def wave() -> None:
         await servo_controller.set_angle_twice(MAX_ANGLE, MIN_ANGLE)
 
     logging.info(f"Raising hand with mode: {mode}")

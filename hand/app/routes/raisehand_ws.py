@@ -9,7 +9,7 @@ router = APIRouter(prefix="/api")
 
 
 @router.websocket("/ws/raisehand")
-async def raise_hand_websocket(websocket: WebSocket):
+async def raise_hand_websocket(websocket: WebSocket) -> None:
     await websocket.accept()
 
     try:

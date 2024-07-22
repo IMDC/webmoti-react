@@ -2,7 +2,7 @@ import logging
 import pathlib
 import time
 from asyncio import CancelledError
-from typing import List
+from typing import AsyncGenerator, List
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from google.cloud.speech_v1 import (
@@ -27,20 +27,20 @@ STABILITY_THRESHOLD = 0.8
 
 
 class ConnectionManager:
-    def __init__(self):
+    def __init__(self) -> None:
         self.active_connections: List[WebSocket] = []
 
-    async def connect(self, websocket: WebSocket):
+    async def connect(self, websocket: WebSocket) -> None:
         await websocket.accept()
         self.active_connections.append(websocket)
 
-    def disconnect(self, websocket: WebSocket):
+    def disconnect(self, websocket: WebSocket) -> None:
         self.active_connections.remove(websocket)
 
-    async def send_personal_message(self, message: dict, websocket: WebSocket):
+    async def send_personal_message(self, message: dict, websocket: WebSocket) -> None:
         await websocket.send_json(message)
 
-    async def broadcast(self, message: dict):
+    async def broadcast(self, message: dict) -> None:
         for connection in self.active_connections:
             await connection.send_json(message)
 
@@ -48,7 +48,7 @@ class ConnectionManager:
 manager = ConnectionManager()
 
 
-async def run_stt(websocket, identity):
+async def run_stt(websocket: WebSocket, identity: str) -> None:
     # client needs to be defined here so in same event loop?
     speech_client = SpeechAsyncClient(credentials=credentials)
 
@@ -62,7 +62,7 @@ async def run_stt(websocket, identity):
         interim_results=True,
     )
 
-    async def request_generator():
+    async def request_generator() -> AsyncGenerator[StreamingRecognizeRequest, None]:
         # first message must contain a streaming_config message and not audio_content
         yield StreamingRecognizeRequest(streaming_config=streaming_config)
 
@@ -150,7 +150,7 @@ async def run_stt(websocket, identity):
 
 
 @router.websocket("/ws/stt")
-async def stt_websocket(websocket: WebSocket, identity: str):
+async def stt_websocket(websocket: WebSocket, identity: str) -> None:
     await manager.connect(websocket)
 
     try:

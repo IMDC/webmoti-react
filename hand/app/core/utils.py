@@ -5,7 +5,7 @@ import sys
 from core.servo_controller import servo_controller
 
 
-def setup_handlers():
+def setup_handlers() -> None:
     # setup cleanup handlers
     def signal_handler(*_):
         servo_controller.stop()

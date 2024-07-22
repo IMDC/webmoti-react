@@ -12,7 +12,7 @@ if platform.system() == "Linux" and platform.machine() == "aarch64":
 
 
 class ServoController:
-    def __init__(self):
+    def __init__(self) -> None:
         if is_rasp_pi:
             GPIO.setmode(GPIO.BOARD)
             GPIO.setup(SERVO_PIN, GPIO.OUT)
@@ -23,7 +23,7 @@ class ServoController:
         self.lock = asyncio.Lock()
         self.is_hand_raised = False
 
-    async def _set_angle(self, angle):
+    async def _set_angle(self, angle: float) -> None:
         if is_rasp_pi:
             # convert angle to duty cycle (2 to 12)
             duty_cycle = (angle / 18) + 2
@@ -33,17 +33,17 @@ class ServoController:
             # relax servo to stop erratic movements
             self.pwm.ChangeDutyCycle(0)
 
-    async def set_angle(self, angle):
+    async def set_angle(self, angle: float) -> None:
         async with self.lock:
             await self._set_angle(angle)
 
-    async def set_angle_twice(self, angle1, angle2):
+    async def set_angle_twice(self, angle1: float, angle2: float) -> None:
         async with self.lock:
             await self._set_angle(angle1)
             await asyncio.sleep(0.5)
             await self._set_angle(angle2)
 
-    def stop(self):
+    def stop(self) -> None:
         if is_rasp_pi:
             self.pwm.stop()
             GPIO.cleanup()
