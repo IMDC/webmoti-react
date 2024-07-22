@@ -15,7 +15,7 @@ from google.oauth2 import service_account
 
 router = APIRouter(prefix="/api")
 
-creds_path = pathlib.Path(__file__).parent / "webmoti-sa.json"
+creds_path = pathlib.Path(__file__).parents[1] / "webmoti-sa.json"
 credentials = service_account.Credentials.from_service_account_file(str(creds_path))
 
 START_MSG = b"STARTSPEECH"
