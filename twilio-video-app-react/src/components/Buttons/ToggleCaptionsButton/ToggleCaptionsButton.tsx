@@ -80,22 +80,20 @@ export default function ToggleCaptionsButton() {
   }, [mediaStreamTrack, readyState, sendMessage]);
 
   const toggleCaptions = async () => {
-    if (!recorderRef.current && !displayCaptions && !isAudioEnabled) {
+    if (!recorderRef.current && !displayCaptions && isAudioEnabled) {
       startRecording();
     }
-
-    // TODO fix bug where rejoin and can't start captions
 
     setDisplayCaptions(!displayCaptions);
   };
 
   useEffect(() => {
-    if (lastJsonMessage !== null) {
-      if (lastJsonMessage.type === 'start' && !recorderRef.current) {
+    if (lastJsonMessage !== null && lastJsonMessage.type === 'start') {
+      if (!recorderRef.current && isAudioEnabled) {
         startRecording();
       }
     }
-  }, [lastJsonMessage, startRecording]);
+  }, [lastJsonMessage, startRecording, isAudioEnabled]);
 
   useEffect(() => {
     const handleAudioToggle = (event: Event) => {

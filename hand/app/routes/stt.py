@@ -104,43 +104,46 @@ async def run_stt(websocket, identity):
             if not response.results:
                 continue
 
-            # TODO
             # The `results` list is consecutive. For streaming, we only care about
             # the first result being considered, since once it's `is_final`, it
             # moves on to considering the next utterance.
-            # result = response.results[0]
-            # if not result.alternatives:
-            #     continue
+            result = response.results[0]
+            if not result.alternatives:
+                continue
 
-            for result in response.results:
+            # is_final has stability of 0.0
+            # also always use first result to minimize delay
+            if not (
+                result.stability > STABILITY_THRESHOLD
+                or result.is_final
+                or is_first_result
+            ):
+                continue
 
-                # is_final has stability of 0.0
-                # also always use first result to minimize delay
-                if (
-                    result.stability > STABILITY_THRESHOLD
-                    or result.is_final
-                    or is_first_result
-                ):
-                    transcript = result.alternatives[0].transcript
+            transcript = result.alternatives[0].transcript
 
-                    await manager.broadcast(
-                        {
-                            "type": "caption",
-                            # this avoids overlapping caption ids for different users
-                            "captionId": f"{identity}{caption_id}",
-                            "transcript": transcript,
-                            "identity": identity,
-                            "timestamp": round(time.time() * 1000),
-                        }
-                    )
+            # sometimes transcript is empty
+            if not transcript:
+                continue
 
-                    if is_first_result:
-                        is_first_result = False
+            await manager.broadcast(
+                {
+                    "type": "caption",
+                    # this avoids overlapping caption ids for different users
+                    "captionId": f"{identity}{caption_id}",
+                    "transcript": transcript,
+                    "identity": identity,
+                    "timestamp": round(time.time() * 1000),
+                }
+            )
 
-                    if result.is_final:
-                        # caption segment is complete
-                        caption_id += 1
-                        is_first_result = True
+            if is_first_result:
+                is_first_result = False
+
+            if result.is_final:
+                # caption segment is complete
+                caption_id += 1
+                is_first_result = True
     except CancelledError:
         # websocket disconnected
         raise WebSocketDisconnect()

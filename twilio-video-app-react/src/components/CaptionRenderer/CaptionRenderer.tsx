@@ -71,7 +71,7 @@ export function CaptionRenderer() {
   }, []);
 
   useEffect(() => {
-    if (lastJsonMessage !== null) {
+    if (lastJsonMessage !== null && lastJsonMessage.type === 'caption') {
       const caption = lastJsonMessage as Caption;
       registerResult(caption);
     }
