@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { Typography } from '@material-ui/core';
+import { Theme, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import useWebSocket from 'react-use-websocket';
 
@@ -9,13 +9,17 @@ import { WS_URL } from '../../constants';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../state';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   captionContainer: {
     position: 'fixed',
-    left: '15%',
+    left: '20%',
     right: '15%',
-    top: 'calc(100% - 300px)',
+    bottom: `${theme.footerHeight}px`,
     zIndex: 100,
+    overflow: 'hidden',
+    maxHeight: '12em',
+    display: 'flex',
+    flexDirection: 'column-reverse',
   },
   caption: {
     color: 'white',
@@ -23,7 +27,7 @@ const useStyles = makeStyles({
     padding: '0.2em',
     display: 'inline-block',
   },
-});
+}));
 
 interface CaptionMap {
   [identity: string]: Caption[];
@@ -59,8 +63,7 @@ export function CaptionRenderer() {
         // overwrite interim results
         updatedCaptions[captionIdentity][existingIndex] = captionResult;
       } else {
-        // keep only the 4 most recent captions
-        updatedCaptions[captionIdentity] = [...updatedCaptions[captionIdentity], captionResult].slice(-4);
+        updatedCaptions[captionIdentity] = [...updatedCaptions[captionIdentity], captionResult].slice(-15);
       }
 
       return updatedCaptions;
@@ -74,7 +77,7 @@ export function CaptionRenderer() {
     }
   }, [lastJsonMessage, registerResult]);
 
-  // every second, we go through the captions, and remove any that are older than ten seconds
+  // every second check captions to see if any are older than ten seconds
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCaptions((prevCaptions) => {
@@ -82,12 +85,13 @@ export function CaptionRenderer() {
         const identities = Object.keys(prevCaptions);
         const updatedCaptions: CaptionMap = {};
 
-        identities.forEach(captionIdentity => {
-          const filteredCaptions = prevCaptions[captionIdentity].filter(caption => caption.timestamp > now - 10000);
-          if (filteredCaptions.length > 0) {
-            updatedCaptions[captionIdentity] = filteredCaptions;
+        for (const captionIdentity of identities) {
+          const captionSet = prevCaptions[captionIdentity];
+          // only include if most recent caption is newer than 10 seconds
+          if (captionSet[captionSet.length - 1].timestamp > now - 10000) {
+            updatedCaptions[captionIdentity] = captionSet;
           }
-        });
+        }
 
         return updatedCaptions;
       });
@@ -103,7 +107,9 @@ export function CaptionRenderer() {
     <div className={classes.captionContainer}>
       {Object.entries(captions).map(([captionIdentity, captionsArray]) => (
         <div key={captionIdentity}>
-          <Typography variant="h6" className={classes.caption}>{captionIdentity}:</Typography>
+          <Typography variant="h6" className={classes.caption}>
+            {captionIdentity}:
+          </Typography>
           {captionsArray.map((caption) => (
             <Typography variant="h6" key={caption.captionId} className={classes.caption}>
               {caption.transcript}
