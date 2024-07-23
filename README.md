@@ -19,6 +19,7 @@
 - [Hand server](#hand-server)
   - [Server setup](#server-setup)
   - [Running the hand server](#running-the-hand-server)
+  - [Hand server tests](#hand-server-tests)
 - [Queue](#queue)
   - [Auto open queue (on Windows tablet)](#auto-open-queue-on-windows-tablet)
 - [Tactile notifications](#tactile-notifications)
@@ -202,6 +203,22 @@ Run on raspberry pi:
 
 ```bash
 sudo python -E main.py
+```
+
+### Hand server tests
+
+```bash
+# run all
+pytest
+# more detailed output
+pytest -v
+```
+
+```bash
+# run one
+pytest hand/app/tests/TEST_FILE.py
+# run specific test
+pytest hand/app/tests/TEST_FILE.py::TEST_NAME
 ```
 
 ## Queue
