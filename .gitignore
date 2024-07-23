@@ -1,5 +1,6 @@
 node_modules
 .env
 .vscode/
-.todo
 hand_server.log
+.venv
+.pytest_cache
