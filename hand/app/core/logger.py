@@ -2,7 +2,7 @@ import pathlib
 from logging import config
 from typing import Any
 
-from constants import LOG_PATH
+from core.constants import LOG_PATH
 
 path = pathlib.Path(LOG_PATH)
 if not path.parent.is_dir():

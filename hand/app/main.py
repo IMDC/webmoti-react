@@ -11,7 +11,7 @@ from fastapi.templating import Jinja2Templates
 load_dotenv()
 
 
-from constants import PORT
+from core.constants import PORT
 from core.logger import LOGGING_CONFIG
 from core.utils import setup_handlers
 from routes.notifications import router as notifications_router

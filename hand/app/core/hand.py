@@ -1,9 +1,9 @@
 import logging
 from typing import Optional, Tuple
 
-from constants import HALFWAY_ANGLE, MAX_ANGLE, MIN_ANGLE, Mode
+from core.constants import HALFWAY_ANGLE, MAX_ANGLE, MIN_ANGLE, Mode
+from core.models import RaiseHandRequest
 from core.servo_controller import servo_controller
-from models import RaiseHandRequest
 from routes.notifications import send_notification
 from routes.queue_sse import add_to_queue, remove_from_queue
 

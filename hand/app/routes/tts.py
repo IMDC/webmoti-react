@@ -4,7 +4,7 @@ import httpx
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 
-from models import TTSRequest
+from core.models import TTSRequest
 
 router = APIRouter(prefix="/api")
 

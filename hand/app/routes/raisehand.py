@@ -3,9 +3,9 @@ from typing import Dict
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 
-from constants import Mode
+from core.constants import Mode
 from core.hand import process_hand_request, raise_hand
-from models import RaiseHandRequest
+from core.models import RaiseHandRequest
 
 router = APIRouter(prefix="/api")
 

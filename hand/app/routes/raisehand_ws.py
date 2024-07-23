@@ -3,7 +3,7 @@ import logging
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
 from core.hand import process_hand_request, raise_hand
-from models import RaiseHandRequest
+from core.models import RaiseHandRequest
 
 router = APIRouter(prefix="/api")
 

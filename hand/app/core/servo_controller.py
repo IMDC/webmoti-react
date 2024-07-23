@@ -1,7 +1,7 @@
 import asyncio
 import platform
 
-from constants import SERVO_PIN
+from core.constants import SERVO_PIN
 
 # this is for testing
 is_rasp_pi = False
