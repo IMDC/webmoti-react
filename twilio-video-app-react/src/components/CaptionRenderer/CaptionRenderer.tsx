@@ -47,25 +47,27 @@ export function CaptionRenderer() {
     share: true,
   });
 
-  const registerResult = useCallback((captionResult: Caption) => {
+  const registerResult = useCallback((caption: Caption) => {
     setCaptions((prevCaptions) => {
       const updatedCaptions = { ...prevCaptions };
-      const captionIdentity = captionResult.identity;
 
-      if (!updatedCaptions[captionIdentity]) {
-        updatedCaptions[captionIdentity] = [];
-      }
+      let captionsArray = updatedCaptions[caption.identity] || [];
 
-      const existingIndex = updatedCaptions[captionIdentity].findIndex(
-        (item) => item.captionId === captionResult.captionId
-      );
+      const existingIndex = captionsArray.findIndex((item) => item.captionId === caption.captionId);
+
       if (existingIndex !== -1) {
         // overwrite interim results
-        updatedCaptions[captionIdentity][existingIndex] = captionResult;
+        captionsArray[existingIndex] = caption;
       } else {
-        updatedCaptions[captionIdentity] = [...updatedCaptions[captionIdentity], captionResult].slice(-15);
+        captionsArray = [...captionsArray, caption];
+
+        // only keep 15 last captions when there are over 30
+        if (captionsArray.length > 30) {
+          captionsArray = captionsArray.slice(-15);
+        }
       }
 
+      updatedCaptions[caption.identity] = captionsArray;
       return updatedCaptions;
     });
   }, []);
