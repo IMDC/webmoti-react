@@ -1,11 +1,13 @@
 import asyncio
+import os
 import platform
 
 from core.constants import SERVO_PIN
 
-# this is for testing
+# this is for running on non rasp pi devices
 is_rasp_pi = False
-if platform.system() == "Linux" and platform.machine() == "aarch64":
+is_testing = os.getenv("PYTEST_RUNNING")
+if (platform.system() == "Linux" and platform.machine() == "aarch64") or is_testing:
     from RPi import GPIO
 
     is_rasp_pi = True
