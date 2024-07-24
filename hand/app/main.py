@@ -18,6 +18,7 @@ from routes.notifications import router as notifications_router
 from routes.queue_sse import router as queue_router
 from routes.raisehand import router as raisehand_router
 from routes.raisehand_ws import router as raisehand_ws_router
+from routes.schedule import router as schedule_router
 from routes.stt import router as stt_router
 from routes.tts import router as tts_router
 
@@ -38,6 +39,7 @@ routers = (
     raisehand_ws_router,
     tts_router,
     stt_router,
+    schedule_router,
 )
 
 for router in routers:
