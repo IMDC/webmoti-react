@@ -1,18 +1,25 @@
 import json
 import os
 from datetime import datetime
+from typing import Dict
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile
+from openai import OpenAI
 
 from core.models import ScheduleRequest
 
 router = APIRouter(prefix="/api")
 
 password = os.getenv("PASSWORD")
+openai_api_key = os.getenv("OPENAI_API_KEY")
+
+schedule: Dict[str, str] = {}
+
+# client = OpenAI(api_key=openai_api_key)
 
 
-def get_schedule(text: str, start_time: datetime, end_time: datetime):
-    example_prompt = f"""
+def get_schedule(text: str, start_time: datetime, end_time: datetime) -> Dict[str, str]:
+    system_prompt = f"""
         Please analyze the class notes and times provided and generate a schedule in 
         JSON format without any other text output. The schedule should have a number of 
         topics based on the length of the notes.
@@ -26,13 +33,23 @@ def get_schedule(text: str, start_time: datetime, end_time: datetime):
             "...": "...",
             "...": "..."
         }}
+    """
 
+    user_prompt = f"""
         Start Time: {start_time}
         End Time: {end_time}
         Notes: {text}
     """
 
-    # TODO send prompt to chatgpt
+    # completion = client.chat.completions.create(
+    #     model="gpt-4o-mini",
+    #     response_format={"type": "json_object"},
+    #     messages=[
+    #         {"role": "system", "content": system_prompt},
+    #         {"role": "user", "content": user_prompt},
+    #     ],
+    # )
+    # response = completion.choices[0].message.content
 
     example_response = json.dumps(
         {
@@ -53,13 +70,24 @@ def get_schedule(text: str, start_time: datetime, end_time: datetime):
     return response_data
 
 
+@router.get("/schedule")
+async def schedule_get_endpoint() -> Dict[str, Dict[str, str]]:
+    if not schedule:
+        raise HTTPException(status_code=404, detail="No schedule for today")
+
+    return {"schedule": schedule}
+
+
 @router.post("/schedule")
-async def schedule_endpoint(file: UploadFile, form_data: ScheduleRequest = Depends()):
+async def schedule_post_endpoint(
+    file: UploadFile, form_data: ScheduleRequest = Depends()
+) -> Dict[str, Dict[str, str]]:
     if form_data.password != password:
         raise HTTPException(status_code=401, detail="Invalid password")
 
     file_text = await file.read()
 
+    global schedule
     schedule = get_schedule(file_text, form_data.start_time, form_data.end_time)
 
     return {"schedule": schedule}
