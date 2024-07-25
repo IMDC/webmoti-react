@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="twilio-video-app-react/public/favicon.svg" alt="Logo" width="150" height="150"/>
+  <img src="webmoti-react/public/favicon.svg" alt="Logo" width="150" height="150"/>
 </p>
 
 <h1 align="center">WebMoti</h1>
@@ -116,6 +116,7 @@ Undeploy the app: `npm run delete`
   - TTS chat history
   - Click to replay
 - Live captions
+- Schedule
 - Chat
 - Noise cancellation
 - Speaker view
@@ -158,7 +159,7 @@ Run cypress tests:
 
 ### Storybook
 
-For testing the UI with interactive controls
+For viewing the UI with interactive controls
 
 ```bash
 npm run storybook
@@ -180,6 +181,8 @@ Create `.env` file in project root:
 VAPID_PRIVATE_KEY=
 VAPID_EMAIL=mailto:webmoti2@gmail.com
 ELEVENLABS_API_KEY=
+PASSWORD=
+OPENAI_API_KEY=
 ```
 
 Vapid key pairs (for push notifications) can be generated using `npx web-push generate-vapid-keys`.
@@ -269,7 +272,7 @@ Both raspberry pi boards automatically join the twilio room when they're booted
 ### Webmoti URL server
 
 The raspberry pi boards are able to always know the latest url and password by
- sending a request to this server (twilio-video-app-react/server/get_url.js).
+ sending a request to this server (webmoti-react/server/get_url.js).
  This is hosted as a twilio serverless function and can be edited in the
  [twilio console](https://console.twilio.com/us1/develop/functions/services).
 
@@ -283,9 +286,9 @@ The raspberry pi boards are able to always know the latest url and password by
 
 #### Create .env in home directory
 
-Get the auth token from the [Twilio Console](https://www.twilio.com/console).
+Get the `TWILIO_AUTH_TOKEN` from the [Twilio Console](https://www.twilio.com/console).
 
-The url server is the current Remote.It link.
+The `URL_SERVER` is the [Webmoti URL server](#webmoti-url-server) url.
 
 ```bash
 TWILIO_AUTH_TOKEN=
