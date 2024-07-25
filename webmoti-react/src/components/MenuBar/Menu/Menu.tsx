@@ -40,6 +40,8 @@ import { isMobile } from '../../../utils';
 import AboutDialog from '../../AboutDialog/AboutDialog';
 import DeviceSelectionDialog from '../../DeviceSelectionDialog/DeviceSelectionDialog';
 import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
+import { CalendarToday } from '@material-ui/icons';
+import ScheduleModal from '../../SetScheduleModal/SetScheduleModal';
 
 export const IconContainer = styled('div')({
   display: 'flex',
@@ -119,6 +121,17 @@ export default function Menu(props: { buttonClassName?: string }) {
   const anchorRef = useRef<HTMLButtonElement>(null);
   const { flipCameraDisabled, toggleFacingMode, flipCameraSupported } = useFlipCameraToggle();
 
+  const [openScheduleModal, setOpenScheduleModal] = useState(false);
+
+  const handleOpenScheduleModal = () => {
+    setOpenScheduleModal(true);
+    setMenuOpen(false);
+  };
+
+  const handleCloseScheduleModal = () => {
+    setOpenScheduleModal(false);
+  };
+
   const toggleMenu = () => {
     setMenuOpen((isOpen) => !isOpen);
   };
@@ -154,6 +167,8 @@ export default function Menu(props: { buttonClassName?: string }) {
           )}
         </Button>
       </ShortcutTooltip>
+
+      <ScheduleModal open={openScheduleModal} onClose={handleCloseScheduleModal} />
 
       <MenuContainer
         open={menuOpen}
@@ -223,6 +238,13 @@ export default function Menu(props: { buttonClassName?: string }) {
             <SearchIcon style={{ fill: '#707578', width: '0.9em' }} />
           </IconContainer>
           <Typography variant="body1">Room Monitor</Typography>
+        </MenuItem>
+
+        <MenuItem onClick={handleOpenScheduleModal}>
+          <IconContainer>
+            <CalendarToday style={{ fill: '#707578', width: '0.9em' }} />
+          </IconContainer>
+          <Typography variant="body1">Set Schedule</Typography>
         </MenuItem>
 
         {!isSharingScreen && !isMobile && (

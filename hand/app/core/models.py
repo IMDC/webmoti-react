@@ -18,5 +18,6 @@ class TTSRequest(BaseModel):
 @dataclass
 class ScheduleRequest:
     password: str = Form(...)
-    start_time: datetime = Form(...)
-    end_time: datetime = Form(...)
+    # format is HH:MM 24h
+    start_time: str = Form(...)
+    end_time: str = Form(...)

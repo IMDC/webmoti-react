@@ -1,0 +1,162 @@
+import { ChangeEvent, FormEvent, useState } from 'react';
+
+import {
+  Backdrop,
+  Button,
+  createStyles,
+  Fade,
+  Grid,
+  makeStyles,
+  Modal,
+  TextField,
+  Theme,
+  Typography,
+} from '@material-ui/core';
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    modal: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    paper: {
+      backgroundColor: theme.palette.background.paper,
+      border: '2px solid #000',
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
+    },
+  })
+);
+
+interface ScheduleModalProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+export default function ScheduleModal({ open, onClose }: ScheduleModalProps) {
+  const classes = useStyles();
+
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [file, setFile] = useState<File | null>(null);
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files !== null) {
+      setFile(event.target.files[0]);
+    }
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (file === null) {
+      setError('No file selected');
+      return;
+    }
+
+    const body = new FormData();
+    body.append('password', password);
+    body.append('start_time', startTime);
+    body.append('end_time', endTime);
+    body.append('file', file);
+
+    const response = await fetch(`http://localhost:80/api/schedule`, {
+      method: 'POST',
+      body: body,
+    });
+
+    if (response.status === 200) {
+      onClose();
+      setStartTime('');
+      setEndTime('');
+      setFile(null);
+      setError('');
+    } else {
+      const result = await response.text();
+      setError(`Error: ${response.status} - ${result}`);
+    }
+  };
+
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+      className={classes.modal}
+      closeAfterTransition
+      BackdropComponent={Backdrop}
+      BackdropProps={{ timeout: 500 }}
+    >
+      <Fade in={open}>
+        <div className={classes.paper}>
+          <Typography variant="h6" style={{ marginBottom: '20px' }}>
+            Set Class Schedule
+          </Typography>
+
+          <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+            <TextField
+              label="Class Start Time"
+              type="time"
+              value={startTime}
+              onChange={(e) => setStartTime(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+              fullWidth
+              style={{ marginBottom: '20px' }}
+            />
+
+            <TextField
+              label="Class End Time"
+              type="time"
+              value={endTime}
+              onChange={(e) => setEndTime(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+              fullWidth
+              style={{ marginBottom: '20px' }}
+            />
+
+            <TextField
+              label="Password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              fullWidth
+              style={{ marginBottom: '20px' }}
+            />
+
+            <input accept="*/*" style={{ display: 'none' }} id="upload-file" type="file" onChange={handleFileChange} />
+
+            <Grid container style={{ marginBottom: '20px' }} alignItems="center">
+              <Grid item>
+                <label htmlFor="upload-file">
+                  <Button variant="contained" component="span">
+                    Upload File
+                  </Button>
+                </label>
+              </Grid>
+
+              <Grid item>
+                {file && (
+                  <Typography variant="body2" style={{ marginLeft: '10px' }}>
+                    {file.name}
+                  </Typography>
+                )}
+              </Grid>
+            </Grid>
+
+            {error && (
+              <Typography color="error" style={{ marginBottom: '20px' }}>
+                {error}
+              </Typography>
+            )}
+
+            <Button type="submit" variant="contained" color="primary" fullWidth>
+              Submit
+            </Button>
+          </form>
+        </div>
+      </Fade>
+    </Modal>
+  );
+}
