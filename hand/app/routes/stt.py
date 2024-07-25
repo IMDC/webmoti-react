@@ -5,6 +5,7 @@ from asyncio import CancelledError
 from typing import AsyncGenerator, List
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from google.api_core.exceptions import OutOfRange
 from google.cloud.speech_v1 import (
     RecognitionConfig,
     SpeechAsyncClient,
@@ -154,10 +155,17 @@ async def stt_websocket(websocket: WebSocket, identity: str) -> None:
     await manager.connect(websocket)
 
     try:
+        auto_restart = False
+
         while True:
             logging.info("Waiting to start speech to text")
-            # wait until START_MSG before starting stt
+
             while True:
+                if auto_restart:
+                    auto_restart = False
+                    break
+
+                # wait until START_MSG before starting stt
                 data = await websocket.receive_bytes()
                 if data == START_MSG:
                     logging.info("Starting speech to text")
@@ -168,6 +176,9 @@ async def stt_websocket(websocket: WebSocket, identity: str) -> None:
                 await run_stt(websocket, identity)
             except WebSocketDisconnect:
                 raise
+            except OutOfRange:
+                # exceeded maximum allowed stream duration of 305 seconds
+                auto_restart = True
             except Exception:
                 await manager.send_personal_message(
                     message={
