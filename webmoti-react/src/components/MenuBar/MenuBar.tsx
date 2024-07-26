@@ -12,10 +12,11 @@ import ModeDisplay from '../AudioMixer/ModeDisplay';
 import EndCallButton from '../Buttons/EndCallButton/EndCallButton';
 import RaiseHandButton from '../Buttons/RaiseHandButton/RaiseHandButton';
 import ToggleAudioButton from '../Buttons/ToggleAudioButton/ToggleAudioButton';
+import ToggleCaptionsButton from '../Buttons/ToggleCaptionsButton/ToggleCaptionsButton';
 import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
+import ToggleScheduleButton from '../Buttons/ToggleScheduleButton/ToggleScheduleButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import ShortcutTooltip from '../ShortcutTooltip/ShortcutTooltip';
-import ToggleCaptionsButton from '../Buttons/ToggleCaptionsButton/ToggleCaptionsButton';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -59,6 +60,7 @@ export default function MenuBar() {
           <Grid style={{ flex: 1 }}>
             <Typography variant="body1">
               {room!.name} | {participants.length + 1} participant{participants.length ? 's' : ''}
+              <ToggleScheduleButton />
             </Typography>
           </Grid>
         </Hidden>

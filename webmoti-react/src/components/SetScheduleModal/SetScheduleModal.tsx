@@ -29,12 +29,12 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface ScheduleModalProps {
+interface SetScheduleModalProps {
   open: boolean;
   onClose: () => void;
 }
 
-export default function ScheduleModal({ open, onClose }: ScheduleModalProps) {
+export default function SetScheduleModal({ open, onClose }: SetScheduleModalProps) {
   const classes = useStyles();
 
   const [startTime, setStartTime] = useState('');

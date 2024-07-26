@@ -1,0 +1,123 @@
+import { useEffect, useState } from 'react';
+
+import {
+  Backdrop,
+  createStyles,
+  Fade,
+  Grid,
+  IconButton,
+  makeStyles,
+  Modal,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Theme,
+  Typography,
+} from '@material-ui/core';
+import { Refresh } from '@material-ui/icons';
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    modal: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    paper: {
+      backgroundColor: theme.palette.background.paper,
+      border: '2px solid #000',
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
+    },
+  })
+);
+
+interface ViewScheduleModalProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+interface Schedule {
+  title: string;
+  [key: string]: string;
+}
+
+export default function ViewScheduleModal({ open, onClose }: ViewScheduleModalProps) {
+  const classes = useStyles();
+
+  const [schedule, setSchedule] = useState<Schedule | null>(null);
+
+  const getSchedule = async () => {
+    const response = await fetch(`http://localhost:80/api/schedule`);
+
+    if (response.status === 200) {
+      const data = await response.json();
+      setSchedule(data.schedule);
+    } else {
+      console.error('Error getting schedule');
+    }
+  };
+
+  useEffect(() => {
+    getSchedule();
+  }, []);
+
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+      className={classes.modal}
+      closeAfterTransition
+      BackdropComponent={Backdrop}
+      BackdropProps={{ timeout: 500 }}
+    >
+      <Fade in={open}>
+        <div className={classes.paper}>
+          <Grid container justifyContent="center" alignItems="center">
+            <Grid item>
+              <Typography variant="h6" component="span" style={{ marginBottom: '20px' }}>
+                Class Schedule
+              </Typography>
+            </Grid>
+
+            <Grid item>
+              <IconButton onClick={getSchedule}>
+                <Refresh />
+              </IconButton>
+            </Grid>
+          </Grid>
+
+          {schedule ? (
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Time</TableCell>
+                    <TableCell>Event</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {Object.entries(schedule).map(
+                    ([time, event]) =>
+                      time !== 'title' && (
+                        <TableRow key={time}>
+                          <TableCell>{time}</TableCell>
+                          <TableCell>{event}</TableCell>
+                        </TableRow>
+                      )
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          ) : (
+            <Typography style={{ marginBottom: '20px' }}>No schedule for today</Typography>
+          )}
+        </div>
+      </Fade>
+    </Modal>
+  );
+}

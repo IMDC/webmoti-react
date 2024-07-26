@@ -13,6 +13,7 @@ import {
   Grid,
   Tooltip,
 } from '@material-ui/core';
+import { CalendarToday } from '@material-ui/icons';
 import CollaborationViewIcon from '@material-ui/icons/AccountBox';
 import GridViewIcon from '@material-ui/icons/Apps';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -39,9 +40,8 @@ import { useAppState } from '../../../state';
 import { isMobile } from '../../../utils';
 import AboutDialog from '../../AboutDialog/AboutDialog';
 import DeviceSelectionDialog from '../../DeviceSelectionDialog/DeviceSelectionDialog';
+import SetScheduleModal from '../../SetScheduleModal/SetScheduleModal';
 import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
-import { CalendarToday } from '@material-ui/icons';
-import ScheduleModal from '../../SetScheduleModal/SetScheduleModal';
 
 export const IconContainer = styled('div')({
   display: 'flex',
@@ -168,7 +168,7 @@ export default function Menu(props: { buttonClassName?: string }) {
         </Button>
       </ShortcutTooltip>
 
-      <ScheduleModal open={openScheduleModal} onClose={handleCloseScheduleModal} />
+      <SetScheduleModal open={openScheduleModal} onClose={handleCloseScheduleModal} />
 
       <MenuContainer
         open={menuOpen}
