@@ -1,39 +1,47 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+
 import { Tooltip, IconButton, Typography } from '@material-ui/core';
-import SchoolIcon from '@material-ui/icons/School';
 import ComputerIcon from '@material-ui/icons/Computer';
 import PersonIcon from '@material-ui/icons/Person';
+import SchoolIcon from '@material-ui/icons/School';
+import { Message } from '@twilio/conversations';
+
+import { Mode } from './AudioMixer';
+import { MsgTypes } from '../../constants';
 import useChatContext from '../../hooks/useChatContext/useChatContext';
+import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
 const ModeDisplay = () => {
   const { conversation } = useChatContext();
-  const [currentMode, setCurrentMode] = useState<string>('');
+  const [currentMode, setCurrentMode] = useState<Mode | null>(null);
+  const { checkSystemMsg } = useWebmotiVideoContext();
 
   useEffect(() => {
-    const handleMessageAdded = (message: { body: any }) => {
-      const body = message.body;
-      const modePattern = /(\bPROFESSOR\b|\bCLASSROOM\b|\bVIRTUAL\b) is active/;
-      const match = body.match(modePattern);
+    const handleMessageAdded = (message: Message) => {
+      if (!checkSystemMsg(message)) {
+        return;
+      }
 
-      if (match) {
-        setCurrentMode(match[0].split(' ')[0]);
+      const msgData = JSON.parse(message.body || '');
+
+      if (msgData.type === MsgTypes.ModeSwitch) {
+        setCurrentMode(msgData.mode);
       }
     };
 
     conversation?.on('messageAdded', handleMessageAdded);
-
     return () => {
       conversation?.off('messageAdded', handleMessageAdded);
     };
-  }, [conversation]);
+  }, [conversation, checkSystemMsg]);
 
   const modeIcon = () => {
     switch (currentMode) {
-      case 'PROFESSOR':
+      case Mode.Professor:
         return <PersonIcon style={{ fontSize: 20 }} />;
-      case 'CLASSROOM':
+      case Mode.Classroom:
         return <SchoolIcon style={{ fontSize: 20 }} />;
-      case 'VIRTUAL':
+      case Mode.Virtual:
         return <ComputerIcon style={{ fontSize: 20 }} />;
       default:
         return null;
@@ -42,11 +50,11 @@ const ModeDisplay = () => {
 
   const modeDescription = () => {
     switch (currentMode) {
-      case 'PROFESSOR':
+      case Mode.Professor:
         return 'Lecture Mode';
-      case 'CLASSROOM':
+      case Mode.Classroom:
         return 'Classroom Interaction';
-      case 'VIRTUAL':
+      case Mode.Virtual:
         return 'Online Participation';
       default:
         return 'Mode';

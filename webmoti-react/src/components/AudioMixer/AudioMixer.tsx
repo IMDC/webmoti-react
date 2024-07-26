@@ -1,3 +1,5 @@
+import React, { useCallback, useEffect, useState } from 'react';
+
 import { Box, Button, Popover, TextField, Typography } from '@material-ui/core';
 import MicIcon from '@material-ui/icons/Mic';
 import MicOffIcon from '@material-ui/icons/MicOff';
@@ -5,27 +7,24 @@ import VolumeOffIcon from '@material-ui/icons/VolumeOff';
 import VolumeUpIcon from '@material-ui/icons/VolumeUp';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-
-import React, { useCallback, useEffect, useState } from 'react';
-
 import { Message } from '@twilio/conversations';
 
-import { WEBMOTI_CAMERA_1 } from '../../constants';
+import { WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../../constants';
+import { MsgTypes } from '../../constants';
 import useChatContext from '../../hooks/useChatContext/useChatContext';
 import useLocalAudioToggle from '../../hooks/useLocalAudioToggle/useLocalAudioToggle';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import theme from '../../theme';
-import { MsgTypes } from '../../constants';
 
-const enum Mode {
+export const enum Mode {
   Professor = 'PROFESSOR',
   Classroom = 'CLASSROOM',
   Virtual = 'VIRTUAL',
 }
 
 const enum Devices {
-  ProfSpeaker = 'PROFSPEAKER',
+  Speaker = 'SPEAKER',
   ClassMic = 'CLASSMIC',
 }
 
@@ -38,7 +37,7 @@ export default function AudioMixer() {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [alignment, setAlignment] = useState<Mode | null>(null);
   const [isClassMicEnabled, setIsClassMicEnabled] = useState(true);
-  const [isProfSpeakerEnabled, setIsProfSpeakerEnabled] = useState(true);
+  const [isSpeakerEnabled, setIsSpeakerEnabled] = useState(true);
   const [input, setInput] = useState('');
 
   const name = room?.localParticipant?.identity || 'Participant';
@@ -66,7 +65,7 @@ export default function AudioMixer() {
   const setClassMicState = useCallback(
     (state: boolean) => {
       // mute classroom mic to remove feedback
-      if (name === WEBMOTI_CAMERA_1) {
+      if (name === WEBMOTI_CAMERA_2) {
         if (isAudioEnabled !== state) {
           toggleAudioEnabled();
         }
@@ -77,10 +76,10 @@ export default function AudioMixer() {
     [name, toggleAudioEnabled, isAudioEnabled]
   );
 
-  const setProfSpeakerState = useCallback(
+  const setSpeakerState = useCallback(
     (state: boolean) => {
       // disable speakers by muting everyone else
-      if (isProfessor && room && room.participants) {
+      if (name === WEBMOTI_CAMERA_1 && room && room.participants) {
         for (const participant of room.participants.values()) {
           // don't mute self
           if (name !== participant.identity) {
@@ -90,9 +89,9 @@ export default function AudioMixer() {
         }
       }
 
-      setIsProfSpeakerEnabled(state);
+      setIsSpeakerEnabled(state);
     },
-    [isProfessor, muteParticipant, name, room]
+    [muteParticipant, name, room]
   );
 
   useEffect(() => {
@@ -109,7 +108,7 @@ export default function AudioMixer() {
             // - disable mic (to prevent double audio)
             // - disable speakers (optional)
             setClassMicState(false);
-            setProfSpeakerState(false);
+            setSpeakerState(false);
             break;
 
           case Mode.Classroom:
@@ -117,7 +116,7 @@ export default function AudioMixer() {
             // - enable mic
             // - disable speakers (mandatory)
             setClassMicState(true);
-            setProfSpeakerState(false);
+            setSpeakerState(false);
             break;
 
           default:
@@ -125,7 +124,7 @@ export default function AudioMixer() {
             // - disable mic
             // - enable speakers
             setClassMicState(false);
-            setProfSpeakerState(true);
+            setSpeakerState(true);
         }
 
         // delete msg so it's not shown when rejoining
@@ -133,8 +132,8 @@ export default function AudioMixer() {
 
         return;
       } else if (msgData.type === MsgTypes.ToggleDevice) {
-        if (msgData.device === Devices.ProfSpeaker) {
-          setProfSpeakerState(!isProfSpeakerEnabled);
+        if (msgData.device === Devices.Speaker) {
+          setSpeakerState(!isSpeakerEnabled);
         } else {
           setClassMicState(!isClassMicEnabled);
         }
@@ -161,9 +160,9 @@ export default function AudioMixer() {
   }, [
     conversation,
     setClassMicState,
-    setProfSpeakerState,
+    setSpeakerState,
     isClassMicEnabled,
-    isProfSpeakerEnabled,
+    isSpeakerEnabled,
     name,
     toggleAudioEnabled,
     checkSystemMsg,
@@ -245,12 +244,12 @@ export default function AudioMixer() {
                   onClick={() =>
                     sendSystemMsg(
                       conversation,
-                      JSON.stringify({ type: MsgTypes.ToggleDevice, device: Devices.ProfSpeaker })
+                      JSON.stringify({ type: MsgTypes.ToggleDevice, device: Devices.Speaker })
                     )
                   }
                 >
-                  {isProfSpeakerEnabled ? <VolumeUpIcon /> : <VolumeOffIcon />}
-                  <Typography variant="body2">Prof Speakers</Typography>
+                  {isSpeakerEnabled ? <VolumeUpIcon /> : <VolumeOffIcon />}
+                  <Typography variant="body2">Speakers</Typography>
                 </Button>
               </Box>
 
@@ -259,7 +258,7 @@ export default function AudioMixer() {
                   variant="outlined"
                   label="Participant"
                   value={input}
-                  onChange={event => setInput(event.target.value)}
+                  onChange={(event) => setInput(event.target.value)}
                 />
 
                 <Button variant="contained" color="primary" onClick={handleMuteBtnClick}>
