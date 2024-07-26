@@ -3,16 +3,9 @@ const crypto = require("crypto");
 const axios = require("axios");
 require("dotenv").config();
 
-// raspberry pi run on startup:
-// pm2 start main.js
-// pm2 startup systemd
-// copy paste outputted command
-// pm2 save
-// sudo reboot (to make sure it works)
-
 // edits needed:
-// line 108: Board-View or Class-View
-// line 130: (if imdc2) Uncomment
+// line 108: Board-View or Student-View
+// line 130: (if imdc1) Uncomment
 
 const ERROR_CODES = {
   MISSING_ENV: 100,
@@ -107,13 +100,10 @@ const retryRequest = async (url, headers, maxRetries, retryDelay, errMsg) => {
     // await page.waitForSelector(roomSel);
     await page.waitForSelector(btnSel);
 
-    // model: Raspberry Pi 4 Model B Rev 1.5
-    // imdc1: Board-View (Hand)
-    // imdc2: Class-View (Directional mic)
-    // enter name and room, click continue
-    await page.type(nameSel, "Board-View or Class-View");
-    // Classroom is already there by default
-    // await page.type(roomSel, "Classroom");
+    // imdc1: Student-View (Hand)
+    // imdc2: Board-View (Directional mic)
+    // enter name and click continue
+    await page.type(nameSel, "Board-View or Student-View");
     await page.click(btnSel);
 
     // ui changes here and join button appears
@@ -133,7 +123,6 @@ const retryRequest = async (url, headers, maxRetries, retryDelay, errMsg) => {
     await page.click(btn2Sel);
 
     // uncomment the following code to mute mic for imdc1 only
-    // it also initializes remote it
 
     /*
     const muteBtnSel = 'button[data-cy-audio-toggle="true"]';

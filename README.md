@@ -279,8 +279,8 @@ The raspberry pi boards are able to always know the latest url and password by
 ### Info
 
 - model: Raspberry Pi 4 Model B Rev 1.5
-- imdc1: Board-View (Hand)
-- imdc2: Class-View (Directional mic)
+- imdc1: Student-View (Hand)
+- imdc2: Board-View (Directional mic)
 
 ### Setting up standalone join
 
@@ -288,7 +288,8 @@ The raspberry pi boards are able to always know the latest url and password by
 
 Get the `TWILIO_AUTH_TOKEN` from the [Twilio Console](https://www.twilio.com/console).
 
-The `URL_SERVER` is the [Webmoti URL server](#webmoti-url-server) url.
+The `URL_SERVER` is the [Webmoti URL server](#webmoti-url-server) url with
+ `/url` as the endpoint.
 
 ```bash
 TWILIO_AUTH_TOKEN=
@@ -297,8 +298,8 @@ URL_SERVER=
 
 #### Code changes
 
-- line 108: Board-View or Class-View
-- line 130: (if imdc2) Uncomment
+- line 108: Board-View or Student-View
+- line 130: (if imdc1) Uncomment
 
 #### Autorun
 
