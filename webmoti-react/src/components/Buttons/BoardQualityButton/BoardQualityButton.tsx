@@ -1,4 +1,7 @@
-import Button from '@material-ui/core/Button';
+import { useState } from 'react';
+
+import { Grid, Typography } from '@material-ui/core';
+import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import { RemoteVideoTrack } from 'twilio-video';
 
 import { WEBMOTI_CAMERA_2 } from '../../../constants';
@@ -9,11 +12,21 @@ import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 export default function BoardQualityButton() {
   const participants = useParticipants();
 
+  const [qualityState, setQualityState] = useState('720');
+
   useSetupHotkeys('ctrl+q', () => {
-    setQuality();
+    setQualityState('1080');
+    setQuality('1080');
   });
 
-  const setQuality = () => {
+  const handleQualityChange = (_: React.MouseEvent<HTMLElement>, newQuality: string) => {
+    if (newQuality !== null) {
+      setQualityState(newQuality);
+      setQuality(newQuality);
+    }
+  };
+
+  const setQuality = (quality: string) => {
     for (const participant of participants) {
       if (participant.identity === WEBMOTI_CAMERA_2) {
         const tracks = participant.tracks;
@@ -23,9 +36,9 @@ export default function BoardQualityButton() {
             // RemoteTrackPublication can be audio or video, so cast to video
             const remoteVideoTrack = trackPub.track as RemoteVideoTrack;
 
-            // make resolution 1080p
+            const resolution = quality === '1080' ? { width: 1920, height: 1080 } : { width: 1280, height: 720 };
             remoteVideoTrack.setContentPreferences({
-              renderDimensions: { width: 1920, height: 1080 },
+              renderDimensions: resolution,
             });
 
             // just set the first video track
@@ -49,8 +62,24 @@ export default function BoardQualityButton() {
   };
 
   return (
-    <ShortcutTooltip shortcut="Q" isCtrlDown>
-      <Button onClick={setQuality}>1080p Quality</Button>
-    </ShortcutTooltip>
+    <Grid container alignItems="center">
+      <Typography style={{ marginRight: '20px' }}>Board Quality</Typography>
+
+      <ShortcutTooltip shortcut="Q" isCtrlDown>
+        <ToggleButtonGroup
+          value={qualityState}
+          exclusive
+          onChange={handleQualityChange}
+          aria-label="Change video quality"
+        >
+          <ToggleButton value="720" aria-label="720p">
+            720p
+          </ToggleButton>
+          <ToggleButton value="1080" aria-label="1080p">
+            1080p
+          </ToggleButton>
+        </ToggleButtonGroup>
+      </ShortcutTooltip>
+    </Grid>
   );
 }

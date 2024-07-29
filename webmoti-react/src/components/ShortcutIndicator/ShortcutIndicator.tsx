@@ -48,8 +48,8 @@ export default function ShortcutIndicator({
     >
       <CardContent className={classes.cardContent}>
         <Typography variant="caption" className={classes.shortcutText}>
-          {isCtrlDown ? '⌘' : ''}
-          {isShiftDown ? '⇧' : ''}
+          {isCtrlDown ? 'Ctrl+' : ''}
+          {isShiftDown ? 'Shift+' : ''}
           {shortcut}
         </Typography>
       </CardContent>
