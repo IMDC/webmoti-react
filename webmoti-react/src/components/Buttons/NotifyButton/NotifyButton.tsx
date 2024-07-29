@@ -78,7 +78,7 @@ export default function NotifyButton({ setSoundKey, setVolume, playSetSound, sou
   return (
     <Grid container justifyContent="center" alignItems="center">
       <ShortcutTooltip shortcut="A" isCtrlDown>
-        <Button onClick={notifyProfessor}>Nudge</Button>
+        <Button onClick={notifyProfessor}>Audio Notification</Button>
       </ShortcutTooltip>
 
       <Select value={soundKey} label="Sound" onChange={handleChange}>

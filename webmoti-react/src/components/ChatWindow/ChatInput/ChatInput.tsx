@@ -198,7 +198,7 @@ export default function ChatInput({
           maxRows={3}
           className={classes.textArea}
           aria-label="chat input"
-          placeholder="Write a message..."
+          placeholder={isTTSModeOn ? 'Write a question to hear it using text to speech...' : 'Write a message...'}
           onKeyPress={handleReturnKeyPress}
           onChange={handleChange}
           value={messageBody}
@@ -230,7 +230,7 @@ export default function ChatInput({
               </>
             ) : (
               <>
-                TTS
+                Question Practice
                 <ArrowRightIcon />
               </>
             )}

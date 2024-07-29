@@ -34,16 +34,16 @@ interface SoundsMap {
 
 export const Sounds: SoundsMap = {
   Bell: { sound: soundsFile, name: 'Bell' },
-  Formal1: { sound: excuse_me_1, name: 'Formal 1' },
-  Formal2: { sound: excuse_me_2, name: 'Formal 2' },
-  Direct1: { sound: question_1, name: 'Direct 1' },
-  Direct2: { sound: question_2, name: 'Direct 2' },
-  Inquisitive1: { sound: professor_1, name: 'Inquisitive 1' },
-  Inquisitive2: { sound: professor_2, name: 'Inquisitive 2' },
-  Inquisitive3: { sound: professor_3, name: 'Inquisitive 3' },
-  NeutralFormal: { sound: neutral_excuse_me, name: 'Neutral Formal' },
-  NeutralDirect: { sound: neutral_question, name: 'Neutral Direct' },
-  NeutralInquisitive: { sound: neutral_professor, name: 'Neutral Inquisitive' },
+  Formal1: { sound: excuse_me_1, name: 'Formal Male' },
+  Formal2: { sound: excuse_me_2, name: 'Formal Female' },
+  Direct1: { sound: question_1, name: 'Direct Male' },
+  Direct2: { sound: question_2, name: 'Direct Female' },
+  Inquisitive1: { sound: professor_1, name: 'Inquisitive Male' },
+  Inquisitive2: { sound: professor_2, name: 'Inquisitive Female' },
+  Inquisitive3: { sound: professor_3, name: 'Inquisitive Female 2' },
+  NeutralFormal: { sound: neutral_excuse_me, name: 'Formal Neutral' },
+  NeutralDirect: { sound: neutral_question, name: 'Direct Neutral' },
+  NeutralInquisitive: { sound: neutral_professor, name: 'Inquisitive Neutral' },
 };
 
 export default function SoundsMenu() {

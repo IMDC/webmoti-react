@@ -37,7 +37,7 @@ export default function ChatWindowHeader({ isTTSModeOn = false }: ChatWindowHead
 
   return (
     <div className={classes.container}>
-      <div className={classes.text}>{isTTSModeOn ? 'TTS' : 'Chat'}</div>
+      <div className={classes.text}>{isTTSModeOn ? 'Question Practice' : 'Chat'}</div>
       <button
         className={classes.closeChatWindow}
         onClick={() => setIsChatWindowOpen(false)}

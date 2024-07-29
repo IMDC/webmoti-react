@@ -1,3 +1,4 @@
+import { Grid, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 
@@ -29,16 +30,24 @@ export default function ChangeZoomButton() {
   });
 
   return (
-    <ButtonGroup>
-      <ShortcutTooltip shortcut="[" isCtrlDown>
-        <Button onClick={decreaseZoom}>-</Button>
-      </ShortcutTooltip>
+    <Grid container alignItems="center">
+      <Typography style={{ marginRight: '20px' }}>Board Zoom</Typography>
 
-      <Button disabled>{zoom}</Button>
+      <ButtonGroup>
+        <ShortcutTooltip shortcut="[" isCtrlDown>
+          <Button onClick={decreaseZoom} variant="contained">
+            -
+          </Button>
+        </ShortcutTooltip>
 
-      <ShortcutTooltip shortcut="]" isCtrlDown>
-        <Button onClick={increaseZoom}>+</Button>
-      </ShortcutTooltip>
-    </ButtonGroup>
+        <Button disabled>{zoom}</Button>
+
+        <ShortcutTooltip shortcut="]" isCtrlDown>
+          <Button onClick={increaseZoom} variant="contained">
+            +
+          </Button>
+        </ShortcutTooltip>
+      </ButtonGroup>
+    </Grid>
   );
 }
