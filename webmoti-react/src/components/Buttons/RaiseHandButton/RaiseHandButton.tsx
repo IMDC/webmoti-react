@@ -16,6 +16,8 @@ import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import ShortcutIndicator from '../../ShortcutIndicator/ShortcutIndicator';
+import useDominantSpeaker from '../../../hooks/useDominantSpeaker/useDominantSpeaker';
+import useLocalAudioToggle from '../../../hooks/useLocalAudioToggle/useLocalAudioToggle';
 
 const maxQueueDisplay = 5;
 
@@ -39,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: '5px',
       verticalAlign: 'middle',
     },
-    firstInQueue: {
+    queueSpeaker: {
       backgroundColor: theme.palette.primary.main,
       color: '#fff',
       fontWeight: 'bold',
@@ -74,6 +76,9 @@ export default function RaiseHandButton() {
   const isRaising = useRef(false);
 
   const name = room?.localParticipant?.identity || 'Participant';
+
+  const dominantSpeaker = useDominantSpeaker(true);
+  const [isAudioEnabled] = useLocalAudioToggle();
 
   // this is run when participant joins
   useEffect(() => {
@@ -241,7 +246,18 @@ export default function RaiseHandButton() {
                     <ArrowRightIcon color="primary" className={classes.centerIcon} />
                   </>
                 )}
-                <Chip label={participantName} className={idx === 0 ? classes.firstInQueue : ''} />
+                {/* dominant speaker is highlighted in the queue */}
+                <Chip
+                  label={participantName}
+                  // dominant speaker isn't set for the local participant
+                  // so highlight local participant if unmuted
+                  className={
+                    (!dominantSpeaker?.identity && isAudioEnabled && participantName === name) ||
+                    dominantSpeaker?.identity === participantName
+                      ? classes.queueSpeaker
+                      : ''
+                  }
+                />
               </Box>
             ))}
 

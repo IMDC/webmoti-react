@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 
 import {
   Backdrop,
@@ -80,6 +80,29 @@ export default function SetScheduleModal({ open, onClose }: SetScheduleModalProp
     }
   };
 
+  // set default time when opening modal
+  useEffect(() => {
+    const now = new Date();
+    // remove minutes part
+    now.setMinutes(0, 0, 0);
+
+    // default end time is start time + 2 hours
+    const twoHoursLater = new Date(now.getTime() + 2 * 60 * 60 * 1000);
+    twoHoursLater.setMinutes(0, 0, 0);
+
+    const formatTime = (date: Date) => {
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      return `${hours}:${minutes}`;
+    };
+
+    const formattedStartTime = formatTime(now);
+    const formattedEndTime = formatTime(twoHoursLater);
+
+    setStartTime(formattedStartTime);
+    setEndTime(formattedEndTime);
+  }, [open]);
+
   return (
     <Modal
       open={open}
@@ -91,11 +114,10 @@ export default function SetScheduleModal({ open, onClose }: SetScheduleModalProp
     >
       <Fade in={open}>
         <div className={classes.paper}>
-          <Typography variant="h6" style={{ marginBottom: '20px' }}>
-            Set Class Schedule
-          </Typography>
+          <Typography variant="h6">Set Class Schedule</Typography>
+          <Typography variant="caption">Upload your class notes to generate a class schedule using AI</Typography>
 
-          <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+          <form onSubmit={handleSubmit} style={{ width: '100%', marginTop: '20px' }}>
             <TextField
               label="Class Start Time"
               type="time"
