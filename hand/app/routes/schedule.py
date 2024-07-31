@@ -10,10 +10,10 @@ from core.models import ScheduleRequest
 
 router = APIRouter(prefix="/api")
 
-password = os.getenv("PASSWORD")
 openai_api_key = os.getenv("OPENAI_API_KEY")
 
-schedule: Dict[str, str] = {}
+# identity to schedule
+schedule: Dict[str, Dict[str, str]] = {}
 
 # client = OpenAI(api_key=openai_api_key)
 
@@ -116,23 +116,22 @@ def get_schedule(
 
 
 @router.get("/schedule")
-async def schedule_get_endpoint() -> Dict[str, Dict[str, str]]:
-    if not schedule:
+async def schedule_get_endpoint(identity: str) -> Dict[str, Dict[str, str]]:
+    if identity not in schedule:
         raise HTTPException(status_code=404, detail="No schedule for today")
 
-    return {"schedule": schedule}
+    return {"schedule": schedule[identity]}
 
 
 @router.post("/schedule")
 async def schedule_post_endpoint(
     file: UploadFile, form_data: ScheduleRequest = Depends()
 ) -> Dict[str, Dict[str, str]]:
-    if form_data.password != password:
-        raise HTTPException(status_code=401, detail="Invalid password")
 
     # file_text = await file.read()
 
-    global schedule
-    schedule = get_schedule(file, form_data.start_time, form_data.end_time)
+    schedule[form_data.identity] = get_schedule(
+        file, form_data.start_time, form_data.end_time
+    )
 
-    return {"schedule": schedule}
+    return {"schedule": schedule[form_data.identity]}

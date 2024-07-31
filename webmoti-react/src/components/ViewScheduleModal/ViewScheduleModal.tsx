@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import {
   Backdrop,
@@ -19,6 +19,8 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Refresh } from '@material-ui/icons';
+
+import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -51,8 +53,11 @@ export default function ViewScheduleModal({ open, onClose }: ViewScheduleModalPr
 
   const [schedule, setSchedule] = useState<Schedule | null>(null);
 
-  const getSchedule = async () => {
-    const response = await fetch(`http://localhost:80/api/schedule`);
+  const { room } = useVideoContext();
+
+  const getSchedule = useCallback(async () => {
+    const name = room?.localParticipant?.identity || 'Participant';
+    const response = await fetch(`http://localhost:80/api/schedule?identity=${name}`);
 
     if (response.status === 200) {
       const data = await response.json();
@@ -60,11 +65,13 @@ export default function ViewScheduleModal({ open, onClose }: ViewScheduleModalPr
     } else {
       console.error('Error getting schedule');
     }
-  };
+  }, [room?.localParticipant?.identity]);
 
   useEffect(() => {
-    getSchedule();
-  }, []);
+    if (open) {
+      getSchedule();
+    }
+  }, [open, getSchedule]);
 
   return (
     <Modal
@@ -79,7 +86,7 @@ export default function ViewScheduleModal({ open, onClose }: ViewScheduleModalPr
         <div className={classes.paper}>
           <Grid container justifyContent="center" alignItems="center">
             <Grid item>
-              <Typography variant="h6" component="span" style={{ marginBottom: '20px' }}>
+              <Typography variant="h6" component="span">
                 Class Schedule
               </Typography>
             </Grid>
@@ -90,6 +97,10 @@ export default function ViewScheduleModal({ open, onClose }: ViewScheduleModalPr
               </IconButton>
             </Grid>
           </Grid>
+
+          <Typography variant="caption" component="span">
+            Note: AI generated schedules are not always accurate
+          </Typography>
 
           {schedule ? (
             <TableContainer component={Paper}>
@@ -114,7 +125,7 @@ export default function ViewScheduleModal({ open, onClose }: ViewScheduleModalPr
               </Table>
             </TableContainer>
           ) : (
-            <Typography style={{ marginBottom: '20px' }}>No schedule for today</Typography>
+            <Typography style={{ marginTop: '20px' }}>No schedule for today</Typography>
           )}
         </div>
       </Fade>

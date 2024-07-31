@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from datetime import datetime
 from typing import Optional
 
 from fastapi import Form
@@ -17,7 +16,7 @@ class TTSRequest(BaseModel):
 
 @dataclass
 class ScheduleRequest:
-    password: str = Form(...)
+    identity: str = Form(...)
     # format is HH:MM 24h
     start_time: str = Form(...)
     end_time: str = Form(...)

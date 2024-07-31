@@ -12,6 +12,7 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
+import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -40,8 +41,10 @@ export default function SetScheduleModal({ open, onClose }: SetScheduleModalProp
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [file, setFile] = useState<File | null>(null);
-  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+
+  const { room } = useVideoContext();
+  const name = room?.localParticipant?.identity || 'Participant';
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files !== null) {
@@ -58,7 +61,7 @@ export default function SetScheduleModal({ open, onClose }: SetScheduleModalProp
     }
 
     const body = new FormData();
-    body.append('password', password);
+    body.append('identity', name);
     body.append('start_time', startTime);
     body.append('end_time', endTime);
     body.append('file', file);
@@ -82,6 +85,10 @@ export default function SetScheduleModal({ open, onClose }: SetScheduleModalProp
 
   // set default time when opening modal
   useEffect(() => {
+    if (!open) {
+      return;
+    }
+
     const now = new Date();
     // remove minutes part
     now.setMinutes(0, 0, 0);
@@ -134,15 +141,6 @@ export default function SetScheduleModal({ open, onClose }: SetScheduleModalProp
               value={endTime}
               onChange={(e) => setEndTime(e.target.value)}
               InputLabelProps={{ shrink: true }}
-              fullWidth
-              style={{ marginBottom: '20px' }}
-            />
-
-            <TextField
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               fullWidth
               style={{ marginBottom: '20px' }}
             />
