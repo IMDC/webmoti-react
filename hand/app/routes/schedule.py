@@ -1,5 +1,6 @@
 import json
 import os
+import textwrap
 from datetime import datetime
 from typing import Dict
 
@@ -18,13 +19,13 @@ schedule: Dict[str, Dict[str, str]] = {}
 # client = OpenAI(api_key=openai_api_key)
 
 
-def get_schedule(
-    file: UploadFile, start_time: datetime, end_time: datetime
-) -> Dict[str, str]:
+def get_system_prompt():
     system_prompt = f"""
         Please analyze the class notes and times provided and generate a schedule in 
         JSON format without any other text output. The schedule should have a number of 
-        topics based on the length of the notes.
+        topics based on the length of the notes. Set topic times based on the depth and 
+        complexity of the content, allocating more time to denser topics rather than 
+        distributing time evenly.
 
         Output format:
         {{
@@ -36,6 +37,13 @@ def get_schedule(
             "...": "..."
         }}
     """
+    return textwrap.dedent(system_prompt)
+
+
+def get_schedule(
+    file: UploadFile, start_time: datetime, end_time: datetime
+) -> Dict[str, str]:
+    system_prompt = get_system_prompt()
 
     user_prompt = f"""
         Start Time: {start_time}
