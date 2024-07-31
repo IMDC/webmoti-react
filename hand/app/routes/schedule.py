@@ -18,7 +18,9 @@ schedule: Dict[str, str] = {}
 # client = OpenAI(api_key=openai_api_key)
 
 
-def get_schedule(text: str, start_time: datetime, end_time: datetime) -> Dict[str, str]:
+def get_schedule(
+    file: UploadFile, start_time: datetime, end_time: datetime
+) -> Dict[str, str]:
     system_prompt = f"""
         Please analyze the class notes and times provided and generate a schedule in 
         JSON format without any other text output. The schedule should have a number of 
@@ -38,7 +40,6 @@ def get_schedule(text: str, start_time: datetime, end_time: datetime) -> Dict[st
     user_prompt = f"""
         Start Time: {start_time}
         End Time: {end_time}
-        Notes: {text}
     """
 
     # completion = client.chat.completions.create(
@@ -50,6 +51,50 @@ def get_schedule(text: str, start_time: datetime, end_time: datetime) -> Dict[st
     #     ],
     # )
     # response = completion.choices[0].message.content
+
+    # make assistant and vector store
+    # assistant = client.beta.assistants.create(
+    #     name="Class Schedule Analyzer",
+    #     instructions=system_prompt,
+    #     model="gpt-4o-mini",
+    #     tools=[{"type": "file_search"}],
+    #     response_format={"type": "json_object"},
+    # )
+    # vector_store = client.beta.vector_stores.create(name="Class Notes")
+    # assistant = client.beta.assistants.update(
+    #     assistant_id=assistant.id,
+    #     tool_resources={"file_search": {"vector_store_ids": [vector_store.id]}},
+    # )
+
+    # # make request with file and text
+    # notes_file = client.files.create(
+    #     file=open(file.filename, "rb"), purpose="assistants"
+    # )
+    # thread = client.beta.threads.create(
+    #     messages=[
+    #         {
+    #             "role": "user",
+    #             "content": user_prompt,
+    #             "attachments": [
+    #                 {"file_id": notes_file.id, "tools": [{"type": "file_search"}]}
+    #             ],
+    #         }
+    #     ]
+    # )
+
+    # # send request
+    # run = client.beta.threads.runs.create_and_poll(
+    #     thread_id=thread.id, assistant_id=assistant.id
+    # )
+    # messages = list(
+    #     client.beta.threads.messages.list(thread_id=thread.id, run_id=run.id)
+    # )
+    # response = messages[0].content[0].text
+
+    # # delete vector store because files aren't needed now
+    # deleted_vector_store = client.beta.vector_stores.delete(
+    #     vector_store_id=vector_store.id
+    # )
 
     example_response = json.dumps(
         {
@@ -85,9 +130,9 @@ async def schedule_post_endpoint(
     if form_data.password != password:
         raise HTTPException(status_code=401, detail="Invalid password")
 
-    file_text = await file.read()
+    # file_text = await file.read()
 
     global schedule
-    schedule = get_schedule(file_text, form_data.start_time, form_data.end_time)
+    schedule = get_schedule(file, form_data.start_time, form_data.end_time)
 
     return {"schedule": schedule}
