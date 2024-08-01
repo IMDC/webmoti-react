@@ -1,10 +1,13 @@
+import EventEmitter from 'events';
+import { setImmediate } from 'timers';
+
 import React from 'react';
+
 import { act, renderHook } from '@testing-library/react-hooks';
+
 import { ChatProvider } from './index';
 import useChatContext from '../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
-import { setImmediate } from 'timers';
-import EventEmitter from 'events';
 
 const mockConversation: any = new EventEmitter();
 mockConversation.getMessages = jest.fn(() => Promise.resolve({ items: ['mockMessage'] }));
@@ -36,7 +39,7 @@ describe('the ChatProvider component', () => {
     mockUseVideoContext.mockImplementation(() => ({ onError: mockOnError }));
     const { result, rerender, waitForNextUpdate } = renderHook(useChatContext, { wrapper });
 
-    await act(() => {
+    act(() => {
       result.current.connect('mockToken');
       mockConversationsClient.emit('stateChanged', 'initialized');
     });
