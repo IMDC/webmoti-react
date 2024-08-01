@@ -8,6 +8,7 @@ import { Caption } from './CaptionTypes';
 import { WS_URL } from '../../constants';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../state';
+import Snackbar from '../Snackbar/Snackbar';
 
 const useStyles = makeStyles((theme: Theme) => ({
   captionContainer: {
@@ -42,9 +43,12 @@ export function CaptionRenderer() {
   const { room } = useVideoContext();
   const identity = room?.localParticipant?.identity || 'Participant';
 
+  const [error, setError] = useState(false);
+
   const { lastJsonMessage } = useWebSocket(`${WS_URL}/stt`, {
     queryParams: { identity },
     share: true,
+    onError: () => {setError(true)}
   });
 
   const registerResult = useCallback((caption: Caption) => {
@@ -107,6 +111,14 @@ export function CaptionRenderer() {
 
   return (
     <div className={classes.captionContainer}>
+      <Snackbar
+        variant="error"
+        headline="Captions Error"
+        message="Failed to connect to captions server"
+        open={error}
+        handleClose={() => {setError(false)}}
+      />
+
       {Object.entries(captions).map(([captionIdentity, captionsArray]) => (
         <div key={captionIdentity}>
           <Typography variant="h6" className={classes.caption}>
