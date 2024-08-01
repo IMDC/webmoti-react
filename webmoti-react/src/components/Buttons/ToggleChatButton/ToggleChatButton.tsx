@@ -9,8 +9,8 @@ import clsx from 'clsx';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
-import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import ChatIcon from '../../../icons/ChatIcon';
+import { checkSystemMsg } from '../../../utils';
 
 export const ANIMATION_DURATION = 700;
 
@@ -67,7 +67,6 @@ export default function ToggleChatButton() {
 
   const { isChatWindowOpen, setIsChatWindowOpen, conversation, hasUnreadMessages } = useChatContext();
   const { setIsBackgroundSelectionOpen } = useVideoContext();
-  const { checkSystemMsg } = useWebmotiVideoContext();
 
   const [shouldAnimate, setShouldAnimate] = useState(false);
 
@@ -101,7 +100,7 @@ export default function ToggleChatButton() {
         conversation.off('messageAdded', handleNewMessage);
       };
     }
-  }, [conversation, isChatWindowOpen, checkSystemMsg]);
+  }, [conversation, isChatWindowOpen]);
 
   useSetupHotkeys('ctrl+shift+t', () => {
     // this won't work when chat window is open because it gets focused

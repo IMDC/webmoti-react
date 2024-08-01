@@ -1,8 +1,6 @@
 import React, { ReactNode, createContext, useCallback, useState } from 'react';
 
-import { Conversation, JSONObject, Message } from '@twilio/conversations';
-
-import { Events, SERVER_URL, WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../../constants';
+import { Events, SERVER_URL, WEBMOTI_CAMERA_1 } from '../../constants';
 import { useAppState } from '../../state';
 
 interface WebmotiVideoContextType {
@@ -15,7 +13,6 @@ interface WebmotiVideoContextType {
   setZoomLevel: (level: number) => void;
   pan: { x: number; y: number };
   setPan: React.Dispatch<React.SetStateAction<{ x: number; y: number }>>;
-  isWebmotiVideo: (identity: string) => boolean;
   isMuted: boolean;
   toggleClassroomMute: () => void;
   isProfessor: boolean;
@@ -26,9 +23,7 @@ interface WebmotiVideoContextType {
   setAdminName: React.Dispatch<React.SetStateAction<string>>;
   professorsName: string;
   setProfessorsName: React.Dispatch<React.SetStateAction<string>>;
-  sendSystemMsg: (conversation: Conversation | null, msg: string) => void;
   sendHandRequest: (mode: string, identity?: string | null, is_silent?: boolean) => Promise<Response>;
-  checkSystemMsg: (message: Message) => boolean;
 }
 
 const WebmotiVideoContext = createContext<WebmotiVideoContextType | undefined>(undefined);
@@ -73,17 +68,8 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
     }
   };
 
-  const isWebmotiVideo = (identity: string) => {
-    return identity === WEBMOTI_CAMERA_1 || identity === WEBMOTI_CAMERA_2;
-  };
-
   const toggleClassroomMute = () => {
     setIsMuted(!isMuted);
-  };
-
-  const sendSystemMsg = (conversation: Conversation | null, msg: string) => {
-    // send with an attribute to differentiate from normal msg
-    conversation?.sendMessage(msg, { attributes: JSON.stringify({ systemMsg: true }) });
   };
 
   const sendHandRequest = useCallback(
@@ -119,23 +105,6 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
     [setError]
   );
 
-  const checkSystemMsg = useCallback((message: Message) => {
-    // parse attributes of msg
-    const attrObj = message.attributes as JSONObject;
-    if (attrObj.attributes === undefined) {
-      // no attributes (not system msg)
-      return false;
-    }
-
-    const attrSysMsg = JSON.parse(attrObj.attributes as string).systemMsg;
-    if (attrSysMsg !== undefined) {
-      // not system msg
-      return true;
-    }
-
-    return false;
-  }, []);
-
   return (
     <WebmotiVideoContext.Provider
       value={{
@@ -148,7 +117,6 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
         setZoomLevel,
         pan,
         setPan,
-        isWebmotiVideo,
         isMuted,
         toggleClassroomMute,
         isProfessor,
@@ -159,9 +127,7 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
         setAdminName,
         professorsName,
         setProfessorsName,
-        sendSystemMsg,
         sendHandRequest,
-        checkSystemMsg,
       }}
     >
       {children}

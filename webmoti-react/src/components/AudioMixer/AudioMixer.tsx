@@ -16,6 +16,7 @@ import useLocalAudioToggle from '../../hooks/useLocalAudioToggle/useLocalAudioTo
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import theme from '../../theme';
+import { checkSystemMsg, sendSystemMsg } from '../../utils';
 
 export const enum Mode {
   Professor = 'PROFESSOR',
@@ -32,7 +33,7 @@ export default function AudioMixer() {
   const { room, muteParticipant } = useVideoContext();
   const { conversation } = useChatContext();
   const [isAudioEnabled, toggleAudioEnabled] = useLocalAudioToggle();
-  const { isProfessor, isAdmin, sendSystemMsg, checkSystemMsg } = useWebmotiVideoContext();
+  const { isProfessor, isAdmin } = useWebmotiVideoContext();
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [alignment, setAlignment] = useState<Mode | null>(null);
@@ -157,16 +158,7 @@ export default function AudioMixer() {
     return () => {
       conversation?.off('messageAdded', handleMessageAdded);
     };
-  }, [
-    conversation,
-    setClassMicState,
-    setSpeakerState,
-    isClassMicEnabled,
-    isSpeakerEnabled,
-    name,
-    toggleAudioEnabled,
-    checkSystemMsg,
-  ]);
+  }, [conversation, setClassMicState, setSpeakerState, isClassMicEnabled, isSpeakerEnabled, name, toggleAudioEnabled]);
 
   const handleMuteBtnClick = () => {
     sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.MuteDevice, device: input }));

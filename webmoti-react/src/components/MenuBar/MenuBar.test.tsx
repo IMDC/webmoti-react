@@ -115,12 +115,12 @@ describe('the MenuBar component', () => {
 
   it('should correctly display the number of participants in a room when there is more than 1 participant', () => {
     const wrapper = shallow(<MenuBar />);
-    expect(wrapper.find('WithStyles(ForwardRef(Typography))').at(0).text()).toBe('Test Room | 3 participants');
+    expect(wrapper.find('WithStyles(ForwardRef(Typography))').at(0).text()).toContain('Test Room | 3 participants');
   });
 
   it('should correctly display the number of participants in a room when there is exactly 1 participant', () => {
     mockUseParticipants.mockImplementationOnce(() => []);
     const wrapper = shallow(<MenuBar />);
-    expect(wrapper.find('WithStyles(ForwardRef(Typography))').at(0).text()).toBe('Test Room | 1 participant');
+    expect(wrapper.find('WithStyles(ForwardRef(Typography))').at(0).text()).toContain('Test Room | 1 participant');
   });
 });

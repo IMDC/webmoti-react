@@ -9,8 +9,8 @@ import { MsgTypes, WEBMOTI_CAMERA_1 } from '../../../constants';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
-import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import InfoIcon from '../../../icons/InfoIcon';
+import { sendSystemMsg } from '../../../utils';
 import { Sounds } from '../../MenuBar/SoundsMenu/SoundsMenu';
 import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
@@ -24,7 +24,6 @@ interface NotifyButtonProps {
 
 export default function NotifyButton({ setSoundKey, setVolume, playSetSound, soundKey, volume }: NotifyButtonProps) {
   const { conversation } = useChatContext();
-  const { sendSystemMsg } = useWebmotiVideoContext();
 
   const { room } = useVideoContext();
   const name = room?.localParticipant?.identity || 'Participant';

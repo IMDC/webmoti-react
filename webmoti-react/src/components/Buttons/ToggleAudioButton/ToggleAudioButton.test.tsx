@@ -10,11 +10,14 @@ import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import MicIcon from '../../../icons/MicIcon';
 import MicOffIcon from '../../../icons/MicOffIcon';
+import { isWebmotiVideo } from '../../../utils';
 
 jest.mock('../../../hooks/useLocalAudioToggle/useLocalAudioToggle');
 jest.mock('../../../hooks/useVideoContext/useVideoContext');
 jest.mock('../../../hooks/useChatContext/useChatContext');
 jest.mock('../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
+jest.mock('../../../utils');
+
 const mockUseLocalAudioToggle = useLocalAudioToggle as jest.Mock<any>;
 const mockUseVideoContext = useVideoContext as jest.Mock<any>;
 
@@ -23,7 +26,9 @@ const mockConversation = new EventEmitter();
 mockUseChatContext.mockImplementation(() => ({ conversation: mockConversation }));
 
 const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
-mockUseWebmotiVideoContext.mockImplementation(() => ({ isWebmotiVideo: () => true }));
+mockUseWebmotiVideoContext.mockImplementation(() => ({}));
+
+(isWebmotiVideo as unknown as jest.Mock).mockImplementation(() => true);
 
 describe('the ToggleAudioButton component', () => {
   beforeAll(() => {

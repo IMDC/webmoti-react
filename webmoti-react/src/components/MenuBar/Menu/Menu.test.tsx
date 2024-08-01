@@ -200,7 +200,7 @@ describe('the Menu component', () => {
     it('should open the AboutDialog when the About button is clicked', () => {
       const wrapper = shallow(<Menu />);
       expect(wrapper.find(AboutDialog).prop('open')).toBe(false);
-      wrapper.find(MenuItem).at(5).simulate('click');
+      wrapper.find(MenuItem).at(6).simulate('click');
       expect(wrapper.find(AboutDialog).prop('open')).toBe(true);
     });
 

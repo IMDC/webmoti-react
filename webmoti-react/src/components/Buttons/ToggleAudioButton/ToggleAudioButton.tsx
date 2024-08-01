@@ -9,6 +9,7 @@ import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import MicIcon from '../../../icons/MicIcon';
 import MicOffIcon from '../../../icons/MicOffIcon';
+import { isWebmotiVideo, sendSystemMsg } from '../../../utils';
 import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
 const enum Mode {
@@ -26,7 +27,7 @@ export default function ToggleAudioButton(props: { disabled?: boolean; className
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const { conversation } = useChatContext();
-  const { isProfessor, sendSystemMsg, isWebmotiVideo } = useWebmotiVideoContext();
+  const { isProfessor } = useWebmotiVideoContext();
 
   useSetupHotkeys('ctrl+m', () => {
     handleAudioToggle();

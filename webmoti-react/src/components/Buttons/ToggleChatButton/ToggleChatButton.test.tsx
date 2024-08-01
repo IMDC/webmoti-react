@@ -8,10 +8,12 @@ import ToggleChatButton, { ANIMATION_DURATION } from './ToggleChatButton';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
+import { checkSystemMsg } from '../../../utils';
 
 jest.mock('../../../hooks/useChatContext/useChatContext');
 jest.mock('../../../hooks/useVideoContext/useVideoContext');
 jest.mock('../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
+jest.mock('../../../utils');
 
 const mockUseChatContext = useChatContext as jest.Mock<any>;
 const mockUseVideoContext = useVideoContext as jest.Mock<any>;
@@ -28,7 +30,9 @@ const mockSetIsBackgroundSelectionOpen = jest.fn();
 mockUseVideoContext.mockImplementation(() => ({ setIsBackgroundSelectionOpen: mockSetIsBackgroundSelectionOpen }));
 
 const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
-mockUseWebmotiVideoContext.mockImplementation(() => ({ checkSystemMsg: () => false }));
+mockUseWebmotiVideoContext.mockImplementation(() => ({}));
+
+(checkSystemMsg as jest.Mock).mockImplementation(() => false);
 
 describe('the ToggleChatButton component', () => {
   it('should be enabled when a conversation is present', () => {

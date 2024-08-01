@@ -8,7 +8,6 @@ import { MsgTypes, WEBMOTI_CAMERA_1 } from '../../../constants';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
-import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import soundsFile from '../../../sounds/ClearAnnounceTones.wav';
 import excuse_me_1 from '../../../sounds/speech/excuse_me_professor_1.mp3';
 import excuse_me_2 from '../../../sounds/speech/excuse_me_professor_2.mp3';
@@ -20,6 +19,7 @@ import neutral_question from '../../../sounds/speech/neutral_question.mp3';
 import professor_1 from '../../../sounds/speech/professor_1.mp3';
 import professor_2 from '../../../sounds/speech/professor_2.mp3';
 import professor_3 from '../../../sounds/speech/professor_3.mp3';
+import { checkSystemMsg } from '../../../utils';
 import NotifyButton from '../../Buttons/NotifyButton/NotifyButton';
 import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
@@ -47,8 +47,6 @@ export const Sounds: SoundsMap = {
 };
 
 export default function SoundsMenu() {
-  const { checkSystemMsg } = useWebmotiVideoContext();
-
   const { conversation } = useChatContext();
 
   const { room } = useVideoContext();
@@ -109,7 +107,7 @@ export default function SoundsMenu() {
     return () => {
       conversation?.off('messageAdded', handleMessageAdded);
     };
-  }, [conversation, playSetSound, checkSystemMsg, name]);
+  }, [conversation, playSetSound, name]);
 
   return (
     <>

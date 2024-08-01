@@ -12,12 +12,13 @@ import { Message } from '@twilio/conversations';
 import { Events, HandActions } from '../../../constants';
 import { MsgTypes } from '../../../constants';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
+import useDominantSpeaker from '../../../hooks/useDominantSpeaker/useDominantSpeaker';
+import useLocalAudioToggle from '../../../hooks/useLocalAudioToggle/useLocalAudioToggle';
 import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
+import { checkSystemMsg, isWebmotiVideo, sendSystemMsg } from '../../../utils';
 import ShortcutIndicator from '../../ShortcutIndicator/ShortcutIndicator';
-import useDominantSpeaker from '../../../hooks/useDominantSpeaker/useDominantSpeaker';
-import useLocalAudioToggle from '../../../hooks/useLocalAudioToggle/useLocalAudioToggle';
 
 const maxQueueDisplay = 5;
 
@@ -62,7 +63,7 @@ export default function RaiseHandButton() {
   const { room } = useVideoContext();
   const { conversation } = useChatContext();
 
-  const { sendSystemMsg, isWebmotiVideo, sendHandRequest, checkSystemMsg } = useWebmotiVideoContext();
+  const { sendHandRequest } = useWebmotiVideoContext();
 
   const [handQueue, setHandQueue] = useState<string[]>([]);
   const [isHandRaised, setIsHandRaised] = useState(false);
@@ -141,7 +142,7 @@ export default function RaiseHandButton() {
       setIsHandRaised(mode === HandActions.Raise);
       isRaising.current = false;
     },
-    [conversation, handQueue, sendSystemMsg, sendHandRequest, name]
+    [conversation, handQueue, sendHandRequest, name]
   );
 
   const handleMouseDown = () => {
@@ -229,7 +230,7 @@ export default function RaiseHandButton() {
     return () => {
       conversation?.off('messageAdded', handleMessageAdded);
     };
-  }, [conversation, checkSystemMsg]);
+  }, [conversation]);
 
   return (
     <div>

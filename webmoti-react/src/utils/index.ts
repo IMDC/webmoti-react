@@ -1,4 +1,7 @@
+import { Conversation, JSONObject, Message } from '@twilio/conversations';
 import { isPlainObject } from 'is-plain-object';
+
+import { WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../constants';
 
 export const isMobile = (() => {
   if (typeof navigator === 'undefined' || typeof navigator.userAgent !== 'string') {
@@ -27,11 +30,11 @@ export async function getDeviceInfo() {
   const devices = await navigator.mediaDevices.enumerateDevices();
 
   return {
-    audioInputDevices: devices.filter(device => device.kind === 'audioinput'),
-    videoInputDevices: devices.filter(device => device.kind === 'videoinput'),
-    audioOutputDevices: devices.filter(device => device.kind === 'audiooutput'),
-    hasAudioInputDevices: devices.some(device => device.kind === 'audioinput'),
-    hasVideoInputDevices: devices.some(device => device.kind === 'videoinput'),
+    audioInputDevices: devices.filter((device) => device.kind === 'audioinput'),
+    videoInputDevices: devices.filter((device) => device.kind === 'videoinput'),
+    audioOutputDevices: devices.filter((device) => device.kind === 'audiooutput'),
+    hasAudioInputDevices: devices.some((device) => device.kind === 'audioinput'),
+    hasVideoInputDevices: devices.some((device) => device.kind === 'videoinput'),
   };
 }
 
@@ -51,3 +54,29 @@ export async function isPermissionDenied(name: 'camera' | 'microphone') {
     return false;
   }
 }
+
+export const isWebmotiVideo = (identity: string) => {
+  return identity === WEBMOTI_CAMERA_1 || identity === WEBMOTI_CAMERA_2;
+};
+
+export const sendSystemMsg = (conversation: Conversation | null, msg: string) => {
+  // send with an attribute to differentiate from normal msg
+  conversation?.sendMessage(msg, { attributes: JSON.stringify({ systemMsg: true }) });
+};
+
+export const checkSystemMsg = (message: Message) => {
+  // parse attributes of msg
+  const attrObj = message.attributes as JSONObject;
+  if (attrObj.attributes === undefined) {
+    // no attributes (not system msg)
+    return false;
+  }
+
+  const attrSysMsg = JSON.parse(attrObj.attributes as string).systemMsg;
+  if (attrSysMsg !== undefined) {
+    // not system msg
+    return true;
+  }
+
+  return false;
+};

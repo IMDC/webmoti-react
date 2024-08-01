@@ -9,12 +9,11 @@ import { Message } from '@twilio/conversations';
 import { Mode } from './AudioMixer';
 import { MsgTypes } from '../../constants';
 import useChatContext from '../../hooks/useChatContext/useChatContext';
-import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
+import { checkSystemMsg } from '../../utils';
 
 const ModeDisplay = () => {
   const { conversation } = useChatContext();
   const [currentMode, setCurrentMode] = useState<Mode | null>(null);
-  const { checkSystemMsg } = useWebmotiVideoContext();
 
   useEffect(() => {
     const handleMessageAdded = (message: Message) => {
@@ -33,7 +32,7 @@ const ModeDisplay = () => {
     return () => {
       conversation?.off('messageAdded', handleMessageAdded);
     };
-  }, [conversation, checkSystemMsg]);
+  }, [conversation]);
 
   const modeIcon = () => {
     switch (currentMode) {
