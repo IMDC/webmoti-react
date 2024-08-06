@@ -1,6 +1,7 @@
 // from https://github.com/twilio-labs/plugin-rtc/blob/master/src/serverless/functions/token.js
 
 /* global Twilio Runtime */
+// eslint-disable-next-line strict
 'use strict';
 
 const AccessToken = Twilio.jwt.AccessToken;
@@ -74,9 +75,9 @@ module.exports.handler = async (context, event, callback) => {
       try {
         // If room doesn't exist, create it
         room = await client.video.rooms.create({ uniqueName: room_name, type: ROOM_TYPE });
-      } catch (e) {
+      } catch (e2) {
         console.error('Error creating room:');
-        console.error(e);
+        console.error(e2);
         response.setStatusCode(500);
         response.setBody({
           error: {
@@ -101,9 +102,9 @@ module.exports.handler = async (context, event, callback) => {
           // This helps to clean up old conversations since there is a limit that a single participant
           // can not be added to more than 1,000 open conversations.
           await conversationsClient.conversations.create({ uniqueName: room.sid, 'timers.closed': 'P1D' });
-        } catch (e) {
+        } catch (e2) {
           console.error('Error creating conversation:');
-          console.error(e);
+          console.error(e2);
           response.setStatusCode(500);
           response.setBody({
             error: {

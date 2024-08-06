@@ -1,13 +1,26 @@
 version: 2
 
 jobs:
-  build:
+  checkout-code:
     docker:
-      - image: circleci/node:16-browsers
-    working_directory: ~/twilio-video-react-app
+      - image: cimg/base:stable
+    working_directory: ~/webmoti
 
     steps:
       - checkout
+      - persist_to_workspace:
+          root: ~/webmoti
+          paths:
+            - .
+
+  build-and-test-react:
+    docker:
+      - image: circleci/node:16-browsers
+    working_directory: ~/webmoti/webmoti-react
+
+    steps:
+      - attach_workspace:
+          at: ~/webmoti
 
       - restore_cache:
           keys:
@@ -16,10 +29,10 @@ jobs:
             - v1-deps
 
       - run:
-          name: 'Install Dependencies'
+          name: "Install Dependencies"
           command: |
             npm ci
-            npm run noisecancellation:krisp
+          # npm run noisecancellation:krisp
 
       - save_cache:
           key: v1-deps-{{ .Branch }}-{{ checksum "package-lock.json" }}
@@ -29,31 +42,31 @@ jobs:
             - ~/.cache
 
       - run:
-          name: 'Jest Unit Tests'
+          name: "Jest Unit Tests"
           command: npm run test:ci
           environment:
-            JEST_JUNIT_OUTPUT_DIR: 'test-reports/jest'
-            JEST_JUNIT_OUTPUT_NAME: 'results.xml'
-            JEST_JUNIT_CLASSNAME: '{classname}'
-            JEST_JUNIT_TITLE: '{title}'
+            JEST_JUNIT_OUTPUT_DIR: "test-reports/jest"
+            JEST_JUNIT_OUTPUT_NAME: "results.xml"
+            JEST_JUNIT_CLASSNAME: "{classname}"
+            JEST_JUNIT_TITLE: "{title}"
 
       - store_artifacts:
           path: coverage
 
       - run:
-          name: 'Eslint'
+          name: "Eslint"
           command: npm run lint -- --max-warnings 0
 
       - run:
-          name: 'Check server types'
+          name: "Check server types"
           command: npm run typescript:server
 
       - run:
-          name: 'Build app'
+          name: "Build app"
           command: npm run build
 
       - run:
-          name: 'Set environment variables for local token server (used by Cypress tests)'
+          name: "Set environment variables for local token server (used by Cypress tests)"
           command: |
             echo TWILIO_ACCOUNT_SID=$TWILIO_ACCOUNT_SID >> .env
             echo TWILIO_API_KEY_SID=$TWILIO_API_KEY >> .env
@@ -82,10 +95,10 @@ jobs:
       #       echo REACT_APP_GIT_COMMIT=$CIRCLE_SHA1 >> .env
       #       npm run build
 
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .
+      # - persist_to_workspace:
+      #     root: .
+      #     paths:
+      #       - .
 
   # deploy:
   #   docker:
@@ -108,9 +121,15 @@ jobs:
 
 workflows:
   version: 2
-  build-and-deploy:
+  build-and-test-app:
     jobs:
-      - build:
+      - checkout-code:
+          filters:
+            tags:
+              only: /.*/
+      - build-and-test-react:
+          requires:
+            - checkout-code
           filters:
             tags:
               only: /.*/

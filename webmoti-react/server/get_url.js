@@ -1,4 +1,5 @@
-/* global Twilio Runtime */
+/* global Twilio */
+// eslint-disable-next-line strict
 "use strict";
 
 module.exports.handler = async function (context, event, callback) {
