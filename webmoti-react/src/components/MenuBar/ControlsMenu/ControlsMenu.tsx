@@ -70,8 +70,8 @@ export default function ControlsMenu() {
             </Grid>
 
             <Grid item>
-              <Divider />
-              <Grid container spacing={2} justifyContent="center" alignItems="center">
+              <Divider style={{ marginBottom: '10px' }} />
+              <Grid container spacing={2} justifyContent="center" alignItems="center" style={{ marginBottom: '10px' }}>
                 <Grid item>
                   <ToggleCameraButton />
                 </Grid>
@@ -81,15 +81,15 @@ export default function ControlsMenu() {
               </Grid>
             </Grid>
 
-            <Grid item>
+            <Grid item style={{ marginBottom: '10px' }}>
               <ChangeZoomButton />
             </Grid>
 
-            <Grid item>
+            <Grid item style={{ marginBottom: '10px' }}>
               <BoardQualityButton />
             </Grid>
 
-            <Grid item>
+            <Grid item style={{ marginBottom: '10px' }}>
               <WaveHandButton />
             </Grid>
           </Grid>
