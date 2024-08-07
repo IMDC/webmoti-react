@@ -25,7 +25,8 @@ def get_system_prompt():
         JSON format without any other text output. The schedule should have a number of 
         topics based on the length of the notes. Set topic times based on the depth and 
         complexity of the content, allocating more time to denser topics rather than 
-        distributing time evenly.
+        distributing time evenly. Some topics may be hands on or demonstrations with 
+        few words and will need a longer time.
 
         Output format:
         {{
