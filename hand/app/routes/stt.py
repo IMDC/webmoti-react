@@ -4,7 +4,7 @@ import time
 from asyncio import CancelledError
 from typing import AsyncGenerator, List
 
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect, status
 from google.api_core.exceptions import OutOfRange
 from google.cloud.speech_v1 import (
     RecognitionConfig,
@@ -17,7 +17,6 @@ from google.oauth2 import service_account
 router = APIRouter(prefix="/api")
 
 creds_path = pathlib.Path(__file__).parents[1] / "webmoti-sa.json"
-credentials = service_account.Credentials.from_service_account_file(str(creds_path))
 
 START_MSG = b"STARTSPEECH"
 STOP_MSG = b"STOPSPEECH"
@@ -50,6 +49,16 @@ manager = ConnectionManager()
 
 
 async def run_stt(websocket: WebSocket, identity: str) -> None:
+    if creds_path.is_file():
+        credentials = service_account.Credentials.from_service_account_file(
+            str(creds_path)
+        )
+    else:
+        await websocket.close(
+            code=status.WS_1011_INTERNAL_ERROR, reason="Missing credentials file"
+        )
+        return
+
     # client needs to be defined here so in same event loop?
     speech_client = SpeechAsyncClient(credentials=credentials)
 

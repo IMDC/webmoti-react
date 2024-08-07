@@ -5,19 +5,6 @@ setup: true
 orbs:
   path-filtering: circleci/path-filtering@1.1.0
 
-jobs:
-  checkout-code:
-    docker:
-      - image: cimg/base:current
-    working_directory: ~/webmoti
-
-    steps:
-      - checkout
-      - persist_to_workspace:
-          root: ~/webmoti
-          paths:
-            - .
-
 workflows:
   setup:
     jobs:
@@ -25,10 +12,5 @@ workflows:
           base-revision: main
           config-path: .circleci/continue-config.yml
           mapping: |
-            webmoti/webmoti-react/.* build-and-test-react-app true
-            webmoti/hand/.* test-hand-server true
-
-      - checkout-code:
-          filters:
-            tags:
-              only: /.*/
+            webmoti-react/.* build-and-test-react-app true
+            hand/app/.* test-hand-server true

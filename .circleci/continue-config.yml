@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   browser-tools: circleci/browser-tools@1.4.8
+  python: circleci/python@2.1.1
 
 parameters:
   build-and-test-react-app:
@@ -18,11 +19,10 @@ jobs:
     working_directory: ~/webmoti/webmoti-react
 
     steps:
+      - checkout:
+          path: ~/webmoti
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
-
-      - attach_workspace:
-          at: ~/webmoti
 
       - restore_cache:
           keys:
@@ -85,13 +85,38 @@ jobs:
 
   # deploy:
 
+  test-hand-server:
+    docker:
+      - image: cimg/python:3.12.4
+    working_directory: ~/webmoti/hand/app
+
+    steps:
+      - checkout:
+          path: ~/webmoti
+
+      - python/install-packages:
+          pkg-manager: pip
+
+      - run:
+          name: Run tests
+          command: pytest --junitxml=junit.xml || ((($? == 5)) && echo 'Did not find any tests to run.')
+
+      - store_test_results:
+          path: junit.xml
+
 workflows:
   react-app:
     when: << pipeline.parameters.build-and-test-react-app >>
     jobs:
       - build-and-test-react-app:
-          requires:
-            - checkout-code
+          filters:
+            tags:
+              only: /.*/
+
+  hand-server:
+    when: << pipeline.parameters.test-hand-server >>
+    jobs:
+      - test-hand-server:
           filters:
             tags:
               only: /.*/
