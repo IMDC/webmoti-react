@@ -6,6 +6,8 @@
 
 [Project Tasks](https://github.com/orgs/IMDC/projects/2)
 
+[![CircleCI](https://dl.circleci.com/status-badge/img/circleci/MQ5eZhP43vsLasGai1Wvc2/HVEDn43Bb981mJ5jVSE4on/tree/main.svg?style=svg&circle-token=CCIPRJ_QkKWgL2GxrDkMMYfFFf4A7_7d93e63b48c75bad00c9edfa79431f677df9a132)](https://dl.circleci.com/status-badge/redirect/circleci/MQ5eZhP43vsLasGai1Wvc2/HVEDn43Bb981mJ5jVSE4on/tree/main)
+
 - [Twilio React App](#twilio-react-app)
   - [Setup](#setup)
   - [Running the App locally for developement](#running-the-app-locally-for-developement)
