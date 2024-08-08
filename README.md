@@ -99,6 +99,8 @@ Undeploy the app: `npm run delete`
 
 ### App features
 
+[UI screenshots](webmoti-react/docs.md)
+
 - Hold to raise hand
   - Hand queue
   - Fireworks

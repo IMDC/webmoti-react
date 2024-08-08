@@ -3,7 +3,9 @@
         "allowed_elements": [
             "p",
             "img",
-            "h1"
+            "h1",
+            "figure",
+            "figcaption"
         ]
     },
     "MD041": false
