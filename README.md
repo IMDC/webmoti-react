@@ -120,7 +120,8 @@ Undeploy the app: `npm run delete`
   - TTS chat history
   - Click to replay
 - Live captions
-- Schedule
+- AI Schedule
+- Tactile mobile notifications
 - Chat
 - Noise cancellation
 - Speaker view
@@ -210,6 +211,13 @@ Run on raspberry pi:
 
 ```bash
 sudo python -E main.py
+```
+
+Or
+
+```bash
+sudo pip install -r app/requirements.txt
+sudo python main.py
 ```
 
 ### Hand server tests
@@ -313,6 +321,12 @@ pm2 startup systemd
 # copy paste outputted command
 pm2 save
 sudo reboot # for testing
+```
+
+```sh
+# for hand server
+sudo pm2 start python app/main.py
+sudo pm2 save
 ```
 
 ## Microphone Function
