@@ -9,3 +9,4 @@ google-cloud-speech==2.27.0
 pytest==8.3.3
 pytest-mock==3.14.0
 openai==1.51.2
+python-multipart==0.0.12
