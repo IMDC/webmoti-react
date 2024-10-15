@@ -1,11 +1,39 @@
 const puppeteer = require("puppeteer-core");
 const crypto = require("crypto");
 const axios = require("axios");
+const { format, createLogger, transports } = require("winston");
 require("dotenv").config();
 
 // edits needed:
 // line 108: Board-View or Student-View
 // line 130: (if imdc1) Uncomment
+
+const logFormat = format.printf(({ level, message, timestamp }) => {
+  if (message === "") {
+    return "";
+  }
+  return `${timestamp} ${level}: ${message}`;
+});
+
+const timestampFormat = format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" });
+
+const logger = createLogger({
+  level: "info",
+  transports: [
+    new transports.Console({
+      format: format.combine(format.colorize(), timestampFormat, logFormat),
+    }),
+    new transports.File({
+      filename: "autojoin.log",
+      format: format.combine(timestampFormat, logFormat),
+      maxsize: 5 * 1024 * 1024,
+      maxFiles: 2,
+    }),
+  ],
+});
+
+logger.info("");
+logger.info("--- Starting Autojoin ---");
 
 const ERROR_CODES = {
   MISSING_ENV: 100,
@@ -23,7 +51,7 @@ const authToken = process.env.TWILIO_AUTH_TOKEN;
 const urlServerEnv = process.env.URL_SERVER;
 
 if (!authToken || !urlServerEnv) {
-  console.error("Missing environment variables");
+  logger.error("Missing environment variables");
   process.exit(ERROR_CODES.MISSING_ENV);
 }
 
@@ -49,12 +77,12 @@ const retryRequest = async (url, headers, maxRetries, retryDelay, errMsg) => {
       }
       return response.data;
     } catch (e) {
-      console.error("Request error: ", e.message);
+      logger.error("Request error: " + e.message);
 
       if (attempt === maxRetries) {
         process.exit(ERROR_CODES.AXIOS_ERROR);
       } else {
-        console.log(
+        logger.info(
           `Attempt ${attempt} failed for ${errMsg}. Retrying in ${
             retryDelay / 1000
           } seconds...`
@@ -150,7 +178,7 @@ const retryRequest = async (url, headers, maxRetries, retryDelay, errMsg) => {
     // if (browser) {
     //   await browser.close();
     // }
-    console.error("Puppeteer error:", e.message);
+    logger.error("Puppeteer error: " + e.message);
     // don't exit because pm2 will try to restart it
     // process.exit(ERROR_CODES.PUPPETEER_ERROR);
   }
