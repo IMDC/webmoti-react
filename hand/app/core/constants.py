@@ -7,7 +7,8 @@ class Mode(enum.Enum):
     TOGGLE = "TOGGLE"
     RAISE = "RAISE"
     LOWER = "LOWER"
-    RERAISE = "RERAISE"
+    RAISE_RETURN = "RAISE_RETURN"
+    LOWER_RETURN = "LOWER_RETURN"
     INIT = "INIT"
 
 
@@ -17,6 +18,10 @@ MAX_ANGLE = 30
 MIN_ANGLE = 180
 # go farther than halfway so camera isn't blocked
 HALFWAY_ANGLE = 90
+
+# a bit higher/lower than halfway for when queue is not empty
+HALFWAY_HIGHER_ANGLE = 70
+HALFWAY_LOWER_ANGLE = 110
 
 SERVO_PIN = 12
 

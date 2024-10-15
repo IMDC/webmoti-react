@@ -1,11 +1,18 @@
 import logging
 from typing import Optional, Tuple
 
-from core.constants import HALFWAY_ANGLE, MAX_ANGLE, MIN_ANGLE, Mode
+from core.constants import (
+    HALFWAY_ANGLE,
+    HALFWAY_HIGHER_ANGLE,
+    HALFWAY_LOWER_ANGLE,
+    MAX_ANGLE,
+    MIN_ANGLE,
+    Mode,
+)
 from core.models import RaiseHandRequest
 from core.servo_controller import servo_controller
 from routes.notifications import send_notification
-from routes.queue_sse import add_to_queue, remove_from_queue
+from routes.queue_sse import add_to_queue, get_queue_length, remove_from_queue
 
 
 async def raise_hand(mode: Mode) -> None:
@@ -38,8 +45,17 @@ async def raise_hand(mode: Mode) -> None:
         await servo_controller.set_angle(MIN_ANGLE)
         servo_controller.is_hand_raised = False
 
-    elif mode == Mode.RERAISE:
-        await servo_controller.set_angle_twice(MIN_ANGLE, HALFWAY_ANGLE)
+    elif mode == Mode.LOWER_RETURN:
+        # this should lower it a small amount, then go back to raised
+        # to show that there are still people in queue
+        await servo_controller.set_angle_twice(
+            HALFWAY_LOWER_ANGLE, HALFWAY_ANGLE, sleep_time=0.1
+        )
+
+    elif mode == Mode.RAISE_RETURN:
+        await servo_controller.set_angle_twice(
+            HALFWAY_HIGHER_ANGLE, HALFWAY_ANGLE, sleep_time=0.1
+        )
 
     elif mode == Mode.INIT:
         # this is to initialize the remote.it connection to speed up future requests
@@ -67,10 +83,13 @@ async def process_hand_request(
     ):
         return None, f"Can't {mode_enum} while hand is raised"
 
-    if mode_enum == Mode.RERAISE:
-        return None, "RERAISE mode not allowed"
+    if mode_enum == Mode.RAISE_RETURN or mode_enum == Mode.LOWER_RETURN:
+        return None, "Mode not allowed"
 
     if mode_enum == Mode.RAISE:
+        if get_queue_length() > 0:
+            mode_enum = Mode.RAISE_RETURN
+
         success = await add_to_queue(identity)
         if success:
             await send_notification(identity)
@@ -84,6 +103,6 @@ async def process_hand_request(
 
         queue_length = await remove_from_queue(identity)
         if queue_length > 0:
-            mode_enum = Mode.RERAISE
+            mode_enum = Mode.LOWER_RETURN
 
     return mode_enum, None

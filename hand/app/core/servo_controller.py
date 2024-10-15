@@ -39,10 +39,12 @@ class ServoController:
         async with self.lock:
             await self._set_angle(angle)
 
-    async def set_angle_twice(self, angle1: float, angle2: float) -> None:
+    async def set_angle_twice(
+        self, angle1: float, angle2: float, sleep_time=0.5
+    ) -> None:
         async with self.lock:
             await self._set_angle(angle1)
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(sleep_time)
             await self._set_angle(angle2)
 
     def stop(self) -> None:

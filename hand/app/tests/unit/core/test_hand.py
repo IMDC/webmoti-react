@@ -123,15 +123,15 @@ async def test_process_hand_request_lower_fail(mock_servo_controller):
 
 
 @pytest.mark.anyio
-async def test_process_hand_request_reraise(
+async def test_process_hand_request_lower_return(
     mock_servo_controller, mock_remove_from_queue
 ):
-    # mode should change from lower to reraise if queue isn't empty
+    # mode should change from lower to lower_return if queue isn't empty
     mock_servo_controller.is_hand_raised = True
     mock_remove_from_queue.return_value = 1
 
     request = RaiseHandRequest(mode="LOWER", identity="user")
     mode, error = await process_hand_request(request)
 
-    assert mode == Mode.RERAISE
+    assert mode == Mode.LOWER_RETURN
     assert error is None

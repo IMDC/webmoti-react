@@ -33,6 +33,10 @@ async def remove_from_queue(identity: str) -> int:
     if identity in queue:
         queue.remove(identity)
         queue_event.set()
+    return get_queue_length()
+
+
+def get_queue_length() -> int:
     return len(queue)
 
 
