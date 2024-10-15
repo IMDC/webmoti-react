@@ -29,6 +29,9 @@
   - [Webmoti URL server](#webmoti-url-server)
   - [Info](#info)
   - [Setting up standalone join](#setting-up-standalone-join)
+    - [Setup Node version](#setup-node-version)
+    - [Download Chromium Browser](#download-chromium-browser)
+    - [Install dependencies](#install-dependencies)
     - [Create .env in home directory](#create-env-in-home-directory)
     - [Code changes](#code-changes)
     - [Autorun](#autorun)
@@ -296,6 +299,36 @@ The raspberry pi boards are able to always know the latest url and password by
 
 ### Setting up standalone join
 
+#### Setup Node version
+
+(This is already setup)
+
+```bash
+# install node version manager
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+```
+
+```bash
+# switch to correct node version
+nvm install 20.8.0
+nvm use 20.8.0
+# check versions
+node -v
+npm -v
+```
+
+#### Download Chromium Browser
+
+These versions are currently installed:
+
+- v116.0.5845.102
+- v124.0.6367.73
+
+#### Install dependencies
+
+1. Get `package.json` and `package-lock.json` from [standalone-join](standalone-join/)
+2. Run `npm install` on raspberry pi
+
 #### Create .env in home directory
 
 Get the `TWILIO_AUTH_TOKEN` from the [Twilio Console](https://www.twilio.com/console).
@@ -317,9 +350,9 @@ URL_SERVER=
 
 ```sh
 pm2 start autojoin.js
-pm2 startup systemd
-# copy paste outputted command
 pm2 save
+pm2 startup systemd # for first time setup
+# copy paste outputted command
 sudo reboot # for testing
 ```
 
