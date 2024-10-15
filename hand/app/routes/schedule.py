@@ -21,8 +21,6 @@ openai_api_key = os.getenv("OPENAI_API_KEY")
 # identity to schedule
 schedule: Dict[str, Dict[str, str]] = {}
 
-client = AsyncOpenAI(api_key=openai_api_key)
-
 
 def get_system_prompt():
     system_prompt = f"""
@@ -94,6 +92,7 @@ def calculate_token_cost(usage: Usage):
 
 
 async def query_assistant(file: UploadFile, query: str):
+    client = AsyncOpenAI(api_key=openai_api_key)
     assistant = await get_assistant(client)
 
     file_contents = await file.read()
