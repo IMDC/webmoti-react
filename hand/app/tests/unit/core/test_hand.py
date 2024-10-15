@@ -1,3 +1,4 @@
+import json
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
@@ -6,6 +7,15 @@ from pytest_mock import MockFixture
 from core.constants import HALFWAY_ANGLE, MIN_ANGLE, Mode
 from core.hand import process_hand_request, raise_hand
 from core.models import RaiseHandRequest
+from routes.queue_sse import get_queue, remove_from_queue
+
+
+# reset queue before each test
+@pytest.fixture(autouse=True)
+async def reset_queue():
+    current_queue = json.loads(get_queue()["data"])
+    for identity in current_queue:
+        await remove_from_queue(identity)
 
 
 @pytest.fixture
