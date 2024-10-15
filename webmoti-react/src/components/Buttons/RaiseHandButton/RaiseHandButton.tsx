@@ -81,6 +81,8 @@ export default function RaiseHandButton() {
   const dominantSpeaker = useDominantSpeaker(true);
   const [isAudioEnabled] = useLocalAudioToggle();
 
+  const [wasShortcutUsed, setWasShortcutUsed] = useState(false);
+
   // this is run when participant joins
   useEffect(() => {
     const initRemoteIt = async () => {
@@ -122,6 +124,10 @@ export default function RaiseHandButton() {
       if (mode === HandActions.Raise && !handQueue.includes(name)) {
         // put in queue
         setHandQueue((prevQueue) => [...prevQueue, name]);
+
+        // show fireworks
+        const event = new CustomEvent(Events.Fireworks);
+        document.dispatchEvent(event);
       } else if (mode === HandActions.Lower) {
         // remove from queue
         setHandQueue((prevQueue) => prevQueue.filter((participantName) => participantName !== name));
@@ -146,25 +152,39 @@ export default function RaiseHandButton() {
   );
 
   const handleMouseDown = () => {
+    if (wasShortcutUsed) {
+      setWasShortcutUsed(false);
+      setHand(HandActions.Lower);
+      return;
+    }
+
     if (!isHandRaised) {
       // Start a timeout when the mouse is held down
       const timeoutId = setTimeout(() => {
         setHand(HandActions.Raise); // Only raise hand if held for more than 500ms
-
-        const event = new CustomEvent(Events.Fireworks);
-        document.dispatchEvent(event);
       }, 500);
       setButtonIntervalID(timeoutId);
     }
   };
 
-  useSetupHotkeys('ctrl+h', () => {
+  useSetupHotkeys('h', () => {
+    // if lowering hand with hotkey, set to false, otherwise true
+    // this is so that the `if (wasShortcutUsed) {` part in `handleMouseDown`
+    // will only trigger if you use the hotkey to raise the hand
+    // and this is because with the hotkey, you don't need to hold it down
+    setWasShortcutUsed(!isHandRaised);
     const raiseMode = isHandRaised ? HandActions.Lower : HandActions.Raise;
     setHand(raiseMode);
   });
 
   useEffect(() => {
     const handleGlobalMouseUp = () => {
+      if (wasShortcutUsed) {
+        // don't lower hand on mouse down if keyboard shortcut was used
+        // because that would be confusing
+        return;
+      }
+
       if (isRaising.current) {
         // if mouse is released right after raising hand, it won't lower
         setTimeout(() => {
@@ -183,7 +203,7 @@ export default function RaiseHandButton() {
     return () => {
       document.removeEventListener('mouseup', handleGlobalMouseUp);
     };
-  }, [isHandRaised, setHand]);
+  }, [isHandRaised, setHand, wasShortcutUsed]);
 
   const handleMouseUp = () => {
     // Clear the timeout if the mouse is released
@@ -286,7 +306,7 @@ export default function RaiseHandButton() {
             {isHandRaised ? 'Lower Hand' : 'Raise Hand'}
             {isLoading && <CircularProgress size={24} className={classes.progress} />}
 
-            <ShortcutIndicator shortcut="H" isCtrlDown />
+            <ShortcutIndicator shortcut="H" />
 
             {countdown > 0 && (
               <CircularProgress
