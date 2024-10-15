@@ -3,7 +3,6 @@ import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 
 import ControlsMenu from './ControlsMenu/ControlsMenu';
 import Menu from './Menu/Menu';
-import SoundsMenu from './SoundsMenu/SoundsMenu';
 import useParticipants from '../../hooks/useParticipants/useParticipants';
 import useRoomState from '../../hooks/useRoomState/useRoomState';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
@@ -17,6 +16,7 @@ import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleScheduleButton from '../Buttons/ToggleScheduleButton/ToggleScheduleButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import ShortcutTooltip from '../ShortcutTooltip/ShortcutTooltip';
+import NotifyButton from '../Buttons/NotifyButton/NotifyButton';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -75,12 +75,11 @@ export default function MenuBar() {
             <ToggleCaptionsButton />
 
             <RaiseHandButton />
+            <NotifyButton />
 
             <ControlsMenu />
 
             <AudioMixer />
-
-            <SoundsMenu />
 
             {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && (
               <ShortcutTooltip shortcut="T" isCtrlDown isShiftDown>

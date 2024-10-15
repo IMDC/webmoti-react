@@ -3,6 +3,8 @@ import { useRef, useState } from 'react';
 import { Button, Divider, Grid, Popover, Theme, createStyles, makeStyles } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+import NotifyDropdown from './NotifyDropdown';
+import NotifySlider from './NotifySlider';
 import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
 import BoardQualityButton from '../../Buttons/BoardQualityButton/BoardQualityButton';
 import ChangeZoomButton from '../../Buttons/ChangeZoomButton/ChangeZoomButton';
@@ -87,6 +89,22 @@ export default function ControlsMenu() {
 
             <Grid item style={{ marginBottom: '10px' }}>
               <BoardQualityButton />
+            </Grid>
+
+            <Grid item style={{ width: '100%', marginBottom: '10px' }}>
+              <Divider />
+            </Grid>
+
+            <Grid item style={{ width: '100%', marginBottom: '10px' }}>
+              <NotifySlider />
+            </Grid>
+
+            <Grid item xs style={{ marginBottom: '10px' }}>
+              <NotifyDropdown />
+            </Grid>
+
+            <Grid item style={{ width: '100%', marginBottom: '10px' }}>
+              <Divider />
             </Grid>
 
             <Grid item style={{ marginBottom: '10px' }}>

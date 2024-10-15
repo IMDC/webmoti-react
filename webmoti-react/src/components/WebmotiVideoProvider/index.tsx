@@ -1,7 +1,41 @@
 import React, { ReactNode, createContext, useCallback, useState } from 'react';
 
 import { Events, SERVER_URL, WEBMOTI_CAMERA_1 } from '../../constants';
+import soundsFile from '../../sounds/ClearAnnounceTones.wav';
+import excuse_me_1 from '../../sounds/speech/excuse_me_professor_1.mp3';
+import excuse_me_2 from '../../sounds/speech/excuse_me_professor_2.mp3';
+import question_1 from '../../sounds/speech/i_have_a_question_1.mp3';
+import question_2 from '../../sounds/speech/i_have_a_question_2.mp3';
+import neutral_excuse_me from '../../sounds/speech/neutral_excuse_me.mp3';
+import neutral_professor from '../../sounds/speech/neutral_professor.mp3';
+import neutral_question from '../../sounds/speech/neutral_question.mp3';
+import professor_1 from '../../sounds/speech/professor_1.mp3';
+import professor_2 from '../../sounds/speech/professor_2.mp3';
+import professor_3 from '../../sounds/speech/professor_3.mp3';
 import { useAppState } from '../../state';
+
+interface SoundEntry {
+  sound: string;
+  name: string;
+}
+
+interface SoundsMap {
+  [key: string]: SoundEntry;
+}
+
+export const Sounds: SoundsMap = {
+  Bell: { sound: soundsFile, name: 'Bell' },
+  Formal1: { sound: excuse_me_1, name: 'Formal Male' },
+  Formal2: { sound: excuse_me_2, name: 'Formal Female' },
+  Direct1: { sound: question_1, name: 'Direct Male' },
+  Direct2: { sound: question_2, name: 'Direct Female' },
+  Inquisitive1: { sound: professor_1, name: 'Inquisitive Male' },
+  Inquisitive2: { sound: professor_2, name: 'Inquisitive Female' },
+  Inquisitive3: { sound: professor_3, name: 'Inquisitive Female 2' },
+  NeutralFormal: { sound: neutral_excuse_me, name: 'Formal Neutral' },
+  NeutralDirect: { sound: neutral_question, name: 'Direct Neutral' },
+  NeutralInquisitive: { sound: neutral_professor, name: 'Inquisitive Neutral' },
+};
 
 interface WebmotiVideoContextType {
   isCameraOneOff: boolean;
@@ -24,6 +58,11 @@ interface WebmotiVideoContextType {
   professorsName: string;
   setProfessorsName: React.Dispatch<React.SetStateAction<string>>;
   sendHandRequest: (mode: string, identity?: string | null, is_silent?: boolean) => Promise<Response>;
+  volume: number;
+  setVolume: React.Dispatch<React.SetStateAction<number>>;
+  soundKey: string;
+  setSoundKey: React.Dispatch<React.SetStateAction<string>>;
+  playSetSound: (soundStr?: string) => void;
 }
 
 const WebmotiVideoContext = createContext<WebmotiVideoContextType | undefined>(undefined);
@@ -43,6 +82,20 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
   const [professorsName, setProfessorsName] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminName, setAdminName] = useState('');
+  const [volume, setVolume] = useState(50);
+  const [soundKey, setSoundKey] = useState(Object.keys(Sounds)[0]);
+
+  const playSetSound = useCallback(
+    (soundStr?: string) => {
+      const key = soundStr ? soundStr : soundKey;
+      const sound = Sounds[key];
+      const audio = new Audio(sound.sound);
+      // volume is 0 to 1 but slider is 1 to 100
+      audio.volume = volume / 100;
+      audio.play();
+    },
+    [soundKey, volume]
+  );
 
   const { setError } = useAppState();
 
@@ -128,6 +181,11 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
         professorsName,
         setProfessorsName,
         sendHandRequest,
+        volume,
+        setVolume,
+        soundKey,
+        setSoundKey,
+        playSetSound,
       }}
     >
       {children}
