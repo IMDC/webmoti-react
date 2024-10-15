@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 
+import { Tooltip } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { Message } from '@twilio/conversations';
 
@@ -10,7 +11,6 @@ import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import { sendSystemMsg } from '../../../utils';
 import { checkSystemMsg } from '../../../utils';
-import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 import ShortcutIndicator from '../../ShortcutIndicator/ShortcutIndicator';
 
 export default function NotifyButton() {
@@ -56,11 +56,16 @@ export default function NotifyButton() {
   });
 
   return (
-    <ShortcutTooltip shortcut="A">
-      <Button variant="contained" color="primary" onClick={notifyProfessor} style={{ marginLeft: '10px' }}>
-        Sound Alert
-        <ShortcutIndicator shortcut="A" />
-      </Button>
-    </ShortcutTooltip>
+    // the div and span make the tooltip in same place as raise hand button
+    <div>
+      <Tooltip title="Play an audio notification in the physical classroom">
+        <span>
+          <Button variant="contained" color="primary" onClick={notifyProfessor} style={{ marginLeft: '10px' }}>
+            Sound Alert
+            <ShortcutIndicator shortcut="A" />
+          </Button>
+        </span>
+      </Tooltip>
+    </div>
   );
 }
