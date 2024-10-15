@@ -18,7 +18,7 @@ export default function ToggleCameraButton(props: { className?: string }) {
 
   return (
     <ShortcutTooltip shortcut="1" isCtrlDown>
-      <Button className={props.className} onClick={toggleCamera1}>
+      <Button variant="outlined" className={props.className} onClick={toggleCamera1}>
         Class-View ON/OFF
       </Button>
     </ShortcutTooltip>

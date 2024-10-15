@@ -34,7 +34,9 @@ export default function ToggleCameraButton() {
 
   return (
     <ShortcutTooltip shortcut="L" isCtrlDown>
-      <Button onClick={() => toggleMute()}>{isMuted ? 'Unmute Classroom' : 'Mute Classroom'}</Button>
+      <Button variant="outlined" onClick={() => toggleMute()}>
+        {isMuted ? 'Unmute Classroom' : 'Mute Classroom'}
+      </Button>
     </ShortcutTooltip>
   );
 }

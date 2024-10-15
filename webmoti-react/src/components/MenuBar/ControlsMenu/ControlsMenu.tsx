@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-import { Button, Divider, Grid, Popover, Theme, createStyles, makeStyles } from '@material-ui/core';
+import { Button, Divider, Grid, Popover, Theme, Typography, createStyles, makeStyles } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import NotifyDropdown from './NotifyDropdown';
@@ -68,25 +68,33 @@ export default function ControlsMenu() {
         <div className={classes.cameraControlsPopover}>
           <Grid container justifyContent="center" alignItems="center" direction="column">
             <Grid item>
+              <Typography variant="overline" style={{ fontWeight: 'bold' }}>
+                Audio Controls
+              </Typography>
+            </Grid>
+            <Grid item>
               <MuteClassroomButton />
             </Grid>
 
+            <Grid item style={{ width: '100%', marginTop: '5px' }}>
+              <Divider />
+            </Grid>
             <Grid item>
-              <Divider style={{ marginBottom: '10px' }} />
-              <Grid container spacing={2} justifyContent="center" alignItems="center" style={{ marginBottom: '10px' }}>
-                <Grid item>
-                  <ToggleCameraButton />
-                </Grid>
-                <Grid item>
-                  <ToggleCameraButton2 />
-                </Grid>
+              <Typography variant="overline" style={{ fontWeight: 'bold' }}>
+                Video Controls
+              </Typography>
+            </Grid>
+            <Grid container spacing={2} justifyContent="center" alignItems="center" style={{ marginBottom: '10px' }}>
+              <Grid item>
+                <ToggleCameraButton />
+              </Grid>
+              <Grid item>
+                <ToggleCameraButton2 />
               </Grid>
             </Grid>
-
             <Grid item style={{ marginBottom: '10px' }}>
               <ChangeZoomButton />
             </Grid>
-
             <Grid item style={{ marginBottom: '10px' }}>
               <BoardQualityButton />
             </Grid>
@@ -94,20 +102,27 @@ export default function ControlsMenu() {
             <Grid item style={{ width: '100%', marginBottom: '10px' }}>
               <Divider />
             </Grid>
-
+            <Grid item>
+              <Typography variant="overline" style={{ fontWeight: 'bold' }}>
+                Sound Alert Controls
+              </Typography>
+            </Grid>
             <Grid item style={{ width: '100%', marginBottom: '10px' }}>
               <NotifySlider />
             </Grid>
-
             <Grid item xs style={{ marginBottom: '10px' }}>
               <NotifyDropdown />
             </Grid>
 
-            <Grid item style={{ width: '100%', marginBottom: '10px' }}>
+            <Grid item style={{ width: '100%' }}>
               <Divider />
             </Grid>
-
-            <Grid item style={{ marginBottom: '10px' }}>
+            <Grid item>
+              <Typography variant="overline" style={{ fontWeight: 'bold' }}>
+                Hand Waving
+              </Typography>
+            </Grid>
+            <Grid item>
               <WaveHandButton />
             </Grid>
           </Grid>

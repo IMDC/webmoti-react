@@ -53,6 +53,7 @@ export default function WaveHandButton() {
             <Button onClick={wave2} disabled={isLoading2} variant="contained">
               Wave Twice
               <EmojiPeople />
+              <EmojiPeople />
               {isLoading2 && <CircularProgress size={24} />}
             </Button>
           </span>
