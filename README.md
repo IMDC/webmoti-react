@@ -65,7 +65,7 @@ Original app: <https://github.com/twilio/twilio-video-app-react#readme>
 
 After following the steps below, run the app locally at `http://localhost:3000` with
 
-```sh
+```bash
 npm start
 ```
 
@@ -84,7 +84,7 @@ It's set up to use the twilio video `go` room type (2 participant max) when
 - Store your Account SID, API Key SID, API Key Secret, and Conversations Service
  SID in a new file called `.env` in the root level of the application (example below).
 
-```sh
+```bash
 TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 TWILIO_API_KEY_SID=SKxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 TWILIO_API_KEY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -146,7 +146,7 @@ npm run test-bail
 ```
 
 ```bash
-# run specific test
+# run specific test (replace TEST_PATH with actual path)
 npx cross-env TZ=utc jest --config jest.config.js TEST_PATH
 ```
 
@@ -177,11 +177,21 @@ npm run storybook
 
 ### Server setup
 
-Install requirements:
+Setup virtual Python environment:
 
 ```bash
-pip install -r requirements.txt
+# create it in home dir
+python -m venv ~/.hand-server-venv
+
+# activate it
+source ~/.hand-server-venv/bin/activate
+
+# install requirements (in venv)
+pip install -r ~/app/requirements.txt
 ```
+
+> **Note:** You need to activate the venv when running the hand server or
+> changing packages
 
 Create `.env` file in project root:
 
@@ -207,20 +217,16 @@ Create `webmoti-sa.json` in project root. This is for authenticating to
 Run server in dev mode:
 
 ```bash
-fastapi dev main.py
+fastapi dev ~/app/main.py
 ```
 
 Run on raspberry pi:
 
 ```bash
-sudo python -E main.py
-```
+# activate venv
+source ~/.hand-server-venv/bin/activate
 
-Or
-
-```bash
-sudo pip install -r app/requirements.txt
-sudo python main.py
+python ~/app/main.py
 ```
 
 ### Hand server tests
@@ -343,12 +349,15 @@ URL_SERVER=
 
 #### Code changes
 
-- line 108: Board-View or Student-View
-- line 130: (if imdc1) Uncomment
+Change these lines after copying script from github:
+
+- line 108: `Board-View` or `Student-View`
+- line 130: (only for imdc1) Uncomment
 
 #### Autorun
 
-```sh
+```bash
+# for autojoin script
 pm2 start autojoin.js
 pm2 save
 pm2 startup systemd # for first time setup
@@ -356,10 +365,11 @@ pm2 startup systemd # for first time setup
 sudo reboot # for testing
 ```
 
-```sh
+```bash
 # for hand server
-sudo pm2 start python app/main.py
-sudo pm2 save
+source ~/.hand-server-venv/bin/activate
+pm2 start python ~/app/main.py --name hand_server
+pm2 save
 ```
 
 ## Microphone Function
@@ -378,7 +388,7 @@ sudo pm2 save
 - Runs on hotspot connection via Raspberry Pi plugged in via ETH
 - Once connection is made allow that connection to be made globally via: <https://www.remote.it/getting-started/raspberry-pi>
 - your routing for the link on the board must be `[WEBPAGE IP].com/raisehand` and
- the Service URL must be `http://localhost/raisehand`. Once properly entered
+ the Service URL must be `http://localhost:8080/raisehand`. Once properly entered
  remote.it will provide a live link.
 - Raising your hand is now possible via the locally hosted code, hotspot connection,
  and proper remote.it IP routing.

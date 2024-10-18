@@ -2,3 +2,6 @@ __pycache__/
 test.rest
 webmoti-sa.json
 .venv
+test.py
+example_pdf.pdf
+test.rest
