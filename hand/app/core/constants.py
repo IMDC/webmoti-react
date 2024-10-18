@@ -12,7 +12,7 @@ class Mode(enum.Enum):
     INIT = "INIT"
 
 
-PORT = 80
+PORT = 8080
 
 MAX_ANGLE = 30
 MIN_ANGLE = 180
