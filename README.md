@@ -290,6 +290,10 @@ Some phones like Samsung have very aggressive battery optimization and might
 Both raspberry pi boards automatically join the twilio room when they're booted
  using a js script (standalone-join/main.js).
 
+The prof laptop also uses this script to make it easier to setup. If the prof
+ laptop is no longer used, please remove the `.env` file located at
+ `C:\Users\IMDC\Desktop\WebMoti\.env` to ensure that the API keys are not exposed.
+
 ### Webmoti URL server
 
 The raspberry pi boards are able to always know the latest url and password by

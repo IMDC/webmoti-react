@@ -8,6 +8,11 @@ require("dotenv").config();
 // line 108: Board-View or Student-View
 // line 130: (if imdc1) Uncomment
 
+// if prof laptop:
+// change line 1 to const puppeteer = require("puppeteer");
+// comment out line 120: executablePath: "chromium-browser"
+// change line 108 to Professor
+
 const logFormat = format.printf(({ level, message, timestamp }) => {
   if (message === "") {
     return "";
@@ -111,9 +116,11 @@ const retryRequest = async (url, headers, maxRetries, retryDelay, errMsg) => {
     browser = await puppeteer.launch({
       // don't use headless mode, too hard to exit
       headless: false,
-      args: ["--use-fake-ui-for-media-stream"],
+      args: ["--use-fake-ui-for-media-stream", "--start-maximized"],
       // needed for puppeteer core
       executablePath: "chromium-browser",
+      // default viewport dimension leaves whitespace on right
+      defaultViewport: null,
     });
     // get current tab
     const [page] = await browser.pages();
