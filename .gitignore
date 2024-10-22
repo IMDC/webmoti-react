@@ -5,3 +5,4 @@ hand_server.log
 .venv
 .pytest_cache
 autojoin.log
+todo.todo

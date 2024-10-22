@@ -22,6 +22,13 @@ HALFWAY_ANGLE = 90
 HALFWAY_HIGHER_ANGLE = 70
 HALFWAY_LOWER_ANGLE = 110
 
+# sleep times in ms for raising hand
+# full is the time it takes to travel 180 degrees from side to side
+FULL_SLEEP_TIME = 1.5
+HALFWAY_SLEEP_TIME = FULL_SLEEP_TIME / 2
+SMALL_SLEEP_TIME = 0.25
+
+
 SERVO_PIN = 12
 
 LOG_PATH = "/home/imdc1/hand_server.log"

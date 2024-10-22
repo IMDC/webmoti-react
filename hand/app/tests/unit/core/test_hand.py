@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 from pytest_mock import MockFixture
 
-from core.constants import HALFWAY_ANGLE, MIN_ANGLE, Mode
+from core.constants import HALFWAY_ANGLE, HALFWAY_SLEEP_TIME, MIN_ANGLE, Mode
 from core.hand import process_hand_request, raise_hand
 from core.models import RaiseHandRequest
 from routes.queue_sse import get_queue, remove_from_queue
@@ -57,7 +57,9 @@ async def test_raise_hand_raise(mock_servo_controller: MagicMock) -> None:
     # servo controller should set hand to raised
     await raise_hand(Mode.RAISE)
 
-    mock_servo_controller.set_angle.assert_called_once_with(HALFWAY_ANGLE)
+    mock_servo_controller.set_angle.assert_called_once_with(
+        HALFWAY_ANGLE, HALFWAY_SLEEP_TIME
+    )
     assert mock_servo_controller.is_hand_raised
 
 
@@ -65,11 +67,13 @@ async def test_raise_hand_raise(mock_servo_controller: MagicMock) -> None:
 async def test_raise_hand_lower(mock_servo_controller: MagicMock) -> None:
     # servo controller should set hand to raised then lower it
     await raise_hand(Mode.RAISE)
-    mock_servo_controller.set_angle.assert_called_with(HALFWAY_ANGLE)
+    mock_servo_controller.set_angle.assert_called_with(
+        HALFWAY_ANGLE, HALFWAY_SLEEP_TIME
+    )
     assert mock_servo_controller.is_hand_raised
 
     await raise_hand(Mode.LOWER)
-    mock_servo_controller.set_angle.assert_called_with(MIN_ANGLE)
+    mock_servo_controller.set_angle.assert_called_with(MIN_ANGLE, HALFWAY_SLEEP_TIME)
     assert not mock_servo_controller.is_hand_raised
 
     assert mock_servo_controller.set_angle.call_count == 2
