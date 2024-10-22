@@ -1,17 +1,28 @@
-const puppeteer = require("puppeteer-core");
 const crypto = require("crypto");
 const axios = require("axios");
 const { format, createLogger, transports } = require("winston");
 require("dotenv").config();
 
-// edits needed:
-// line 108: Board-View or Student-View
-// line 130: (if imdc1) Uncomment
+//
+// edit these variables for using script on different devices
+//
+const isImdc1 = false;
+const isProfLaptop = false;
+//
+//
 
-// if prof laptop:
-// change line 1 to const puppeteer = require("puppeteer");
-// comment out line 120: executablePath: "chromium-browser"
-// change line 108 to Professor
+const puppeteer = isProfLaptop
+  ? require("puppeteer")
+  : require("puppeteer-core");
+
+const NAMES = ["Board-View", "Student-View", "Professor"];
+
+let deviceName = NAMES[0];
+if (isImdc1) {
+  deviceName = NAMES[1];
+} else if (isProfLaptop) {
+  deviceName = NAMES[2];
+}
 
 const logFormat = format.printf(({ level, message, timestamp }) => {
   if (message === "") {
@@ -99,6 +110,46 @@ const retryRequest = async (url, headers, maxRetries, retryDelay, errMsg) => {
   }
 };
 
+const muteStudentViewMic = async (page) => {
+  const muteBtnSel = 'button[data-cy-audio-toggle="true"]';
+  // muted button needs to load
+  await page.waitForFunction(
+    (selector) => !!document.querySelector(selector),
+    // increase time from 30000 ms because this takes a while sometimes
+    { timeout: 60000 },
+    muteBtnSel
+  );
+
+  const isMuted = await page.evaluate((selector) => {
+    // the svg has a group element when it's muted
+    const groupSel = document.querySelector(
+      `${selector} > span > span > svg > g`
+    );
+    return groupSel !== null;
+  }, muteBtnSel);
+
+  if (!isMuted) {
+    await page.click(muteBtnSel);
+  }
+};
+
+const clickIsProfessor = async (page, state) => {
+  const profCheckboxId = "#profCheckbox";
+  await page.waitForSelector(profCheckboxId);
+
+  // event listener to handle dialog when checkbox clicked
+  page.on("dialog", async (dialog) => {
+    // if password is incorrect, stop script
+    if (dialog.message().toLowerCase().includes("incorrect")) {
+      state.shouldContinue = false;
+      return;
+    }
+    await dialog.accept("professor123");
+  });
+
+  await page.click(profCheckboxId);
+};
+
 (async () => {
   // get url from twilio endpoint
   const webmotiData = await retryRequest(
@@ -118,13 +169,21 @@ const retryRequest = async (url, headers, maxRetries, retryDelay, errMsg) => {
       headless: false,
       args: ["--use-fake-ui-for-media-stream", "--start-maximized"],
       // needed for puppeteer core
-      executablePath: "chromium-browser",
+      executablePath: !isProfLaptop ? "chromium-browser" : undefined,
       // default viewport dimension leaves whitespace on right
       defaultViewport: null,
     });
     // get current tab
     const [page] = await browser.pages();
     await page.goto(webmotiData["url"]);
+
+    if (isProfLaptop) {
+      const state = { shouldContinue: true };
+      await clickIsProfessor(page, state);
+      if (!state.shouldContinue) {
+        throw new Error("Incorrect professor password");
+      }
+    }
 
     const nameSel = "#input-user-name";
     // const roomSel = "#input-room-name";
@@ -135,10 +194,8 @@ const retryRequest = async (url, headers, maxRetries, retryDelay, errMsg) => {
     // await page.waitForSelector(roomSel);
     await page.waitForSelector(btnSel);
 
-    // imdc1: Student-View (Hand)
-    // imdc2: Board-View (Directional mic)
     // enter name and click continue
-    await page.type(nameSel, "Board-View or Student-View");
+    await page.type(nameSel, deviceName);
     await page.click(btnSel);
 
     // ui changes here and join button appears
@@ -157,30 +214,10 @@ const retryRequest = async (url, headers, maxRetries, retryDelay, errMsg) => {
     // join meeting
     await page.click(btn2Sel);
 
-    // uncomment the following code to mute mic for imdc1 only
-
-    /*
-    const muteBtnSel = 'button[data-cy-audio-toggle="true"]';
-    // muted button needs to load
-    await page.waitForFunction(
-      (selector) => !!document.querySelector(selector),
-      // increase time from 30000 ms because this takes a while sometimes
-      { timeout: 60000 },
-      muteBtnSel
-    );
-
-    const isMuted = await page.evaluate((selector) => {
-      // the svg has a group element when it's muted
-      const groupSel = document.querySelector(
-        `${selector} > span > span > svg > g`
-      );
-      return groupSel !== null;
-    }, muteBtnSel);
-
-    if (!isMuted) {
-      await page.click(muteBtnSel);
+    // mute mic for imdc1 only
+    if (isImdc1) {
+      await muteStudentViewMic(page);
     }
-    */
   } catch (e) {
     // if (browser) {
     //   await browser.close();

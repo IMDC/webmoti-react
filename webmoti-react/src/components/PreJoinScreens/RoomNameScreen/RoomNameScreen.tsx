@@ -12,8 +12,8 @@ import {
   Theme,
 } from '@material-ui/core';
 
-import { useAppState } from '../../../state';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
+import { useAppState } from '../../../state';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
@@ -159,7 +159,9 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
         </div>
         <div className={classes.checkboxContainer}>
           <FormControlLabel
-            control={<Checkbox checked={isProfessor} onChange={handleProfessorChange} color="primary" />}
+            control={
+              <Checkbox id="profCheckbox" checked={isProfessor} onChange={handleProfessorChange} color="primary" />
+            }
             label="I am a professor"
           />
           <FormControlLabel

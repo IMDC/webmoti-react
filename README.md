@@ -353,10 +353,8 @@ URL_SERVER=
 
 #### Code changes
 
-Change these lines after copying script from github:
-
-- line 108: `Board-View` or `Student-View`
-- line 130: (only for imdc1) Uncomment
+Change the variables at the top of the autojoin.js script based on what device
+ it's running on
 
 #### Autorun
 
