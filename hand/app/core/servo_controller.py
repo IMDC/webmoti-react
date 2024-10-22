@@ -25,27 +25,26 @@ class ServoController:
         self.lock = asyncio.Lock()
         self.is_hand_raised = False
 
-    async def _set_angle(self, angle: float) -> None:
+    async def _set_angle(self, angle: float, sleep_time: float) -> None:
         if is_rasp_pi:
             # convert angle to duty cycle (2 to 12)
             duty_cycle = (angle / 18) + 2
             self.pwm.ChangeDutyCycle(duty_cycle)
-            # 1 seconds is around the time to travel 180 degrees
-            await asyncio.sleep(1)
+            # wait a bit before stopping servo to remove momentum
+            await asyncio.sleep(sleep_time)
             # relax servo to stop erratic movements
             self.pwm.ChangeDutyCycle(0)
 
-    async def set_angle(self, angle: float) -> None:
+    async def set_angle(self, angle: float, sleep_time) -> None:
         async with self.lock:
-            await self._set_angle(angle)
+            await self._set_angle(angle, sleep_time)
 
     async def set_angle_twice(
-        self, angle1: float, angle2: float, sleep_time=0.5
+        self, angle1: float, angle2: float, sleep_time: float
     ) -> None:
         async with self.lock:
-            await self._set_angle(angle1)
-            await asyncio.sleep(sleep_time)
-            await self._set_angle(angle2)
+            await self._set_angle(angle1, sleep_time)
+            await self._set_angle(angle2, sleep_time)
 
     def stop(self) -> None:
         if is_rasp_pi:

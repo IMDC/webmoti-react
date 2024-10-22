@@ -4,7 +4,6 @@ import enum
 class Mode(enum.Enum):
     WAVE2 = "WAVE2"
     WAVE = "WAVE"
-    TOGGLE = "TOGGLE"
     RAISE = "RAISE"
     LOWER = "LOWER"
     RAISE_RETURN = "RAISE_RETURN"

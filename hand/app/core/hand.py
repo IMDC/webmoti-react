@@ -17,7 +17,7 @@ from routes.queue_sse import add_to_queue, get_queue_length, remove_from_queue
 
 async def raise_hand(mode: Mode) -> None:
     async def wave() -> None:
-        await servo_controller.set_angle_twice(MAX_ANGLE, MIN_ANGLE)
+        await servo_controller.set_angle_twice(MAX_ANGLE, MIN_ANGLE, sleep_time=1.5)
 
     logging.info(f"Raising hand with mode: {mode}")
 
@@ -28,33 +28,25 @@ async def raise_hand(mode: Mode) -> None:
     elif mode == Mode.WAVE:
         await wave()
 
-    elif mode == Mode.TOGGLE:
-        is_hand_raised = servo_controller.is_hand_raised
-        if is_hand_raised:
-            await servo_controller.set_angle(MIN_ANGLE)
-        else:
-            # go farther than halfway so camera isn't blocked
-            await servo_controller.set_angle(HALFWAY_ANGLE)
-        servo_controller.is_hand_raised = not is_hand_raised
-
     elif mode == Mode.RAISE:
-        await servo_controller.set_angle(HALFWAY_ANGLE)
+        # go farther than halfway so camera isn't blocked
+        await servo_controller.set_angle(HALFWAY_ANGLE, sleep_time=0.75)
         servo_controller.is_hand_raised = True
 
     elif mode == Mode.LOWER:
-        await servo_controller.set_angle(MIN_ANGLE)
+        await servo_controller.set_angle(MIN_ANGLE, sleep_time=0.75)
         servo_controller.is_hand_raised = False
 
     elif mode == Mode.LOWER_RETURN:
         # this should lower it a small amount, then go back to raised
         # to show that there are still people in queue
         await servo_controller.set_angle_twice(
-            HALFWAY_LOWER_ANGLE, HALFWAY_ANGLE, sleep_time=0.1
+            HALFWAY_LOWER_ANGLE, HALFWAY_ANGLE, sleep_time=0.25
         )
 
     elif mode == Mode.RAISE_RETURN:
         await servo_controller.set_angle_twice(
-            HALFWAY_HIGHER_ANGLE, HALFWAY_ANGLE, sleep_time=0.1
+            HALFWAY_HIGHER_ANGLE, HALFWAY_ANGLE, sleep_time=0.25
         )
 
     elif mode == Mode.INIT:
