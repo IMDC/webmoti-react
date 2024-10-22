@@ -69,10 +69,7 @@ async def process_hand_request(
     if (mode_enum in [Mode.RAISE, Mode.LOWER]) and not identity:
         return None, f"Identity is required for mode: {mode}"
 
-    if (
-        mode_enum in [Mode.WAVE, Mode.WAVE2, Mode.TOGGLE]
-        and servo_controller.is_hand_raised
-    ):
+    if mode_enum in [Mode.WAVE, Mode.WAVE2] and servo_controller.is_hand_raised:
         return None, f"Can't {mode_enum} while hand is raised"
 
     if mode_enum == Mode.RAISE_RETURN or mode_enum == Mode.LOWER_RETURN:

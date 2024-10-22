@@ -192,6 +192,8 @@ pip install -r ~/app/requirements.txt
 
 > **Note:** You need to activate the venv when running the hand server or
 > changing packages
+>
+> You can also activate it by typing activatehs (this is setup in .bashrc)
 
 Create `.env` file in project root:
 
