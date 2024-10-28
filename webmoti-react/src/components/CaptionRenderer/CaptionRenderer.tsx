@@ -45,7 +45,7 @@ export function CaptionRenderer() {
 
   const [error, setError] = useState(false);
 
-  const { lastJsonMessage } = useWebSocket(`${WS_URL}/stt`, {
+  const { lastJsonMessage } = useWebSocket(`${WS_URL}/captions`, {
     queryParams: { identity },
     share: true,
     onError: () => {setError(true)}

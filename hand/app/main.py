@@ -14,12 +14,12 @@ load_dotenv()
 from core.constants import PORT
 from core.logger import LOGGING_CONFIG
 from core.utils import setup_handlers
+from routes.captions_ws import router as captions_router
 from routes.notifications import router as notifications_router
 from routes.queue_sse import router as queue_router
 from routes.raisehand import router as raisehand_router
 from routes.raisehand_ws import router as raisehand_ws_router
 from routes.schedule import router as schedule_router
-from routes.stt import router as stt_router
 from routes.tts import router as tts_router
 
 app = FastAPI()
@@ -38,7 +38,7 @@ routers = (
     notifications_router,
     raisehand_ws_router,
     tts_router,
-    stt_router,
+    captions_router,
     schedule_router,
 )
 

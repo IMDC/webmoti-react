@@ -81,16 +81,7 @@ const signature = crypto
 const retryRequest = async (url, headers, maxRetries, retryDelay, errMsg) => {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      let response;
-      if (url === urlServer) {
-        response = await axios.get(url, { headers: headers });
-      } else {
-        response = await axios.post(url, "mode=INIT", {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        });
-      }
+      const response = await axios.get(url, { headers: headers });
       return response.data;
     } catch (e) {
       logger.error("Request error: " + e.message);

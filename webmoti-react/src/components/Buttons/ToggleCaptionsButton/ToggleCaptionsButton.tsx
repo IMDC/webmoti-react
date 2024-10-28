@@ -1,17 +1,15 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { IconButton } from '@material-ui/core';
 import { ClosedCaption } from '@material-ui/icons';
-import useWebSocket, { ReadyState } from 'react-use-websocket';
-import { LocalAudioTrack } from 'twilio-video';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import useWebSocket from 'react-use-websocket';
 
 import { WS_URL } from '../../../constants';
-import useMediaStreamTrack from '../../../hooks/useMediaStreamTrack/useMediaStreamTrack';
+import useLocalAudioToggle from '../../../hooks/useLocalAudioToggle/useLocalAudioToggle';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../../state';
-import useLocalAudioToggle from '../../../hooks/useLocalAudioToggle/useLocalAudioToggle';
-
-const isIOS = /iPhone|iPad/.test(navigator.userAgent);
+import Snackbar from '../../Snackbar/Snackbar';
 
 interface AudioToggleDetail {
   enabled: boolean;
@@ -19,102 +17,136 @@ interface AudioToggleDetail {
 interface AudioToggleEvent extends CustomEvent<AudioToggleDetail> {}
 
 export default function ToggleCaptionsButton() {
-  const { localTracks, room } = useVideoContext();
+  const { room } = useVideoContext();
   const [isAudioEnabled] = useLocalAudioToggle();
 
-  const localAudioTrack = localTracks.find((track) => track.kind === 'audio') as LocalAudioTrack;
+  const [snackbarError, setSnackbarError] = useState('');
 
-  const mediaStreamTrack = useMediaStreamTrack(localAudioTrack);
+  const { resetTranscript, browserSupportsSpeechRecognition, finalTranscript, interimTranscript } =
+    useSpeechRecognition();
 
   const identity = room?.localParticipant?.identity || 'Participant';
 
+  const captionIdRef = useRef(0);
+
   const { displayCaptions, setDisplayCaptions } = useAppState();
 
-  const { sendMessage, readyState, lastJsonMessage } = useWebSocket(`${WS_URL}/stt`, {
+  const { lastJsonMessage, sendJsonMessage } = useWebSocket(`${WS_URL}/captions`, {
     queryParams: { identity },
     share: true,
     shouldReconnect: () => true,
-    onClose: () => {
-      stopRecording();
+    onClose: async () => {
       setDisplayCaptions(false);
+      await stopRecordingCaptions();
     },
   });
 
-  const recorderRef = useRef<MediaRecorder | null>(null);
-
-  const strToBytes = (str: string) => {
-    const utf8Encode = new TextEncoder();
-    return utf8Encode.encode(str);
-  };
-
-  const stopRecording = useCallback(() => {
-    recorderRef.current?.stop();
-    recorderRef.current = null;
-    sendMessage(strToBytes('STOPSPEECH'));
-  }, [sendMessage]);
-
-  const startRecording = useCallback(() => {
-    if (!mediaStreamTrack) {
-      console.error('Error getting media stream track');
+  const startRecordingCaptions = useCallback(async () => {
+    if (!isAudioEnabled) {
+      // no error message since being muted while seeing captions is ok
+      return;
+    }
+    if (!browserSupportsSpeechRecognition) {
+      setSnackbarError("Browser is not supported. You will still be able to see other people's captions.");
       return;
     }
 
-    sendMessage(strToBytes('STARTSPEECH'));
+    await SpeechRecognition.startListening({ continuous: true, language: 'en-US', interimResults: true });
+  }, [isAudioEnabled, browserSupportsSpeechRecognition]);
 
-    const newMediaStream = new MediaStream([isIOS ? mediaStreamTrack.clone() : mediaStreamTrack]);
+  const stopRecordingCaptions = async () => {
+    await SpeechRecognition.abortListening();
+  };
 
-    const audioContext = new AudioContext();
-    const source = audioContext.createMediaStreamSource(newMediaStream);
+  // react to websocket messages
+  useEffect(() => {
+    if (lastJsonMessage === null) {
+      return;
+    }
 
-    const options = { mimeType: 'audio/webm; codecs=opus' };
-    const recorder = new MediaRecorder(source.mediaStream, options);
+    const handleMsg = async () => {
+      switch (lastJsonMessage.type) {
+        case 'start_recording':
+          await startRecordingCaptions();
+          break;
 
-    recorder.ondataavailable = (event) => {
-      if (readyState === ReadyState.OPEN && event.data.size > 0) {
-        sendMessage(event.data);
+        case 'stop_recording':
+          await stopRecordingCaptions();
+          break;
       }
     };
 
-    recorder.start(100);
-    recorderRef.current = recorder;
-  }, [mediaStreamTrack, readyState, sendMessage]);
+    handleMsg();
+  }, [lastJsonMessage, startRecordingCaptions]);
 
-  const toggleCaptions = async () => {
-    if (!recorderRef.current && !displayCaptions && isAudioEnabled) {
-      startRecording();
-    }
-
-    setDisplayCaptions(!displayCaptions);
-  };
-
-  useEffect(() => {
-    if (lastJsonMessage !== null && lastJsonMessage.type === 'start') {
-      if (!recorderRef.current && isAudioEnabled) {
-        startRecording();
-      }
-    }
-  }, [lastJsonMessage, startRecording, isAudioEnabled]);
-
+  // when muting/unmuting, also need to toggle recorder
   useEffect(() => {
     const handleAudioToggle = (event: Event) => {
       const customEvent = event as AudioToggleEvent;
       if (customEvent.detail.enabled) {
-        startRecording();
+        startRecordingCaptions();
       } else {
-        stopRecording();
+        stopRecordingCaptions();
       }
     };
-
     window.addEventListener('audiotoggle', handleAudioToggle);
-
     return () => {
       window.removeEventListener('audiotoggle', handleAudioToggle);
     };
-  }, [startRecording, stopRecording]);
+  }, [startRecordingCaptions]);
+
+  const sendCaption = useCallback(
+    (caption: string, isFinal: boolean) => {
+      sendJsonMessage({
+        type: 'caption',
+        transcript: caption,
+        id: captionIdRef.current,
+      });
+
+      if (isFinal) {
+        // update caption id
+        captionIdRef.current += 1;
+      }
+    },
+    [sendJsonMessage]
+  );
+
+  useEffect(() => {
+    if (!interimTranscript && finalTranscript) {
+      // caption isFinal when interimTranscript is empty
+      sendCaption(finalTranscript, true);
+      // clear old final caption
+      resetTranscript();
+    } else if (interimTranscript) {
+      // send interim transcript (not complete)
+      sendCaption(interimTranscript, false);
+    }
+  }, [interimTranscript, finalTranscript, resetTranscript, sendCaption]);
+
+  const toggleCaptions = () => {
+    if (!displayCaptions) {
+      setDisplayCaptions(true);
+      sendJsonMessage({ type: 'caption_action', action: 'start' });
+    } else {
+      setDisplayCaptions(false);
+      sendJsonMessage({ type: 'caption_action', action: 'stop' });
+    }
+  };
 
   return (
-    <IconButton onClick={toggleCaptions}>
-      <ClosedCaption color={displayCaptions ? 'primary' : 'inherit'} />
-    </IconButton>
+    <>
+      <Snackbar
+        variant="error"
+        headline="Captions Error"
+        message={snackbarError}
+        open={snackbarError !== ''}
+        handleClose={() => {
+          setSnackbarError('');
+        }}
+      />
+      <IconButton onClick={toggleCaptions}>
+        <ClosedCaption color={displayCaptions ? 'primary' : 'inherit'} />
+      </IconButton>
+    </>
   );
 }
