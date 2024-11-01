@@ -1,4 +1,4 @@
-import { SERVER_URL } from '../../constants';
+import { HTTPS_SERVER_URL } from '../../constants';
 
 export default class TTSMessage {
   text: string;
@@ -17,7 +17,7 @@ export default class TTSMessage {
       body: JSON.stringify({ text: this.text }),
     };
 
-    const response = await fetch(`${SERVER_URL}/tts`, options);
+    const response = await fetch(`${HTTPS_SERVER_URL}/tts`, options);
 
     if (response.ok) {
       const blob = await response.blob();

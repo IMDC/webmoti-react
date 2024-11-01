@@ -32,7 +32,6 @@ async def push(subscription: dict, message: str) -> None:
 # this is async so it doesn't block
 async def send_notification(name: str) -> None:
     if not subscriptions:
-        logging.info("No subscriptions found")
         return
 
     for subscription in subscriptions:

@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import useWebSocket from 'react-use-websocket';
 
 import { Caption } from './CaptionTypes';
-import { WS_URL } from '../../constants';
+import { WS_SERVER_URL } from '../../constants';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../state';
 import Snackbar from '../Snackbar/Snackbar';
@@ -45,10 +45,12 @@ export function CaptionRenderer() {
 
   const [error, setError] = useState(false);
 
-  const { lastJsonMessage } = useWebSocket(`${WS_URL}/captions`, {
+  const { lastJsonMessage } = useWebSocket(`${WS_SERVER_URL}/captions`, {
     queryParams: { identity },
     share: true,
-    onError: () => {setError(true)}
+    onError: () => {
+      setError(true);
+    },
   });
 
   const registerResult = useCallback((caption: Caption) => {
@@ -116,7 +118,9 @@ export function CaptionRenderer() {
         headline="Captions Error"
         message="Failed to connect to captions server"
         open={error}
-        handleClose={() => {setError(false)}}
+        handleClose={() => {
+          setError(false);
+        }}
       />
 
       {Object.entries(captions).map(([captionIdentity, captionsArray]) => (

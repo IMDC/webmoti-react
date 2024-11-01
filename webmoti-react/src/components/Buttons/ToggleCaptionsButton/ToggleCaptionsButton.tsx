@@ -5,7 +5,7 @@ import { ClosedCaption } from '@material-ui/icons';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import useWebSocket from 'react-use-websocket';
 
-import { WS_URL } from '../../../constants';
+import { WS_SERVER_URL } from '../../../constants';
 import useLocalAudioToggle from '../../../hooks/useLocalAudioToggle/useLocalAudioToggle';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../../state';
@@ -31,7 +31,7 @@ export default function ToggleCaptionsButton() {
 
   const { displayCaptions, setDisplayCaptions } = useAppState();
 
-  const { lastJsonMessage, sendJsonMessage } = useWebSocket(`${WS_URL}/captions`, {
+  const { lastJsonMessage, sendJsonMessage } = useWebSocket(`${WS_SERVER_URL}/captions`, {
     queryParams: { identity },
     share: true,
     shouldReconnect: () => true,

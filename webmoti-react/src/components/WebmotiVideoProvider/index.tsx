@@ -1,6 +1,6 @@
 import React, { ReactNode, createContext, useCallback, useState } from 'react';
 
-import { Events, SERVER_URL, WEBMOTI_CAMERA_1 } from '../../constants';
+import { Events, HTTPS_SERVER_URL, WEBMOTI_CAMERA_1 } from '../../constants';
 import soundsFile from '../../sounds/ClearAnnounceTones.wav';
 import excuse_me_1 from '../../sounds/speech/excuse_me_professor_1.mp3';
 import excuse_me_2 from '../../sounds/speech/excuse_me_professor_2.mp3';
@@ -127,7 +127,7 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
 
   const sendHandRequest = useCallback(
     async (mode: string, identity: string | null = null, is_silent = false) => {
-      const response = await fetch(`${SERVER_URL}/raisehand`, {
+      const response = await fetch(`${HTTPS_SERVER_URL}/raisehand`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
