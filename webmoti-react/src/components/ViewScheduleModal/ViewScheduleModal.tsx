@@ -20,6 +20,7 @@ import {
 } from '@material-ui/core';
 import { Refresh } from '@material-ui/icons';
 
+import { HTTPS_SERVER_URL } from '../../constants';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -57,7 +58,7 @@ export default function ViewScheduleModal({ open, onClose }: ViewScheduleModalPr
 
   const getSchedule = useCallback(async () => {
     const name = room?.localParticipant?.identity || 'Participant';
-    const response = await fetch(`http://localhost:80/api/schedule?identity=${name}`);
+    const response = await fetch(`${HTTPS_SERVER_URL}/schedule?identity=${name}`);
 
     if (response.status === 200) {
       const data = await response.json();

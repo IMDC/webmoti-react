@@ -12,6 +12,8 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
+
+import { HTTPS_SERVER_URL } from '../../constants';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -66,7 +68,7 @@ export default function SetScheduleModal({ open, onClose }: SetScheduleModalProp
     body.append('end_time', endTime);
     body.append('file', file);
 
-    const response = await fetch(`http://localhost:80/api/schedule`, {
+    const response = await fetch(`${HTTPS_SERVER_URL}/schedule`, {
       method: 'POST',
       body: body,
     });

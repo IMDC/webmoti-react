@@ -27,7 +27,7 @@ export const WEBMOTI_CAMERA_2 = 'Board-View';
 
 const API_DOMAIN = 'jmn2f42hjgfv.connect.remote.it/api';
 export const HTTPS_SERVER_URL = `https://${API_DOMAIN}`;
-export const WS_SERVER_URL = `ws://${API_DOMAIN}/ws`;
+export const WS_SERVER_URL = `wss://${API_DOMAIN}/ws`;
 
 export const enum MsgTypes {
   Hand = 'HAND',
