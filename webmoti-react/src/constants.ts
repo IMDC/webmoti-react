@@ -26,6 +26,7 @@ export const WEBMOTI_CAMERA_1 = 'Student-View';
 export const WEBMOTI_CAMERA_2 = 'Board-View';
 
 const API_DOMAIN = 'jmn2f42hjgfv.connect.remote.it/api';
+// use http://127.0.0.1:8080/api for testing
 export const HTTPS_SERVER_URL = `https://${API_DOMAIN}`;
 export const WS_SERVER_URL = `wss://${API_DOMAIN}/ws`;
 

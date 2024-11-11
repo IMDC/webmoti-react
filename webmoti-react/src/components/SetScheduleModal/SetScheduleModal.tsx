@@ -3,6 +3,7 @@ import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import {
   Backdrop,
   Button,
+  CircularProgress,
   createStyles,
   Fade,
   Grid,
@@ -44,6 +45,7 @@ export default function SetScheduleModal({ open, onClose }: SetScheduleModalProp
   const [endTime, setEndTime] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const { room } = useVideoContext();
   const name = room?.localParticipant?.identity || 'Participant';
@@ -61,6 +63,8 @@ export default function SetScheduleModal({ open, onClose }: SetScheduleModalProp
       setError('No file selected');
       return;
     }
+
+    setIsLoading(true);
 
     const body = new FormData();
     body.append('identity', name);
@@ -83,6 +87,8 @@ export default function SetScheduleModal({ open, onClose }: SetScheduleModalProp
       const result = await response.text();
       setError(`Error: ${response.status} - ${result}`);
     }
+
+    setIsLoading(false);
   };
 
   // set default time when opening modal
@@ -173,8 +179,9 @@ export default function SetScheduleModal({ open, onClose }: SetScheduleModalProp
               </Typography>
             )}
 
-            <Button type="submit" variant="contained" color="primary" fullWidth>
-              Submit
+            <Button type="submit" variant="contained" color="primary" fullWidth disabled={isLoading}>
+              {isLoading && <CircularProgress size={24} />}
+              {isLoading ? 'Generating...' : 'Submit'}
             </Button>
           </form>
         </div>
