@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import textwrap
 from datetime import datetime
@@ -23,7 +24,7 @@ schedule: Dict[str, Dict[str, str]] = {}
 
 
 def get_system_prompt():
-    system_prompt = f"""
+    system_prompt = """
         Please analyze the class notes and times provided and generate a schedule in 
         JSON format without any other text output. If no notes are provided, mostly empty, 
         or inaccessible, return an error. Don't create a schedule from missing data. 
@@ -33,12 +34,12 @@ def get_system_prompt():
         on or demonstrations with few words and will need a longer time. 
 
         Output format:
-        {{
+        {
             "title": "<title based on notes>",
             "<time 1 in 24h>": "<topic1>",
             "<time 2>": "<topic2>",
             "...": "...",
-        }}
+        }
     """
     return textwrap.dedent(system_prompt)
 
@@ -51,11 +52,11 @@ async def get_assistant(client: AsyncOpenAI):
     async for a in a_list:
         # need to create new assistant if instructions change
         if a.name == ASSISTANT_NAME and a.instructions == system_prompt:
-            print("found previous assistant")
+            logging.info("found previous assistant")
             return a
 
     # assistant not found, create new one
-    print("creating new assistant")
+    logging.info("creating new assistant")
     return await client.beta.assistants.create(
         name=ASSISTANT_NAME,
         instructions=system_prompt,
@@ -68,7 +69,7 @@ async def get_assistant(client: AsyncOpenAI):
 
 def calculate_token_cost(usage: Usage):
     if not usage:
-        print("No usage information available")
+        logging.info("No usage information available")
         return
 
     prompt_tokens = usage.prompt_tokens
@@ -83,12 +84,12 @@ def calculate_token_cost(usage: Usage):
     output_cost = (completion_tokens / 1_000_000) * cost_per_1M_output_tokens
     total_cost = input_cost + output_cost
 
-    print(f"Prompt Tokens: {prompt_tokens}")
-    print(f"Completion Tokens: {completion_tokens}")
-    print(f"Total Tokens: {total_tokens}")
-    print(f"Input Cost (USD): ${input_cost:.4f}")
-    print(f"Output Cost (USD): ${output_cost:.4f}")
-    print(f"Total Cost (USD): ${total_cost:.4f}")
+    logging.info(f"Prompt Tokens: {prompt_tokens}")
+    logging.info(f"Completion Tokens: {completion_tokens}")
+    logging.info(f"Total Tokens: {total_tokens}")
+    logging.info(f"Input Cost (USD): ${input_cost:.4f}")
+    logging.info(f"Output Cost (USD): ${output_cost:.4f}")
+    logging.info(f"Total Cost (USD): ${total_cost:.4f}")
 
 
 async def query_assistant(file: UploadFile, query: str):
@@ -117,7 +118,7 @@ async def query_assistant(file: UploadFile, query: str):
     )
 
     if run.status != "completed":
-        print("Run failed:", run.status)
+        logging.info("Run failed:", run.status)
         raise HTTPException(status_code=500, detail="Error getting schedule")
 
     message_list = await client.beta.threads.messages.list(
@@ -126,7 +127,7 @@ async def query_assistant(file: UploadFile, query: str):
     messages = [message async for message in message_list]
 
     response = messages[0].content[0].text.value
-    print(response)
+    logging.info(response)
 
     calculate_token_cost(run.usage)
 
@@ -134,7 +135,7 @@ async def query_assistant(file: UploadFile, query: str):
     await client.beta.threads.delete(thread_id=thread.id)
     await client.files.delete(file_id=file.id)
 
-    print("deleted thread and file")
+    logging.info("deleted thread and file")
 
     return response
 

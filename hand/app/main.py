@@ -1,4 +1,6 @@
+import logging
 import pathlib
+from contextlib import asynccontextmanager
 
 import uvicorn
 from dotenv import load_dotenv
@@ -8,21 +10,31 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+# load env variables before setting them in the modules below
 load_dotenv()
 
 
-from core.constants import PORT
-from core.logger import LOGGING_CONFIG
-from core.utils import setup_handlers
-from routes.captions_ws import router as captions_router
-from routes.notifications import router as notifications_router
-from routes.queue_sse import router as queue_router
-from routes.raisehand import router as raisehand_router
-from routes.raisehand_ws import router as raisehand_ws_router
-from routes.schedule import router as schedule_router
-from routes.tts import router as tts_router
+from core.constants import PORT  # noqa: E402
+from core.logger import LOGGING_CONFIG  # noqa: E402
+from core.utils import setup_handlers  # noqa: E402
+from routes.captions_ws import router as captions_router  # noqa: E402
+from routes.notifications import router as notifications_router  # noqa: E402
+from routes.queue_sse import router as queue_router  # noqa: E402
+from routes.raisehand import router as raisehand_router  # noqa: E402
+from routes.raisehand_ws import router as raisehand_ws_router  # noqa: E402
+from routes.schedule import router as schedule_router  # noqa: E402
+from routes.tts import router as tts_router  # noqa: E402
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logging.info("\n")
+    logging.info("--- Starting hand server ---\n")
+
+    yield
+
+
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
