@@ -72,3 +72,12 @@ async def root(request: Request):
 if __name__ == "__main__":
     setup_handlers()
     uvicorn.run(app, host="127.0.0.1", port=PORT, log_config=LOGGING_CONFIG)
+
+    # uncomment below for faster dev (auto reload)
+    # note: if log file is in app dir, it will cause infinite loop with reload=True
+    # also uvicorn reload_dir always includes cwd so need to change it to avoid log file
+    # workaround:
+    # import os
+
+    # os.chdir("hand/app")
+    # uvicorn.run("__main__:app", port=PORT, log_config=LOGGING_CONFIG, reload=True)

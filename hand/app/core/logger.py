@@ -6,7 +6,8 @@ from core.constants import LOG_PATH
 
 path = pathlib.Path(LOG_PATH)
 if not path.parent.is_dir():
-    path = pathlib.Path(__file__).parents[1] / "hand_server.log"
+    # for non raspberry pi
+    path = pathlib.Path(__file__).parents[2] / "hand_server.log"
 
 LOGGING_CONFIG: Dict[str, Any] = {
     "version": 1,
@@ -55,6 +56,12 @@ LOGGING_CONFIG: Dict[str, Any] = {
         },
         "uvicorn.access": {
             "handlers": ["access", "file_handler"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        # don't log reload changes to file
+        "watchfiles": {
+            "handlers": ["default"],
             "level": "INFO",
             "propagate": False,
         },
