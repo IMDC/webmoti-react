@@ -1,7 +1,14 @@
+:root {
+  --bg-color: #121212;
+  --green: #1db954;
+  --white: #f4f4f9;
+  --purple: #7f00ff;
+}
+
 body {
-  background-color: #121212;
+  background-color: var(--bg-color);
   font-family: "Inter", sans-serif;
-  color: #fff;
+  color: var(--white);
 
   margin: 0;
   display: flex;
@@ -18,7 +25,7 @@ body {
   line-height: 0.8;
   padding: 2vw;
 
-  color: #1db954;
+  color: var(--green);
   font-size: 15vw;
 }
 
@@ -116,10 +123,12 @@ body {
   height: 10vw;
   width: 10vw;
   border: 0.5vw solid;
-  border-color: white transparent white transparent;
+  border-color: var(--white) transparent var(--white) transparent;
   border-radius: 50%;
   animation: spin 1.5s linear infinite;
+}
 
+.center {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -130,4 +139,23 @@ body {
   to {
     transform: translate(-50%, -50%) rotate(360deg);
   }
+}
+
+/* push to talk styles below */
+
+.btn {
+  font-family: "Inter", sans-serif;
+  font-weight: bold;
+
+  padding: 10px;
+  font-size: 15vw;
+
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-active {
+  background-color: var(--purple);
+  color: var(--white);
 }

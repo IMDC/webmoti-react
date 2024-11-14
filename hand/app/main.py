@@ -19,6 +19,7 @@ from core.logger import LOGGING_CONFIG  # noqa: E402
 from core.utils import setup_handlers  # noqa: E402
 from routes.captions_ws import router as captions_router  # noqa: E402
 from routes.notifications import router as notifications_router  # noqa: E402
+from routes.push_to_talk import router as push_to_talk_router  # noqa: E402
 from routes.queue_sse import router as queue_router  # noqa: E402
 from routes.raisehand import router as raisehand_router  # noqa: E402
 from routes.raisehand_ws import router as raisehand_ws_router  # noqa: E402
@@ -27,7 +28,7 @@ from routes.tts import router as tts_router  # noqa: E402
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_: FastAPI):
     logging.info("\n")
     logging.info("--- Starting hand server ---\n")
 
@@ -52,6 +53,7 @@ routers = (
     tts_router,
     captions_router,
     schedule_router,
+    push_to_talk_router,
 )
 
 for router in routers:
@@ -67,6 +69,16 @@ templates = Jinja2Templates(directory=(dir_path / "templates"))
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
     return templates.TemplateResponse(request, "index.html")
+
+
+@app.get("/queue", response_class=HTMLResponse)
+async def queue(request: Request):
+    return templates.TemplateResponse(request, "queue.html")
+
+
+@app.get("/classroom", response_class=HTMLResponse)
+async def push_to_talk(request: Request):
+    return templates.TemplateResponse(request, "push_to_talk.html")
 
 
 if __name__ == "__main__":
