@@ -2,3 +2,8 @@
 # but this version needs a version of libstdc++ that isn't installed on rasp pi
 grpcio==1.66.2
 grpcio-status==1.66.2
+
+# this is needed for rasp pi before installing aiortc
+av --only-binary=:all:; platform_system == "Linux" and platform_machine == "aarch64"
+# RPi.GPIO is for rasp pi only
+RPi.GPIO==0.7.1; platform_system == "Linux" and platform_machine == "aarch64"
