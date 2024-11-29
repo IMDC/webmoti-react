@@ -90,21 +90,17 @@ async def push_to_talk(request: Request):
 
 
 def run_vite(command: str):
-    process = subprocess.Popen(
+    print("[vite] Starting Vite server...")
+    subprocess.Popen(
         f"npm run {command}",
         shell=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        universal_newlines=True,
         cwd=str(app_dir / "client"),
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        # fully detach on windows
+        creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
     )
-    try:
-        for line in process.stdout:
-            print(f"[vite] {line.strip()}")
-        for line in process.stderr:
-            print(f"[vite] {line.strip()}")
-    finally:
-        process.wait()
+    print("[vite] Vite server started.")
 
 
 def run_dev():
@@ -119,9 +115,7 @@ def run_dev():
     set_asset_dev_mode(True)
 
     # TODO exclude vite from reload
-    vite_thread = threading.Thread(target=run_vite, args=("dev",), daemon=True)
-    vite_thread.start()
-
+    run_vite("dev")
     uvicorn.run("__main__:app", port=PORT, log_config=LOGGING_CONFIG, reload=True)
 
 
