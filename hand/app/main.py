@@ -2,6 +2,8 @@ import argparse
 import logging
 import os
 import pathlib
+import subprocess
+import threading
 from contextlib import asynccontextmanager
 
 import uvicorn
@@ -63,10 +65,10 @@ for router in routers:
     app.include_router(router)
 
 
-dir_path = pathlib.Path(__file__).parent
+app_dir = pathlib.Path(__file__).parent
 
-app.mount("/static", StaticFiles(directory=(dir_path / "static")), name="static")
-templates = Jinja2Templates(directory=(dir_path / "templates"))
+app.mount("/static", StaticFiles(directory=(app_dir / "static")), name="static")
+templates = Jinja2Templates(directory=(app_dir / "templates"))
 
 # asset helper function
 templates.env.globals["asset"] = asset
@@ -87,21 +89,45 @@ async def push_to_talk(request: Request):
     return templates.TemplateResponse(request, "push_to_talk.html")
 
 
+def run_vite(command: str):
+    process = subprocess.Popen(
+        f"npm run {command}",
+        shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        universal_newlines=True,
+        cwd=str(app_dir / "client"),
+    )
+    try:
+        for line in process.stdout:
+            print(f"[vite] {line.strip()}")
+        for line in process.stderr:
+            print(f"[vite] {line.strip()}")
+    finally:
+        process.wait()
+
+
 def run_dev():
     cwd = pathlib.Path.cwd()
     if cwd.parts[-2:] != ("hand", "app"):
         # note: if log file is in app dir, it will cause infinite loop with reload=True
         # also uvicorn reload_dir always includes cwd so need to change it to avoid log file
         # workaround is to change cwd to directory without log file inside:
-        app_dir = pathlib.Path(__file__).parent
         os.chdir(app_dir)
         print(f"Changed cwd to {app_dir}")
 
     set_asset_dev_mode(True)
 
     # TODO exclude vite from reload
-    # TODO npm run build and npm run dev
+    vite_thread = threading.Thread(target=run_vite, args=("dev",), daemon=True)
+    vite_thread.start()
+
     uvicorn.run("__main__:app", port=PORT, log_config=LOGGING_CONFIG, reload=True)
+
+
+def run_prod():
+    run_vite("build")
+    uvicorn.run(app, host="127.0.0.1", port=PORT, log_config=LOGGING_CONFIG)
 
 
 def parse_args():
@@ -126,4 +152,4 @@ if __name__ == "__main__":
     if DEV_MODE:
         run_dev()
     else:
-        uvicorn.run(app, host="127.0.0.1", port=PORT, log_config=LOGGING_CONFIG)
+        run_prod()
