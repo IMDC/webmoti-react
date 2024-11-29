@@ -22,7 +22,6 @@
 
 <div id="spinner" class="center" aria-label="Loading indicator" />
 
-<script src="{{ url_for('static', path='queueListener.js') }}"></script>
-<script src="{{ url_for('static', path='notifications.js') }}"></script>
+<script type="module" src="{{ asset('bundles/queueBundle.js') }}"></script>
 
 {% endblock %}

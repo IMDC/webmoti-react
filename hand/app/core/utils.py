@@ -14,3 +14,7 @@ def setup_handlers() -> None:
 
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
+
+
+def is_pytest_running():
+    return "pytest" in sys.modules

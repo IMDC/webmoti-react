@@ -5,11 +5,15 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 
 from core.models import TTSRequest
+from core.utils import is_pytest_running
 
 router = APIRouter(prefix="/api")
 
 
 elevenlabs_api_key = os.getenv("ELEVENLABS_API_KEY")
+if not is_pytest_running() and not elevenlabs_api_key:
+    raise RuntimeError("Missing environment variable: ELEVENLABS_API_KEY")
+
 
 CHUNK_SIZE = 1024
 

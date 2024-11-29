@@ -1,0 +1,3 @@
+[tool.ruff]
+# group absolute path imports relative to this directory
+src = ["hand/app"]

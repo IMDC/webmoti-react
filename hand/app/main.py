@@ -1,4 +1,6 @@
+import argparse
 import logging
+import os
 import pathlib
 from contextlib import asynccontextmanager
 
@@ -10,13 +12,14 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+from core.constants import PORT
+from core.logger import LOGGING_CONFIG
+from core.utils import setup_handlers
+from vite_asset import asset, set_asset_dev_mode
+
 # load env variables before setting them in the modules below
 load_dotenv()
 
-
-from core.constants import PORT  # noqa: E402
-from core.logger import LOGGING_CONFIG  # noqa: E402
-from core.utils import setup_handlers  # noqa: E402
 from routes.captions_ws import router as captions_router  # noqa: E402
 from routes.notifications import router as notifications_router  # noqa: E402
 from routes.push_to_talk import router as push_to_talk_router  # noqa: E402
@@ -65,6 +68,9 @@ dir_path = pathlib.Path(__file__).parent
 app.mount("/static", StaticFiles(directory=(dir_path / "static")), name="static")
 templates = Jinja2Templates(directory=(dir_path / "templates"))
 
+# asset helper function
+templates.env.globals["asset"] = asset
+
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
@@ -81,15 +87,43 @@ async def push_to_talk(request: Request):
     return templates.TemplateResponse(request, "push_to_talk.html")
 
 
+def run_dev():
+    cwd = pathlib.Path.cwd()
+    if cwd.parts[-2:] != ("hand", "app"):
+        # note: if log file is in app dir, it will cause infinite loop with reload=True
+        # also uvicorn reload_dir always includes cwd so need to change it to avoid log file
+        # workaround is to change cwd to directory without log file inside:
+        app_dir = pathlib.Path(__file__).parent
+        os.chdir(app_dir)
+        print(f"Changed cwd to {app_dir}")
+
+    set_asset_dev_mode(True)
+
+    # TODO exclude vite from reload
+    # TODO npm run build and npm run dev
+    uvicorn.run("__main__:app", port=PORT, log_config=LOGGING_CONFIG, reload=True)
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Set production mode.")
+    parser.add_argument(
+        "--prod",
+        action="store_true",
+        dest="prod",
+        help="Enable production mode to build. Disable for code reloading.",
+    )
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
+    # TODO remove setup_handlers
     setup_handlers()
-    uvicorn.run(app, host="127.0.0.1", port=PORT, log_config=LOGGING_CONFIG)
+    args = parse_args()
 
-    # uncomment below for faster dev (auto reload)
-    # note: if log file is in app dir, it will cause infinite loop with reload=True
-    # also uvicorn reload_dir always includes cwd so need to change it to avoid log file
-    # workaround:
-    # import os
-
-    # os.chdir("hand/app")
-    # uvicorn.run("__main__:app", port=PORT, log_config=LOGGING_CONFIG, reload=True)
+    # dev mode: vite hmr + uvicorn reload
+    DEV_MODE = not args.prod
+    print(f"Dev mode: {DEV_MODE}\n")
+    if DEV_MODE:
+        run_dev()
+    else:
+        uvicorn.run(app, host="127.0.0.1", port=PORT, log_config=LOGGING_CONFIG)

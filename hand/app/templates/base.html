@@ -7,7 +7,9 @@
 
     <link rel="icon" href="{{ url_for('static', path='/favicon.svg') }}" />
 
-    <link href="{{ url_for('static', path='/style.css?id=1') }}" rel="stylesheet" />
+    <script type="module" src="{{ asset('@vite/client') }}"></script>
+    <script type="module" src="{{ asset('bundles/main.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('styles/style.css') }}" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

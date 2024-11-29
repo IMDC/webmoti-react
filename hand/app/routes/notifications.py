@@ -6,11 +6,17 @@ from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import JSONResponse
 from pywebpush import WebPushException, webpush
 
+from core.utils import is_pytest_running
+
 router = APIRouter(prefix="/api")
 
 
 vapid_private_key = os.getenv("VAPID_PRIVATE_KEY")
 vapid_email = os.getenv("VAPID_EMAIL")
+if not is_pytest_running() and (not vapid_private_key or not vapid_email):
+    raise RuntimeError(
+        "Missing environment variables: VAPID_PRIVATE_KEY or VAPID_EMAIL"
+    )
 
 # this is stored in memory vs a db because we don't want subs to persist
 subscriptions: List[Dict] = []

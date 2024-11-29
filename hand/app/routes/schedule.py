@@ -14,10 +14,13 @@ from openai.types.beta.threads.message_create_params import (
 from openai.types.beta.threads.run import Usage
 
 from core.models import ScheduleRequest
+from core.utils import is_pytest_running
 
 router = APIRouter(prefix="/api")
 
 openai_api_key = os.getenv("OPENAI_API_KEY")
+if not is_pytest_running() and not openai_api_key:
+    raise RuntimeError("Missing environment variable: OPENAI_API_KEY")
 
 # identity to schedule
 schedule: Dict[str, Dict[str, str]] = {}
@@ -178,4 +181,6 @@ async def schedule_post_endpoint(
         file, form_data.start_time, form_data.end_time
     )
 
+    return {"schedule": schedule[form_data.identity]}
+    return {"schedule": schedule[form_data.identity]}
     return {"schedule": schedule[form_data.identity]}
