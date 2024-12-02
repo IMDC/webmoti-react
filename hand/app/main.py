@@ -104,8 +104,8 @@ async def queue(request: Request):
 
 
 @app.get("/classroom", response_class=HTMLResponse)
-async def push_to_talk(request: Request):
-    return templates.TemplateResponse(request, "push_to_talk.html")
+async def classroom(request: Request):
+    return templates.TemplateResponse(request, "classroom.html")
 
 
 def run_vite(is_dev: bool = True):
