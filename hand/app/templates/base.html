@@ -7,7 +7,7 @@
 
     <link rel="icon" href="{{ url_for('static', path='/favicon.svg') }}" />
 
-    <script type="module" src="{{ asset('@vite/client') }}"></script>
+    {{ vite_hmr_client() }}
     <script type="module" src="{{ asset('bundles/main.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('styles/style.css') }}" />
 

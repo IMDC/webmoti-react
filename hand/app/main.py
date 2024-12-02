@@ -3,7 +3,6 @@ import logging
 import os
 import pathlib
 import subprocess
-import threading
 from contextlib import asynccontextmanager
 
 import uvicorn
@@ -17,7 +16,7 @@ from fastapi.templating import Jinja2Templates
 from core.constants import PORT
 from core.logger import LOGGING_CONFIG
 from core.utils import setup_handlers
-from vite_asset import asset, set_asset_dev_mode
+from vite_asset import asset, set_asset_dev_mode, vite_hmr_client
 
 # load env variables before setting them in the modules below
 load_dotenv()
@@ -38,6 +37,17 @@ async def lifespan(_: FastAPI):
     logging.info("--- Starting hand server ---\n")
 
     yield
+
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--prod",
+        action="store_true",
+        dest="prod",
+        help="Enable production mode to build. Disable for code reloading.",
+    )
+    return parser.parse_args()
 
 
 app = FastAPI(lifespan=lifespan)
@@ -70,8 +80,17 @@ app_dir = pathlib.Path(__file__).parent
 app.mount("/static", StaticFiles(directory=(app_dir / "static")), name="static")
 templates = Jinja2Templates(directory=(app_dir / "templates"))
 
+
+args = parse_args()
+# dev mode: vite hmr + uvicorn reload
+DEV_MODE = not args.prod
+print(f"Dev mode: {DEV_MODE}\n")
+set_asset_dev_mode(DEV_MODE)
+
 # asset helper function
+# this needs to be after calling set_asset_dev_mode
 templates.env.globals["asset"] = asset
+templates.env.globals["vite_hmr_client"] = vite_hmr_client
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -89,18 +108,30 @@ async def push_to_talk(request: Request):
     return templates.TemplateResponse(request, "push_to_talk.html")
 
 
-def run_vite(command: str):
-    print("[vite] Starting Vite server...")
-    subprocess.Popen(
-        f"npm run {command}",
-        shell=True,
-        cwd=str(app_dir / "client"),
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-        # fully detach on windows
-        creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
-    )
-    print("[vite] Vite server started.")
+def run_vite(is_dev: bool = True):
+    command = "dev"
+    if not is_dev:
+        command = "build"
+    print(f"Running npm run {command}")
+
+    kwargs = {
+        "shell": True,
+        "cwd": str(app_dir / "client"),
+    }
+
+    if is_dev:
+        kwargs.update(
+            {
+                "stdout": subprocess.DEVNULL,
+                "stderr": subprocess.DEVNULL,
+                # fully detach on windows
+                "creationflags": subprocess.CREATE_NEW_PROCESS_GROUP,
+            }
+        )
+        subprocess.Popen(f"npm run {command}", **kwargs)
+        print("Vite dev server will run in the background")
+    else:
+        subprocess.run(f"npm run {command}", **kwargs)
 
 
 def run_dev():
@@ -112,37 +143,20 @@ def run_dev():
         os.chdir(app_dir)
         print(f"Changed cwd to {app_dir}")
 
-    set_asset_dev_mode(True)
-
     # TODO exclude vite from reload
-    run_vite("dev")
+    run_vite()
     uvicorn.run("__main__:app", port=PORT, log_config=LOGGING_CONFIG, reload=True)
 
 
 def run_prod():
-    run_vite("build")
+    run_vite(is_dev=False)
     uvicorn.run(app, host="127.0.0.1", port=PORT, log_config=LOGGING_CONFIG)
-
-
-def parse_args():
-    parser = argparse.ArgumentParser(description="Set production mode.")
-    parser.add_argument(
-        "--prod",
-        action="store_true",
-        dest="prod",
-        help="Enable production mode to build. Disable for code reloading.",
-    )
-    return parser.parse_args()
 
 
 if __name__ == "__main__":
     # TODO remove setup_handlers
     setup_handlers()
-    args = parse_args()
 
-    # dev mode: vite hmr + uvicorn reload
-    DEV_MODE = not args.prod
-    print(f"Dev mode: {DEV_MODE}\n")
     if DEV_MODE:
         run_dev()
     else:
