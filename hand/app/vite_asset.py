@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+from markupsafe import Markup
+
 VITE_ORIGIN = "http://localhost:5173"
 
 _is_dev_mode = False
@@ -41,16 +43,15 @@ def prod_asset(file_path: str) -> str:
 
 def vite_hmr_client() -> str:
     if _is_dev_mode:
-        return f'<script type="module" src="{VITE_ORIGIN}/@vite/client"></script>'
+        # mark string as safe html
+        return Markup(
+            f'<script type="module" src="{VITE_ORIGIN}/@vite/client"></script>'
+        )
     return ""
 
 
 def asset(file_path: str) -> str:
     if _is_dev_mode:
-        # vite hmr client
-        if file_path == "@vite/client":
-            return f"{VITE_ORIGIN}/@vite/client"
         return dev_asset(file_path)
 
-    # if not dev mode, vite hmr client src will be ""
     return prod_asset(file_path)
