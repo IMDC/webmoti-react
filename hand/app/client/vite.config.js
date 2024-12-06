@@ -1,20 +1,21 @@
 import { defineConfig } from "vite";
+import { resolve } from "path";
 
 // https://vite.dev/guide/backend-integration.html
 export default defineConfig({
-  root: "./src/",
+  root: resolve(__dirname, "src"),
   build: {
     // generate .vite/manifest.json in outDir
     manifest: true,
     emptyOutDir: true,
-    outDir: "../../static/build",
+    outDir: resolve(__dirname, "../static/build"),
     rollupOptions: {
       input: {
-        main: "./src/bundles/main.js",
-        queue: "./src/bundles/queueBundle.js",
-        classroom: "./src/bundles/classroomBundle.js",
-        sw: "./src/js/sw.js",
-        styles: "./src/styles/style.css",
+        main: resolve(__dirname, "src/bundles/main.js"),
+        queue: resolve(__dirname, "src/bundles/queueBundle.js"),
+        classroom: resolve(__dirname, "src/bundles/classroomBundle.js"),
+        sw: resolve(__dirname, "src/js/sw.js"),
+        styles: resolve(__dirname, "src/styles/style.css"),
       },
       output: {
         entryFileNames: (chunk) => {
