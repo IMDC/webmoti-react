@@ -13,7 +13,16 @@ export default defineConfig({
         main: "./src/bundles/main.js",
         queue: "./src/bundles/queueBundle.js",
         classroom: "./src/bundles/classroomBundle.js",
+        sw: "./src/js/sw.js",
         styles: "./src/styles/style.css",
+      },
+      output: {
+        entryFileNames: (chunk) => {
+          if (chunk.name === "sw") {
+            return "sw.js";
+          }
+          return "assets/[name]-[hash].js";
+        },
       },
     },
   },

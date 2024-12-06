@@ -25,7 +25,9 @@ const unregisterSw = async () => {
 };
 
 const registerSw = async () => {
-  const registration = await navigator.serviceWorker.register("/static/sw.js");
+  const registration = await navigator.serviceWorker.register(
+    "/static/build/sw.js"
+  );
   return registration;
 };
 
