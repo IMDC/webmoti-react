@@ -1,51 +1,162 @@
-let peer;
-let audioTrack;
+import { Room, RoomEvent } from "livekit-client";
 
-async function initializeConnection() {
-  // get local audio stream
-  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-  audioTrack = stream.getAudioTracks()[0];
-  // start with audio disabled
-  audioTrack.enabled = false;
+const livekitUrl = import.meta.env.VITE_LIVEKIT_URL;
 
-  // start connection with stream
-  peer = new SimplePeer({
-    initiator: true,
-    trickle: false,
-    stream: stream,
+const pttButton = document.getElementById("talk-button");
+const connectButton = document.getElementById("connect-button");
+const connectSpinner = connectButton.querySelector(".connect-spinner");
+
+let isConnected = false;
+
+let token;
+
+const room = new Room({
+  // don't sub to other participants tracks
+  autoSubscribe: false,
+  adaptiveStream: false,
+  publishDefaults: {
+    audioPreset: {
+      maxBitrate: 64000,
+      priority: "medium",
+    },
+    dtx: true,
+    red: true,
+    stopMicTrackOnMute: true,
+  },
+});
+
+async function getToken(id) {
+  const response = await fetch("/api/get-token", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id: id }),
   });
 
-  peer.on("signal", async (data) => {
-    if (data.type === "offer") {
-      const response = await fetch("/api/offer", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      const answer = await response.json();
-      peer.signal(answer);
-    }
-  });
-}
-
-function setupPushToTalk(buttonId) {
-  const button = document.getElementById(buttonId);
-
-  function toggleAudio(enable) {
-    if (audioTrack) audioTrack.enabled = enable;
-    button.classList.toggle("btn-active", enable);
+  if (!response.ok) {
+    console.error("Failed to fetch token");
+    return null;
   }
 
-  button.addEventListener("mousedown", () => toggleAudio(true));
-  button.addEventListener("mouseup", () => toggleAudio(false));
+  const data = await response.json();
 
-  // mobile devices
-  button.addEventListener("touchstart", () => toggleAudio(true));
-  button.addEventListener("touchend", () => toggleAudio(false));
+  return data.token;
+}
+
+async function prepareConnection() {
+  console.log("Preparing connection...");
+  let userId = crypto.randomUUID();
+
+  token = await getToken(userId);
+  if (token == null) {
+    alert("Error authenticating");
+    return;
+  }
+
+  room.prepareConnection(livekitUrl, token);
+
+  // don't listen to track sub events (no audio playback needed)
+  room
+    .on(RoomEvent.Disconnected, handleDisconnect)
+    .on(RoomEvent.LocalTrackUnpublished, handleLocalTrackUnpublished);
+}
+
+async function joinRoom() {
+  await room.connect(livekitUrl, token);
+  console.log("Connected to classroom");
+}
+
+async function leaveRoom() {
+  await room.disconnect(true);
+  console.log("Disconnected from classroom");
+}
+
+function handleLocalTrackUnpublished(_) {
+  console.log(`Track unpublished by participant`);
+}
+
+function handleDisconnect() {
+  console.log("Disconnected from room");
+  pttButton.disabled = true;
+}
+
+function setupPushToTalk() {
+  async function toggleAudio(enable) {
+    if (enable && !(await checkMic())) return;
+    await room.localParticipant.setMicrophoneEnabled(enable);
+    pttButton.classList.toggle("btn-active", enable);
+  }
+
+  pttButton.disabled = true;
+
+  // listeners for pc and mobile
+  pttButton.addEventListener("mousedown", () => toggleAudio(true));
+  pttButton.addEventListener("mouseup", () => toggleAudio(false));
+  pttButton.addEventListener("touchstart", () => toggleAudio(true));
+  pttButton.addEventListener("touchend", () => toggleAudio(false));
+}
+
+async function requestAudioPerms() {
+  const micPermission = await navigator.permissions.query({
+    name: "microphone",
+  });
+  const isFirefox = navigator.userAgent.toLowerCase().includes("firefox");
+
+  // in firefox, it says permission is granted when it's not
+  if (micPermission.state !== "granted" || isFirefox) {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // stop mic recorder to remove red mic icon
+      stream.getTracks().forEach((track) => track.stop());
+    } catch (e) {
+      console.error(e);
+      if (e.name === "NotAllowedError") {
+        alert("Microphone permission is blocked");
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
+async function checkMic() {
+  const devices = await navigator.mediaDevices.enumerateDevices();
+  const hasMic = devices.some((device) => device.kind === "audioinput");
+  if (!hasMic) {
+    alert("No microphone found");
+    return false;
+  }
+  return true;
+}
+
+function setupConnectBtn() {
+  async function toggleConnection() {
+    if (!isConnected && !(await checkMic())) return;
+    // need to get mic permission before publishing track because of livekit bug
+    if (!isConnected && !(await requestAudioPerms())) return;
+
+    const buttonText = connectButton.querySelector("#button-text");
+
+    if (!isConnected) {
+      // only show spinner on join since leave is very quick
+      connectSpinner.classList.remove("hidden");
+      await joinRoom();
+      buttonText.textContent = "Disconnect";
+      connectSpinner.classList.add("hidden");
+    } else {
+      await leaveRoom();
+      buttonText.textContent = "Connect";
+    }
+
+    isConnected = !isConnected;
+    pttButton.disabled = !isConnected;
+  }
+
+  connectButton.addEventListener("click", () => toggleConnection());
 }
 
 window.addEventListener("load", () => {
-  initializeConnection();
-  setupPushToTalk("talkButton");
+  setupConnectBtn();
+  setupPushToTalk();
+  prepareConnection();
 });

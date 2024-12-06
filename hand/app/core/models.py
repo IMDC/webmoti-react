@@ -18,6 +18,12 @@ class TTSRequest(BaseModel):
     text: str
 
 
+class TokenRequest(BaseModel):
+    """Client post request to /get-token"""
+
+    id: str
+
+
 class CaptionData(BaseModel):
     """Websocket JSON caption to /ws/captions"""
 

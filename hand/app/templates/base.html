@@ -7,19 +7,22 @@
 
     <link rel="icon" href="{{ url_for('static', path='/favicon.svg') }}" />
 
-    {{ vite_hmr_client() }}
-    <script type="module" src="{{ asset('bundles/main.js') }}"></script>
-    <link rel="stylesheet" href="{{ asset('styles/style.css') }}" />
-
+    <!-- fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
       rel="stylesheet"
     />
+
+    <link rel="stylesheet" href="{{ asset('styles/style.css') }}" />
   </head>
 
   <body>
     {% block content %}{% endblock %}
+    <!-- prettier-ignore -->
+
+    {{ vite_hmr_client() }}
+    <script type="module" src="{{ asset('bundles/main.js') }}"></script>
   </body>
 </html>

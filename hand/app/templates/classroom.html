@@ -6,9 +6,21 @@
 {% block content %}
 <!-- prettier-ignore -->
 
-<button id="talkButton" class="btn center">Push to talk</button>
+<!-- TODO aria labels -->
 
-<!-- <script src="https://cdn.jsdelivr.net/npm/simple-peer@9.11.1/simplepeer.min.js "></script> -->
+<button id="talk-button" class="btn center center-transform">
+  Push to talk
+</button>
+
+<button id="connect-button" class="btn connect-btn bottom-right">
+  <span id="button-text">Connect</span>
+
+  <div
+    class="spinner connect-spinner hidden"
+    aria-label="Loading indicator"
+  ></div>
+</button>
+
 <script type="module" src="{{ asset('bundles/classroomBundle.js') }}"></script>
 
 {% endblock %}

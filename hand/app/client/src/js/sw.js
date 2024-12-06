@@ -15,14 +15,11 @@ const urlBase64ToUint8Array = (base64String) => {
 };
 
 const saveSubscription = async (subscription) => {
-  const response = await fetch(
-    "https://jmn2f42hjgfv.connect.remote.it/api/save-subscription",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(subscription),
-    }
-  );
+  const response = await fetch(import.meta.env.VITE_SAVE_SUB_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(subscription),
+  });
 
   // show notification if save subscription fails
   if (!response.ok) {
@@ -38,7 +35,7 @@ self.addEventListener("activate", async () => {
   const sub = await self.registration.pushManager.subscribe({
     userVisibleOnly: true,
     applicationServerKey: urlBase64ToUint8Array(
-      "BGtqvdLvqK_85Tf61yiByRqhf4zXEuG39BSpcoRecp2zaxXeN6wpCTxUGGsaaCtc1JZdv7Qa52JhWUlwI5fHVws"
+      import.meta.env.VITE_NOTIF_APP_KEY
     ),
   });
 

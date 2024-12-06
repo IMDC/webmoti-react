@@ -16,11 +16,19 @@ body {
   box-sizing: border-box;
 }
 
-#counter {
+.bottom-right {
   position: fixed;
   bottom: 0;
   right: 0;
+}
 
+.bottom-left {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+
+#counter {
   margin: 0;
   line-height: 0.8;
   padding: 2vw;
@@ -29,11 +37,7 @@ body {
   font-size: 15vw;
 }
 
-#notificationButton {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-
+#notification-button {
   padding: 2vw;
   width: 5vw;
 
@@ -119,7 +123,7 @@ body {
   margin-bottom: 2rem;
 }
 
-#spinner {
+.spinner {
   height: 10vw;
   width: 10vw;
   border: 0.5vw solid;
@@ -132,12 +136,20 @@ body {
   position: fixed;
   top: 50%;
   left: 50%;
+}
+
+.center-margin {
+  margin-top: -5vw;
+  margin-left: -5vw;
+}
+
+.center-transform {
   transform: translate(-50%, -50%);
 }
 
 @keyframes spin {
   to {
-    transform: translate(-50%, -50%) rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 
@@ -155,7 +167,26 @@ body {
   cursor: pointer;
 }
 
+.connect-btn {
+  font-size: 2.5vw;
+  margin: 15px;
+  display: inline-flex;
+  gap: 0.5em;
+}
+
 .btn-active {
   background-color: var(--purple);
   color: var(--white);
+}
+
+.connect-spinner {
+  height: 1em;
+  width: 1em;
+  border: 0.1em solid;
+  border-color: var(--bg-color) transparent var(--bg-color) transparent;
+  display: inline-block;
+}
+
+.connect-spinner.hidden {
+  display: none;
 }

@@ -143,9 +143,16 @@ def run_dev():
         os.chdir(app_dir)
         print(f"Changed cwd to {app_dir}")
 
-    # TODO exclude vite from reload
     run_vite()
-    uvicorn.run("__main__:app", port=PORT, log_config=LOGGING_CONFIG, reload=True)
+    uvicorn.run(
+        "__main__:app",
+        port=PORT,
+        log_config=LOGGING_CONFIG,
+        reload=True,
+        # TODO exclude vite client because of hmr (this doesn't work)
+        # TODO maybe fix is to move /client outside of /app
+        # reload_excludes=[str(app_dir / "client")],
+    )
 
 
 def run_prod():

@@ -6,13 +6,13 @@
 {% block content %}
 <!-- prettier-ignore -->
 
-<h1 id="counter" aria-live="polite" aria-label="Number of people in queue"></h1>
+<h1 id="counter" class="bottom-right" aria-live="polite" aria-label="Number of people in queue"></h1>
 
 <ul id="queue" aria-live="polite" aria-label="Queue list"></ul>
 
 <img
-  id="notificationButton"
-  class="gray-filter"
+  id="notification-button"
+  class="gray-filter bottom-left"
   src="{{ url_for('static', path='notification-bell.svg') }}"
   alt="Notification button"
   tabindex="0"
@@ -20,7 +20,11 @@
   aria-label="Click to enable notifications"
 />
 
-<div id="spinner" class="center" aria-label="Loading indicator" />
+<div
+  id="spinner"
+  class="center center-margin spinner"
+  aria-label="Loading indicator"
+></div>
 
 <script type="module" src="{{ asset('bundles/queueBundle.js') }}"></script>
 

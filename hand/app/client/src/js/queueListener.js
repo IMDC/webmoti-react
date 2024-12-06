@@ -90,7 +90,7 @@ eventSource.onopen = () => {
   queue.style.display = "block";
   counter.style.display = "block";
   // notificationBtn is used in notifications.js
-  document.getElementById("notificationButton").style.display = "block";
+  document.getElementById("notification-button").style.display = "block";
 };
 
 eventSource.onerror = () => {
@@ -98,7 +98,7 @@ eventSource.onerror = () => {
   spinner.style.display = "block";
   queue.style.display = "none";
   counter.style.display = "none";
-  document.getElementById("notificationButton").style.display = "none";
+  document.getElementById("notification-button").style.display = "none";
 };
 
 const stringToColour = (stringInput) => {

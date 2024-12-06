@@ -1,4 +1,4 @@
-const notificationBtn = document.getElementById("notificationButton");
+const notificationBtn = document.getElementById("notification-button");
 
 let notificationsEnabled = false;
 
