@@ -86,8 +86,6 @@ function setupPushToTalk() {
     pttButton.classList.toggle("btn-active", enable);
   }
 
-  pttButton.disabled = true;
-
   // listeners for pc and mobile
   pttButton.addEventListener("mousedown", () => toggleAudio(true));
   pttButton.addEventListener("mouseup", () => toggleAudio(false));

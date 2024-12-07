@@ -5,6 +5,7 @@
   --bg-color: #121212;
   --green: #1db954;
   --white: #f4f4f9;
+  --darker-white: #c3c3c7;
   --purple: #7f00ff;
 }
 
@@ -64,8 +65,16 @@ body {
   transform: translate(-50%, -50%);
 }
 
+.large-text {
+  font-size: xx-large;
+}
+
+.strong-text {
+  font-weight: bolder;
+  text-transform: uppercase;
+}
+
 .button {
-  /* font-family: "Inter", sans-serif; */
   color: var(--bg-color);
   background-color: var(--white);
   text-decoration: none;
@@ -74,6 +83,20 @@ body {
   border-radius: 25px;
   border: none;
   cursor: pointer;
+
+  transition: 0.3s ease;
+}
+
+.button:hover {
+  background-color: var(--darker-white);
+}
+
+.button:disabled {
+  cursor: default;
+  opacity: 0.6;
+
+  color: grey;
+  background-color: var(--darker-white);
 }
 
 .row {

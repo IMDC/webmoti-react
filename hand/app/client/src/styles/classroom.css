@@ -1,20 +1,10 @@
-.btn {
-  font-family: "Inter", sans-serif;
-  font-weight: bold;
-
-  padding: 10px;
-  font-size: 15vw;
-
-  border-radius: 25px;
-  border: none;
-  cursor: pointer;
+#talk-button {
+  font-size: 10vw;
 }
 
-.connect-btn {
-  font-size: 2.5vw;
+#connect-button {
+  font-size: 3vw;
   margin: 15px;
-  display: inline-flex;
-  gap: 0.5em;
 }
 
 .btn-active {
