@@ -1,0 +1,35 @@
+.btn {
+  font-family: "Inter", sans-serif;
+  font-weight: bold;
+
+  padding: 10px;
+  font-size: 15vw;
+
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+}
+
+.connect-btn {
+  font-size: 2.5vw;
+  margin: 15px;
+  display: inline-flex;
+  gap: 0.5em;
+}
+
+.btn-active {
+  background-color: var(--purple);
+  color: var(--white);
+}
+
+.connect-spinner {
+  height: 1em;
+  width: 1em;
+  border: 0.1em solid;
+  border-color: var(--bg-color) transparent var(--bg-color) transparent;
+  display: inline-block;
+}
+
+.connect-spinner.hidden {
+  display: none;
+}

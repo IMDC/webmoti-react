@@ -1,3 +1,6 @@
+@import "./queue.css";
+@import "./classroom.css";
+
 :root {
   --bg-color: #121212;
   --green: #1db954;
@@ -37,92 +40,6 @@ body {
   font-size: 15vw;
 }
 
-#notification-button {
-  padding: 2vw;
-  width: 5vw;
-
-  cursor: pointer;
-}
-
-.gray-filter {
-  filter: invert(91%) sepia(0%) saturate(99%) hue-rotate(174deg) brightness(82%)
-    contrast(77%);
-}
-
-.blue-filter {
-  filter: invert(58%) sepia(57%) saturate(6535%) hue-rotate(194deg)
-    brightness(104%) contrast(101%);
-}
-
-#queue {
-  list-style: none;
-  padding: 0;
-  margin: 3vw;
-  width: 100vw;
-}
-
-#queue li {
-  margin-bottom: 0;
-  max-height: 0;
-  overflow: hidden;
-
-  font-weight: 700;
-  text-align: center;
-  word-break: break-word;
-  overflow-wrap: break-word;
-
-  opacity: 0;
-}
-
-.transition-no-size {
-  transition: margin-bottom 0.4s ease-out, max-height 0.4s ease-out,
-    opacity 0.4s ease-out;
-}
-
-.queue-0 {
-  font-size: 14vw;
-}
-
-#queue .show-0 {
-  max-height: 17vw;
-  opacity: 1;
-
-  margin-bottom: 6rem;
-}
-
-.queue-1 {
-  font-size: 8vw;
-}
-
-#queue .show-1 {
-  max-height: 10vw;
-  opacity: 0.8;
-
-  margin-bottom: 2rem;
-}
-
-.queue-2 {
-  font-size: 5vw;
-}
-
-#queue .show-2 {
-  max-height: 7vw;
-  opacity: 0.7;
-
-  margin-bottom: 2rem;
-}
-
-.queue-3 {
-  font-size: 3vw;
-}
-
-#queue .show-3 {
-  max-height: 6vw;
-  opacity: 0.6;
-
-  margin-bottom: 2rem;
-}
-
 .spinner {
   height: 10vw;
   width: 10vw;
@@ -147,46 +64,26 @@ body {
   transform: translate(-50%, -50%);
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* push to talk styles below */
-
-.btn {
-  font-family: "Inter", sans-serif;
-  font-weight: bold;
-
-  padding: 10px;
-  font-size: 15vw;
+.button {
+  /* font-family: "Inter", sans-serif; */
+  color: var(--bg-color);
+  background-color: var(--white);
+  text-decoration: none;
+  padding: 20px;
 
   border-radius: 25px;
   border: none;
   cursor: pointer;
 }
 
-.connect-btn {
-  font-size: 2.5vw;
-  margin: 15px;
-  display: inline-flex;
-  gap: 0.5em;
+.row {
+  display: flex;
+  flex-direction: row;
+  gap: 5vw;
 }
 
-.btn-active {
-  background-color: var(--purple);
-  color: var(--white);
-}
-
-.connect-spinner {
-  height: 1em;
-  width: 1em;
-  border: 0.1em solid;
-  border-color: var(--bg-color) transparent var(--bg-color) transparent;
-  display: inline-block;
-}
-
-.connect-spinner.hidden {
-  display: none;
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

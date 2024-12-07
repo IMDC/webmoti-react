@@ -1,2 +1,2 @@
-import "../styles/style.css";
+// todo disable this
 import "vite/modulepreload-polyfill";
