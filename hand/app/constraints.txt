@@ -7,3 +7,9 @@ grpcio-status==1.66.2
 av --only-binary=:all:; platform_system == "Linux" and platform_machine == "aarch64"
 # RPi.GPIO is for rasp pi only
 RPi.GPIO==0.7.1; platform_system == "Linux" and platform_machine == "aarch64"
+
+# this is to make it work with circleci
+# note: for linux (non circleci), you need to install manually
+# TODO make setup.py for this instead
+soundcard==0.4.3; (platform_system == "Linux" and platform_machine == "aarch64") or platform_system == "Windows"
+
