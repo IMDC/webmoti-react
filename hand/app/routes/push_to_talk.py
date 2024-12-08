@@ -1,6 +1,8 @@
 import logging
 import os
+import threading
 from contextlib import asynccontextmanager
+from uuid import uuid4
 
 from fastapi import APIRouter, FastAPI
 from livekit import api, rtc
@@ -18,11 +20,15 @@ if not LIVEKIT_API_KEY or not LIVEKIT_API_SECRET or not LIVEKIT_SERVER_URL:
 
 ROOM_NAME = "Classroom"
 
+unmuted_tracks = []
+lock = threading.Lock()
+
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    # create room on startup
+    # create and join room on startup
     await create_room(ROOM_NAME)
+    await join_room()
 
     yield
 
@@ -35,11 +41,49 @@ async def lifespan(_: FastAPI):
 router = APIRouter(prefix="/api", lifespan=lifespan)
 
 
+async def join_room():
+    room = rtc.Room()
+
+    @room.on("track_subscribed")
+    def on_track_subscribed(
+        track: rtc.Track,
+        _publication: rtc.RemoteTrackPublication,
+        _participant: rtc.RemoteParticipant,
+    ):
+        if not track.muted:
+            with lock:
+                unmuted_tracks.append(track)
+                print(unmuted_tracks)
+
+    @room.on("track_unmuted")
+    def on_track_unmuted(_: rtc.Participant, publication: rtc.TrackPublication) -> None:
+        with lock:
+            unmuted_tracks.append(publication.track)
+            print(unmuted_tracks)
+
+    @room.on("track_muted")
+    def on_track_muted(_: rtc.Participant, publication: rtc.TrackPublication) -> None:
+        with lock:
+            unmuted_tracks.remove(publication.track)
+            print(unmuted_tracks)
+
+    id = uuid4()
+    token = generate_token(str(id), room_admin=True)
+    await room.connect(LIVEKIT_SERVER_URL, token["token"])
+    logging.info("Connected to classroom")
+
+
 async def create_room(room_name: str) -> rtc.Room:
     lkapi = api.LiveKitAPI(LIVEKIT_SERVER_URL)
     try:
         room = await lkapi.room.create_room(
-            api.CreateRoomRequest(name=room_name, max_participants=100)
+            api.CreateRoomRequest(
+                name=room_name,
+                max_participants=100,
+                # empty_timeout=0,
+                # close room instantly after last participant (this one) leaves
+                # departure_timeout=1,
+            )
         )
         logging.info("Created livekit classroom")
         await lkapi.aclose()
@@ -64,7 +108,9 @@ def generate_token(user_id: str, room_admin=False) -> dict:
     if room_admin:
         video_grants.room_admin = True
         video_grants.can_subscribe = True
-        video_grants.hidden = True
+        # video_grants.can_publish = False
+        # this causes error
+        # video_grants.hidden = True
 
     token = (
         api.AccessToken(api_key=LIVEKIT_API_KEY, api_secret=LIVEKIT_API_SECRET)
