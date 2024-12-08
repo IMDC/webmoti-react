@@ -5,14 +5,17 @@
 #connect-button {
   font-size: 3vw;
   margin: 15px;
+  /* stuff below is for the spinner */
+  display: inline-flex;
+  gap: 0.5em;
 }
 
-.btn-active {
+#talk-button.btn-active {
   background-color: var(--purple);
   color: var(--white);
 }
 
-.connect-spinner {
+#connect-button .connect-spinner {
   height: 1em;
   width: 1em;
   border: 0.1em solid;
@@ -20,6 +23,6 @@
   display: inline-block;
 }
 
-.connect-spinner.hidden {
+#connect-button .connect-spinner.hidden {
   display: none;
 }

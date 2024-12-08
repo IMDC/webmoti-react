@@ -4,6 +4,7 @@ const livekitUrl = import.meta.env.VITE_LIVEKIT_URL;
 
 const pttButton = document.getElementById("talk-button");
 const connectButton = document.getElementById("connect-button");
+const buttonText = connectButton.querySelector("#button-text");
 const connectSpinner = connectButton.querySelector(".connect-spinner");
 
 let isConnected = false;
@@ -42,41 +43,42 @@ async function getToken(id) {
   return data.token;
 }
 
+function checkToken() {
+  if (token == null) {
+    alert("Error authenticating");
+    return false;
+  }
+  return true;
+}
+
 async function prepareConnection() {
   console.log("Preparing connection...");
   let userId = crypto.randomUUID();
 
   token = await getToken(userId);
-  if (token == null) {
-    alert("Error authenticating");
-    return;
-  }
+  if (!checkToken()) return;
 
   room.prepareConnection(livekitUrl, token);
 
   // don't listen to track sub events (no audio playback needed)
-  room
-    .on(RoomEvent.Disconnected, handleDisconnect)
-    .on(RoomEvent.LocalTrackUnpublished, handleLocalTrackUnpublished);
+  room.on(RoomEvent.Disconnected, handleDisconnect);
 }
 
 async function joinRoom() {
   await room.connect(livekitUrl, token);
+  buttonText.textContent = "Disconnect";
   console.log("Connected to classroom");
 }
 
 async function leaveRoom() {
   await room.disconnect(true);
-  console.log("Disconnected from classroom");
-}
-
-function handleLocalTrackUnpublished(_) {
-  console.log(`Track unpublished by participant`);
+  console.log("Left classroom");
 }
 
 function handleDisconnect() {
-  console.log("Disconnected from room");
+  console.log("Disconnected from classroom");
   pttButton.disabled = true;
+  buttonText.textContent = "Connect";
 }
 
 function setupPushToTalk() {
@@ -132,18 +134,15 @@ function setupConnectBtn() {
     if (!isConnected && !(await checkMic())) return;
     // need to get mic permission before publishing track because of livekit bug
     if (!isConnected && !(await requestAudioPerms())) return;
-
-    const buttonText = connectButton.querySelector("#button-text");
+    if (!checkToken()) return;
 
     if (!isConnected) {
       // only show spinner on join since leave is very quick
       connectSpinner.classList.remove("hidden");
       await joinRoom();
-      buttonText.textContent = "Disconnect";
       connectSpinner.classList.add("hidden");
     } else {
       await leaveRoom();
-      buttonText.textContent = "Connect";
     }
 
     isConnected = !isConnected;
