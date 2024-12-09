@@ -39,17 +39,6 @@ async def lifespan(_: FastAPI):
     yield
 
 
-def parse_args():
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--prod",
-        action="store_true",
-        dest="prod",
-        help="Enable production mode to build. Disable for code reloading.",
-    )
-    return parser.parse_args()
-
-
 app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
@@ -80,12 +69,11 @@ app_dir = pathlib.Path(__file__).parent
 app.mount("/static", StaticFiles(directory=(app_dir / "static")), name="static")
 templates = Jinja2Templates(directory=(app_dir / "templates"))
 
-
-args = parse_args()
-# dev mode: vite hmr + uvicorn reload
-DEV_MODE = not args.prod
-print(f"Dev mode: {DEV_MODE}\n")
-set_asset_dev_mode(DEV_MODE)
+# default is dev mode: vite hmr + uvicorn reload
+APP_ENV = os.getenv("APP_ENV", "dev").lower()
+IS_DEV_MODE = APP_ENV == "dev"
+print(f"Dev mode: {IS_DEV_MODE}\n")
+set_asset_dev_mode(IS_DEV_MODE)
 
 # asset helper function
 # this needs to be after calling set_asset_dev_mode
@@ -155,16 +143,48 @@ def run_dev():
     )
 
 
-def run_prod():
-    run_vite(is_dev=False)
+def run_prod(build: bool):
+    if build:
+        run_vite(is_dev=False)
+
     uvicorn.run(app, host="127.0.0.1", port=PORT, log_config=LOGGING_CONFIG)
 
 
-if __name__ == "__main__":
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--build",
+        action="store_true",
+        dest="build",
+        help="Enable to run npm build. Only enable if vite project code has changed.",
+    )
+    parser.add_argument(
+        "--build-only",
+        action="store_true",
+        dest="build_only",
+        help="Enable to run npm build and exit.",
+    )
+    args = parser.parse_args()
+    if args.build and args.build_only:
+        parser.error("Don't use --build and --build-only together.")
+    return args
+
+
+def main():
     # TODO remove setup_handlers
     setup_handlers()
+    args = parse_args()
 
-    if DEV_MODE:
+    if args.build_only:
+        run_vite(is_dev=False)
+        return
+
+    if IS_DEV_MODE:
         run_dev()
-    else:
-        run_prod()
+        return
+
+    run_prod(args.build)
+
+
+if __name__ == "__main__":
+    main()
