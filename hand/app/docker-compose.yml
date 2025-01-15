@@ -1,10 +1,9 @@
-version: "3.8"
-
 services:
-  fastapi-app:
+  webmoti-server-app:
     image: arm64v8/debian:bookworm
-    container_name: server-container
+    container_name: webmoti-server-container
     privileged: true
+    platform: linux/arm64
     ports:
       - "8080:8080"
     volumes:
