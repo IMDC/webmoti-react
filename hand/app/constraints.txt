@@ -3,8 +3,6 @@
 grpcio==1.66.2
 grpcio-status==1.66.2
 
-# this is needed for rasp pi before installing aiortc
-av --only-binary=:all:; platform_system == "Linux" and platform_machine == "aarch64"
 # RPi.GPIO is for rasp pi only
 RPi.GPIO==0.7.1; platform_system == "Linux" and platform_machine == "aarch64"
 
@@ -12,4 +10,3 @@ RPi.GPIO==0.7.1; platform_system == "Linux" and platform_machine == "aarch64"
 # note: for linux (non circleci), you need to install manually
 # TODO make setup.py for this instead
 soundcard==0.4.3; (platform_system == "Linux" and platform_machine == "aarch64") or platform_system == "Windows"
-
