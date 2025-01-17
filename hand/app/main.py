@@ -2,6 +2,7 @@ import argparse
 import logging
 import os
 import pathlib
+import platform
 import subprocess
 from contextlib import asynccontextmanager
 
@@ -108,14 +109,14 @@ def run_vite(is_dev: bool = True):
     }
 
     if is_dev:
-        kwargs.update(
-            {
-                "stdout": subprocess.DEVNULL,
-                "stderr": subprocess.DEVNULL,
-                # fully detach on windows
-                "creationflags": subprocess.CREATE_NEW_PROCESS_GROUP,
-            }
-        )
+        kwargs.update({"stdout": subprocess.DEVNULL, "stderr": subprocess.DEVNULL})
+
+        # fully detach npm process
+        if platform.system() == "Windows":
+            kwargs.update({"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP})
+        else:
+            kwargs.update({"start_new_session": True})
+
         subprocess.Popen(f"npm run {command}", **kwargs)
         print("Vite dev server will run in the background")
     else:

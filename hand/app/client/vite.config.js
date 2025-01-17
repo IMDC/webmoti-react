@@ -4,6 +4,7 @@ import { resolve } from "path";
 // https://vite.dev/guide/backend-integration.html
 export default defineConfig({
   root: resolve(__dirname, "src"),
+  envDir: resolve(__dirname, "../"),
   build: {
     // generate .vite/manifest.json in outDir
     manifest: true,
