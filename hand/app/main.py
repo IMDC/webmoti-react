@@ -177,13 +177,16 @@ def main():
     args = parse_args()
 
     if args.build_only:
+        print("Build only")
         run_vite(is_dev=False)
         return
 
     if IS_DEV_MODE:
+        print("Starting dev mode")
         run_dev()
         return
 
+    print(f"Starting prod mode (build={args.build})")
     run_prod(args.build)
 
 
