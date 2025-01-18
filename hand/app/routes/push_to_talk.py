@@ -31,7 +31,7 @@ unmuted_track_event = None
 
 virtual_microphone = None
 if not is_pytest_running():
-    virtual_microphone = soundcard.get_speaker("VirtualMic")
+    virtual_microphone = soundcard.get_speaker("Null Output")
 
 
 @asynccontextmanager
@@ -76,50 +76,45 @@ router = APIRouter(prefix="/api", lifespan=lifespan)
 
 async def audio_processing_loop():
     audio_stream = None
-    player = None
 
-    try:
-        player = virtual_microphone.player(samplerate=44100)
+    while True:
+        # wait until unmuted track
+        await unmuted_track_event.wait()
 
-        while True:
-            # wait until unmuted track
-            await unmuted_track_event.wait()
+        with lock:
+            active_track = unmuted_tracks[0] if unmuted_tracks else None
 
-            with lock:
-                active_track = unmuted_tracks[0] if unmuted_tracks else None
+        if active_track is None:
+            # this shouldn't happen
+            unmuted_track_event.clear()
+            continue
 
-            if active_track is None:
-                # this shouldn't happen
-                unmuted_track_event.clear()
-                continue
+        print("active track")
 
-            print("active track")
+        if not audio_stream:
+            print("made new audio stream")
+            audio_stream = rtc.AudioStream.from_track(track=active_track)
 
-            if not audio_stream:
-                print("made new audio stream")
-                audio_stream = rtc.AudioStream.from_track(track=active_track)
+        try:
+            async for event in audio_stream:
+                with lock:
+                    if active_track not in unmuted_tracks:
+                        print("track muted, stopping processing")
+                        audio_stream = None
+                        unmuted_track_event.clear()
+                        break
 
-            try:
-                async for event in audio_stream:
-                    with lock:
-                        if active_track not in unmuted_tracks:
-                            print("track muted, stopping processing")
-                            audio_stream = None
-                            unmuted_track_event.clear()
-                            break
+                audio_frame = event.frame
+                audio_data = audio_frame.data
 
-                    audio_frame = event.frame
-                    audio_data = audio_frame.data
+                virtual_microphone.player(samplerate=audio_frame.sample_rate).play(
+                    audio_data
+                )
 
-                    player.play(audio_data)
-
-                print("done, no events")
-            except Exception as e:
-                logging.error(f"Error processing audio from track: {e}")
-                audio_stream = None
-    finally:
-        if player:
-            player.close()
+            print("done, no events")
+        except Exception as e:
+            logging.error(f"Error processing audio from track: {e}")
+            audio_stream = None
 
 
 async def join_room():
