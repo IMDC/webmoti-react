@@ -123,6 +123,16 @@ def run_vite(is_dev: bool = True):
         subprocess.run(f"npm run {command}", **kwargs)
 
 
+def run_uvicorn(fastapi_app, use_reload=False):
+    uvicorn.run(
+        fastapi_app,
+        host="0.0.0.0",
+        port=PORT,
+        log_config=LOGGING_CONFIG,
+        reload=use_reload,
+    )
+
+
 def run_dev():
     cwd = pathlib.Path.cwd()
     if cwd.parts[-2:] != ("hand", "app"):
@@ -133,22 +143,14 @@ def run_dev():
         print(f"Changed cwd to {app_dir}")
 
     run_vite()
-    uvicorn.run(
-        "__main__:app",
-        port=PORT,
-        log_config=LOGGING_CONFIG,
-        reload=True,
-        # TODO exclude vite client because of hmr (this doesn't work)
-        # TODO maybe fix is to move /client outside of /app
-        # reload_excludes=[str(app_dir / "client")],
-    )
+    run_uvicorn("__main__:app", use_reload=True)
 
 
 def run_prod(build: bool):
     if build:
         run_vite(is_dev=False)
 
-    uvicorn.run(app, host="127.0.0.1", port=PORT, log_config=LOGGING_CONFIG)
+    run_uvicorn(app)
 
 
 def parse_args():
