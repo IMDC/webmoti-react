@@ -29,11 +29,9 @@ unmuted_tracks = []
 lock = threading.Lock()
 unmuted_track_event = None
 
-# virtual_microphone = None
-# if not is_pytest_running():
-#     virtual_microphone = soundcard.get_microphone(
-#         "Virtual Microphone Name", include_loopback=True
-#     )
+virtual_microphone = None
+if not is_pytest_running():
+    virtual_microphone = soundcard.get_microphone("VirtualMic", include_loopback=True)
 
 
 @asynccontextmanager
@@ -106,8 +104,12 @@ async def audio_processing_loop():
                         unmuted_track_event.clear()
                         break
 
-                # audio_frame = event.frame
-                # audio_data = audio_frame.data
+                audio_frame = event.frame
+                audio_data = audio_frame.data
+                if virtual_microphone:
+                    virtual_microphone.play(
+                        audio_data, samplerate=audio_frame.sample_rate
+                    )
 
             print("done, no events")
         except Exception as e:
