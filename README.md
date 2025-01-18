@@ -20,6 +20,13 @@
   - [Storybook](#storybook)
 - [Hand server](#hand-server)
   - [Server setup](#server-setup)
+  - [Livekit setup](#livekit-setup)
+    - [Docker setup](#docker-setup)
+      - [Installing Docker](#installing-docker)
+      - [Creating Docker container](#creating-docker-container)
+      - [Starting Docker container](#starting-docker-container)
+      - [Stopping Docker container](#stopping-docker-container)
+      - [Setting up Docker container](#setting-up-docker-container)
   - [Running the hand server](#running-the-hand-server)
   - [Hand server tests](#hand-server-tests)
 - [Queue](#queue)
@@ -188,6 +195,85 @@ source ~/.hand-server-venv/bin/activate
 
 # install requirements (in venv)
 pip install -r ~/app/requirements.txt
+```
+
+### Livekit setup
+
+```bash
+# this is for when installing livekit on raspberry pi 32 bit (not docker)
+# fix numpy import error
+sudo apt-get install libopenblas-dev
+```
+
+Currently, the raspberry pi runs a 64 bit os with a 32 bit userland, so python
+ is 32 bit. Livekit doesn't provide a 32 bit arm binary, which means the os
+ needs to be upgraded to full 64 bit or python needs to be run in Docker.
+
+Right now we use docker.
+
+#### Docker setup
+
+##### Installing Docker
+
+```bash
+curl -sSL https://get.docker.com | sh
+sudo usermod -aG docker $USER
+```
+
+##### Creating Docker container
+
+```bash
+docker run -it \
+    --name webmoti-server-container \
+    --privileged \
+    --platform linux/arm64 \
+    -p 8080:8080 \
+    -v /home/imdc1/app:/app \
+    -w /app \
+    -v /run/user/1000/pulse:/run/user/1000/pulse \
+    -e PULSE_SERVER=unix:/run/user/1000/pulse/native \
+    --group-add audio \
+    --group-add gpio \
+    --group-add sudo \
+    --user 1000:1000 \
+    arm64v8/debian:bookworm bash
+```
+
+##### Starting Docker container
+
+`docker start -ai webmoti-server-container`
+
+##### Stopping Docker container
+
+`docker stop webmoti-server-container`
+
+##### Setting up Docker container
+
+```bash
+# install python
+`apt install -y python3 python3-pip python3.11-venv`
+```
+
+```bash
+# install pulseaudio
+`apt install -y pulseaudio-utils`
+```
+
+```bash
+# setup virtual mic
+sudo apt install -y pulseaudio pulseaudio-utils alsa-utils pavucontrol
+sudo modprobe snd-aloop
+# user 1000 is needed to allow container to access raspberry pi pulseaudio
+useradd -u 1000 -m imdc1
+```
+
+```bash
+# allow gpio to run in container
+sudo groupadd gpio
+sudo usermod -a -G gpio imdc1
+sudo grep gpio /etc/group
+sudo chown root:gpio /dev/gpiomem
+sudo chmod g+rw /dev/gpiomem
 ```
 
 > **Note:** You need to activate the venv when running the hand server or
