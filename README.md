@@ -12,6 +12,8 @@ See the [project board](https://github.com/orgs/IMDC/projects/2) for issue prior
 
 Check the [setup guide](setup.md) for setup information.
 
+![Sequence Diagram](webmoti-react/docs/sequence_diagram.png)
+
 ## Features
 
 - Hold to raise hand
