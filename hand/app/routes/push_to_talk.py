@@ -5,9 +5,8 @@ import threading
 from contextlib import asynccontextmanager
 from uuid import uuid4
 
-# import pyaudio
-# import soundcard
-import sounddevice
+import numpy as np
+import soundcard
 from fastapi import APIRouter, FastAPI
 from livekit import api, rtc
 
@@ -32,14 +31,6 @@ lock = threading.Lock()
 unmuted_track_event = None
 
 
-def find_virtual_microphone(mic_name):
-    devices = sounddevice.query_devices()
-    for idx, device in enumerate(devices):
-        if mic_name in device["name"]:
-            return idx
-    raise ValueError(f"Virtual microphone '{mic_name}' not found!")
-
-
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     if is_pytest_running():
@@ -55,17 +46,8 @@ async def lifespan(_: FastAPI):
     global unmuted_track_event
     unmuted_track_event = asyncio.Event()
 
-    virtual_mic_idx = find_virtual_microphone("Null Output")
-    stream = sounddevice.RawOutputStream(
-        device=virtual_mic_idx,
-        # default livekit values
-        samplerate=48000,
-        channels=1,
-        # livekit audio_frame.data is 16 bit integer
-        dtype="int16",
-    )
-    stream.start()
-    audio_task = asyncio.create_task(audio_processing_loop(stream))
+    virtual_mic_sink = soundcard.get_speaker("webmoti_source")
+    audio_task = asyncio.create_task(audio_processing_loop(virtual_mic_sink))
 
     yield
 
@@ -76,9 +58,6 @@ async def lifespan(_: FastAPI):
         await audio_task
     except asyncio.CancelledError:
         pass
-
-    stream.stop()
-    stream.close()
 
 
 @asynccontextmanager
@@ -93,7 +72,7 @@ async def livekit_client():
 router = APIRouter(prefix="/api", lifespan=lifespan)
 
 
-async def audio_processing_loop(virtual_mic_stream):
+async def audio_processing_loop(virtual_mic_sink):
     audio_stream = None
 
     while True:
@@ -124,14 +103,16 @@ async def audio_processing_loop(virtual_mic_stream):
                         break
 
                 audio_frame = event.frame
-                audio_data = audio_frame.data
+                np_audio_data = np.frombuffer(audio_frame.data, dtype=np.int16)
 
                 # TODO remove this
-                assert virtual_mic_stream.channels == audio_frame.num_channels
-                assert virtual_mic_stream.samplerate == audio_frame.sample_rate
+                # assert virtual_mic_sink.channels == audio_frame.num_channels
+                # assert virtual_mic_sink.samplerate == audio_frame.sample_rate
 
-                # pass raw audio data to virtual mic stream
-                virtual_mic_stream.write(audio_data)
+                with virtual_mic_sink.player(
+                    samplerate=audio_frame.sample_rate
+                ) as player:
+                    player.play(np_audio_data)
 
             print("done, no events")
         except Exception as e:
