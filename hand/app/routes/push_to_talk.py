@@ -1,14 +1,15 @@
 # import asyncio
-import logging
+# import logging
 import os
+
 # import threading
 from contextlib import asynccontextmanager
-from uuid import uuid4
 
-import numpy as np
+# from uuid import uuid4
+# import numpy as np
 # import soundcard
 from fastapi import APIRouter, FastAPI
-from livekit import api, rtc
+from livekit import api
 
 from core.models import TokenRequest
 from core.utils import is_pytest_running
@@ -39,7 +40,7 @@ async def lifespan(_: FastAPI):
         return
 
     # create and join room on startup
-    await create_room(ROOM_NAME)
+    # await create_room(ROOM_NAME)
     # await join_room()
 
     # make sure event is in same event loop
@@ -53,7 +54,7 @@ async def lifespan(_: FastAPI):
 
     yield
 
-    await delete_room(ROOM_NAME)
+    # await delete_room(ROOM_NAME)
 
     # audio_task.cancel()
     # try:
@@ -62,13 +63,13 @@ async def lifespan(_: FastAPI):
     #     pass
 
 
-@asynccontextmanager
-async def livekit_client():
-    lkapi = api.LiveKitAPI(LIVEKIT_SERVER_URL)
-    try:
-        yield lkapi
-    finally:
-        await lkapi.aclose()
+# @asynccontextmanager
+# async def livekit_client():
+#     lkapi = api.LiveKitAPI(LIVEKIT_SERVER_URL)
+#     try:
+#         yield lkapi
+#     finally:
+#         await lkapi.aclose()
 
 
 router = APIRouter(prefix="/api", lifespan=lifespan)
@@ -156,28 +157,28 @@ router = APIRouter(prefix="/api", lifespan=lifespan)
 #     logging.info("Connected to classroom")
 
 
-async def create_room(room_name: str) -> rtc.Room:
-    async with livekit_client() as lkapi:
-        try:
-            room = await lkapi.room.create_room(
-                api.CreateRoomRequest(
-                    name=room_name,
-                    max_participants=100,
-                    empty_timeout=300,
-                    # close room 1min after last participant leaves
-                    departure_timeout=60,
-                )
-            )
-            logging.info("Created livekit classroom")
-            return room
-        except Exception as e:
-            logging.error(f"Error creating room: {e}")
-            raise
+# async def create_room(room_name: str) -> rtc.Room:
+#     async with livekit_client() as lkapi:
+#         try:
+#             room = await lkapi.room.create_room(
+#                 api.CreateRoomRequest(
+#                     name=room_name,
+#                     max_participants=100,
+#                     empty_timeout=300,
+#                     # close room 1min after last participant leaves
+#                     departure_timeout=60,
+#                 )
+#             )
+#             logging.info("Created livekit classroom")
+#             return room
+#         except Exception as e:
+#             logging.error(f"Error creating room: {e}")
+#             raise
 
 
-async def delete_room(room_name: str):
-    async with livekit_client() as lkapi:
-        await lkapi.room.delete_room(api.DeleteRoomRequest(room=room_name))
+# async def delete_room(room_name: str):
+#     async with livekit_client() as lkapi:
+#         await lkapi.room.delete_room(api.DeleteRoomRequest(room=room_name))
 
 
 def generate_token(user_id: str, room_admin=False) -> dict:

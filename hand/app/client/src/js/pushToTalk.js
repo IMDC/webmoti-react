@@ -83,7 +83,8 @@ function handleDisconnect() {
 
 function setupPushToTalk() {
   async function toggleAudio(enable) {
-    if (enable && !(await checkMic())) return;
+    // TODO (fix this)
+    // if (enable && !(await checkMic())) return;
     await room.localParticipant.setMicrophoneEnabled(enable);
     pttButton.classList.toggle("btn-active", enable);
   }
