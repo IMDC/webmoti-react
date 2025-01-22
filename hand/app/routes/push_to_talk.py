@@ -1,12 +1,12 @@
-import asyncio
+# import asyncio
 import logging
 import os
-import threading
+# import threading
 from contextlib import asynccontextmanager
 from uuid import uuid4
 
 import numpy as np
-import soundcard
+# import soundcard
 from fastapi import APIRouter, FastAPI
 from livekit import api, rtc
 
@@ -26,9 +26,9 @@ if not is_pytest_running() and (
 
 ROOM_NAME = "Classroom"
 
-unmuted_tracks = []
-lock = threading.Lock()
-unmuted_track_event = None
+# unmuted_tracks = []
+# lock = threading.Lock()
+# unmuted_track_event = None
 
 
 @asynccontextmanager
@@ -40,24 +40,26 @@ async def lifespan(_: FastAPI):
 
     # create and join room on startup
     await create_room(ROOM_NAME)
-    await join_room()
+    # await join_room()
 
     # make sure event is in same event loop
-    global unmuted_track_event
-    unmuted_track_event = asyncio.Event()
+    # global unmuted_track_event
+    # unmuted_track_event = asyncio.Event()
 
-    virtual_mic_sink = soundcard.get_speaker("webmoti_source")
-    audio_task = asyncio.create_task(audio_processing_loop(virtual_mic_sink))
+    # virtual_mic_sink = soundcard.get_speaker("webmoti_source")
+    # virtual_mic_player = virtual_mic_sink.player(samplerate=48000)
+    # with virtual_mic_player:
+    #     audio_task = asyncio.create_task(audio_processing_loop(virtual_mic_player))
 
     yield
 
     await delete_room(ROOM_NAME)
 
-    audio_task.cancel()
-    try:
-        await audio_task
-    except asyncio.CancelledError:
-        pass
+    # audio_task.cancel()
+    # try:
+    #     await audio_task
+    # except asyncio.CancelledError:
+    #     pass
 
 
 @asynccontextmanager
@@ -72,89 +74,86 @@ async def livekit_client():
 router = APIRouter(prefix="/api", lifespan=lifespan)
 
 
-async def audio_processing_loop(virtual_mic_sink):
-    audio_stream = None
+# async def audio_processing_loop(virtual_mic_player):
+#     audio_stream = None
 
-    while True:
-        # wait until unmuted track
-        await unmuted_track_event.wait()
+#     while True:
+#         # wait until unmuted track
+#         await unmuted_track_event.wait()
 
-        with lock:
-            active_track = unmuted_tracks[0] if unmuted_tracks else None
+#         with lock:
+#             active_track = unmuted_tracks[0] if unmuted_tracks else None
 
-        if active_track is None:
-            # this shouldn't happen
-            unmuted_track_event.clear()
-            continue
+#         if active_track is None:
+#             # this shouldn't happen
+#             unmuted_track_event.clear()
+#             continue
 
-        print("active track")
+#         print("active track")
 
-        if not audio_stream:
-            print("made new audio stream")
-            audio_stream = rtc.AudioStream.from_track(track=active_track)
+#         if not audio_stream:
+#             print("made new audio stream")
+#             audio_stream = rtc.AudioStream.from_track(track=active_track)
 
-        try:
-            async for event in audio_stream:
-                with lock:
-                    if active_track not in unmuted_tracks:
-                        print("track muted, stopping processing")
-                        audio_stream = None
-                        unmuted_track_event.clear()
-                        break
+#         try:
+#             async for event in audio_stream:
+#                 with lock:
+#                     if active_track not in unmuted_tracks:
+#                         print("track muted, stopping processing")
+#                         audio_stream = None
+#                         unmuted_track_event.clear()
+#                         break
 
-                audio_frame = event.frame
-                np_audio_data = np.frombuffer(audio_frame.data, dtype=np.int16)
+#                 audio_frame = event.frame
+#                 np_audio_data = np.frombuffer(audio_frame.data, dtype=np.int16)
 
-                # TODO remove this
-                # assert virtual_mic_sink.channels == audio_frame.num_channels
-                # assert virtual_mic_sink.samplerate == audio_frame.sample_rate
+#                 # TODO remove this
+#                 # assert virtual_mic_sink.channels == audio_frame.num_channels
+#                 # assert virtual_mic_sink.samplerate == audio_frame.sample_rate
 
-                with virtual_mic_sink.player(
-                    samplerate=audio_frame.sample_rate
-                ) as player:
-                    player.play(np_audio_data)
+#                 virtual_mic_player.play(np_audio_data)
 
-            print("done, no events")
-        except Exception as e:
-            logging.error(f"Error processing audio from track: {e}")
-            audio_stream = None
+#             print("done, no events")
+#         except Exception as e:
+#             logging.error(f"Error processing audio from track: {e}")
+#             audio_stream = None
 
 
-async def join_room():
-    room = rtc.Room()
+# async def join_room():
+#     room = rtc.Room()
 
-    @room.on("track_subscribed")
-    def on_track_subscribed(
-        track: rtc.Track,
-        _publication: rtc.RemoteTrackPublication,
-        _participant: rtc.RemoteParticipant,
-    ):
-        if not track.muted:
-            with lock:
-                unmuted_tracks.append(track)
-                unmuted_track_event.set()
-                print(unmuted_tracks)
+#     @room.on("track_subscribed")
+#     def on_track_subscribed(
+#         track: rtc.Track,
+#         _publication: rtc.RemoteTrackPublication,
+#         _participant: rtc.RemoteParticipant,
+#     ):
+#         if not track.muted:
+#             with lock:
+#                 unmuted_tracks.append(track)
+#                 unmuted_track_event.set()
+#                 print(unmuted_tracks)
 
-    @room.on("track_unmuted")
-    def on_track_unmuted(_: rtc.Participant, publication: rtc.TrackPublication) -> None:
-        with lock:
-            unmuted_tracks.append(publication.track)
-            unmuted_track_event.set()
-            print(unmuted_tracks)
+#     @room.on("track_unmuted")
+#     def on_track_unmuted(_: rtc.Participant, publication: rtc.TrackPublication) -> None:
+#         with lock:
+#             unmuted_tracks.append(publication.track)
+#             unmuted_track_event.set()
+#             print(unmuted_tracks)
 
-    @room.on("track_muted")
-    def on_track_muted(_: rtc.Participant, publication: rtc.TrackPublication) -> None:
-        with lock:
-            unmuted_tracks.remove(publication.track)
-            # only clear event when there are no more unmuted tracks
-            if not unmuted_tracks:
-                unmuted_track_event.clear()
-            print(unmuted_tracks)
+#     @room.on("track_muted")
+#     def on_track_muted(_: rtc.Participant, publication: rtc.TrackPublication) -> None:
+#         with lock:
+#             unmuted_tracks.remove(publication.track)
+#             # only clear event when there are no more unmuted tracks
+#             if not unmuted_tracks:
+#                 unmuted_track_event.clear()
+#             print(unmuted_tracks)
 
-    id = uuid4()
-    token = generate_token(str(id), room_admin=True)
-    await room.connect(LIVEKIT_SERVER_URL, token["token"])
-    logging.info("Connected to classroom")
+#     id = uuid4()
+#     token = generate_token(str(id), room_admin=True)
+#     await room.connect(LIVEKIT_SERVER_URL, token["token"])
+#     logging.info("Connected to classroom")
 
 
 async def create_room(room_name: str) -> rtc.Room:
@@ -188,7 +187,7 @@ def generate_token(user_id: str, room_admin=False) -> dict:
         room=ROOM_NAME,
         room_join=True,
         # clients don't need to hear audio, just publish it
-        can_subscribe=False,
+        # can_subscribe=False,
         # audio only
         can_publish_sources=["microphone"],
     )
