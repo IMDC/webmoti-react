@@ -17,6 +17,7 @@ import ToggleScheduleButton from '../Buttons/ToggleScheduleButton/ToggleSchedule
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import ShortcutTooltip from '../ShortcutTooltip/ShortcutTooltip';
 import NotifyButton from '../Buttons/NotifyButton/NotifyButton';
+import LivekitConnectButton from '../Buttons/LivekitConnectButton/LivekitConnectButton';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -76,6 +77,8 @@ export default function MenuBar() {
 
             <RaiseHandButton />
             <NotifyButton />
+
+            <LivekitConnectButton />
 
             <ControlsMenu />
 

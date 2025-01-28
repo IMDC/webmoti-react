@@ -34,6 +34,7 @@
     "fscreen": "^1.2.0",
     "linkify-it": "^5.0.0",
     "lint-staged": "^15.2.7",
+    "livekit-client": "^2.8.1",
     "lodash.throttle": "^4.1.1",
     "nanoid": "^5.0.7",
     "prettier": "^3.3.2",
