@@ -18,7 +18,7 @@ const room = new Room({
 
 let token: string;
 
-const livekitUrl = '';
+const livekitUrl = process.env.REACT_APP_LIVEKIT_URL;
 
 export default function LivekitConnectButton() {
   const [isConnected, setIsConnected] = useState(false);
@@ -78,6 +78,11 @@ export default function LivekitConnectButton() {
   }
 
   async function connect() {
+    if (!livekitUrl) {
+      alert('Livekit URL not set');
+      return;
+    }
+
     try {
       if (!isConnected) {
         console.log('Preparing connection...');
@@ -110,7 +115,12 @@ export default function LivekitConnectButton() {
   }
 
   return (
-    <Button color={isConnected ? 'secondary' : 'primary'} onClick={connect}>
+    <Button
+      variant="contained"
+      color={isConnected ? 'secondary' : 'primary'}
+      onClick={connect}
+      style={{ marginLeft: '10px' }}
+    >
       {isConnected ? 'Mute Students' : 'Hear Students'}
       {isLoading && <CircularProgress size={24} />}
     </Button>
