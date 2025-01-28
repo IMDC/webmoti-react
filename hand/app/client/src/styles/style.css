@@ -79,6 +79,7 @@ body {
   background-color: var(--white);
   text-decoration: none;
   padding: 20px;
+  text-align: center;
 
   border-radius: 25px;
   border: none;
@@ -103,6 +104,16 @@ body {
   display: flex;
   flex-direction: row;
   gap: 5vw;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 10vw;
+}
+
+.hidden {
+  display: none;
 }
 
 @keyframes spin {

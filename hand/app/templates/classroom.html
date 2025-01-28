@@ -8,13 +8,23 @@
 
 <!-- TODO aria labels -->
 
-<button
-  id="talk-button"
-  class="button center center-transform strong-text"
-  disabled
->
-  Push to talk
-</button>
+<div class="ptt-container center center-transform">
+  <img
+    id="mic-on-icon"
+    class="blue-filter icon hidden"
+    src="{{ url_for('static', path='mic-on-icon.svg') }}"
+  />
+
+  <img
+    id="mic-off-icon"
+    class="gray-filter icon hidden"
+    src="{{ url_for('static', path='mic-off-icon.svg') }}"
+  />
+
+  <button id="talk-button" class="button strong-text hidden">
+    Push to talk
+  </button>
+</div>
 
 <button id="connect-button" class="button bottom-right strong-text">
   <span id="button-text">Connect</span>

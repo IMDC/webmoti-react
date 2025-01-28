@@ -6,6 +6,8 @@ const pttButton = document.getElementById("talk-button");
 const connectButton = document.getElementById("connect-button");
 const buttonText = connectButton.querySelector("#button-text");
 const connectSpinner = connectButton.querySelector(".connect-spinner");
+const micOnIcon = document.getElementById("mic-on-icon");
+const micOffIcon = document.getElementById("mic-off-icon");
 
 let isConnected = false;
 
@@ -67,6 +69,7 @@ async function prepareConnection() {
 async function joinRoom() {
   await room.connect(livekitUrl, token);
   buttonText.textContent = "Disconnect";
+  micOffIcon.classList.remove("hidden");
   console.log("Connected to classroom");
 }
 
@@ -77,7 +80,9 @@ async function leaveRoom() {
 
 function handleDisconnect() {
   console.log("Disconnected from classroom");
-  pttButton.disabled = true;
+  pttButton.classList.add("hidden");
+  micOnIcon.classList.add("hidden");
+  micOffIcon.classList.add("hidden");
   buttonText.textContent = "Connect";
 }
 
@@ -87,6 +92,9 @@ function setupPushToTalk() {
     // if (enable && !(await checkMic())) return;
     await room.localParticipant.setMicrophoneEnabled(enable);
     pttButton.classList.toggle("btn-active", enable);
+
+    micOnIcon.classList.toggle("hidden", !enable);
+    micOffIcon.classList.toggle("hidden", enable);
   }
 
   // listeners for pc and mobile
@@ -147,7 +155,7 @@ function setupConnectBtn() {
     }
 
     isConnected = !isConnected;
-    pttButton.disabled = !isConnected;
+    pttButton.classList.toggle("hidden", !isConnected);
   }
 
   connectButton.addEventListener("click", () => toggleConnection());

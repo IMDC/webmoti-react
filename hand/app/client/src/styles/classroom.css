@@ -1,9 +1,24 @@
 #talk-button {
-  font-size: 10vw;
+  font-size: 70px;
+  user-select: none;
+  margin-bottom: 40px;
+}
+
+.icon {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 20px;
+}
+
+.ptt-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 #connect-button {
-  font-size: 3vw;
+  font-size: 6vw;
   margin: 15px;
   /* stuff below is for the spinner */
   display: inline-flex;
