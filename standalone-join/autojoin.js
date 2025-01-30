@@ -158,6 +158,8 @@ const clickIsProfessor = async (page, state) => {
       // don't use headless mode, too hard to exit
       headless: false,
       args: ["--use-fake-ui-for-media-stream", "--start-maximized"],
+      // needed for puppeteer core
+      executablePath: !isProfLaptop ? "/usr/bin/chromium" : undefined,
       // default viewport dimension leaves whitespace on right
       defaultViewport: null,
     });
