@@ -1,12 +1,13 @@
 {
-  "name": "imdc1",
+  "name": "standalone-join",
   "version": "1.0.0",
   "main": "autojoin.js",
   "license": "ISC",
   "private": true,
   "dependencies": {
-    "axios": "^1.6.5",
-    "dotenv": "^16.3.1",
-    "puppeteer-core": "^1.11.0"
+    "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
+    "puppeteer": "^24.1.1",
+    "winston": "^3.17.0"
   }
 }
