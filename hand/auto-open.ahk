@@ -1,11 +1,13 @@
 #Requires AutoHotkey v2.0
 
-Run("https://jmn2f42hjgfv.connect.remote.it/queue")
+; set this to the random string generated for the remote.it url
+SUBDOMAIN := ""
 
-Sleep(2000)
+; open queue page in chrome with fullscreen
+Run('chrome.exe --start-fullscreen "https://' . SUBDOMAIN . '.connect.remote.it/queue"')
 
-; fullscreen
-Send("{F11}")
+; wait until browser opens
+WinWaitActive("ahk_exe chrome.exe")
 
 ; keep screen on
 loop {
