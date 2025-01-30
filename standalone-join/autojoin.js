@@ -1,6 +1,7 @@
 const crypto = require("crypto");
 const axios = require("axios");
 const { format, createLogger, transports } = require("winston");
+const puppeteer = require("puppeteer");
 require("dotenv").config();
 
 //
@@ -11,9 +12,7 @@ const isProfLaptop = false;
 //
 //
 
-const puppeteer = isProfLaptop
-  ? require("puppeteer")
-  : require("puppeteer-core");
+// TODO more logging here
 
 const NAMES = ["Board-View", "Student-View", "Professor"];
 
@@ -159,8 +158,6 @@ const clickIsProfessor = async (page, state) => {
       // don't use headless mode, too hard to exit
       headless: false,
       args: ["--use-fake-ui-for-media-stream", "--start-maximized"],
-      // needed for puppeteer core
-      executablePath: !isProfLaptop ? "chromium-browser" : undefined,
       // default viewport dimension leaves whitespace on right
       defaultViewport: null,
     });
