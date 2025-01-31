@@ -37,7 +37,3 @@ gpio.PWM = MockPWM
 
 sys.modules["RPi"] = type(sys)("RPi")
 sys.modules["RPi.GPIO"] = gpio
-
-# mock soundcard module (circleci doesn't have pulseaudio)
-soundcard = type(sys)("soundcard")
-sys.modules["soundcard"] = soundcard
