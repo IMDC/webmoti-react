@@ -1,46 +1,39 @@
+<!-- omit from toc -->
 # WebMoti Setup Guide
 
-- [WebMoti Setup Guide](#webmoti-setup-guide)
-  - [Twilio React App](#twilio-react-app)
-    - [Setup Twilio React App](#setup-twilio-react-app)
-    - [Running the App locally for developement](#running-the-app-locally-for-developement)
-      - [Local setup](#local-setup)
-    - [Deploying](#deploying)
-    - [Testing](#testing)
-      - [Unit Tests](#unit-tests)
-      - [E2E Tests](#e2e-tests)
-    - [Storybook](#storybook)
-  - [Hand server](#hand-server)
-    - [Server setup](#server-setup)
-    - [Livekit setup](#livekit-setup)
-      - [Docker setup](#docker-setup)
-        - [Installing Docker](#installing-docker)
-        - [Creating Docker container](#creating-docker-container)
-        - [Starting Docker container](#starting-docker-container)
-        - [Stopping Docker container](#stopping-docker-container)
-        - [Setting up Docker container](#setting-up-docker-container)
-    - [Running the hand server](#running-the-hand-server)
-    - [Hand server tests](#hand-server-tests)
-  - [Queue](#queue)
-    - [Auto open queue (on Windows tablet)](#auto-open-queue-on-windows-tablet)
-  - [Tactile notifications](#tactile-notifications)
-  - [Standalone Join](#standalone-join)
-    - [Webmoti URL server](#webmoti-url-server)
-    - [Info](#info)
-    - [Setting up standalone join](#setting-up-standalone-join)
-      - [Setup Node version](#setup-node-version)
-      - [Download Chromium Browser](#download-chromium-browser)
-      - [Install dependencies](#install-dependencies)
-      - [Create .env in home directory](#create-env-in-home-directory)
-      - [Code changes](#code-changes)
-      - [Autorun](#autorun)
-  - [Microphone Function](#microphone-function)
-  - [RaiseHand Function](#raisehand-function)
-  - [Connecting raspberry pi to secure networks (like TMU)](#connecting-raspberry-pi-to-secure-networks-like-tmu)
-    - [dhcpcd method](#dhcpcd-method)
-    - [Network Manager alternative](#network-manager-alternative)
-  - [Auto wifi setup](#auto-wifi-setup)
-  - [Auto wifi](#auto-wifi)
+- [Twilio React App](#twilio-react-app)
+  - [Setup Twilio React App](#setup-twilio-react-app)
+  - [Running the App locally for developement](#running-the-app-locally-for-developement)
+    - [Local setup](#local-setup)
+  - [Deploying](#deploying)
+  - [Testing](#testing)
+    - [Unit Tests](#unit-tests)
+    - [E2E Tests](#e2e-tests)
+  - [Storybook](#storybook)
+- [Hand server](#hand-server)
+  - [Server setup](#server-setup)
+  - [Running the hand server](#running-the-hand-server)
+  - [Hand server tests](#hand-server-tests)
+- [Queue](#queue)
+  - [Auto open queue (on Windows tablet)](#auto-open-queue-on-windows-tablet)
+- [Tactile notifications](#tactile-notifications)
+- [Standalone Join](#standalone-join)
+  - [Webmoti URL server](#webmoti-url-server)
+  - [Info](#info)
+  - [Setting up standalone join](#setting-up-standalone-join)
+    - [Setup Node version](#setup-node-version)
+    - [Download Chromium Browser](#download-chromium-browser)
+    - [Install dependencies](#install-dependencies)
+    - [Create .env in home directory](#create-env-in-home-directory)
+    - [Code changes](#code-changes)
+    - [Autorun](#autorun)
+- [Microphone Function](#microphone-function)
+- [RaiseHand Function](#raisehand-function)
+- [Connecting raspberry pi to secure networks (like TMU)](#connecting-raspberry-pi-to-secure-networks-like-tmu)
+  - [dhcpcd method](#dhcpcd-method)
+  - [Network Manager alternative](#network-manager-alternative)
+- [Auto wifi setup](#auto-wifi-setup)
+- [Auto wifi](#auto-wifi)
 
 ## Twilio React App
 
@@ -158,85 +151,6 @@ source ~/.hand-server-venv/bin/activate
 pip install -r ~/app/requirements.txt
 ```
 
-### Livekit setup
-
-```bash
-# this is for when installing livekit on raspberry pi 32 bit (not docker)
-# fix numpy import error
-sudo apt-get install libopenblas-dev
-```
-
-Currently, the raspberry pi runs a 64 bit os with a 32 bit userland, so python
- is 32 bit. Livekit doesn't provide a 32 bit arm binary, which means the os
- needs to be upgraded to full 64 bit or python needs to be run in Docker.
-
-Right now we use docker.
-
-#### Docker setup
-
-##### Installing Docker
-
-```bash
-curl -sSL https://get.docker.com | sh
-sudo usermod -aG docker $USER
-```
-
-##### Creating Docker container
-
-```bash
-docker run -it \
-    --name webmoti-server-container \
-    --privileged \
-    --platform linux/arm64 \
-    -p 8080:8080 \
-    -v /home/imdc1/app:/app \
-    -w /app \
-    -v /run/user/1000/pulse:/run/user/1000/pulse \
-    -e PULSE_SERVER=unix:/run/user/1000/pulse/native \
-    --group-add audio \
-    --group-add gpio \
-    --group-add sudo \
-    --user 1000:1000 \
-    arm64v8/debian:bookworm bash
-```
-
-##### Starting Docker container
-
-`docker start -ai webmoti-server-container`
-
-##### Stopping Docker container
-
-`docker stop webmoti-server-container`
-
-##### Setting up Docker container
-
-```bash
-# install python
-`apt install -y python3 python3-pip python3.11-venv`
-```
-
-```bash
-# install pulseaudio
-`apt install -y pulseaudio-utils`
-```
-
-```bash
-# setup virtual mic
-sudo apt install -y pulseaudio pulseaudio-utils alsa-utils pavucontrol
-sudo modprobe snd-aloop
-# user 1000 is needed to allow container to access raspberry pi pulseaudio
-useradd -u 1000 -m imdc1
-```
-
-```bash
-# allow gpio to run in container
-sudo groupadd gpio
-sudo usermod -a -G gpio imdc1
-sudo grep gpio /etc/group
-sudo chown root:gpio /dev/gpiomem
-sudo chmod g+rw /dev/gpiomem
-```
-
 > **Note:** You need to activate the venv when running the hand server or
 > changing packages
 >
@@ -253,13 +167,6 @@ OPENAI_API_KEY=
 ```
 
 Vapid key pairs (for push notifications) can be generated using `npx web-push generate-vapid-keys`.
-
-Create `webmoti-sa.json` in project root. This is for authenticating to
- Google Speech to Text API and can be generated by following this tutorial: <https://youtu.be/izdDHVLc_Z0?t=216>
-
-1. Create and setup Google Cloud project (at 3:36)
-2. Create a Google Service account (at 6:38)
-3. Download the credentials JSON file (at 7:38)
 
 ### Running the hand server
 
@@ -407,9 +314,12 @@ Change the variables at the top of the autojoin.js script based on what device
 
 #### Autorun
 
+For autorun on the imdc1 pi, the `launch_autojoin.sh` script needs to be run
+ instead of the actual `autojoin.js` script.
+
 ```bash
 # for autojoin script
-pm2 start autojoin.js
+pm2 start launch_autojoin.sh
 pm2 save
 pm2 startup systemd # for first time setup
 # copy paste outputted command
