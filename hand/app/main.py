@@ -22,6 +22,9 @@ from vite_asset import asset, set_asset_dev_mode, vite_hmr_client
 # load env variables before setting them in the modules below
 load_dotenv()
 
+IS_DEV_MODE = False
+# IS_DEV_MODE = True
+
 from routes.captions_ws import router as captions_router  # noqa: E402
 from routes.notifications import router as notifications_router  # noqa: E402
 from routes.push_to_talk import router as push_to_talk_router  # noqa: E402
@@ -70,9 +73,6 @@ app_dir = pathlib.Path(__file__).parent
 app.mount("/static", StaticFiles(directory=(app_dir / "static")), name="static")
 templates = Jinja2Templates(directory=(app_dir / "templates"))
 
-# default is dev mode: vite hmr + uvicorn reload
-APP_ENV = os.getenv("APP_ENV", "dev").lower()
-IS_DEV_MODE = APP_ENV == "dev"
 print(f"Dev mode: {IS_DEV_MODE}\n")
 set_asset_dev_mode(IS_DEV_MODE)
 
