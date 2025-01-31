@@ -126,7 +126,7 @@ def run_vite(is_dev: bool = True):
 def run_uvicorn(fastapi_app, use_reload=False):
     uvicorn.run(
         fastapi_app,
-        host="0.0.0.0",
+        host="127.0.0.1",
         port=PORT,
         log_config=LOGGING_CONFIG,
         reload=use_reload,
