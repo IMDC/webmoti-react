@@ -1,8 +1,8 @@
 <!-- omit from toc -->
 # WebMoti Setup Guide
 
-- [Twilio React App](#twilio-react-app)
-  - [Setup Twilio React App](#setup-twilio-react-app)
+- [React App (For virtual students)](#react-app-for-virtual-students)
+  - [Setup React App](#setup-react-app)
   - [Running the App locally for developement](#running-the-app-locally-for-developement)
     - [Local setup](#local-setup)
   - [Deploying](#deploying)
@@ -12,6 +12,7 @@
   - [Storybook](#storybook)
 - [Hand server](#hand-server)
   - [Server setup](#server-setup)
+  - [Remote.It](#remoteit)
   - [Running the hand server](#running-the-hand-server)
   - [Hand server tests](#hand-server-tests)
 - [Queue](#queue)
@@ -22,7 +23,7 @@
   - [Info](#info)
   - [Setting up standalone join](#setting-up-standalone-join)
     - [Setup Node version](#setup-node-version)
-    - [Download Chromium Browser](#download-chromium-browser)
+    - [Chromium Browser](#chromium-browser)
     - [Install dependencies](#install-dependencies)
     - [Create .env in home directory](#create-env-in-home-directory)
     - [Code changes](#code-changes)
@@ -35,11 +36,11 @@
 - [Auto wifi setup](#auto-wifi-setup)
 - [Auto wifi](#auto-wifi)
 
-## Twilio React App
+## React App (For virtual students)
 
-Original app: <https://github.com/twilio/twilio-video-app-react#readme>
+Original app template: <https://github.com/twilio/twilio-video-app-react#readme>
 
-### Setup Twilio React App
+### Setup React App
 
 1. Install dependencies: `npm install`
 
@@ -136,6 +137,8 @@ npm run storybook
 
 ## Hand server
 
+This runs on the raspberry pi.
+
 ### Server setup
 
 Setup virtual Python environment:
@@ -145,6 +148,8 @@ Setup virtual Python environment:
 python -m venv ~/.hand-server-venv
 
 # activate it
+# (add this to ~/.bashrc for a shortcut)
+# alias activatehs='source "$HOME/.hand-server-venv/bin/activate"'
 source ~/.hand-server-venv/bin/activate
 
 # install requirements (in venv)
@@ -168,22 +173,31 @@ OPENAI_API_KEY=
 
 Vapid key pairs (for push notifications) can be generated using `npx web-push generate-vapid-keys`.
 
+### Remote.It
+
+The hand server is exposed to the internet using remote.it.
+This needs to be setup on the raspberry pi running the hand server.
+
+Setup:
+<https://www.remote.it/getting-started/raspberry-pi>
+
 ### Running the hand server
-
-Run server in dev mode:
-
-```bash
-fastapi dev ~/app/main.py
-```
-
-Run on raspberry pi:
 
 ```bash
 # activate venv
 source ~/.hand-server-venv/bin/activate
+# (or activatehs)
 
 python ~/app/main.py
 ```
+
+It runs in dev mode by default (code reloading). For prod mode run:
+`export APP_ENV=prod`
+
+Flags:
+(For prod mode)
+`--build`: Enable to run npm build. Only enable if vite project code has changed.
+`--build-only`: Enable to run npm build and exit.
 
 ### Hand server tests
 
@@ -283,12 +297,11 @@ node -v
 npm -v
 ```
 
-#### Download Chromium Browser
+#### Chromium Browser
 
-These versions are currently installed:
-
-- v116.0.5845.102
-- v124.0.6367.73
+Installing `puppeteer` on raspberry pi (arm64) is broken. It doesn't install
+ the proper chromium binary. To fix this, use `executablePath: /usr/bin/chromium-browser`
+ when starting puppeteer.
 
 #### Install dependencies
 
