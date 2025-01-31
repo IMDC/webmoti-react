@@ -5,19 +5,20 @@ const puppeteer = require("puppeteer");
 require("dotenv").config();
 
 //
-// edit these variables for using script on different devices
 //
-const isImdc1 = false;
 const isProfLaptop = false;
 //
 //
 
-// TODO more logging here
+// TODO more logging in this script
 
 const NAMES = ["Board-View", "Student-View", "Professor"];
 
+// set this env variable for the student view raspberry pi
+const isStudentView = process.env.IS_STUDENT_VIEW === "true";
+
 let deviceName = NAMES[0];
-if (isImdc1) {
+if (isStudentView) {
   deviceName = NAMES[1];
 } else if (isProfLaptop) {
   deviceName = NAMES[2];
@@ -205,7 +206,7 @@ const clickIsProfessor = async (page, state) => {
     await page.click(btn2Sel);
 
     // mute mic for imdc1 only
-    if (isImdc1) {
+    if (isStudentView) {
       await muteStudentViewMic(page);
     }
   } catch (e) {
