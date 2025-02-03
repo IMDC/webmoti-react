@@ -14,13 +14,14 @@ class Mode(enum.Enum):
 PORT = 8080
 
 MAX_ANGLE = 30
-MIN_ANGLE = 180
-# go farther than halfway so camera isn't blocked
+MIN_ANGLE = 175
+
 HALFWAY_ANGLE = 90
 
 # a bit higher/lower than halfway for when queue is not empty
-HALFWAY_HIGHER_ANGLE = 70
-HALFWAY_LOWER_ANGLE = 110
+QUEUE_ANGLE_INCREMENT = 20
+HALFWAY_HIGHER_ANGLE = HALFWAY_ANGLE - QUEUE_ANGLE_INCREMENT
+HALFWAY_LOWER_ANGLE = HALFWAY_ANGLE + QUEUE_ANGLE_INCREMENT
 
 # sleep times in ms for raising hand
 # full is the time it takes to travel 180 degrees from side to side
