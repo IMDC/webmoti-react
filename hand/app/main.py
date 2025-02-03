@@ -22,8 +22,10 @@ from vite_asset import asset, set_asset_dev_mode, vite_hmr_client
 # load env variables before setting them in the modules below
 load_dotenv()
 
-IS_DEV_MODE = False
-# IS_DEV_MODE = True
+IS_DEV_MODE = True
+app_env = os.getenv("APP_ENV")
+if app_env.lower() == "prod":
+    IS_DEV_MODE = False
 
 from routes.captions_ws import router as captions_router  # noqa: E402
 from routes.notifications import router as notifications_router  # noqa: E402
@@ -97,10 +99,10 @@ async def classroom(request: Request):
     return templates.TemplateResponse(request, "classroom.html")
 
 
-def run_vite(is_dev: bool = True):
-    command = "dev"
-    if not is_dev:
-        command = "build"
+def run_npm(command: str):
+    command = command.lower()
+    if command not in ["dev", "build"]:
+        command = "dev"
     print(f"Running npm run {command}")
 
     kwargs = {
@@ -108,7 +110,10 @@ def run_vite(is_dev: bool = True):
         "cwd": str(app_dir / "client"),
     }
 
-    if is_dev:
+    # ! Note: Since this detaches the npm run dev process, it will continue to run
+    # ! even after closing server with CTRL C. So you should close the terminal as well
+    # ! which will close the npm process.
+    if command == "dev":
         kwargs.update({"stdout": subprocess.DEVNULL, "stderr": subprocess.DEVNULL})
 
         # fully detach npm process
@@ -142,25 +147,12 @@ def run_dev():
         os.chdir(app_dir)
         print(f"Changed cwd to {app_dir}")
 
-    run_vite()
+    run_npm("dev")
     run_uvicorn("__main__:app", use_reload=True)
-
-
-def run_prod(build: bool):
-    if build:
-        run_vite(is_dev=False)
-
-    run_uvicorn(app)
 
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--build",
-        action="store_true",
-        dest="build",
-        help="Enable to run npm build. Only enable if vite project code has changed.",
-    )
     parser.add_argument(
         "--build-only",
         action="store_true",
@@ -168,8 +160,6 @@ def parse_args():
         help="Enable to run npm build and exit.",
     )
     args = parser.parse_args()
-    if args.build and args.build_only:
-        parser.error("Don't use --build and --build-only together.")
     return args
 
 
@@ -180,7 +170,7 @@ def main():
 
     if args.build_only:
         print("Build only")
-        run_vite(is_dev=False)
+        run_npm("build")
         return
 
     if IS_DEV_MODE:
@@ -188,8 +178,9 @@ def main():
         run_dev()
         return
 
-    print(f"Starting prod mode (build={args.build})")
-    run_prod(args.build)
+    print("Starting prod mode\n\n")
+    print("Reminder to build app!!!\n" * 5)
+    run_uvicorn(app)
 
 
 if __name__ == "__main__":
