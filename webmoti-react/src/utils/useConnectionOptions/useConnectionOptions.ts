@@ -1,4 +1,5 @@
 import { ConnectOptions } from 'twilio-video';
+
 import { isMobile, removeUndefineds } from '..';
 import { useAppState } from '../../state';
 
@@ -28,6 +29,12 @@ export default function useConnectionOptions() {
     maxAudioBitrate: Number(settings.maxAudioBitrate),
 
     preferredVideoCodecs: 'auto',
+
+    // simulcast for better performance?
+    // https://www.twilio.com/docs/video/tutorials/working-with-vp8-simulcast#enable-adaptive-simulcast
+    // preferredVideoCodecs: [{ codec: 'VP8', simulcast: true }],
+
+    // video: { height: 1920, frameRate: 24, width: 1080 },
 
     //@ts-ignore - Internal use only. This property is not exposed in type definitions.
     environment: process.env.REACT_APP_TWILIO_ENVIRONMENT,

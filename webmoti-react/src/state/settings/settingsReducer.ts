@@ -17,12 +17,16 @@ export interface SettingsAction {
 }
 
 export const initialSettings: Settings = {
+  // https://www.twilio.com/docs/video/tutorials/developing-high-quality-video-applications
   trackSwitchOffMode: undefined,
   dominantSpeakerPriority: 'standard',
-  bandwidthProfileMode: 'collaboration',
-  maxAudioBitrate: '16000',
-  contentPreferencesMode: 'manual',
-  clientTrackSwitchOffControl: 'auto',
+  // presentation since there is a main speaker
+  bandwidthProfileMode: 'presentation',
+  maxAudioBitrate: '48000',
+  contentPreferencesMode: 'auto',
+  // manual means the cameras won't switch off when low bandwidth
+  // (and when zooming in to level 3 on board-view)
+  clientTrackSwitchOffControl: 'manual',
 };
 
 // This inputLabels object is used by ConnectionOptions.tsx. It is used to populate the id, name, and label props
