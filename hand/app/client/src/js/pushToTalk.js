@@ -161,8 +161,33 @@ function setupConnectBtn() {
   connectButton.addEventListener("click", () => toggleConnection());
 }
 
+function isFirefoxMobile() {
+  const userAgent = navigator.userAgent.toLowerCase();
+  return (
+    userAgent.includes("firefox") && /android|iphone|ipad|ipod/.test(userAgent)
+  );
+}
+
+function displayFirefoxWarning() {
+  connectButton.style.display = "none";
+  const warning = document.createElement("h1");
+  warning.textContent =
+    "Firefox for mobile isn't currently supported. Please try again using another browser.";
+  warning.classList.add("center", "center-transform");
+  document.body.appendChild(warning);
+}
+
 window.addEventListener("load", () => {
-  setupConnectBtn();
-  setupPushToTalk();
-  prepareConnection();
+  if (isFirefoxMobile()) {
+    // TODO fix this
+    // the issue is that firefox for mobile (maybe just android) only
+    // saves permissions if you press "remember this decision".
+    // if the user doesn't press that, it will hang when push to
+    // talk button is pressed (mic permission is needed before pressing it)
+    displayFirefoxWarning();
+  } else {
+    setupConnectBtn();
+    setupPushToTalk();
+    prepareConnection();
+  }
 });
