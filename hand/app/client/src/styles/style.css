@@ -86,6 +86,9 @@ body {
   cursor: pointer;
 
   transition: 0.3s ease;
+
+  /* remove blue highlight on button when tapping */
+  -webkit-tap-highlight-color: transparent;
 }
 
 .button:hover {

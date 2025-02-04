@@ -3,7 +3,6 @@
   user-select: none;
   margin-bottom: 40px;
   touch-action: none;
-  -webkit-tap-highlight-color: transparent;
 }
 
 #talk-button span {
