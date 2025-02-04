@@ -158,7 +158,14 @@ const clickIsProfessor = async (page, state) => {
     browser = await puppeteer.launch({
       // don't use headless mode, too hard to exit
       headless: false,
-      args: ["--use-fake-ui-for-media-stream", "--start-maximized"],
+      args: [
+        // this arg is for automatically enabling media permissions
+        "--use-fake-ui-for-media-stream",
+        "--start-maximized",
+        // disabling WebRtcPipeWireCamera is needed for making media work on
+        // raspberry pi 5 chromium browser
+        "--disable-features=WebRtcPipeWireCamera",
+      ],
       // needed for puppeteer core
       executablePath: !isProfLaptop ? "/usr/bin/chromium-browser" : undefined,
       // default viewport dimension leaves whitespace on right
