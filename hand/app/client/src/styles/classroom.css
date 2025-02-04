@@ -2,6 +2,12 @@
   font-size: 70px;
   user-select: none;
   margin-bottom: 40px;
+  touch-action: none;
+}
+
+#talk-button span {
+  /* to ignore events on button text */
+  pointer-events: none;
 }
 
 .icon {
