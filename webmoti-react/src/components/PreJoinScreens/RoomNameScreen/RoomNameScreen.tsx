@@ -1,18 +1,7 @@
 import { ChangeEvent, FormEvent } from 'react';
 
-import {
-  Typography,
-  makeStyles,
-  TextField,
-  Grid,
-  Button,
-  InputLabel,
-  Checkbox,
-  FormControlLabel,
-  Theme,
-} from '@material-ui/core';
+import { Typography, makeStyles, TextField, Grid, Button, InputLabel, Theme } from '@material-ui/core';
 
-import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import { useAppState } from '../../../state';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -58,10 +47,6 @@ interface RoomNameScreenProps {
 export default function RoomNameScreen({ name, roomName, setName, setRoomName, handleSubmit }: RoomNameScreenProps) {
   const classes = useStyles();
   const { user } = useAppState();
-  const correctProfessorPassword = 'professor123';
-  const correctAdminPassword = 'admin456';
-
-  const { isProfessor, isAdmin, setIsProfessor, setProfessorsName, setAdmin, setAdminName } = useWebmotiVideoContext();
 
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
@@ -69,48 +54,6 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
 
   const handleRoomNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setRoomName(event.target.value);
-  };
-
-  const handleProfessorChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const isChecked = event.target.checked;
-    if (isChecked) {
-      askProfessorPassword();
-    } else {
-      setIsProfessor(false);
-      setProfessorsName('');
-    }
-  };
-
-  const askProfessorPassword = () => {
-    let password = prompt('Enter the professor password:');
-    while (password !== correctProfessorPassword && password !== null) {
-      password = prompt('Incorrect professor password! Please try again:');
-    }
-    if (password === correctProfessorPassword) {
-      setIsProfessor(true);
-      setProfessorsName(name);
-    }
-  };
-
-  const handleAdminChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const isChecked = event.target.checked;
-    if (isChecked) {
-      askAdminPassword();
-    } else {
-      setAdmin(false);
-      setAdminName('');
-    }
-  };
-
-  const askAdminPassword = () => {
-    let password = prompt('Enter the admin password:');
-    while (password !== correctAdminPassword && password !== null) {
-      password = prompt('Incorrect admin password! Please try again:');
-    }
-    if (password === correctAdminPassword) {
-      setAdmin(true);
-      setAdminName(name);
-    }
   };
 
   const hasUsername = !window.location.search.includes('customIdentity=true') && user?.displayName;
@@ -156,18 +99,6 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
               onChange={handleRoomNameChange}
             />
           </div>
-        </div>
-        <div className={classes.checkboxContainer}>
-          <FormControlLabel
-            control={
-              <Checkbox id="profCheckbox" checked={isProfessor} onChange={handleProfessorChange} color="primary" />
-            }
-            label="I am a professor"
-          />
-          <FormControlLabel
-            control={<Checkbox checked={isAdmin} onChange={handleAdminChange} color="primary" />}
-            label="I am an admin"
-          />
         </div>
 
         <Grid container justifyContent="flex-end">

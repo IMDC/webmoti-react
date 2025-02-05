@@ -49,14 +49,8 @@ interface WebmotiVideoContextType {
   setPan: React.Dispatch<React.SetStateAction<{ x: number; y: number }>>;
   isMuted: boolean;
   toggleClassroomMute: () => void;
-  isProfessor: boolean;
-  setIsProfessor: React.Dispatch<React.SetStateAction<boolean>>;
   isAdmin: boolean;
-  setAdmin: React.Dispatch<React.SetStateAction<boolean>>;
-  adminName: string;
-  setAdminName: React.Dispatch<React.SetStateAction<string>>;
-  professorsName: string;
-  setProfessorsName: React.Dispatch<React.SetStateAction<string>>;
+  setIsAdmin: React.Dispatch<React.SetStateAction<boolean>>;
   sendHandRequest: (mode: string, identity?: string | null, is_silent?: boolean) => Promise<Response>;
   volume: number;
   setVolume: React.Dispatch<React.SetStateAction<number>>;
@@ -78,10 +72,7 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [isMuted, setIsMuted] = useState(false);
-  const [isProfessor, setIsProfessor] = useState(false);
-  const [professorsName, setProfessorsName] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
-  const [adminName, setAdminName] = useState('');
   const [volume, setVolume] = useState(50);
   const [soundKey, setSoundKey] = useState(Object.keys(Sounds)[0]);
 
@@ -172,14 +163,8 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
         setPan,
         isMuted,
         toggleClassroomMute,
-        isProfessor,
-        setIsProfessor,
         isAdmin,
-        setAdmin: setIsAdmin,
-        adminName,
-        setAdminName,
-        professorsName,
-        setProfessorsName,
+        setIsAdmin,
         sendHandRequest,
         volume,
         setVolume,

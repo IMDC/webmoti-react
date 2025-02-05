@@ -33,7 +33,7 @@ export default function AudioMixer() {
   const { room, muteParticipant } = useVideoContext();
   const { conversation } = useChatContext();
   const [isAudioEnabled, toggleAudioEnabled] = useLocalAudioToggle();
-  const { isProfessor, isAdmin } = useWebmotiVideoContext();
+  const { isAdmin } = useWebmotiVideoContext();
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [alignment, setAlignment] = useState<Mode | null>(null);
@@ -165,7 +165,7 @@ export default function AudioMixer() {
   };
 
   // only show mixer if prof or admin
-  const showMixer = isProfessor || isAdmin;
+  const showMixer = isAdmin;
 
   return (
     <>

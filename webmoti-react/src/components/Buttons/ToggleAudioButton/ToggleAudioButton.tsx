@@ -6,7 +6,6 @@ import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useLocalAudioToggle from '../../../hooks/useLocalAudioToggle/useLocalAudioToggle';
 import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
-import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import MicIcon from '../../../icons/MicIcon';
 import MicOffIcon from '../../../icons/MicOffIcon';
 import { isWebmotiVideo, sendSystemMsg } from '../../../utils';
@@ -27,7 +26,6 @@ export default function ToggleAudioButton(props: { disabled?: boolean; className
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const { conversation } = useChatContext();
-  const { isProfessor } = useWebmotiVideoContext();
 
   useSetupHotkeys('ctrl+m', () => {
     handleAudioToggle();
@@ -41,8 +39,10 @@ export default function ToggleAudioButton(props: { disabled?: boolean; className
     });
     window.dispatchEvent(toggleEvent);
 
-    // only switch modes when virtual student toggles audio
-    if (!isProfessor && !isWebmotiVideo(room?.localParticipant?.identity || '')) {
+    // only switch modes when virtual student toggles audio.
+    // that means that the speaker will be off when the prof is talking
+    // since the wireless mic is connected to the webmoti board-view unit.
+    if (!isWebmotiVideo(room?.localParticipant?.identity || '')) {
       if (isAudioEnabled) {
         // if student is muting their mic, enable class mic
         sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.ModeSwitch, mode: Mode.Classroom }));

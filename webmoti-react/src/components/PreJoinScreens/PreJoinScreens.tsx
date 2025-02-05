@@ -6,7 +6,6 @@ import DeviceSelectionScreen from './DeviceSelectionScreen/DeviceSelectionScreen
 import MediaErrorSnackbar from './MediaErrorSnackbar/MediaErrorSnackbar';
 import RoomNameScreen from './RoomNameScreen/RoomNameScreen';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
-import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import { useAppState } from '../../state';
 import IntroContainer from '../IntroContainer/IntroContainer';
 
@@ -18,7 +17,6 @@ export enum Steps {
 export default function PreJoinScreens() {
   const { user } = useAppState();
   const { getAudioAndVideoTracks } = useVideoContext();
-  const { isProfessor } = useWebmotiVideoContext();
 
   const { URLRoomName } = useParams<{ URLRoomName?: string }>();
   const [step, setStep] = useState(Steps.roomNameStep);
@@ -50,12 +48,6 @@ export default function PreJoinScreens() {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    const suffix = '(Prof)';
-    if (isProfessor && !name.endsWith(suffix)) {
-      // append Prof to name
-      setName(`${name} ${suffix}`);
-    }
 
     // If this app is deployed as a twilio function, don't change the URL because routing isn't supported.
     // @ts-ignore

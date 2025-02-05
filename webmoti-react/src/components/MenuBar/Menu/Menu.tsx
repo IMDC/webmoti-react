@@ -13,7 +13,7 @@ import {
   Grid,
   Tooltip,
 } from '@material-ui/core';
-import { CalendarToday } from '@material-ui/icons';
+import { CalendarToday, SupervisorAccount } from '@material-ui/icons';
 import CollaborationViewIcon from '@material-ui/icons/AccountBox';
 import GridViewIcon from '@material-ui/icons/Apps';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -42,6 +42,7 @@ import AboutDialog from '../../AboutDialog/AboutDialog';
 import DeviceSelectionDialog from '../../DeviceSelectionDialog/DeviceSelectionDialog';
 import SetScheduleModal from '../../SetScheduleModal/SetScheduleModal';
 import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
+import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
 export const IconContainer = styled('div')({
   display: 'flex',
@@ -123,6 +124,8 @@ export default function Menu(props: { buttonClassName?: string }) {
 
   const [openScheduleModal, setOpenScheduleModal] = useState(false);
 
+  const { setIsAdmin } = useWebmotiVideoContext();
+
   const handleOpenScheduleModal = () => {
     setOpenScheduleModal(true);
     setMenuOpen(false);
@@ -139,6 +142,19 @@ export default function Menu(props: { buttonClassName?: string }) {
   useSetupHotkeys('ctrl+o', () => {
     toggleMenu();
   });
+
+  // TODO: make this server side
+  const correctAdminPassword = 'admin456';
+
+  const askAdminPassword = () => {
+    let password = prompt('Enter the admin password:');
+    while (password !== correctAdminPassword && password !== null) {
+      password = prompt('Incorrect admin password! Please try again:');
+    }
+    if (password === correctAdminPassword) {
+      setIsAdmin(true);
+    }
+  };
 
   return (
     <>
@@ -284,6 +300,13 @@ export default function Menu(props: { buttonClassName?: string }) {
             <InfoIconOutlined />
           </IconContainer>
           <Typography variant="body1">About</Typography>
+        </MenuItem>
+
+        <MenuItem onClick={askAdminPassword}>
+          <IconContainer>
+            <SupervisorAccount style={{ fill: '#707578', width: '0.9em' }} />
+          </IconContainer>
+          <Typography variant="body1">Admin</Typography>
         </MenuItem>
       </MenuContainer>
       <AboutDialog
