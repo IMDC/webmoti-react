@@ -1,12 +1,3 @@
-# google-cloud-speech/google-api-core installs grpcio==1.67.0
-# but this version needs a version of libstdc++ that isn't installed on rasp pi
-grpcio==1.66.2
-grpcio-status==1.66.2
-
 # RPi.GPIO is for rasp pi only
-RPi.GPIO==0.7.1; platform_system == "Linux" and platform_machine == "aarch64"
-
-# this is to make it work with circleci
-# note: for linux (non circleci), you need to install manually
-# TODO make setup.py for this instead
-soundcard==0.4.3; (platform_system == "Linux" and platform_machine == "aarch64") or platform_system == "Windows"
+# TODO fix this not running on rasp pi
+rpi-lgpio==0.6; platform_system == "Linux" and platform_machine == "aarch64"
