@@ -23,7 +23,7 @@ from vite_asset import asset, set_asset_dev_mode, vite_hmr_client
 load_dotenv()
 
 IS_DEV_MODE = True
-app_env = os.getenv("APP_ENV")
+app_env = os.getenv("APP_ENV", "dev")
 if app_env.lower() == "prod":
     IS_DEV_MODE = False
 
