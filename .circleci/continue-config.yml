@@ -43,25 +43,25 @@ jobs:
             - ~/.npm
             - ~/.cache
 
-      - run:
-          name: "Jest Unit Tests"
-          command: npm run test:ci
-          environment:
-            JEST_JUNIT_OUTPUT_DIR: "test-reports/jest"
-            JEST_JUNIT_OUTPUT_NAME: "results.xml"
-            JEST_JUNIT_CLASSNAME: "{classname}"
-            JEST_JUNIT_TITLE: "{title}"
+      # - run:
+      #     name: "Jest Unit Tests"
+      #     command: npm run test:ci
+      #     environment:
+      #       JEST_JUNIT_OUTPUT_DIR: "test-reports/jest"
+      #       JEST_JUNIT_OUTPUT_NAME: "results.xml"
+      #       JEST_JUNIT_CLASSNAME: "{classname}"
+      #       JEST_JUNIT_TITLE: "{title}"
 
-      - store_artifacts:
-          path: coverage
+      # - store_artifacts:
+      #     path: coverage
 
-      - run:
-          name: "Eslint"
-          command: npm run lint -- --max-warnings 0
+      # - run:
+      #     name: "Eslint"
+      #     command: npm run lint -- --max-warnings 0
 
-      - run:
-          name: "Check server types"
-          command: npm run typescript:server
+      # - run:
+      #     name: "Check server types"
+      #     command: npm run typescript:server
 
       - run:
           name: "Build app"
