@@ -21,12 +21,12 @@ export const initialSettings: Settings = {
   trackSwitchOffMode: undefined,
   dominantSpeakerPriority: 'standard',
   // presentation since there is a main speaker
-  bandwidthProfileMode: 'presentation',
+  bandwidthProfileMode: 'collaboration',
   maxAudioBitrate: '48000',
   contentPreferencesMode: 'auto',
   // manual means the cameras won't switch off when low bandwidth
   // (and when zooming in to level 3 on board-view)
-  clientTrackSwitchOffControl: 'manual',
+  clientTrackSwitchOffControl: 'auto',
 };
 
 // This inputLabels object is used by ConnectionOptions.tsx. It is used to populate the id, name, and label props
