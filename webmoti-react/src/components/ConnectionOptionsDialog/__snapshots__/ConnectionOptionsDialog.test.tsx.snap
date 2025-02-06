@@ -127,7 +127,7 @@ exports[`the ConnectionOptionsDialog component when connected to a room should r
             label="bandwidthProfileMode"
             name="bandwidthProfileMode"
             onChange={[Function]}
-            value="collaboration"
+            value="presentation"
           >
             <WithStyles(ForwardRef(MenuItem))
               value="grid"
@@ -171,7 +171,7 @@ exports[`the ConnectionOptionsDialog component when connected to a room should r
             label="clientTrackSwitchOffControl"
             name="clientTrackSwitchOffControl"
             onChange={[Function]}
-            value="auto"
+            value="manual"
           >
             <WithStyles(ForwardRef(MenuItem))
               value="auto"
@@ -204,7 +204,7 @@ exports[`the ConnectionOptionsDialog component when connected to a room should r
             label="contentPreferencesMode"
             name="contentPreferencesMode"
             onChange={[Function]}
-            value="manual"
+            value="auto"
           >
             <WithStyles(ForwardRef(MenuItem))
               value="auto"
@@ -234,7 +234,7 @@ exports[`the ConnectionOptionsDialog component when connected to a room should r
             name="maxAudioBitrate"
             onChange={[Function]}
             placeholder="Leave blank for no limit"
-            value="16000"
+            value="48000"
           />
         </WithStyles(ForwardRef(FormControl))>
       </WithStyles(ForwardRef(Grid))>
@@ -381,7 +381,7 @@ exports[`the ConnectionOptionsDialog component when not connected to a room shou
             label="bandwidthProfileMode"
             name="bandwidthProfileMode"
             onChange={[Function]}
-            value="collaboration"
+            value="presentation"
           >
             <WithStyles(ForwardRef(MenuItem))
               value="grid"
@@ -425,7 +425,7 @@ exports[`the ConnectionOptionsDialog component when not connected to a room shou
             label="clientTrackSwitchOffControl"
             name="clientTrackSwitchOffControl"
             onChange={[Function]}
-            value="auto"
+            value="manual"
           >
             <WithStyles(ForwardRef(MenuItem))
               value="auto"
@@ -458,7 +458,7 @@ exports[`the ConnectionOptionsDialog component when not connected to a room shou
             label="contentPreferencesMode"
             name="contentPreferencesMode"
             onChange={[Function]}
-            value="manual"
+            value="auto"
           >
             <WithStyles(ForwardRef(MenuItem))
               value="auto"
@@ -488,7 +488,7 @@ exports[`the ConnectionOptionsDialog component when not connected to a room shou
             name="maxAudioBitrate"
             onChange={[Function]}
             placeholder="Leave blank for no limit"
-            value="16000"
+            value="48000"
           />
         </WithStyles(ForwardRef(FormControl))>
       </WithStyles(ForwardRef(Grid))>

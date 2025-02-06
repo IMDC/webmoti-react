@@ -102,6 +102,7 @@
     "gcp-build": "",
     "test": "cross-env TZ=utc jest --config jest.config.js",
     "test-bail": "cross-env TZ=utc jest --config jest.config.js --bail",
+    "update-snapshots:file": "cross-env TZ=utc jest --config jest.config.js -u --testPathPattern $1",
     "eject": "react-scripts eject",
     "lint": "eslint src server",
     "lint-fix-imports": "eslint --config .eslintrc_on_save.json --fix",

@@ -1,6 +1,13 @@
-import { renderHook, act } from '@testing-library/react-hooks';
 import EventEmitter from 'events';
+
+import { renderHook, act } from '@testing-library/react-hooks';
+
 import useTracks from './useTracks';
+
+jest.mock('../useVideoContext/useVideoContext', () => () => ({
+  localTracks: [],
+  room: { sid: 'mockRoomSid' },
+}));
 
 describe('the useTracks hook', () => {
   let mockParticipant: any;

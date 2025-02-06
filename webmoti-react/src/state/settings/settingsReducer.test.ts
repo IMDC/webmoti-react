@@ -4,12 +4,12 @@ describe('the settingsReducer', () => {
   it('should set a setting from the name/value pair provided', () => {
     const result = settingsReducer(initialSettings, { name: 'clientTrackSwitchOffControl', value: 'auto' });
     expect(result).toEqual({
-      bandwidthProfileMode: 'collaboration',
+      bandwidthProfileMode: 'presentation',
       dominantSpeakerPriority: 'standard',
-      maxAudioBitrate: '16000',
+      maxAudioBitrate: '48000',
       trackSwitchOffMode: undefined,
       clientTrackSwitchOffControl: 'auto',
-      contentPreferencesMode: 'manual',
+      contentPreferencesMode: 'auto',
     });
   });
 
@@ -18,9 +18,9 @@ describe('the settingsReducer', () => {
     expect(result).toEqual({
       bandwidthProfileMode: undefined,
       dominantSpeakerPriority: 'standard',
-      maxAudioBitrate: '16000',
-      clientTrackSwitchOffControl: 'auto',
-      contentPreferencesMode: 'manual',
+      maxAudioBitrate: '48000',
+      clientTrackSwitchOffControl: 'manual',
+      contentPreferencesMode: 'auto',
       trackSwitchOffMode: undefined,
     });
   });

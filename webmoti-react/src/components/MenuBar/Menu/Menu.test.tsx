@@ -17,6 +17,7 @@ import FlipCameraIcon from '../../../icons/FlipCameraIcon';
 import { useAppState } from '../../../state';
 import AboutDialog from '../../AboutDialog/AboutDialog';
 import DeviceSelectionDialog from '../../DeviceSelectionDialog/DeviceSelectionDialog';
+import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
 jest.mock('../../../hooks/useFlipCameraToggle/useFlipCameraToggle');
 jest.mock('@material-ui/core/useMediaQuery');
@@ -30,6 +31,7 @@ jest.mock('../../../hooks/useChatContext/useChatContext');
 jest.mock('../../../hooks/useLocalVideoToggle/useLocalVideoToggle');
 jest.mock('../../../hooks/useRoomState/useRoomState');
 jest.mock('../../../hooks/useScreenShareParticipant/useScreenShareParticipant');
+jest.mock('../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 
 const mockUseFlipCameraToggle = useFlipCameraToggle as jest.Mock<any>;
 const mockUseMediaQuery = useMediaQuery as jest.Mock<boolean>;
@@ -47,6 +49,9 @@ mockUseRoomState.mockImplementation(() => 'connected');
 
 const mockUseScreenShareParticipant = useScreenShareParticipant as jest.Mock<any>;
 mockUseScreenShareParticipant.mockImplementation(() => 'mockParticipant');
+
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
+mockUseWebmotiVideoContext.mockImplementation(() => ({}));
 
 describe('the Menu component', () => {
   let mockUpdateRecordingRules: jest.Mock<any>;

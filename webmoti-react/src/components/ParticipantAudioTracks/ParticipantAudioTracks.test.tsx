@@ -1,8 +1,12 @@
-import React from 'react';
 import { EventEmitter } from 'events';
 import { mount } from 'enzyme';
 import { ParticipantAudioTracks } from './ParticipantAudioTracks';
 import useParticipants from '../../hooks/useParticipants/useParticipants';
+
+jest.mock('../../hooks/useVideoContext/useVideoContext', () => () => ({
+  localTracks: [],
+  room: { sid: 'mockRoomSid' },
+}));
 
 function MockAudioTrack() {
   return <div>Mock Audio Track</div>;
