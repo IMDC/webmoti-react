@@ -6,7 +6,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import NotifyDropdown from './NotifyDropdown';
 import NotifySlider from './NotifySlider';
 import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
-import BoardQualityButton from '../../Buttons/BoardQualityButton/BoardQualityButton';
+// import BoardQualityButton from '../../Buttons/BoardQualityButton/BoardQualityButton';
 import ChangeZoomButton from '../../Buttons/ChangeZoomButton/ChangeZoomButton';
 import MuteClassroomButton from '../../Buttons/MuteClassroomButton/MuteClassroomButton';
 import ToggleCameraButton from '../../Buttons/ToggleCameraButton/ToggleCameraButton';
@@ -95,9 +95,9 @@ export default function ControlsMenu() {
             <Grid item style={{ marginBottom: '10px' }}>
               <ChangeZoomButton />
             </Grid>
-            <Grid item style={{ marginBottom: '10px' }}>
+            {/* <Grid item style={{ marginBottom: '10px' }}>
               <BoardQualityButton />
-            </Grid>
+            </Grid> */}
 
             <Grid item style={{ width: '100%', marginBottom: '10px' }}>
               <Divider />
