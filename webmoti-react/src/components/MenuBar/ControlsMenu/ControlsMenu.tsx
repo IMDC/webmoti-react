@@ -11,7 +11,7 @@ import ChangeZoomButton from '../../Buttons/ChangeZoomButton/ChangeZoomButton';
 import MuteClassroomButton from '../../Buttons/MuteClassroomButton/MuteClassroomButton';
 import ToggleCameraButton from '../../Buttons/ToggleCameraButton/ToggleCameraButton';
 import ToggleCameraButton2 from '../../Buttons/ToggleCameraButton2/ToggleCameraButton2';
-import WaveHandButton from '../../Buttons/WaveHandButton/WaveHandButton';
+// import WaveHandButton from '../../Buttons/WaveHandButton/WaveHandButton';
 import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -114,7 +114,7 @@ export default function ControlsMenu() {
               <NotifyDropdown />
             </Grid>
 
-            <Grid item style={{ width: '100%' }}>
+            {/* <Grid item style={{ width: '100%' }}>
               <Divider />
             </Grid>
             <Grid item>
@@ -124,7 +124,7 @@ export default function ControlsMenu() {
             </Grid>
             <Grid item>
               <WaveHandButton />
-            </Grid>
+            </Grid> */}
           </Grid>
         </div>
       </Popover>
