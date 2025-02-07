@@ -33,7 +33,7 @@ class ServoController:
             # wait a bit before stopping servo to remove momentum
             await asyncio.sleep(sleep_time)
             # relax servo to stop erratic movements
-            self.pwm.ChangeDutyCycle(0)
+            # self.pwm.ChangeDutyCycle(0)
 
     async def set_angle(self, angle: float, sleep_time) -> None:
         async with self.lock:
