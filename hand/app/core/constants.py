@@ -25,8 +25,8 @@ HALFWAY_LOWER_ANGLE = HALFWAY_ANGLE + QUEUE_ANGLE_INCREMENT
 
 # sleep times in ms for raising hand
 # full is the time it takes to travel 180 degrees from side to side
-FULL_SLEEP_TIME = 1.5
-HALFWAY_SLEEP_TIME = FULL_SLEEP_TIME / 2
+FULL_SLEEP_TIME = 2
+HALFWAY_SLEEP_TIME = 1.5
 SMALL_SLEEP_TIME = 0.25
 
 
