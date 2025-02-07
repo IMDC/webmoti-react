@@ -74,7 +74,7 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
   const [isMuted, setIsMuted] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [volume, setVolume] = useState(50);
-  const [soundKey, setSoundKey] = useState(Object.keys(Sounds)[0]);
+  const [soundKey, setSoundKey] = useState(Object.keys(Sounds)[1]);
 
   const playSetSound = useCallback(
     (soundStr?: string) => {
