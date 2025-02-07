@@ -16,7 +16,7 @@ PORT = 8080
 MAX_ANGLE = 30
 MIN_ANGLE = 175
 
-HALFWAY_ANGLE = 90
+HALFWAY_ANGLE = 100
 
 # a bit higher/lower than halfway for when queue is not empty
 QUEUE_ANGLE_INCREMENT = 20
