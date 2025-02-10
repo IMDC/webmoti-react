@@ -1,31 +1,20 @@
 import { useMediaQuery, useTheme } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 
-import { MsgTypes } from '../../../constants';
-import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useLocalAudioToggle from '../../../hooks/useLocalAudioToggle/useLocalAudioToggle';
 import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import MicIcon from '../../../icons/MicIcon';
 import MicOffIcon from '../../../icons/MicOffIcon';
-import { isWebmotiVideo, sendSystemMsg } from '../../../utils';
 import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
-
-const enum Mode {
-  Professor = 'PROFESSOR',
-  Classroom = 'CLASSROOM',
-  Virtual = 'VIRTUAL',
-}
 
 export default function ToggleAudioButton(props: { disabled?: boolean; className?: string }) {
   const [isAudioEnabled, toggleAudioEnabled] = useLocalAudioToggle();
-  const { localTracks, room } = useVideoContext();
+  const { localTracks } = useVideoContext();
   const hasAudioTrack = localTracks.some((track) => track.kind === 'audio');
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
-  const { conversation } = useChatContext();
 
   useSetupHotkeys('ctrl+m', () => {
     handleAudioToggle();
@@ -38,20 +27,6 @@ export default function ToggleAudioButton(props: { disabled?: boolean; className
       },
     });
     window.dispatchEvent(toggleEvent);
-
-    // only switch modes when virtual student toggles audio.
-    // that means that the speaker will be off when the prof is talking
-    // since the wireless mic is connected to the webmoti board-view unit.
-    if (!isWebmotiVideo(room?.localParticipant?.identity || '')) {
-      if (isAudioEnabled) {
-        // if student is muting their mic, enable class mic
-        sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.ModeSwitch, mode: Mode.Classroom }));
-      } else {
-        // if student unmutes, mute class mic
-        sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.ModeSwitch, mode: Mode.Virtual }));
-      }
-    }
-
     toggleAudioEnabled();
   };
 

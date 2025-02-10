@@ -5,8 +5,6 @@ import MicIcon from '@material-ui/icons/Mic';
 import MicOffIcon from '@material-ui/icons/MicOff';
 import VolumeOffIcon from '@material-ui/icons/VolumeOff';
 import VolumeUpIcon from '@material-ui/icons/VolumeUp';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import { Message } from '@twilio/conversations';
 
 import { WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../../constants';
@@ -15,7 +13,6 @@ import useChatContext from '../../hooks/useChatContext/useChatContext';
 import useLocalAudioToggle from '../../hooks/useLocalAudioToggle/useLocalAudioToggle';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
-import theme from '../../theme';
 import { checkSystemMsg, sendSystemMsg } from '../../utils';
 
 export const enum Mode {
@@ -36,7 +33,6 @@ export default function AudioMixer() {
   const { isAdmin } = useWebmotiVideoContext();
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const [alignment, setAlignment] = useState<Mode | null>(null);
   const [isClassMicEnabled, setIsClassMicEnabled] = useState(true);
   const [isSpeakerEnabled, setIsSpeakerEnabled] = useState(true);
   const [input, setInput] = useState('');
@@ -48,19 +44,6 @@ export default function AudioMixer() {
   };
   const handleClosePopover = () => {
     setAnchorEl(null);
-  };
-  const handleAlignment = (_: React.MouseEvent<HTMLElement>, newAlignment: Mode | null) => {
-    if (newAlignment !== null) {
-      setAlignment(newAlignment);
-
-      if (newAlignment === Mode.Professor) {
-        sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.ModeSwitch, mode: Mode.Professor }));
-      } else if (newAlignment === Mode.Classroom) {
-        sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.ModeSwitch, mode: Mode.Classroom }));
-      } else {
-        sendSystemMsg(conversation, JSON.stringify({ type: MsgTypes.ModeSwitch, mode: Mode.Virtual }));
-      }
-    }
   };
 
   const setClassMicState = useCallback(
@@ -103,36 +86,7 @@ export default function AudioMixer() {
 
       const msgData = JSON.parse(message.body || '');
 
-      if (msgData.type === MsgTypes.ModeSwitch) {
-        switch (msgData.mode) {
-          case Mode.Professor:
-            // - disable mic (to prevent double audio)
-            // - disable speakers (optional)
-            setClassMicState(false);
-            setSpeakerState(false);
-            break;
-
-          case Mode.Classroom:
-            // for in person students
-            // - enable mic
-            // - disable speakers (mandatory)
-            setClassMicState(true);
-            setSpeakerState(false);
-            break;
-
-          default:
-            // for online students
-            // - disable mic
-            // - enable speakers
-            setClassMicState(false);
-            setSpeakerState(true);
-        }
-
-        // delete msg so it's not shown when rejoining
-        message.remove();
-
-        return;
-      } else if (msgData.type === MsgTypes.ToggleDevice) {
+      if (msgData.type === MsgTypes.ToggleDevice) {
         if (msgData.device === Devices.Speaker) {
           setSpeakerState(!isSpeakerEnabled);
         } else {
@@ -183,36 +137,6 @@ export default function AudioMixer() {
             transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           >
             <Box p={2} display="flex" flexDirection="column" alignItems="center">
-              <ToggleButtonGroup value={alignment} exclusive onChange={handleAlignment}>
-                <ToggleButton
-                  value={Mode.Professor}
-                  style={{
-                    backgroundColor: alignment === Mode.Professor ? theme.palette.secondary.main : undefined,
-                    color: alignment === Mode.Professor ? 'white' : undefined,
-                  }}
-                >
-                  Professor
-                </ToggleButton>
-                <ToggleButton
-                  value={Mode.Classroom}
-                  style={{
-                    backgroundColor: alignment === Mode.Classroom ? theme.palette.secondary.main : undefined,
-                    color: alignment === Mode.Classroom ? 'white' : undefined,
-                  }}
-                >
-                  Classroom
-                </ToggleButton>
-                <ToggleButton
-                  value={Mode.Virtual}
-                  style={{
-                    backgroundColor: alignment === Mode.Virtual ? theme.palette.secondary.main : undefined,
-                    color: alignment === Mode.Virtual ? 'white' : undefined,
-                  }}
-                >
-                  Virtual
-                </ToggleButton>
-              </ToggleButtonGroup>
-
               <Box mt={2}>
                 <Button
                   variant="contained"

@@ -7,7 +7,6 @@ import useParticipants from '../../hooks/useParticipants/useParticipants';
 import useRoomState from '../../hooks/useRoomState/useRoomState';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import AudioMixer from '../AudioMixer/AudioMixer';
-import ModeDisplay from '../AudioMixer/ModeDisplay';
 import EndCallButton from '../Buttons/EndCallButton/EndCallButton';
 import RaiseHandButton from '../Buttons/RaiseHandButton/RaiseHandButton';
 import ToggleAudioButton from '../Buttons/ToggleAudioButton/ToggleAudioButton';
@@ -68,8 +67,6 @@ export default function MenuBar() {
 
         <Grid item>
           <Grid container justifyContent="center" alignItems="center">
-            <ModeDisplay />
-
             <ToggleAudioButton disabled={isReconnecting} />
             <ToggleVideoButton disabled={isReconnecting} />
 
