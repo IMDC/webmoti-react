@@ -18,14 +18,17 @@ export interface SettingsAction {
 
 export const initialSettings: Settings = {
   // https://www.twilio.com/docs/video/tutorials/developing-high-quality-video-applications
-  trackSwitchOffMode: undefined,
-  dominantSpeakerPriority: 'standard',
+  // https://www.twilio.com/docs/video/tutorials/using-bandwidth-profile-api#specifying-a-bw-profile
+
+  // disabled: never turn off tracks when low bandwidth
+  trackSwitchOffMode: 'disabled',
+  dominantSpeakerPriority: 'high',
   // presentation since there is a main speaker
   bandwidthProfileMode: 'presentation',
   maxAudioBitrate: '48000',
   contentPreferencesMode: 'auto',
-  // manual means the cameras won't switch off when low bandwidth
-  // (and when zooming in to level 3 on board-view)
+  // manual: cameras don't turn off when zooming in to level 3 on board-view
+  // (auto makes it turn off when zoomed because most of the zoomed video is not visible/rendered)
   clientTrackSwitchOffControl: 'manual',
 };
 
