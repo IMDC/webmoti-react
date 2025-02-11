@@ -1,5 +1,7 @@
 // import { Button, Grid, Typography } from '@material-ui/core';
 import { shallow } from 'enzyme';
+
+import MenuBar from './MenuBar';
 import useParticipants from '../../hooks/useParticipants/useParticipants';
 import useRoomState from '../../hooks/useRoomState/useRoomState';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
@@ -8,7 +10,6 @@ import ToggleAudioButton from '../Buttons/ToggleAudioButton/ToggleAudioButton';
 import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 // import ToggleScreenShareButton from '../Buttons/ToggleScreenShareButton/ToggleScreenShareButton';
-import MenuBar from './MenuBar';
 
 jest.mock('../../hooks/useRoomState/useRoomState');
 jest.mock('../../hooks/useVideoContext/useVideoContext');
@@ -113,14 +114,15 @@ describe('the MenuBar component', () => {
   //   expect(mockToggleScreenShare).toHaveBeenCalledTimes(1);
   // });
 
+  // Test Room (room name) is hidden in dev mode
   it('should correctly display the number of participants in a room when there is more than 1 participant', () => {
     const wrapper = shallow(<MenuBar />);
-    expect(wrapper.find('WithStyles(ForwardRef(Typography))').at(0).text()).toContain('Test Room | 3 participants');
+    expect(wrapper.find('WithStyles(ForwardRef(Typography))').at(0).text()).toContain('3 participants');
   });
 
   it('should correctly display the number of participants in a room when there is exactly 1 participant', () => {
     mockUseParticipants.mockImplementationOnce(() => []);
     const wrapper = shallow(<MenuBar />);
-    expect(wrapper.find('WithStyles(ForwardRef(Typography))').at(0).text()).toContain('Test Room | 1 participant');
+    expect(wrapper.find('WithStyles(ForwardRef(Typography))').at(0).text()).toContain('1 participant');
   });
 });
