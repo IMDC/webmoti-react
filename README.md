@@ -8,9 +8,11 @@
 
 [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/MQ5eZhP43vsLasGai1Wvc2/HVEDn43Bb981mJ5jVSE4on/tree/main.svg?style=svg&circle-token=CCIPRJ_QkKWgL2GxrDkMMYfFFf4A7_7d93e63b48c75bad00c9edfa79431f677df9a132)](https://dl.circleci.com/status-badge/redirect/circleci/MQ5eZhP43vsLasGai1Wvc2/HVEDn43Bb981mJ5jVSE4on/tree/main)
 
+Check the [setup guide](setup.md) for setup information.
+
 See the [project board](https://github.com/orgs/IMDC/projects/2) for issue priorities.
 
-Check the [setup guide](setup.md) for setup information.
+---
 
 ![Sequence Diagram](webmoti-react/docs/sequence_diagram.png)
 
