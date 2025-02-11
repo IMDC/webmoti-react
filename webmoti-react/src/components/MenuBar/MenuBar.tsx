@@ -59,7 +59,9 @@ export default function MenuBar() {
         <Hidden mdDown>
           <Grid style={{ flex: 1 }}>
             <Typography variant="body1">
-              {room!.name} | {participants.length + 1} participant{participants.length ? 's' : ''}
+              {/* only show room name in dev */}
+              {process.env.NODE_ENV === 'development' && `${room!.name} |`} {participants.length + 1} participant
+              {participants.length ? 's' : ''}
               <ToggleScheduleButton />
             </Typography>
           </Grid>

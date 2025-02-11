@@ -44,7 +44,8 @@ export default function MobileTopMenuBar() {
     <Grid container alignItems="center" justifyContent="space-between" className={classes.container}>
       <div className={classes.row}>
         <Typography variant="subtitle1" component="span">
-          {room!.name}
+          {/* only show room name in dev */}
+          {process.env.NODE_ENV === 'development' && room!.name}
         </Typography>
         <ToggleScheduleButton />
       </div>
