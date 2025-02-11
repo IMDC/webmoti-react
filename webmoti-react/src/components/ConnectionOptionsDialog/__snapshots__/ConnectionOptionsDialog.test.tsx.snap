@@ -51,7 +51,7 @@ exports[`the ConnectionOptionsDialog component when connected to a room should r
             label="dominantSpeakerPriority"
             name="dominantSpeakerPriority"
             onChange={[Function]}
-            value="standard"
+            value="high"
           >
             <WithStyles(ForwardRef(MenuItem))
               value="low"
@@ -89,7 +89,7 @@ exports[`the ConnectionOptionsDialog component when connected to a room should r
             label="trackSwitchOffMode"
             name="trackSwitchOffMode"
             onChange={[Function]}
-            value="default"
+            value="disabled"
           >
             <WithStyles(ForwardRef(MenuItem))
               value="predicted"
@@ -305,7 +305,7 @@ exports[`the ConnectionOptionsDialog component when not connected to a room shou
             label="dominantSpeakerPriority"
             name="dominantSpeakerPriority"
             onChange={[Function]}
-            value="standard"
+            value="high"
           >
             <WithStyles(ForwardRef(MenuItem))
               value="low"
@@ -343,7 +343,7 @@ exports[`the ConnectionOptionsDialog component when not connected to a room shou
             label="trackSwitchOffMode"
             name="trackSwitchOffMode"
             onChange={[Function]}
-            value="default"
+            value="disabled"
           >
             <WithStyles(ForwardRef(MenuItem))
               value="predicted"

@@ -5,9 +5,9 @@ describe('the settingsReducer', () => {
     const result = settingsReducer(initialSettings, { name: 'clientTrackSwitchOffControl', value: 'auto' });
     expect(result).toEqual({
       bandwidthProfileMode: 'presentation',
-      dominantSpeakerPriority: 'standard',
+      dominantSpeakerPriority: 'high',
       maxAudioBitrate: '48000',
-      trackSwitchOffMode: undefined,
+      trackSwitchOffMode: 'disabled',
       clientTrackSwitchOffControl: 'auto',
       contentPreferencesMode: 'auto',
     });
@@ -17,11 +17,11 @@ describe('the settingsReducer', () => {
     const result = settingsReducer(initialSettings, { name: 'bandwidthProfileMode', value: 'default' });
     expect(result).toEqual({
       bandwidthProfileMode: undefined,
-      dominantSpeakerPriority: 'standard',
+      dominantSpeakerPriority: 'high',
       maxAudioBitrate: '48000',
       clientTrackSwitchOffControl: 'manual',
       contentPreferencesMode: 'auto',
-      trackSwitchOffMode: undefined,
+      trackSwitchOffMode: 'disabled',
     });
   });
 });

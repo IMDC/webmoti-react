@@ -22,6 +22,7 @@ export const initialSettings: Settings = {
 
   // disabled: never turn off tracks when low bandwidth
   trackSwitchOffMode: 'disabled',
+  // high: dominant speaker tracks will be high priority
   dominantSpeakerPriority: 'high',
   // presentation since there is a main speaker
   bandwidthProfileMode: 'presentation',
