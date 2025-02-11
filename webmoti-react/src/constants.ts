@@ -32,7 +32,6 @@ export const WS_SERVER_URL = `wss://${API_DOMAIN}/ws`;
 
 export const enum MsgTypes {
   Hand = 'HAND',
-  ModeSwitch = 'MODESWITCH',
   ToggleDevice = 'TOGGLEDEVICE',
   MuteDevice = 'MUTEDEVICE',
   Notify = 'NOTIFY',

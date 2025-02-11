@@ -61,19 +61,17 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
   return (
     <main>
       <Typography variant="h5" className={classes.gutterBottom}>
-        Join a Room
+        Join Classroom
       </Typography>
       <Typography variant="body1">
-        {hasUsername
-          ? "Enter the name of a room you'd like to join."
-          : "Enter your name and the name of a room you'd like to join"}
+        Enter your first name and click continue
       </Typography>
       <form onSubmit={handleSubmit}>
         <div className={classes.inputContainer}>
           {!hasUsername && (
             <div className={classes.textFieldContainer}>
               <InputLabel shrink htmlFor="input-user-name">
-                Your Name
+                Your First Name
               </InputLabel>
               <TextField
                 id="input-user-name"
@@ -85,20 +83,24 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
               />
             </div>
           )}
-          <div className={classes.textFieldContainer}>
-            <InputLabel shrink htmlFor="input-room-name">
-              Room Name
-            </InputLabel>
-            <TextField
-              autoCapitalize="false"
-              id="input-room-name"
-              variant="outlined"
-              fullWidth
-              size="small"
-              value={roomName}
-              onChange={handleRoomNameChange}
-            />
-          </div>
+          {/* hide room name field when running prod */}
+          {/* (it confuses participants and we only need one room for now) */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className={classes.textFieldContainer}>
+              <InputLabel shrink htmlFor="input-room-name">
+                Room Name
+              </InputLabel>
+              <TextField
+                autoCapitalize="false"
+                id="input-room-name"
+                variant="outlined"
+                fullWidth
+                size="small"
+                value={roomName}
+                onChange={handleRoomNameChange}
+              />
+            </div>
+          )}
         </div>
 
         <Grid container justifyContent="flex-end">
