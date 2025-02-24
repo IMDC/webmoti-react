@@ -33,7 +33,7 @@ DeployCommand.flags = Object.assign(
       required: false,
     }),
     authentication: flags.enum({
-      options: ['passcode'],
+      options: ['passcode', 'firebase'],
       description: 'Type of authentication to use',
       required: true,
     }),

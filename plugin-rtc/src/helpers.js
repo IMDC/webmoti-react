@@ -45,7 +45,7 @@ async function getAssets(folder) {
     assetsFolderNames: [folder],
   });
 
-  const indexHTML = assets.find(asset => asset.name.includes('index.html'));
+  const indexHTML = assets.find((asset) => asset.name.includes('index.html'));
 
   const allAssets = assets.concat([
     {
@@ -63,8 +63,8 @@ async function getAssets(folder) {
   return allAssets;
 }
 
-function getMiddleware() {
-  const authHandlerFn = fs.readFileSync(path.join(__dirname, './serverless/middleware/auth.js'));
+function getMiddleware(authType) {
+  const authHandlerFn = fs.readFileSync(path.join(__dirname, `./serverless/middleware/${authType}_auth.js`));
 
   return [
     {
@@ -91,7 +91,7 @@ function getServiceAccountAsset() {
 
 async function findApp() {
   const services = await this.twilioClient.serverless.services.list();
-  return services.find(service => service.friendlyName.includes(APP_NAME));
+  return services.find((service) => service.friendlyName.includes(APP_NAME));
 }
 
 async function getAppInfo() {
@@ -100,36 +100,37 @@ async function getAppInfo() {
   if (!app) return null;
 
   const appInstance = await this.twilioClient.serverless.services(app.sid);
-
   const [environment] = await appInstance.environments.list();
-
   const variables = await appInstance.environments(environment.sid).variables.list();
-
   const assets = await appInstance.assets.list();
-
   const functions = await appInstance.functions.list();
-  const tokenServerFunction = functions.find(fn => fn.friendlyName.includes('token'));
 
-  const passcodeVar = variables.find(v => v.key === 'API_PASSCODE');
-  const expiryVar = variables.find(v => v.key === 'API_PASSCODE_EXPIRY');
-  const roomTypeVar = variables.find(v => v.key === 'ROOM_TYPE');
+  const tokenServerFunction = functions.find((fn) => fn.friendlyName.includes('token'));
+  const roomType = variables.find((v) => v.key === 'ROOM_TYPE')?.value ?? '';
 
-  const passcode = passcodeVar ? passcodeVar.value : '';
-  const expiry = expiryVar ? expiryVar.value : '';
-  const roomType = roomTypeVar ? roomTypeVar.value : '';
-
-  const fullPasscode = getPasscode(environment.domainName, passcode);
-
-  return {
-    url: `https://${environment.domainName}?passcode=${fullPasscode}`,
-    expiry: moment(Number(expiry)).toString(),
+  const baseInfo = {
+    url: `https://${environment.domainName}`,
     sid: app.sid,
-    passcode: fullPasscode,
-    hasWebAssets: Boolean(assets.find(asset => asset.friendlyName.includes('index.html'))),
+    hasWebAssets: assets.some((asset) => asset.friendlyName.includes('index.html')),
     roomType,
     environmentSid: environment.sid,
-    functionSid: tokenServerFunction.sid,
+    functionSid: tokenServerFunction?.sid ?? '',
   };
+
+  if (this.flags['authentication'] === 'passcode') {
+    const passcode = variables.find((v) => v.key === 'API_PASSCODE')?.value ?? '';
+    const expiry = variables.find((v) => v.key === 'API_PASSCODE_EXPIRY')?.value ?? '';
+    const fullPasscode = getPasscode(environment.domainName, passcode);
+
+    return {
+      ...baseInfo,
+      url: `${baseInfo.url}?passcode=${fullPasscode}`,
+      passcode: fullPasscode,
+      expiry: moment(Number(expiry)).toString(),
+    };
+  }
+
+  return baseInfo;
 }
 
 async function displayAppInfo() {
@@ -144,12 +145,16 @@ async function displayAppInfo() {
     console.log(`Web App URL: ${appInfo.url}`);
   }
 
-  console.log(`Passcode: ${appInfo.passcode.replace(/(\d{3})(\d{3})(\d{4})(\d{4})/, '$1 $2 $3 $4')}`);
-  console.log(`Expires: ${appInfo.expiry}`);
+  if (this.flags['authentication'] === 'passcode') {
+    console.log(`Passcode: ${appInfo.passcode.replace(/(\d{3})(\d{3})(\d{4})(\d{4})/, '$1 $2 $3 $4')}`);
+    console.log(`Expires: ${appInfo.expiry}`);
+  }
 
   if (appInfo.roomType) {
     console.log(`Room Type: ${appInfo.roomType}`);
   }
+
+  console.log(`Authentication: ${this.flags['authentication']}`);
 
   console.log(
     `Edit your token server at: https://www.twilio.com/console/functions/editor/${appInfo.sid}/environment/${appInfo.environmentSid}/function/${appInfo.functionSid}`
@@ -158,7 +163,7 @@ async function displayAppInfo() {
 
 async function findConversationsService() {
   const services = await this.twilioClient.conversations.services.list();
-  return services.find(service => service.friendlyName.includes(APP_NAME));
+  return services.find((service) => service.friendlyName.includes(APP_NAME));
 }
 
 async function getConversationsServiceSID() {
@@ -181,8 +186,10 @@ async function deploy() {
     assetsFolderNames: [],
   });
 
-  assets.push(...getMiddleware());
-  assets.push(...getServiceAccountAsset());
+  assets.push(...getMiddleware(this.flags['authentication']));
+  if (this.flags['authentication'] === 'firebase') {
+    assets.push(...getServiceAccountAsset());
+  }
 
   if (this.twilioClient.username === this.twilioClient.accountSid) {
     // When twilioClient.username equals twilioClient.accountSid, it means that the user
@@ -208,25 +215,30 @@ TWILIO_API_SECRET = the secret for the API Key`);
     password: this.twilioClient.password,
   });
 
-  const pin = getRandomInt(6);
-  const expiryTime = Date.now() + EXPIRY_PERIOD;
-
   cli.action.start('deploying app');
 
   const conversationServiceSid = await getConversationsServiceSID.call(this);
 
+  const env = {
+    TWILIO_API_KEY_SID: this.twilioClient.username,
+    TWILIO_API_KEY_SECRET: this.twilioClient.password,
+    ROOM_TYPE: this.flags['room-type'],
+    CONVERSATIONS_SERVICE_SID: conversationServiceSid,
+  };
+
+  if (this.flags['authentication'] === 'passcode') {
+    const pin = getRandomInt(6);
+    const expiryTime = Date.now() + EXPIRY_PERIOD;
+    env.API_PASSCODE = pin;
+    env.API_PASSCODE_EXPIRY = expiryTime;
+  }
+
   const deployOptions = {
-    env: {
-      TWILIO_API_KEY_SID: this.twilioClient.username,
-      TWILIO_API_KEY_SECRET: this.twilioClient.password,
-      API_PASSCODE: pin,
-      API_PASSCODE_EXPIRY: expiryTime,
-      ROOM_TYPE: this.flags['room-type'],
-      CONVERSATIONS_SERVICE_SID: conversationServiceSid,
-    },
+    env,
     pkgJson: {
       dependencies: {
-        twilio: '^3.80.0', // This determines the version of the Twilio client returned by context.getTwilioClient()
+        // This determines the version of the Twilio client returned by context.getTwilioClient()
+        twilio: '^3.80.0',
         'firebase-admin': '^13.1.0',
       },
     },
