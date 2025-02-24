@@ -2,8 +2,8 @@ import { RequestHandler } from 'express';
 import firebaseAdmin from 'firebase-admin';
 
 firebaseAdmin.initializeApp({
-  credential: firebaseAdmin.credential.cert(require('./serviceAccountKey.json')),
-  databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
+  credential: firebaseAdmin.credential.cert(require('../../plugin-rtc/src/firebase_service_account.json')),
+  // databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
 });
 
 const firebaseAuthMiddleware: RequestHandler = async (req, res, next) => {

@@ -76,6 +76,19 @@ function getMiddleware() {
   ];
 }
 
+function getServiceAccountAsset() {
+  const serviceAccountContent = fs.readFileSync(path.join(__dirname, './firebase_service_account.json'), 'utf8');
+
+  return [
+    {
+      name: 'firebase_service_account',
+      path: '/firebase_service_account.json',
+      content: serviceAccountContent,
+      access: 'private',
+    },
+  ];
+}
+
 async function findApp() {
   const services = await this.twilioClient.serverless.services.list();
   return services.find(service => service.friendlyName.includes(APP_NAME));
@@ -169,6 +182,7 @@ async function deploy() {
   });
 
   assets.push(...getMiddleware());
+  assets.push(...getServiceAccountAsset());
 
   if (this.twilioClient.username === this.twilioClient.accountSid) {
     // When twilioClient.username equals twilioClient.accountSid, it means that the user
@@ -213,6 +227,7 @@ TWILIO_API_SECRET = the secret for the API Key`);
     pkgJson: {
       dependencies: {
         twilio: '^3.80.0', // This determines the version of the Twilio client returned by context.getTwilioClient()
+        'firebase-admin': '^13.1.0',
       },
     },
     functionsEnv: 'dev',

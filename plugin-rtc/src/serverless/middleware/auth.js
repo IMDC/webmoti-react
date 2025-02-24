@@ -1,35 +1,52 @@
-/* global Twilio */
+/* global Twilio, Runtime */
 'use strict';
 
+const firebaseAdmin = require('firebase-admin');
+const fs = require('fs');
+
+function handleError(response, statusCode, message) {
+  console.error(`Error: ${message}`);
+  response.setStatusCode(statusCode);
+  response.setBody({ error: { message } });
+  return response;
+}
+
 module.exports = async (context, event, callback) => {
-  const { API_PASSCODE, API_PASSCODE_EXPIRY, DOMAIN_NAME } = context;
-
-  const { passcode } = event;
-  const [, appID, serverlessID] = DOMAIN_NAME.match(/-?(\d*)-(\d+)(?:-\w+)?.twil.io$/);
-
-  let response = new Twilio.Response();
+  const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
-  if (Date.now() > API_PASSCODE_EXPIRY) {
-    response.setStatusCode(401);
-    response.setBody({
-      error: {
-        message: 'passcode expired',
-        explanation:
-          'The passcode used to validate application users has expired. Re-deploy the application to refresh the passcode.',
-      },
-    });
-    return callback(null, response);
+  const { path: serviceAccountFilePath } = Runtime.getAssets()['/firebase_service_account.json'];
+
+  let serviceAccountJson;
+  try {
+    // require doesn't work here so we need to use fs instead
+    const rawJson = fs.readFileSync(serviceAccountFilePath, 'utf8');
+    serviceAccountJson = JSON.parse(rawJson);
+  } catch (err) {
+    return callback(null, handleError(response, 500, 'Could not load service account JSON'));
   }
 
-  if (API_PASSCODE + appID + serverlessID !== passcode) {
-    response.setStatusCode(401);
-    response.setBody({
-      error: {
-        message: 'passcode incorrect',
-        explanation: 'The passcode used to validate application users is incorrect.',
-      },
+  // initialize firebase if not already done
+  if (!firebaseAdmin.apps.length) {
+    firebaseAdmin.initializeApp({
+      credential: firebaseAdmin.credential.cert(serviceAccountJson),
     });
-    return callback(null, response);
+  }
+
+  const idToken = event.firebase_token;
+  if (!idToken) {
+    return callback(null, handleError(response, 401, 'Firebase ID token missing'));
+  }
+
+  try {
+    const decodedToken = await firebaseAdmin.auth().verifyIdToken(idToken);
+
+    const userEmail = decodedToken.email;
+    // only tmu accounts are allowed
+    if (!userEmail || !userEmail.endsWith('@torontomu.ca')) {
+      return callback(null, handleError(response, 403, 'Forbidden - only torontomu.ca is allowed'));
+    }
+  } catch (err) {
+    return callback(null, handleError(response, 401, 'Unauthorized - invalid token'));
   }
 };

@@ -31,7 +31,7 @@ yarn-error.log*
 
 test-reports
 junit.xml
-serviceAccountKey.json
+firebase_service_account.json
 
 public/noisecancellation/
 public/virtualbackground/
