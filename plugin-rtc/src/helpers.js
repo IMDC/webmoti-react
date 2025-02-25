@@ -242,7 +242,7 @@ TWILIO_API_SECRET = the secret for the API Key`);
         'firebase-admin': '^13.1.0',
       },
     },
-    functionsEnv: 'dev',
+    functionsEnv: '',
     functions,
     assets,
   };
@@ -250,7 +250,7 @@ TWILIO_API_SECRET = the secret for the API Key`);
   if (this.appInfo && this.appInfo.sid) {
     deployOptions.serviceSid = this.appInfo.sid;
   } else {
-    deployOptions.serviceName = `${APP_NAME}-${getRandomInt(4)}`;
+    deployOptions.serviceName = APP_NAME;
   }
 
   try {

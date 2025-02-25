@@ -1,20 +1,26 @@
 /* global Twilio */
 // eslint-disable-next-line strict
-"use strict";
+'use strict';
+
+/*
+!
+! Only use this for passcode auth
+!
+! Right now this isn't used so it doesn't get deployed in the /old folder
+!
+*/
 
 module.exports.handler = async function (context, event, callback) {
   const client = context.getTwilioClient();
   const response = new Twilio.Response();
-  response.setHeaders({ "Content-Type": "application/json" });
+  response.setHeaders({ 'Content-Type': 'application/json' });
 
   // from https://github.com/twilio-labs/plugin-rtc/blob/master/src/helpers.js
 
-  const APP_NAME = "video-app";
+  const APP_NAME = 'webmoti';
 
   function getPasscode(domain, passcode) {
-    const [, appID, serverlessID] = domain.match(
-      /-?(\d*)-(\d+)(?:-\w+)?.twil.io$/
-    );
+    const [, appID, serverlessID] = domain.match(/-?(\d*)-(\d+)(?:-\w+)?.twil.io$/);
     return `${passcode}${appID}${serverlessID}`;
   }
 
@@ -27,24 +33,19 @@ module.exports.handler = async function (context, event, callback) {
     const app = await findApp();
 
     if (!app) {
-      console.error("No deployed app found with the specified name.");
+      console.error('No deployed app found with the specified name.');
       response.setStatusCode(404);
       response.setBody({
-        error: "No deployed app found with the specified name.",
+        error: 'No deployed app found with the specified name.',
       });
       return callback(null, response);
     }
 
-    const [environment] = await client.serverless
-      .services(app.sid)
-      .environments.list();
-    const variables = await client.serverless
-      .services(app.sid)
-      .environments(environment.sid)
-      .variables.list();
+    const [environment] = await client.serverless.services(app.sid).environments.list();
+    const variables = await client.serverless.services(app.sid).environments(environment.sid).variables.list();
 
-    const passcodeVar = variables.find((v) => v.key === "API_PASSCODE");
-    const passcode = passcodeVar ? passcodeVar.value : "";
+    const passcodeVar = variables.find((v) => v.key === 'API_PASSCODE');
+    const passcode = passcodeVar ? passcodeVar.value : '';
 
     const fullPasscode = getPasscode(environment.domainName, passcode);
 
