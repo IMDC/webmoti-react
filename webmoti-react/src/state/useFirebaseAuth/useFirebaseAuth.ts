@@ -35,30 +35,22 @@ export default function useFirebaseAuth() {
         }),
       });
 
+      const responseText = await response.text();
+
+      let responseBody;
+      try {
+        responseBody = JSON.parse(responseText);
+      } catch {
+        responseBody = responseText;
+      }
+
       if (!response.ok) {
-        let errorBody;
-
-        try {
-          errorBody = await response.json();
-        } catch {
-          errorBody = await response.text();
-        }
-
-        let formattedError;
-        if (typeof errorBody === 'object') {
-          formattedError = JSON.stringify(errorBody);
-        } else {
-          formattedError = errorBody;
-        }
+        let formattedError = typeof responseBody === 'object' ? JSON.stringify(responseBody) : responseBody;
 
         throw new Error(`Request failed with status ${response.status}: ${formattedError}`);
       }
 
-      try {
-        return await response.json();
-      } catch (error) {
-        throw new Error(`Failed to parse response JSON: "${await response.text()}"`);
-      }
+      return responseBody;
     },
     [user]
   );

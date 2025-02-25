@@ -10,7 +10,7 @@ const firebaseAuthMiddleware: RequestHandler = async (req, res, next) => {
   const authHeader = req.get('authorization');
 
   if (!authHeader) {
-    return res.status(401).send();
+    return res.status(401).json({ message: 'Authorization header is missing' });
   }
 
   try {
@@ -18,15 +18,15 @@ const firebaseAuthMiddleware: RequestHandler = async (req, res, next) => {
     const token = await firebaseAdmin.auth().verifyIdToken(authHeader);
 
     // Here we authorize users to use this application only if they have a
-    // Twilio email address. The logic in this if statement can be changed if
+    // TMU email address. The logic in this if statement can be changed if
     // you would like to authorize your users in a different manner.
-    if (token.email && /@twilio.com$/.test(token.email)) {
+    if (token.email && /@torontomu.ca$/.test(token.email)) {
       next();
     } else {
-      res.status(401).send();
+      res.status(403).json({ message: 'Access denied. Only TMU users are allowed.' });
     }
   } catch {
-    res.status(401).send();
+    res.status(401).json({ message: 'Invalid or expired token' });
   }
 };
 
