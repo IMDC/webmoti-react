@@ -3,13 +3,13 @@ import MenuContainer from '@material-ui/core/Menu';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import { render, fireEvent, waitForElement } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import { shallow } from 'enzyme';
 
 import Menu from './Menu';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useFlipCameraToggle from '../../../hooks/useFlipCameraToggle/useFlipCameraToggle';
-import useIsRecording from '../../../hooks/useIsRecording/useIsRecording';
+// import useIsRecording from '../../../hooks/useIsRecording/useIsRecording';
 import useLocalVideoToggle from '../../../hooks/useLocalVideoToggle/useLocalVideoToggle';
 import useRoomState from '../../../hooks/useRoomState/useRoomState';
 import useScreenShareParticipant from '../../../hooks/useScreenShareParticipant/useScreenShareParticipant';
@@ -36,7 +36,7 @@ jest.mock('../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 const mockUseFlipCameraToggle = useFlipCameraToggle as jest.Mock<any>;
 const mockUseMediaQuery = useMediaQuery as jest.Mock<boolean>;
 const mockUseAppState = useAppState as jest.Mock<any>;
-const mockUseIsRecording = useIsRecording as jest.Mock<boolean>;
+// const mockUseIsRecording = useIsRecording as jest.Mock<boolean>;
 const mockUseChatContext = useChatContext as jest.Mock<any>;
 const mockUseLocalVideoToggle = useLocalVideoToggle as jest.Mock<any>;
 
@@ -73,118 +73,118 @@ describe('the Menu component', () => {
     }));
   });
 
-  describe('the recording button', () => {
-    describe('while recording is in progress', () => {
-      beforeAll(() => {
-        mockUseIsRecording.mockImplementation(() => true);
-      });
+  // describe('the recording button', () => {
+  //   describe('while recording is in progress', () => {
+  //     beforeAll(() => {
+  //       mockUseIsRecording.mockImplementation(() => true);
+  //     });
 
-      it('should display "Stop Recording"', () => {
-        const { getByText } = render(<Menu />);
-        fireEvent.click(getByText('More'));
+  //     it('should display "Stop Recording"', () => {
+  //       const { getByText } = render(<Menu />);
+  //       fireEvent.click(getByText('More'));
 
-        expect(getByText('Stop Recording')).toBeTruthy();
-      });
+  //       expect(getByText('Stop Recording')).toBeTruthy();
+  //     });
 
-      it('should correctly update recording rules and display the snackbar when the user clicks on the Stop Recording button', () => {
-        const { getByText } = render(<Menu />);
-        fireEvent.click(getByText('More'));
+  //     it('should correctly update recording rules and display the snackbar when the user clicks on the Stop Recording button', () => {
+  //       const { getByText } = render(<Menu />);
+  //       fireEvent.click(getByText('More'));
 
-        fireEvent.click(getByText('Stop Recording'));
+  //       fireEvent.click(getByText('Stop Recording'));
 
-        expect(mockUpdateRecordingRules).toHaveBeenCalledWith('mockRoomSid', [{ all: true, type: 'exclude' }]);
-        waitForElement(() => getByText('You can view the recording in the Twilio Console'));
-      });
-    });
+  //       expect(mockUpdateRecordingRules).toHaveBeenCalledWith('mockRoomSid', [{ all: true, type: 'exclude' }]);
+  //       waitForElement(() => getByText('You can view the recording in the Twilio Console'));
+  //     });
+  //   });
 
-    describe('while recording is not in progress', () => {
-      beforeAll(() => {
-        mockUseIsRecording.mockImplementation(() => false);
-      });
+  //   describe('while recording is not in progress', () => {
+  //     beforeAll(() => {
+  //       mockUseIsRecording.mockImplementation(() => false);
+  //     });
 
-      it('should render the recording button in group rooms', () => {
-        mockUseAppState.mockImplementation(() => ({
-          isFetching: false,
-          updateRecordingRules: mockUpdateRecordingRules,
-          roomType: 'group',
-          setIsGalleryViewActive: mockSetIsGalleryViewActive,
-        }));
-        const { getByText } = render(<Menu />);
-        fireEvent.click(getByText('More'));
-        expect(getByText('Start Recording')).toBeTruthy();
-      });
+  //     it('should render the recording button in group rooms', () => {
+  //       mockUseAppState.mockImplementation(() => ({
+  //         isFetching: false,
+  //         updateRecordingRules: mockUpdateRecordingRules,
+  //         roomType: 'group',
+  //         setIsGalleryViewActive: mockSetIsGalleryViewActive,
+  //       }));
+  //       const { getByText } = render(<Menu />);
+  //       fireEvent.click(getByText('More'));
+  //       expect(getByText('Start Recording')).toBeTruthy();
+  //     });
 
-      it('should render the recording button in group-small rooms', () => {
-        mockUseAppState.mockImplementation(() => ({
-          isFetching: false,
-          updateRecordingRules: mockUpdateRecordingRules,
-          roomType: 'group-small',
-          setIsGalleryViewActive: mockSetIsGalleryViewActive,
-        }));
-        const { getByText } = render(<Menu />);
-        fireEvent.click(getByText('More'));
-        expect(getByText('Start Recording')).toBeTruthy();
-      });
+  //     it('should render the recording button in group-small rooms', () => {
+  //       mockUseAppState.mockImplementation(() => ({
+  //         isFetching: false,
+  //         updateRecordingRules: mockUpdateRecordingRules,
+  //         roomType: 'group-small',
+  //         setIsGalleryViewActive: mockSetIsGalleryViewActive,
+  //       }));
+  //       const { getByText } = render(<Menu />);
+  //       fireEvent.click(getByText('More'));
+  //       expect(getByText('Start Recording')).toBeTruthy();
+  //     });
 
-      it('should not render the recording button in go rooms', () => {
-        mockUseAppState.mockImplementation(() => ({
-          isFetching: false,
-          updateRecordingRules: mockUpdateRecordingRules,
-          roomType: 'go',
-          setIsGalleryViewActive: mockSetIsGalleryViewActive,
-        }));
-        const { getByText, queryByText } = render(<Menu />);
-        fireEvent.click(getByText('More'));
-        expect(queryByText('Start Recording')).toBeNull();
-      });
+  //     it('should not render the recording button in go rooms', () => {
+  //       mockUseAppState.mockImplementation(() => ({
+  //         isFetching: false,
+  //         updateRecordingRules: mockUpdateRecordingRules,
+  //         roomType: 'go',
+  //         setIsGalleryViewActive: mockSetIsGalleryViewActive,
+  //       }));
+  //       const { getByText, queryByText } = render(<Menu />);
+  //       fireEvent.click(getByText('More'));
+  //       expect(queryByText('Start Recording')).toBeNull();
+  //     });
 
-      it('should not render the recording button in peer-to-peer rooms', () => {
-        mockUseAppState.mockImplementation(() => ({
-          isFetching: false,
-          updateRecordingRules: mockUpdateRecordingRules,
-          roomType: 'peer-to-peer',
-          setIsGalleryViewActive: mockSetIsGalleryViewActive,
-        }));
-        const { getByText, queryByText } = render(<Menu />);
-        fireEvent.click(getByText('More'));
-        expect(queryByText('Start Recording')).toBeNull();
-      });
+  //     it('should not render the recording button in peer-to-peer rooms', () => {
+  //       mockUseAppState.mockImplementation(() => ({
+  //         isFetching: false,
+  //         updateRecordingRules: mockUpdateRecordingRules,
+  //         roomType: 'peer-to-peer',
+  //         setIsGalleryViewActive: mockSetIsGalleryViewActive,
+  //       }));
+  //       const { getByText, queryByText } = render(<Menu />);
+  //       fireEvent.click(getByText('More'));
+  //       expect(queryByText('Start Recording')).toBeNull();
+  //     });
 
-      it('should render the recording button when roomType is undefined', () => {
-        mockUseAppState.mockImplementation(() => ({
-          isFetching: false,
-          updateRecordingRules: mockUpdateRecordingRules,
-          roomType: undefined,
-          setIsGalleryViewActive: mockSetIsGalleryViewActive,
-        }));
-        const { getByText } = render(<Menu />);
-        fireEvent.click(getByText('More'));
-        expect(getByText('Start Recording')).toBeTruthy();
-      });
+  //     it('should render the recording button when roomType is undefined', () => {
+  //       mockUseAppState.mockImplementation(() => ({
+  //         isFetching: false,
+  //         updateRecordingRules: mockUpdateRecordingRules,
+  //         roomType: undefined,
+  //         setIsGalleryViewActive: mockSetIsGalleryViewActive,
+  //       }));
+  //       const { getByText } = render(<Menu />);
+  //       fireEvent.click(getByText('More'));
+  //       expect(getByText('Start Recording')).toBeTruthy();
+  //     });
 
-      it('should display "Start Recording"', () => {
-        const { getByText } = render(<Menu />);
-        fireEvent.click(getByText('More'));
+  //     it('should display "Start Recording"', () => {
+  //       const { getByText } = render(<Menu />);
+  //       fireEvent.click(getByText('More'));
 
-        expect(getByText('Start Recording')).toBeTruthy();
-      });
+  //       expect(getByText('Start Recording')).toBeTruthy();
+  //     });
 
-      it('should correctly update recording rules and display the snackbar when the user clicks on the Start Recording button', () => {
-        const { getByText } = render(<Menu />);
-        fireEvent.click(getByText('More'));
+  //     it('should correctly update recording rules and display the snackbar when the user clicks on the Start Recording button', () => {
+  //       const { getByText } = render(<Menu />);
+  //       fireEvent.click(getByText('More'));
 
-        fireEvent.click(getByText('Start Recording'));
-        expect(mockUpdateRecordingRules).toHaveBeenCalledWith('mockRoomSid', [{ all: true, type: 'include' }]);
-      });
+  //       fireEvent.click(getByText('Start Recording'));
+  //       expect(mockUpdateRecordingRules).toHaveBeenCalledWith('mockRoomSid', [{ all: true, type: 'include' }]);
+  //     });
 
-      it('should disable the Start Recording button when isFetching is true', async () => {
-        mockUseAppState.mockImplementationOnce(() => ({ isFetching: true }));
-        const wrapper = shallow(<Menu />);
+  //     it('should disable the Start Recording button when isFetching is true', async () => {
+  //       mockUseAppState.mockImplementationOnce(() => ({ isFetching: true }));
+  //       const wrapper = shallow(<Menu />);
 
-        expect(wrapper.find(MenuItem).at(1).prop('disabled')).toBe(true);
-      });
-    });
-  });
+  //       expect(wrapper.find(MenuItem).at(1).prop('disabled')).toBe(true);
+  //     });
+  //   });
+  // });
 
   describe('on desktop devices', () => {
     beforeAll(() => {

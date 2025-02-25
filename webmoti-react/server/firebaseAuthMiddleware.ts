@@ -14,13 +14,16 @@ const firebaseAuthMiddleware: RequestHandler = async (req, res, next) => {
   }
 
   try {
+    // remove Bearer prefix
+    const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : authHeader;
+
     // Here we authenticate users be verifying the ID token that was sent
-    const token = await firebaseAdmin.auth().verifyIdToken(authHeader);
+    const decodedToken = await firebaseAdmin.auth().verifyIdToken(token);
 
     // Here we authorize users to use this application only if they have a
     // TMU email address. The logic in this if statement can be changed if
     // you would like to authorize your users in a different manner.
-    if (token.email && /@torontomu.ca$/.test(token.email)) {
+    if (decodedToken.email && /@torontomu.ca$/.test(decodedToken.email)) {
       next();
     } else {
       return res.status(403).json({ message: 'Access denied. Only TMU users are allowed.' });

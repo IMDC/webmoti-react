@@ -24,7 +24,7 @@ import { VideoRoomMonitor } from '@twilio/video-room-monitor';
 
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useFlipCameraToggle from '../../../hooks/useFlipCameraToggle/useFlipCameraToggle';
-import useIsRecording from '../../../hooks/useIsRecording/useIsRecording';
+// import useIsRecording from '../../../hooks/useIsRecording/useIsRecording';
 import useRoomState from '../../../hooks/useRoomState/useRoomState';
 import useScreenShareParticipant from '../../../hooks/useScreenShareParticipant/useScreenShareParticipant';
 import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
@@ -34,8 +34,8 @@ import FlipCameraIcon from '../../../icons/FlipCameraIcon';
 import InfoIconOutlined from '../../../icons/InfoIconOutlined';
 import ScreenShareIcon from '../../../icons/ScreenShareIcon';
 import SettingsIcon from '../../../icons/SettingsIcon';
-import StartRecordingIcon from '../../../icons/StartRecordingIcon';
-import StopRecordingIcon from '../../../icons/StopRecordingIcon';
+// import StartRecordingIcon from '../../../icons/StartRecordingIcon';
+// import StopRecordingIcon from '../../../icons/StopRecordingIcon';
 import { useAppState } from '../../../state';
 import { isMobile } from '../../../utils';
 import AboutDialog from '../../AboutDialog/AboutDialog';
@@ -114,10 +114,21 @@ export default function Menu(props: { buttonClassName?: string }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
-  const { isFetching, updateRecordingRules, roomType, setIsGalleryViewActive, isGalleryViewActive } = useAppState();
+  const {
+    // isFetching,
+    // updateRecordingRules,
+    //  roomType,
+    setIsGalleryViewActive,
+    isGalleryViewActive,
+  } = useAppState();
   const { setIsChatWindowOpen } = useChatContext();
-  const isRecording = useIsRecording();
-  const { room, setIsBackgroundSelectionOpen, isSharingScreen, toggleScreenShare } = useVideoContext();
+  // const isRecording = useIsRecording();
+  const {
+    // room,
+    setIsBackgroundSelectionOpen,
+    isSharingScreen,
+    toggleScreenShare,
+  } = useVideoContext();
 
   const anchorRef = useRef<HTMLButtonElement>(null);
   const { flipCameraDisabled, toggleFacingMode, flipCameraSupported } = useFlipCameraToggle();
@@ -227,7 +238,7 @@ export default function Menu(props: { buttonClassName?: string }) {
             <Typography variant="body1">Flip Camera</Typography>
           </MenuItem>
         )}
-        {roomType !== 'peer-to-peer' && roomType !== 'go' && (
+        {/* {roomType !== 'peer-to-peer' && roomType !== 'go' && (
           <MenuItem
             disabled={isFetching}
             onClick={() => {
@@ -243,7 +254,7 @@ export default function Menu(props: { buttonClassName?: string }) {
             <IconContainer>{isRecording ? <StopRecordingIcon /> : <StartRecordingIcon />}</IconContainer>
             <Typography variant="body1">{isRecording ? 'Stop' : 'Start'} Recording</Typography>
           </MenuItem>
-        )}
+        )} */}
         <MenuItem
           onClick={() => {
             VideoRoomMonitor.toggleMonitor();
