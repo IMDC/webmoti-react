@@ -23,7 +23,13 @@ jest.mock('firebase/auth', () => {
 });
 
 // @ts-ignore
-window.fetch = jest.fn(() => Promise.resolve({ json: () => ({ token: 'mockVideoToken' }) }));
+window.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    text: () => Promise.resolve(JSON.stringify({ token: 'mockVideoToken' })),
+    json: () => Promise.resolve({ token: 'mockVideoToken' }),
+  })
+);
 
 describe('the useFirebaseAuth hook', () => {
   afterEach(jest.clearAllMocks);
@@ -63,7 +69,7 @@ describe('the useFirebaseAuth hook', () => {
     await result.current.getToken('testuser', 'testroom');
 
     const headers = new Headers({
-      Authorization: 'idToken',
+      Authorization: 'Bearer idToken',
       'Content-Type': 'application/json',
     });
 

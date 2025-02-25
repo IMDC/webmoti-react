@@ -23,10 +23,10 @@ const firebaseAuthMiddleware: RequestHandler = async (req, res, next) => {
     if (token.email && /@torontomu.ca$/.test(token.email)) {
       next();
     } else {
-      res.status(403).json({ message: 'Access denied. Only TMU users are allowed.' });
+      return res.status(403).json({ message: 'Access denied. Only TMU users are allowed.' });
     }
   } catch {
-    res.status(401).json({ message: 'Invalid or expired token' });
+    return res.status(401).json({ message: 'Invalid or expired token' });
   }
 };
 

@@ -33,7 +33,8 @@ module.exports = async (context, event, callback) => {
     });
   }
 
-  const idToken = event.firebase_token;
+  const authHeader = event.request?.headers?.authorization || '';
+  const idToken = authHeader.startsWith('Bearer ') ? authHeader.replace('Bearer ', '') : null;
   if (!idToken) {
     return callback(null, handleError(response, 401, 'Firebase ID token missing'));
   }

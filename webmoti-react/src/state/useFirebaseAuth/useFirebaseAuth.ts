@@ -19,7 +19,7 @@ export default function useFirebaseAuth() {
       const headers = new window.Headers();
 
       const idToken = await user!.getIdToken();
-      headers.set('Authorization', idToken);
+      headers.set('Authorization', `Bearer ${idToken}`);
       headers.set('content-type', 'application/json');
 
       const endpoint = process.env.REACT_APP_TOKEN_ENDPOINT || '/token';
@@ -31,7 +31,6 @@ export default function useFirebaseAuth() {
           user_identity,
           room_name,
           create_conversation: process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true',
-          firebase_token: idToken,
         }),
       });
 

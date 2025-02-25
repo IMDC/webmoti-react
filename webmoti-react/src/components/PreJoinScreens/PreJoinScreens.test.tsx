@@ -2,14 +2,14 @@ import { setImmediate } from 'timers';
 
 import React from 'react';
 
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
 import { useParams } from 'react-router-dom';
 
-import DeviceSelectionScreen from './DeviceSelectionScreen/DeviceSelectionScreen';
+// import DeviceSelectionScreen from './DeviceSelectionScreen/DeviceSelectionScreen';
 import MediaErrorSnackbar from './MediaErrorSnackbar/MediaErrorSnackbar';
 import PreJoinScreens from './PreJoinScreens';
-import RoomNameScreen from './RoomNameScreen/RoomNameScreen';
+// import RoomNameScreen from './RoomNameScreen/RoomNameScreen';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import { useAppState } from '../../state';
@@ -56,63 +56,64 @@ describe('the PreJoinScreens component', () => {
     mockUseVideoContext.mockImplementation(() => ({ getAudioAndVideoTracks: () => Promise.resolve() }));
   });
 
-  it('should update the URL to include the room name on submit', () => {
-    const wrapper = shallow(<PreJoinScreens />);
+  // ! Room name screen is not shown when using firebase auth
+  // it('should update the URL to include the room name on submit', () => {
+  //   const wrapper = shallow(<PreJoinScreens />);
 
-    const setRoomName = wrapper.find(RoomNameScreen).prop('setRoomName');
-    setRoomName('Test Room 123');
+  //   const setRoomName = wrapper.find(RoomNameScreen).prop('setRoomName');
+  //   setRoomName('Test Room 123');
 
-    const handleSubmit = wrapper.find(RoomNameScreen).prop('handleSubmit');
-    handleSubmit({ preventDefault: () => {} } as any);
+  //   const handleSubmit = wrapper.find(RoomNameScreen).prop('handleSubmit');
+  //   handleSubmit({ preventDefault: () => {} } as any);
 
-    expect(window.history.replaceState).toHaveBeenCalledWith(null, '', '/room/Test%20Room%20123');
-  });
+  //   expect(window.history.replaceState).toHaveBeenCalledWith(null, '', '/room/Test%20Room%20123');
+  // });
 
-  it('should not update the URL when the app is deployed as a Twilio function', () => {
-    // @ts-ignore
-    window.location = { ...window.location, origin: 'https://video-app-1234-twil.io' };
-    const wrapper = shallow(<PreJoinScreens />);
+  // it('should not update the URL when the app is deployed as a Twilio function', () => {
+  //   // @ts-ignore
+  //   window.location = { ...window.location, origin: 'https://video-app-1234-twil.io' };
+  //   const wrapper = shallow(<PreJoinScreens />);
 
-    const setRoomName = wrapper.find(RoomNameScreen).prop('setRoomName');
-    setRoomName('Test Room 123');
+  //   const setRoomName = wrapper.find(RoomNameScreen).prop('setRoomName');
+  //   setRoomName('Test Room 123');
 
-    const handleSubmit = wrapper.find(RoomNameScreen).prop('handleSubmit');
-    handleSubmit({ preventDefault: () => {} } as any);
+  //   const handleSubmit = wrapper.find(RoomNameScreen).prop('handleSubmit');
+  //   handleSubmit({ preventDefault: () => {} } as any);
 
-    expect(window.history.replaceState).not.toHaveBeenCalled();
-  });
+  //   expect(window.history.replaceState).not.toHaveBeenCalled();
+  // });
 
-  it('should switch to the DeviceSelection screen when a room name is submitted', () => {
-    const wrapper = shallow(<PreJoinScreens />);
+  // it('should switch to the DeviceSelection screen when a room name is submitted', () => {
+  //   const wrapper = shallow(<PreJoinScreens />);
 
-    expect(wrapper.find(RoomNameScreen).exists()).toBe(true);
-    expect(wrapper.find(DeviceSelectionScreen).exists()).toBe(false);
+  //   expect(wrapper.find(RoomNameScreen).exists()).toBe(true);
+  //   expect(wrapper.find(DeviceSelectionScreen).exists()).toBe(false);
 
-    const handleSubmit = wrapper.find(RoomNameScreen).prop('handleSubmit');
-    handleSubmit({ preventDefault: () => {} } as any);
+  //   const handleSubmit = wrapper.find(RoomNameScreen).prop('handleSubmit');
+  //   handleSubmit({ preventDefault: () => {} } as any);
 
-    expect(wrapper.find(RoomNameScreen).exists()).toBe(false);
-    expect(wrapper.find(DeviceSelectionScreen).exists()).toBe(true);
-  });
+  //   expect(wrapper.find(RoomNameScreen).exists()).toBe(false);
+  //   expect(wrapper.find(DeviceSelectionScreen).exists()).toBe(true);
+  // });
 
-  it('should populate the room name from the URL and switch to the DeviceSelectionScreen when the displayName is present for the user', () => {
-    const wrapper = mount(<PreJoinScreens />);
-    const roomName = wrapper.find(DeviceSelectionScreen).prop('roomName');
-    expect(roomName).toBe('testRoom');
+  // it('should populate the room name from the URL and switch to the DeviceSelectionScreen when the displayName is present for the user', () => {
+  //   const wrapper = mount(<PreJoinScreens />);
+  //   const roomName = wrapper.find(DeviceSelectionScreen).prop('roomName');
+  //   expect(roomName).toBe('testRoom');
 
-    expect(wrapper.find(RoomNameScreen).exists()).toBe(false);
-    expect(wrapper.find(DeviceSelectionScreen).exists()).toBe(true);
-  });
+  //   expect(wrapper.find(RoomNameScreen).exists()).toBe(false);
+  //   expect(wrapper.find(DeviceSelectionScreen).exists()).toBe(true);
+  // });
 
-  it('should populate the room name from the URL and stay on the RoomNameScreen when the displayName is not present for the user', () => {
-    mockUseAppState.mockImplementation(() => ({ user: {} }));
-    const wrapper = mount(<PreJoinScreens />);
-    const roomName = wrapper.find(RoomNameScreen).prop('roomName');
-    expect(roomName).toBe('testRoom');
+  // it('should populate the room name from the URL and stay on the RoomNameScreen when the displayName is not present for the user', () => {
+  //   mockUseAppState.mockImplementation(() => ({ user: {} }));
+  //   const wrapper = mount(<PreJoinScreens />);
+  //   const roomName = wrapper.find(RoomNameScreen).prop('roomName');
+  //   expect(roomName).toBe('testRoom');
 
-    expect(wrapper.find(RoomNameScreen).exists()).toBe(true);
-    expect(wrapper.find(DeviceSelectionScreen).exists()).toBe(false);
-  });
+  //   expect(wrapper.find(RoomNameScreen).exists()).toBe(true);
+  //   expect(wrapper.find(DeviceSelectionScreen).exists()).toBe(false);
+  // });
 
   it('should capture errors from getAudioAndVideoTracks and pass them to the MediaErrorSnackbar component', async () => {
     const mockGetAudioAndVideoTracks = jest.fn(() => Promise.reject('testError'));

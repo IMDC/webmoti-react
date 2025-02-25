@@ -1,13 +1,14 @@
-import React from 'react';
-import DeviceSelectionScreen from './DeviceSelectionScreen';
+import { setImmediate } from 'timers';
+
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { shallow } from 'enzyme';
-import { Steps } from '../PreJoinScreens';
-import { useAppState } from '../../../state';
+
+import DeviceSelectionScreen from './DeviceSelectionScreen';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
-import ToggleVideoButton from '../../Buttons/ToggleVideoButton/ToggleVideoButton';
+import { useAppState } from '../../../state';
 import ToggleAudioButton from '../../Buttons/ToggleAudioButton/ToggleAudioButton';
-import { setImmediate } from 'timers';
+import ToggleVideoButton from '../../Buttons/ToggleVideoButton/ToggleVideoButton';
+// import { Steps } from '../PreJoinScreens';
 
 const mockUseAppState = useAppState as jest.Mock<any>;
 const mockUseVideoContext = useVideoContext as jest.Mock<any>;
@@ -108,14 +109,15 @@ describe('the DeviceSelectionScreen component', () => {
     expect(wrapper.find({ children: 'Join Now' }).prop('disabled')).toBe(false);
   });
 
-  it('should go back to the RoomNameScreen when the Cancel button is clicked', () => {
-    const mockSetStep = jest.fn();
-    const wrapper = shallow(<DeviceSelectionScreen name="test name" roomName="test room name" setStep={mockSetStep} />);
-    wrapper.find({ children: 'Cancel' }).simulate('click');
-    expect(mockSetStep).toHaveBeenCalledWith(Steps.roomNameStep);
-  });
+  // ! Cancel button is hidden for firebase auth
+  // it('should go back to the RoomNameScreen when the Cancel button is clicked', () => {
+  //   const mockSetStep = jest.fn();
+  //   const wrapper = shallow(<DeviceSelectionScreen name="test name" roomName="test room name" setStep={mockSetStep} />);
+  //   wrapper.find({ children: 'Cancel' }).simulate('click');
+  //   expect(mockSetStep).toHaveBeenCalledWith(Steps.roomNameStep);
+  // });
 
-  it('should fetch a token and connect to the Video SDK and Conversations SDK when the Join Now button is clicked', done => {
+  it('should fetch a token and connect to the Video SDK and Conversations SDK when the Join Now button is clicked', (done) => {
     const wrapper = shallow(<DeviceSelectionScreen name="test name" roomName="test room name" setStep={() => {}} />);
     wrapper.find({ children: 'Join Now' }).simulate('click');
 
@@ -127,7 +129,7 @@ describe('the DeviceSelectionScreen component', () => {
     });
   });
 
-  it('should fetch a token and connect to the Video SDK only when the Join Now button is clicked when the REACT_APP_DISABLE_TWILIO_CONVERSATIONS variable is true', done => {
+  it('should fetch a token and connect to the Video SDK only when the Join Now button is clicked when the REACT_APP_DISABLE_TWILIO_CONVERSATIONS variable is true', (done) => {
     process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS = 'true';
     const wrapper = shallow(<DeviceSelectionScreen name="test name" roomName="test room name" setStep={() => {}} />);
     wrapper.find({ children: 'Join Now' }).simulate('click');
