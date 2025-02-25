@@ -1,19 +1,19 @@
-import React from 'react';
 import { makeStyles, Typography, Grid, Button, Theme, Hidden, Switch, Tooltip } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Divider from '@material-ui/core/Divider';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+
 import LocalVideoPreview from './LocalVideoPreview/LocalVideoPreview';
 import SettingsMenu from './SettingsMenu/SettingsMenu';
-import { Steps } from '../PreJoinScreens';
+import useChatContext from '../../../hooks/useChatContext/useChatContext';
+import { useKrispToggle } from '../../../hooks/useKrispToggle/useKrispToggle';
+import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
+import InfoIconOutlined from '../../../icons/InfoIconOutlined';
+import SmallCheckIcon from '../../../icons/SmallCheckIcon';
+import { useAppState } from '../../../state';
 import ToggleAudioButton from '../../Buttons/ToggleAudioButton/ToggleAudioButton';
 import ToggleVideoButton from '../../Buttons/ToggleVideoButton/ToggleVideoButton';
-import { useAppState } from '../../../state';
-import useChatContext from '../../../hooks/useChatContext/useChatContext';
-import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { useKrispToggle } from '../../../hooks/useKrispToggle/useKrispToggle';
-import SmallCheckIcon from '../../../icons/SmallCheckIcon';
-import InfoIconOutlined from '../../../icons/InfoIconOutlined';
+import { Steps } from '../PreJoinScreens';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
@@ -189,9 +189,14 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
 
             <Grid item md={5} sm={12} xs={12}>
               <div className={classes.joinButtons}>
-                <Button variant="outlined" color="primary" onClick={() => setStep(Steps.roomNameStep)}>
-                  Cancel
-                </Button>
+                {process.env.REACT_APP_SET_AUTH === 'passcode' ? (
+                  <Button variant="outlined" color="primary" onClick={() => setStep(Steps.roomNameStep)}>
+                    Cancel
+                  </Button>
+                ) : (
+                  // placeholder that keeps join button on the right
+                  <span style={{ flexGrow: 1 }} />
+                )}
                 <Button
                   variant="contained"
                   color="primary"

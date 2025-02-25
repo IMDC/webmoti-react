@@ -90,9 +90,9 @@ export default function LoginPage() {
       {process.env.REACT_APP_SET_AUTH === 'firebase' && (
         <>
           <Typography variant="h5" className={classes.gutterBottom}>
-            Sign in to join a room
+            Sign in to join the classroom
           </Typography>
-          <Typography variant="body1">Sign in using your Twilio Google Account</Typography>
+          <Typography variant="body1">Sign in using your TMU Google Account</Typography>
           <Button variant="contained" className={classes.googleButton} onClick={login} startIcon={<GoogleLogo />}>
             Sign in with Google
           </Button>

@@ -19,7 +19,10 @@ export default function PreJoinScreens() {
   const { getAudioAndVideoTracks } = useVideoContext();
 
   const { URLRoomName } = useParams<{ URLRoomName?: string }>();
-  const [step, setStep] = useState(Steps.roomNameStep);
+
+  // don't show room name step with firebase auth since identity is already set based on google account
+  const initialStep = process.env.REACT_APP_SET_AUTH === 'passcode' ? Steps.roomNameStep : Steps.deviceSelectionStep;
+  const [step, setStep] = useState(initialStep);
 
   const [name, setName] = useState<string>(user?.displayName || '');
   // default room is "Classroom"
