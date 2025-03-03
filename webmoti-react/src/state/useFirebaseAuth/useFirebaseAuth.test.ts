@@ -6,11 +6,15 @@ const mockUser = { getIdToken: () => Promise.resolve('idToken') };
 
 jest.mock('firebase/app', () => ({
   initializeApp: jest.fn(),
+  getApps: jest.fn(() => []),
 }));
 
 jest.mock('firebase/auth', () => {
   const mockAuth = () => ({
-    onAuthStateChanged: (fn: Function) => setImmediate(() => fn('mockUser')),
+    onAuthStateChanged: (fn: Function) => {
+      setImmediate(() => fn('mockUser'));
+      return jest.fn(() => {});
+    },
     signOut: jest.fn(() => Promise.resolve()),
   });
   const mockSignInWithPopup = jest.fn(() => Promise.resolve({ user: mockUser }));

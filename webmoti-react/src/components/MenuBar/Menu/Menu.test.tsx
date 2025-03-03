@@ -205,14 +205,20 @@ describe('the Menu component', () => {
     it('should open the AboutDialog when the About button is clicked', () => {
       const wrapper = shallow(<Menu />);
       expect(wrapper.find(AboutDialog).prop('open')).toBe(false);
-      wrapper.find(MenuItem).at(6).simulate('click');
+      wrapper
+        .find(MenuItem)
+        .filterWhere((node) => node.text().includes('About'))
+        .simulate('click');
       expect(wrapper.find(AboutDialog).prop('open')).toBe(true);
     });
 
     it('should open the DeviceSelectionDialog when the Settings button is clicked', () => {
       const wrapper = shallow(<Menu />);
       expect(wrapper.find(DeviceSelectionDialog).prop('open')).toBe(false);
-      wrapper.find(MenuItem).at(0).simulate('click');
+      wrapper
+        .find(MenuItem)
+        .filterWhere((node) => node.text().includes('Audio and Video Settings'))
+        .simulate('click');
       expect(wrapper.find(DeviceSelectionDialog).prop('open')).toBe(true);
     });
 
@@ -272,7 +278,12 @@ describe('the Menu component', () => {
     it('should render non-disabled Flip Camera button when flipCameraSupported is true', () => {
       const wrapper = shallow(<Menu />);
       expect(wrapper.find(FlipCameraIcon).exists()).toBe(true);
-      expect(wrapper.find(MenuItem).at(1).prop('disabled')).toBe(false);
+      expect(
+        wrapper
+          .find(MenuItem)
+          .filterWhere((node) => node.text().includes('Flip Camera'))
+          .prop('disabled')
+      ).toBe(false);
     });
 
     it('should render a disabled Flip Camera button when flipCameraSupported is true, and flipCameraDisabled is true', () => {
@@ -282,7 +293,12 @@ describe('the Menu component', () => {
       }));
       const wrapper = shallow(<Menu />);
       expect(wrapper.find(FlipCameraIcon).exists()).toBe(true);
-      expect(wrapper.find(MenuItem).at(1).prop('disabled')).toBe(true);
+      expect(
+        wrapper
+          .find(MenuItem)
+          .filterWhere((node) => node.text().includes('Flip Camera'))
+          .prop('disabled')
+      ).toBe(true);
     });
 
     it('should not render Flip Camera button when flipCameraSupported is false', () => {
