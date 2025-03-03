@@ -38,6 +38,7 @@ import DeviceSelectionDialog from '../../DeviceSelectionDialog/DeviceSelectionDi
 import SetScheduleModal from '../../SetScheduleModal/SetScheduleModal';
 import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 import ViewScheduleModal from '../../ViewScheduleModal/ViewScheduleModal';
+import LivekitConnectButton from '../../Buttons/LivekitConnectButton/LivekitConnectButton';
 
 const IconContainer = styled('div')({
   display: 'flex',
@@ -204,6 +205,10 @@ export default function Menu({ buttonClassName }: MenuProps) {
       label: 'Admin',
       onClick: handleAdminLogin,
     },
+    {
+      isCustomComponent: true,
+      component: <LivekitConnectButton />,
+    },
   ];
 
   return (
@@ -244,23 +249,29 @@ export default function Menu({ buttonClassName }: MenuProps) {
           horizontal: 'center',
         }}
       >
-        {menuItems.map((item, index) => (
-          <MenuItem key={index} onClick={item.onClick} disabled={item.disabled}>
-            {item.tooltip ? (
-              <Tooltip title={item.tooltip} placement="top" PopperProps={{ disablePortal: true }}>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
+        {menuItems.map((item, index) =>
+          item.isCustomComponent ? (
+            <MenuItem key={index} disableRipple disableTouchRipple>
+              {item.component}
+            </MenuItem>
+          ) : (
+            <MenuItem key={index} onClick={item.onClick} disabled={item.disabled}>
+              {item.tooltip ? (
+                <Tooltip title={item.tooltip} placement="top" PopperProps={{ disablePortal: true }}>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <IconContainer>{item.icon}</IconContainer>
+                    <Typography variant="body1">{item.label}</Typography>
+                  </div>
+                </Tooltip>
+              ) : (
+                <>
                   <IconContainer>{item.icon}</IconContainer>
                   <Typography variant="body1">{item.label}</Typography>
-                </div>
-              </Tooltip>
-            ) : (
-              <>
-                <IconContainer>{item.icon}</IconContainer>
-                <Typography variant="body1">{item.label}</Typography>
-              </>
-            )}
-          </MenuItem>
-        ))}
+                </>
+              )}
+            </MenuItem>
+          )
+        )}
       </MuiMenu>
 
       <AboutDialog
