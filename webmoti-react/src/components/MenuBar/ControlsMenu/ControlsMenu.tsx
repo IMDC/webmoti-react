@@ -36,7 +36,7 @@ export default function ControlsMenu() {
     setCameraControlsAnchorEl(null);
   };
 
-  useSetupHotkeys('ctrl+c', () => {
+  useSetupHotkeys('alt+c', () => {
     if (cameraControlsAnchorEl) {
       handleCameraControlsClose();
     } else {
@@ -46,7 +46,7 @@ export default function ControlsMenu() {
 
   return (
     <>
-      <ShortcutTooltip shortcut="C" isCtrlDown>
+      <ShortcutTooltip shortcut="C" isAltDown>
         <Button ref={openBtnRef} onClick={handleCameraControlsClick}>
           Controls <ExpandMoreIcon />
         </Button>

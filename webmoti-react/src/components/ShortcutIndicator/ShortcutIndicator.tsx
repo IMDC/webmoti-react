@@ -27,6 +27,7 @@ interface ShortcutIndicatorProps {
   shortcut: string;
   isCtrlDown?: boolean;
   isShiftDown?: boolean;
+  isAltDown?: boolean;
   isInTooltip?: boolean;
 }
 
@@ -34,6 +35,7 @@ export default function ShortcutIndicator({
   shortcut,
   isCtrlDown = false,
   isShiftDown = false,
+  isAltDown = false,
   isInTooltip = false,
 }: ShortcutIndicatorProps) {
   const classes = useStyles();
@@ -50,6 +52,7 @@ export default function ShortcutIndicator({
         <Typography variant="caption" className={classes.shortcutText}>
           {isCtrlDown ? 'Ctrl+' : ''}
           {isShiftDown ? 'Shift+' : ''}
+          {isAltDown ? 'Alt+' : ''}
           {shortcut}
         </Typography>
       </CardContent>

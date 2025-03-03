@@ -7,7 +7,6 @@ import { Message } from '@twilio/conversations';
 import clsx from 'clsx';
 
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
-import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import ChatIcon from '../../../icons/ChatIcon';
 import { checkSystemMsg } from '../../../utils';
@@ -101,11 +100,6 @@ export default function ToggleChatButton() {
       };
     }
   }, [conversation, isChatWindowOpen]);
-
-  useSetupHotkeys('ctrl+shift+t', () => {
-    // this won't work when chat window is open because it gets focused
-    toggleChatWindow();
-  });
 
   return (
     <Button

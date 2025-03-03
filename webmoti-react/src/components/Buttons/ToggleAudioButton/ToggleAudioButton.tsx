@@ -16,7 +16,7 @@ export default function ToggleAudioButton(props: { disabled?: boolean; className
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  useSetupHotkeys('ctrl+m', () => {
+  useSetupHotkeys('alt+a', () => {
     handleAudioToggle();
   });
 
@@ -31,7 +31,7 @@ export default function ToggleAudioButton(props: { disabled?: boolean; className
   };
 
   return (
-    <ShortcutTooltip shortcut="M" isCtrlDown>
+    <ShortcutTooltip shortcut="A" isAltDown>
       <span>
         <Button
           className={props.className}

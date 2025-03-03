@@ -3,7 +3,6 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import clsx from 'clsx';
 
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
-import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -28,10 +27,6 @@ export default function EndCallButton(props: { className?: string }) {
     // also leave conversation to allow rejoin with same name
     conversation?.leave();
   };
-
-  useSetupHotkeys('ctrl+shift+d', () => {
-    endCall();
-  });
 
   return (
     <Button onClick={endCall} className={clsx(classes.button, props.className)} data-cy-disconnect>

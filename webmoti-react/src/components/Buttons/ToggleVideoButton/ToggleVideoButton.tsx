@@ -18,7 +18,7 @@ export default function ToggleVideoButton(props: { disabled?: boolean; className
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  useSetupHotkeys('ctrl+v', () => {
+  useSetupHotkeys('alt+v', () => {
     toggleVideo();
   });
 
@@ -30,7 +30,7 @@ export default function ToggleVideoButton(props: { disabled?: boolean; className
   }, [toggleVideoEnabled]);
 
   return (
-    <ShortcutTooltip shortcut="V" isCtrlDown>
+    <ShortcutTooltip shortcut="V" isAltDown>
       <span>
         <Button
           className={props.className}

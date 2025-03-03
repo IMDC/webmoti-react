@@ -13,7 +13,6 @@ import ToggleAudioButton from '../Buttons/ToggleAudioButton/ToggleAudioButton';
 import ToggleCaptionsButton from '../Buttons/ToggleCaptionsButton/ToggleCaptionsButton';
 import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
-import ShortcutTooltip from '../ShortcutTooltip/ShortcutTooltip';
 import NotifyButton from '../Buttons/NotifyButton/NotifyButton';
 import ToggleScreenShareButton from '../Buttons/ToggleScreenShareButton/ToggleScreenShareButton';
 import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/useScreenShareParticipant';
@@ -81,17 +80,15 @@ export default function MenuBar() {
             <RaiseHandButton />
             <NotifyButton />
 
-            <ControlsMenu />
-
             <AudioMixer />
 
             {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && (
-              <ShortcutTooltip shortcut="T" isCtrlDown isShiftDown>
-                <span>
-                  <ToggleChatButton />
-                </span>
-              </ShortcutTooltip>
+              <span style={{ marginLeft: '10px' }}>
+                <ToggleChatButton />
+              </span>
             )}
+
+            <ControlsMenu />
 
             <Hidden mdDown>
               <Menu />
@@ -102,9 +99,7 @@ export default function MenuBar() {
         <Hidden mdDown>
           <Grid style={{ flex: 1 }}>
             <Grid container justifyContent="flex-end">
-              <ShortcutTooltip shortcut="D" isCtrlDown isShiftDown>
-                <EndCallButton />
-              </ShortcutTooltip>
+              <EndCallButton />
             </Grid>
           </Grid>
         </Hidden>

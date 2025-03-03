@@ -23,7 +23,6 @@ import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useFlipCameraToggle from '../../../hooks/useFlipCameraToggle/useFlipCameraToggle';
 import useRoomState from '../../../hooks/useRoomState/useRoomState';
 import useScreenShareParticipant from '../../../hooks/useScreenShareParticipant/useScreenShareParticipant';
-import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import BackgroundIcon from '../../../icons/BackgroundIcon';
@@ -36,7 +35,6 @@ import { isMobile } from '../../../utils';
 import AboutDialog from '../../AboutDialog/AboutDialog';
 import DeviceSelectionDialog from '../../DeviceSelectionDialog/DeviceSelectionDialog';
 import SetScheduleModal from '../../SetScheduleModal/SetScheduleModal';
-import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 import ViewScheduleModal from '../../ViewScheduleModal/ViewScheduleModal';
 import LivekitConnectButton from '../../Buttons/LivekitConnectButton/LivekitConnectButton';
 
@@ -105,8 +103,6 @@ export default function Menu({ buttonClassName }: MenuProps) {
   const isScreenShareDisabled = Boolean(screenShareParticipant) || !isScreenShareSupported || isReconnecting;
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
-
-  useSetupHotkeys('ctrl+o', toggleMenu);
 
   const getTooltipMessage = () => {
     if (screenShareParticipant) return SHARE_IN_PROGRESS_TEXT;
@@ -220,24 +216,22 @@ export default function Menu({ buttonClassName }: MenuProps) {
         </ScreenShareBanner>
       )}
 
-      <ShortcutTooltip shortcut="O" isCtrlDown>
-        <Button
-          onClick={toggleMenu}
-          ref={anchorRef}
-          className={buttonClassName}
-          aria-label="More options"
-          data-cy-more-button
-        >
-          {isMobileBreakpoint ? (
-            <MoreIcon />
-          ) : (
-            <>
-              More
-              <ExpandMoreIcon />
-            </>
-          )}
-        </Button>
-      </ShortcutTooltip>
+      <Button
+        onClick={toggleMenu}
+        ref={anchorRef}
+        className={buttonClassName}
+        aria-label="More options"
+        data-cy-more-button
+      >
+        {isMobileBreakpoint ? (
+          <MoreIcon />
+        ) : (
+          <>
+            More
+            <ExpandMoreIcon />
+          </>
+        )}
+      </Button>
 
       <MuiMenu
         open={menuOpen}

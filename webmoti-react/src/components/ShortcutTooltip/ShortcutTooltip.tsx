@@ -15,6 +15,7 @@ interface ShortcutTooltipProps {
   shortcut: string;
   isCtrlDown?: boolean;
   isShiftDown?: boolean;
+  isAltDown?: boolean;
 }
 
 export default function ShortcutTooltip({
@@ -22,13 +23,20 @@ export default function ShortcutTooltip({
   shortcut,
   isCtrlDown = false,
   isShiftDown = false,
+  isAltDown = false,
 }: ShortcutTooltipProps) {
   return (
     <LightTooltip
       TransitionComponent={Fade}
       TransitionProps={{ timeout: 150 }}
       title={
-        <ShortcutIndicator shortcut={shortcut} isCtrlDown={isCtrlDown} isShiftDown={isShiftDown} isInTooltip={true} />
+        <ShortcutIndicator
+          shortcut={shortcut}
+          isCtrlDown={isCtrlDown}
+          isShiftDown={isShiftDown}
+          isAltDown={isAltDown}
+          isInTooltip={true}
+        />
       }
     >
       {children}
