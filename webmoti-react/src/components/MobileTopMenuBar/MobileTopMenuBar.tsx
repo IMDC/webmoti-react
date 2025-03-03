@@ -2,7 +2,6 @@ import { Grid, makeStyles, Theme, Typography } from '@material-ui/core';
 
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import EndCallButton from '../Buttons/EndCallButton/EndCallButton';
-import ToggleScheduleButton from '../Buttons/ToggleScheduleButton/ToggleScheduleButton';
 import Menu from '../MenuBar/Menu/Menu';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -47,7 +46,6 @@ export default function MobileTopMenuBar() {
           {/* only show room name in dev */}
           {process.env.NODE_ENV === 'development' && room!.name}
         </Typography>
-        <ToggleScheduleButton />
       </div>
 
       <div>

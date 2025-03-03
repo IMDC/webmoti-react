@@ -12,7 +12,6 @@ import RaiseHandButton from '../Buttons/RaiseHandButton/RaiseHandButton';
 import ToggleAudioButton from '../Buttons/ToggleAudioButton/ToggleAudioButton';
 import ToggleCaptionsButton from '../Buttons/ToggleCaptionsButton/ToggleCaptionsButton';
 import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
-import ToggleScheduleButton from '../Buttons/ToggleScheduleButton/ToggleScheduleButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import ShortcutTooltip from '../ShortcutTooltip/ShortcutTooltip';
 import NotifyButton from '../Buttons/NotifyButton/NotifyButton';
@@ -62,7 +61,6 @@ export default function MenuBar() {
               {/* only show room name in dev */}
               {process.env.NODE_ENV === 'development' && `${room!.name} |`} {participants.length + 1} participant
               {participants.length ? 's' : ''}
-              <ToggleScheduleButton />
             </Typography>
           </Grid>
         </Hidden>
