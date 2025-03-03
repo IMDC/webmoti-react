@@ -77,7 +77,7 @@ function getMiddleware(authType) {
 }
 
 function getServiceAccountAsset() {
-  const serviceAccountContent = fs.readFileSync(path.join(__dirname, './firebase_service_account.json'), 'utf8');
+  const serviceAccountContent = fs.readFileSync(path.join(__dirname, '../firebase_service_account.json'), 'utf8');
 
   return [
     {

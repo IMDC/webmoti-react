@@ -4,7 +4,7 @@
 import firebaseAuthMiddleware from '../firebaseAuthMiddleware';
 import firebaseAdmin from 'firebase-admin';
 
-jest.mock('../../../plugin-rtc/src/firebase_service_account.json', () => ({ mockCertificate: 'foo' }), {
+jest.mock('../../../plugin-rtc/firebase_service_account.json', () => ({ mockCertificate: 'foo' }), {
   virtual: true,
 });
 jest.mock('firebase-admin', () => {
