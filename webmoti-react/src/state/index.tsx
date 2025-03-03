@@ -1,18 +1,22 @@
-import { User } from 'firebase/auth';
 import React, { createContext, useContext, useReducer, useState } from 'react';
+
+import { User } from 'firebase/auth';
 import { TwilioError } from 'twilio-video';
-import { useLocalStorageState } from '../hooks/useLocalStorageState/useLocalStorageState';
-import { RecordingRules, RoomType } from '../types';
+
 import { Settings, SettingsAction, initialSettings, settingsReducer } from './settings/settingsReducer';
 import useActiveSinkId from './useActiveSinkId/useActiveSinkId';
-import useFirebaseAuth from './useFirebaseAuth/useFirebaseAuth';
+import useFirebaseAuth, { RaspberryPiUser } from './useFirebaseAuth/useFirebaseAuth';
 import usePasscodeAuth from './usePasscodeAuth/usePasscodeAuth';
+import { useLocalStorageState } from '../hooks/useLocalStorageState/useLocalStorageState';
+import { RecordingRules, RoomType } from '../types';
+
+type PasscodeUser = { displayName: undefined; photoURL: undefined; passcode?: string };
 
 export interface StateContextType {
   error: TwilioError | Error | null;
   setError(error: TwilioError | Error | null): void;
   getToken(name: string, room: string, passcode?: string): Promise<{ room_type: RoomType; token: string }>;
-  user?: User | null | { displayName: undefined; photoURL: undefined; passcode?: string };
+  user?: User | RaspberryPiUser | PasscodeUser | null;
   signIn?(passcode?: string): Promise<void>;
   signOut?(): Promise<void>;
   isAuthReady?: boolean;
@@ -110,8 +114,8 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
             create_conversation: process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true',
           }),
         })
-          .then(res => res.json())
-          .then(json => {
+          .then((res) => res.json())
+          .then((json) => {
             if (json.error) {
               // the most likely error is the duplicate participant one
               throw new Error(json.error.message);
@@ -130,7 +134,7 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
           body: JSON.stringify({ room_sid, rules }),
           method: 'POST',
         })
-          .then(async res => {
+          .then(async (res) => {
             const jsonResponse = await res.json();
 
             if (!res.ok) {
@@ -143,7 +147,7 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
 
             return jsonResponse;
           })
-          .catch(err => setError(err));
+          .catch((err) => setError(err));
       },
     };
   }
@@ -152,12 +156,12 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
     setIsFetching(true);
     return contextValue
       .getToken(name, room)
-      .then(res => {
+      .then((res) => {
         setRoomType(res.room_type);
         setIsFetching(false);
         return res;
       })
-      .catch(err => {
+      .catch((err) => {
         setError(err);
         setIsFetching(false);
         return Promise.reject(err);
@@ -168,11 +172,11 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
     setIsFetching(true);
     return contextValue
       .updateRecordingRules(room_sid, rules)
-      .then(res => {
+      .then((res) => {
         setIsFetching(false);
         return res;
       })
-      .catch(err => {
+      .catch((err) => {
         setError(err);
         setIsFetching(false);
         return Promise.reject(err);

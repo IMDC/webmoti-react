@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import { initializeApp } from 'firebase/app';
+
+import { initializeApp, getApps } from 'firebase/app';
 import { getAuth, User, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 
 const firebaseConfig = {
@@ -10,12 +11,44 @@ const firebaseConfig = {
   messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
 };
 
+const getUrlTokenParam = () => {
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('token');
+
+  if (token) {
+    // remove token from URL
+    const url = new URL(window.location.href);
+    url.searchParams.delete('token');
+    window.history.replaceState({}, '', url.toString());
+  }
+
+  return token;
+};
+
+export type RaspberryPiUser = {
+  token: string;
+  displayName?: string;
+  photoURL?: undefined;
+};
+
+function isRaspberryPiUser(user: AuthUser): user is RaspberryPiUser {
+  // normal users don't have a "token" property
+  return !!user && typeof (user as RaspberryPiUser).token === 'string';
+}
+
+type AuthUser = User | RaspberryPiUser | null;
+
 export default function useFirebaseAuth() {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AuthUser>(null);
   const [isAuthReady, setIsAuthReady] = useState(false);
 
   const getToken = useCallback(
     async (user_identity: string, room_name: string) => {
+      // just return token from url if raspberry pi
+      if (isRaspberryPiUser(user)) {
+        return { token: user.token };
+      }
+
       const headers = new window.Headers();
 
       const idToken = await user!.getIdToken();
@@ -58,6 +91,11 @@ export default function useFirebaseAuth() {
     async (room_sid, rules) => {
       const headers = new window.Headers();
 
+      if (isRaspberryPiUser(user)) {
+        console.error('Raspberry PI user cannot sign in to firebase');
+        return;
+      }
+
       const idToken = await user!.getIdToken();
       headers.set('Authorization', idToken);
       headers.set('content-type', 'application/json');
@@ -84,11 +122,29 @@ export default function useFirebaseAuth() {
   );
 
   useEffect(() => {
-    initializeApp(firebaseConfig);
-    getAuth().onAuthStateChanged((newUser) => {
-      setUser(newUser);
+    // initialize firebase
+    if (!getApps().length) {
+      initializeApp(firebaseConfig);
+    }
+
+    // check for token parameter in url
+    const token = getUrlTokenParam();
+    if (token) {
+      // minimal pi user object
+      const piUser: RaspberryPiUser = {
+        token: token,
+      };
+
+      setUser(piUser);
       setIsAuthReady(true);
-    });
+    } else {
+      // normal user scenario
+      const unsubscribe = getAuth().onAuthStateChanged((newUser) => {
+        setUser(newUser);
+        setIsAuthReady(true);
+      });
+      return () => unsubscribe();
+    }
   }, []);
 
   const signIn = useCallback(() => {
