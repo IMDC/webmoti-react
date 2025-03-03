@@ -6,13 +6,13 @@ require("dotenv").config();
 
 //
 //
-const isProfLaptop = false;
+const isTestUser = false;
 //
 //
 
 // TODO more logging in this script
 
-const NAMES = ["Board-View", "Student-View", "Professor"];
+const NAMES = ["Board-View", "Student-View", "Test-User"];
 
 // set this env variable for the student view raspberry pi
 const isStudentView = process.env.IS_STUDENT_VIEW === "true";
@@ -20,7 +20,7 @@ const isStudentView = process.env.IS_STUDENT_VIEW === "true";
 let deviceName = NAMES[0];
 if (isStudentView) {
   deviceName = NAMES[1];
-} else if (isProfLaptop) {
+} else if (isTestUser) {
   deviceName = NAMES[2];
 }
 
@@ -124,23 +124,6 @@ const muteStudentViewMic = async (page) => {
   }
 };
 
-const clickIsProfessor = async (page, state) => {
-  const profCheckboxId = "#profCheckbox";
-  await page.waitForSelector(profCheckboxId);
-
-  // event listener to handle dialog when checkbox clicked
-  page.on("dialog", async (dialog) => {
-    // if password is incorrect, stop script
-    if (dialog.message().toLowerCase().includes("incorrect")) {
-      state.shouldContinue = false;
-      return;
-    }
-    await dialog.accept("professor123");
-  });
-
-  await page.click(profCheckboxId);
-};
-
 (async () => {
   // get url from twilio endpoint
   const webmotiData = await retryRequest(
@@ -167,21 +150,13 @@ const clickIsProfessor = async (page, state) => {
         "--disable-features=WebRtcPipeWireCamera",
       ],
       // needed for puppeteer core
-      executablePath: !isProfLaptop ? "/usr/bin/chromium-browser" : undefined,
+      executablePath: !isTestUser ? "/usr/bin/chromium-browser" : undefined,
       // default viewport dimension leaves whitespace on right
       defaultViewport: null,
     });
     // get current tab
     const [page] = await browser.pages();
     await page.goto(webmotiData["url"]);
-
-    if (isProfLaptop) {
-      const state = { shouldContinue: true };
-      await clickIsProfessor(page, state);
-      if (!state.shouldContinue) {
-        throw new Error("Incorrect professor password");
-      }
-    }
 
     const nameSel = "#input-user-name";
     // const roomSel = "#input-room-name";
