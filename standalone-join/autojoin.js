@@ -1,16 +1,18 @@
-const crypto = require("crypto");
-const axios = require("axios");
-const { format, createLogger, transports } = require("winston");
 const puppeteer = require("puppeteer");
+const os = require("os");
+const { exec } = require("child_process");
+const twilio = require("twilio");
+const { format, createLogger, transports } = require("winston");
 require("dotenv").config();
 
 //
 //
-const isTestUser = false;
+const isTestUser = true;
 //
 //
 
-// TODO more logging in this script
+const ROOM_NAME = "Classroom";
+const ROOM_TYPE = "group";
 
 const NAMES = ["Board-View", "Student-View", "Test-User"];
 
@@ -48,58 +50,160 @@ const logger = createLogger({
   ],
 });
 
-logger.info("");
-logger.info("--- Starting Autojoin ---");
-
 const ERROR_CODES = {
   MISSING_ENV: 100,
-  AXIOS_ERROR: 101,
+  NO_INTERNET: 101,
   PUPPETEER_ERROR: 102,
 };
 
-// keep trying for 3 min
-// needed because rasp pi won't have wifi immediately
-const WEBMOTI_MAX_RETRIES = 72;
-// 2.5 seconds
-const WEBMOTI_RETRY_DELAY = 2500;
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const apiKey = process.env.TWILIO_API_KEY_SID;
+const apiSecret = process.env.TWILIO_API_KEY_SECRET;
+const conversationsServiceSid = process.env.TWILIO_CONVERSATIONS_SERVICE_SID;
 
-const authToken = process.env.TWILIO_AUTH_TOKEN;
-const urlServerEnv = process.env.URL_SERVER;
+const webmotiUrl = process.env.WEBMOTI_URL;
 
-if (!authToken || !urlServerEnv) {
+if (
+  !accountSid ||
+  !apiKey ||
+  !apiSecret ||
+  !conversationsServiceSid ||
+  !webmotiUrl
+) {
   logger.error("Missing environment variables");
   process.exit(ERROR_CODES.MISSING_ENV);
 }
 
-const urlServer = `https://${urlServerEnv}`;
+function generateVideoToken(identity, roomName) {
+  logger.info("Generating video token...");
+  const AccessToken = twilio.jwt.AccessToken;
+  const VideoGrant = AccessToken.VideoGrant;
+  const ChatGrant = AccessToken.ChatGrant;
 
-const signature = crypto
-  .createHmac("sha1", authToken)
-  .update(Buffer.from(urlServer, "utf-8"))
-  .digest("base64");
+  const token = new AccessToken(accountSid, apiKey, apiSecret, {
+    identity: identity.trim(),
+    ttl: 10800, // 3 hours
+  });
 
-const retryRequest = async (url, headers, maxRetries, retryDelay, errMsg) => {
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+  const videoGrant = new VideoGrant({
+    room: roomName.trim(),
+  });
+  token.addGrant(videoGrant);
+
+  const chatGrant = new ChatGrant({
+    serviceSid: conversationsServiceSid.trim(),
+  });
+  token.addGrant(chatGrant);
+
+  logger.info("Generated video token");
+  return token.toJwt();
+}
+
+// from https://github.com/twilio-labs/plugin-rtc/blob/master/src/serverless/functions/token.js#L66
+async function ensureRoomExists(client, roomName) {
+  let room;
+
+  try {
+    // See if a room already exists
+    logger.info("Fetching room...");
+    room = await client.video.rooms(roomName).fetch();
+    logger.info("Found room");
+  } catch (e) {
     try {
-      const response = await axios.get(url, { headers: headers });
-      return response.data;
+      // If room doesn't exist, create it
+      logger.info("Room doesn't exist");
+      logger.info("Creating room...");
+      room = await client.video.rooms.create({
+        uniqueName: roomName,
+        type: ROOM_TYPE,
+      });
     } catch (e) {
-      logger.error("Request error: " + e.message);
-
-      if (attempt === maxRetries) {
-        process.exit(ERROR_CODES.AXIOS_ERROR);
-      } else {
-        logger.info(
-          `Attempt ${attempt} failed for ${errMsg}. Retrying in ${
-            retryDelay / 1000
-          } seconds...`
-        );
-        // retry after waiting
-        await new Promise((resolve) => setTimeout(resolve, retryDelay));
-      }
+      logger.error("Error creating room: " + e.message);
     }
   }
-};
+
+  return room;
+}
+
+// from https://github.com/twilio-labs/plugin-rtc/blob/master/src/serverless/functions/token.js#L90
+async function ensureConversationExists(client, identity, room) {
+  const conversationsClient = client.conversations.services(
+    conversationsServiceSid
+  );
+
+  try {
+    // See if conversation already exists
+    logger.info("Fetching conversation...");
+    await conversationsClient.conversations(room.sid).fetch();
+    logger.info("Found conversation");
+  } catch (e) {
+    try {
+      // If conversation doesn't exist, create it.
+      // Here we add a timer to close the conversation after the maximum length of a room (24 hours).
+      // This helps to clean up old conversations since there is a limit that a single participant
+      // can not be added to more than 1,000 open conversations.
+      logger.info("Conversation doesn't exist");
+      logger.info("Creating conversation...");
+      await conversationsClient.conversations.create({
+        uniqueName: room.sid,
+        "timers.closed": "P1D",
+      });
+    } catch (e) {
+      logger.error("Error creating conversation: " + e.message);
+    }
+  }
+
+  try {
+    // Add participant to conversation
+    logger.info("Adding participant to conversation...");
+    await conversationsClient
+      .conversations(room.sid)
+      .participants.create({ identity: identity });
+    logger.info("Added participant to conversation");
+  } catch (e) {
+    // Ignore "Participant already exists" error (50433)
+    if (e.code !== 50433) {
+      logger.error("Error adding participant to conversation: " + e.message);
+    }
+  }
+}
+
+function waitForInternet(timeoutMinutes = 5, intervalSeconds = 2) {
+  const timeout = timeoutMinutes * 60000;
+  const interval = intervalSeconds * 1000;
+  logger.info("Waiting for internet...");
+
+  const PING_COMMAND =
+    os.platform() === "win32" ? "ping -n 1 8.8.8.8" : "ping -c 1 8.8.8.8";
+
+  return new Promise((resolve) => {
+    const startTime = Date.now();
+    let attempt = 0;
+
+    const checkInternet = () => {
+      attempt++;
+      if (attempt % 5 === 0) {
+        logger.info("Connecting to internet...");
+      }
+
+      exec(PING_COMMAND, (error) => {
+        if (!error) {
+          logger.info("Connected to internet");
+          return resolve();
+        }
+
+        if (Date.now() - startTime > timeout) {
+          logger.error("Couldn't connect to internet");
+          process.exit(ERROR_CODES.NO_INTERNET);
+        }
+
+        setTimeout(checkInternet, interval);
+      });
+    };
+
+    checkInternet();
+  });
+}
 
 const muteStudentViewMic = async (page) => {
   const muteBtnSel = 'button[data-cy-audio-toggle="true"]';
@@ -121,21 +225,12 @@ const muteStudentViewMic = async (page) => {
 
   if (!isMuted) {
     await page.click(muteBtnSel);
+    logger.info("Muted mic");
   }
 };
 
-(async () => {
-  // get url from twilio endpoint
-  const webmotiData = await retryRequest(
-    urlServer,
-    {
-      "X-Twilio-Signature": signature,
-    },
-    WEBMOTI_MAX_RETRIES,
-    WEBMOTI_RETRY_DELAY,
-    "webmoti url"
-  );
-
+const joinClassroom = async (token) => {
+  logger.info("Joining classroom...");
   let browser;
   try {
     browser = await puppeteer.launch({
@@ -154,40 +249,34 @@ const muteStudentViewMic = async (page) => {
       // default viewport dimension leaves whitespace on right
       defaultViewport: null,
     });
+    logger.info("Launched browser");
+
     // get current tab
     const [page] = await browser.pages();
-    await page.goto(webmotiData["url"]);
+    await page.goto(`https://${webmotiUrl}?token=${token}`);
 
-    const nameSel = "#input-user-name";
-    // const roomSel = "#input-room-name";
-    const btnSel = ".MuiButton-label";
-
-    // wait until loaded
-    await page.waitForSelector(nameSel);
-    // await page.waitForSelector(roomSel);
-    await page.waitForSelector(btnSel);
-
-    // enter name and click continue
-    await page.type(nameSel, deviceName);
-    await page.click(btnSel);
-
-    // ui changes here and join button appears
-    const btn2Sel =
-      ".MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary";
-    await page.waitForSelector(btn2Sel);
+    const joinBtnSelector = '[data-cy-join-now="true"]';
+    await page.waitForSelector(joinBtnSelector, { visible: true });
 
     // wait until join button is enabled
+    logger.info("Waiting for clickable join button...");
     await page.waitForFunction(
-      (selector) =>
-        !document.querySelector(selector).classList.contains("Mui-disabled"),
+      (selector) => {
+        const btn = document.querySelector(selector);
+        return btn && !btn.disabled;
+      },
       {},
-      btn2Sel
+      joinBtnSelector
     );
 
-    // join meeting
-    await page.click(btn2Sel);
+    // sleep 2s to make sure button is ready
+    await new Promise((r) => setTimeout(r, 2000));
 
-    // mute mic for imdc1 only
+    // join meeting
+    await page.click(joinBtnSelector);
+    logger.info("Joined classroom");
+
+    // mute mic for student-view only
     if (isStudentView) {
       await muteStudentViewMic(page);
     }
@@ -196,7 +285,23 @@ const muteStudentViewMic = async (page) => {
     //   await browser.close();
     // }
     logger.error("Puppeteer error: " + e.message);
-    // don't exit because pm2 will try to restart it
-    // process.exit(ERROR_CODES.PUPPETEER_ERROR);
+    process.exit(ERROR_CODES.PUPPETEER_ERROR);
   }
-})();
+};
+
+const main = async () => {
+  logger.info("");
+  logger.info("--- Starting Autojoin ---");
+
+  await waitForInternet();
+
+  const token = generateVideoToken(deviceName, ROOM_NAME);
+  const client = twilio(apiKey, apiSecret, { accountSid });
+
+  const room = await ensureRoomExists(client, ROOM_NAME);
+  await ensureConversationExists(client, deviceName, room);
+
+  await joinClassroom(token);
+};
+
+main();
