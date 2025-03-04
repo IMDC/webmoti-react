@@ -3,7 +3,6 @@ import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 
 import ControlsMenu from './ControlsMenu/ControlsMenu';
 import Menu from './Menu/Menu';
-import useParticipants from '../../hooks/useParticipants/useParticipants';
 import useRoomState from '../../hooks/useRoomState/useRoomState';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import AudioMixer from '../AudioMixer/AudioMixer';
@@ -47,7 +46,7 @@ export default function MenuBar() {
   const classes = useStyles();
 
   const { room } = useVideoContext();
-  const participants = useParticipants();
+  // const participants = useParticipants();
   const roomState = useRoomState();
 
   const isReconnecting = roomState === 'reconnecting';
@@ -63,8 +62,10 @@ export default function MenuBar() {
           <Grid style={{ flex: 1 }}>
             <Typography variant="body1">
               {/* only show room name in dev */}
-              {process.env.NODE_ENV === 'development' && `${room!.name} |`} {participants.length + 1} participant
-              {participants.length ? 's' : ''}
+              {process.env.NODE_ENV === 'development' && `${room!.name}`}
+              {/* {' | '}
+              {participants.length + 1} participant
+              {participants.length ? 's' : ''} */}
             </Typography>
           </Grid>
         </Hidden>
