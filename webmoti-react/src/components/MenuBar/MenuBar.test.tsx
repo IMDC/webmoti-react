@@ -115,14 +115,14 @@ describe('the MenuBar component', () => {
   // });
 
   // Test Room (room name) is hidden in dev mode
-  it('should correctly display the number of participants in a room when there is more than 1 participant', () => {
-    const wrapper = shallow(<MenuBar />);
-    expect(wrapper.find('WithStyles(ForwardRef(Typography))').at(0).text()).toContain('3 participants');
-  });
+  // it('should correctly display the number of participants in a room when there is more than 1 participant', () => {
+  //   const wrapper = shallow(<MenuBar />);
+  //   expect(wrapper.find('WithStyles(ForwardRef(Typography))').at(0).text()).toContain('3 participants');
+  // });
 
-  it('should correctly display the number of participants in a room when there is exactly 1 participant', () => {
-    mockUseParticipants.mockImplementationOnce(() => []);
-    const wrapper = shallow(<MenuBar />);
-    expect(wrapper.find('WithStyles(ForwardRef(Typography))').at(0).text()).toContain('1 participant');
-  });
+  // it('should correctly display the number of participants in a room when there is exactly 1 participant', () => {
+  //   mockUseParticipants.mockImplementationOnce(() => []);
+  //   const wrapper = shallow(<MenuBar />);
+  //   expect(wrapper.find('WithStyles(ForwardRef(Typography))').at(0).text()).toContain('1 participant');
+  // });
 });

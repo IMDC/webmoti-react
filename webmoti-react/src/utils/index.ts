@@ -65,6 +65,10 @@ export const sendSystemMsg = (conversation: Conversation | null, msg: string) =>
 };
 
 export const checkSystemMsg = (message: Message) => {
+  if (!message.attributes) {
+    return false;
+  }
+
   // parse attributes of msg
   const attrObj = message.attributes as JSONObject;
   if (attrObj.attributes === undefined) {
