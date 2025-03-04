@@ -1,7 +1,10 @@
-import { Client, JSONObject } from '@twilio/conversations';
-import { Conversation, Message } from '@twilio/conversations/';
 import React, { createContext, useCallback, useEffect, useRef, useState } from 'react';
+
+import { Client } from '@twilio/conversations';
+import { Conversation, Message } from '@twilio/conversations/';
+
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
+import { checkSystemMsg } from '../../utils';
 
 type ChatContextType = {
   isChatWindowOpen: boolean;
@@ -49,22 +52,15 @@ export const ChatProvider: React.FC = ({ children }) => {
   useEffect(() => {
     if (conversation) {
       const handleMessageAdded = (message: Message) => {
-        // don't show system messages
-        let isSystemMsg = false;
-        const attrObj = message.attributes as JSONObject;
-        if (attrObj.attributes !== undefined) {
-          const attrSysMsg = JSON.parse(attrObj.attributes as string).systemMsg;
-          if (attrSysMsg !== undefined) {
-            isSystemMsg = true;
-          }
-        }
-
-        if (!isSystemMsg) {
-          setMessages(oldMessages => [...oldMessages, message]);
+        if (!checkSystemMsg(message)) {
+          setMessages((oldMessages) => [...oldMessages, message]);
         }
       };
 
-      conversation.getMessages().then(newMessages => setMessages(newMessages.items));
+      // don't show system messages when rejoining
+      conversation.getMessages().then((newMessages) => {
+        setMessages(newMessages.items.filter((message) => !checkSystemMsg(message)));
+      });
 
       conversation.on('messageAdded', handleMessageAdded);
       return () => {
@@ -89,12 +85,12 @@ export const ChatProvider: React.FC = ({ children }) => {
     if (room && chatClient) {
       chatClient
         .getConversationByUniqueName(room.sid)
-        .then(newConversation => {
+        .then((newConversation) => {
           //@ts-ignore
           window.chatConversation = newConversation;
           setConversation(newConversation);
         })
-        .catch(e => {
+        .catch((e) => {
           console.error(e);
           onError(new Error('There was a problem getting the Conversation associated with this room.'));
         });
