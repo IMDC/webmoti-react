@@ -28,8 +28,10 @@ const updateQueueStyles = () => {
 };
 
 const addName = (name) => {
+  const firstName = name.split(" ")[0];
   const newItem = document.createElement("li");
-  newItem.textContent = name;
+  // display first name only
+  newItem.textContent = firstName;
 
   queue.appendChild(newItem);
   currentItems.set(name, newItem);
