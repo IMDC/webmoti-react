@@ -2,7 +2,7 @@ import asyncio
 import os
 import platform
 
-from gpiozero import AngularServo
+import lgpio
 
 from core.constants import SERVO_PIN
 
@@ -16,7 +16,8 @@ if (platform.system() == "Linux" and platform.machine() == "aarch64") or is_test
 class ServoController:
     def __init__(self) -> None:
         if is_rasp_pi:
-            self.servo = AngularServo(SERVO_PIN, min_angle=0, max_angle=180)
+            self.chip = lgpio.gpiochip_open(0)
+            lgpio.gpio_claim_output(self.chip, SERVO_PIN)
 
         # the lock is so multiple users can't use the servo at the same time
         self.lock = asyncio.Lock()
@@ -24,9 +25,10 @@ class ServoController:
 
     async def _set_angle(self, angle: float, sleep_time: float) -> None:
         if is_rasp_pi:
-            self.servo.angle = angle
+            pulse_width = int((angle / 180) * 2000 + 500)
+            lgpio.tx_pwm(self.chip, SERVO_PIN, 50, pulse_width / 20000)
             await asyncio.sleep(sleep_time)
-            self.servo.angle = None
+            lgpio.tx_pwm(self.chip, SERVO_PIN, 50, 0)
 
     async def set_angle(self, angle: float, sleep_time) -> None:
         async with self.lock:
@@ -41,8 +43,8 @@ class ServoController:
 
     def stop(self) -> None:
         if is_rasp_pi:
-            self.servo.angle = None
-            self.servo.close()
+            lgpio.tx_pwm(self.chip, SERVO_PIN, 50, 0)
+            lgpio.gpiochip_close(self.chip)
 
 
 servo_controller = ServoController()
