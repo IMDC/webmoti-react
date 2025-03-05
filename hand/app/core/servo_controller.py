@@ -2,22 +2,24 @@ import asyncio
 import os
 import platform
 
-import lgpio
-
 from core.constants import SERVO_PIN
 
 # this is for running on non rasp pi devices
 is_rasp_pi = False
 is_testing = os.getenv("PYTEST_RUNNING")
 if (platform.system() == "Linux" and platform.machine() == "aarch64") or is_testing:
+    from RPi import GPIO
+
     is_rasp_pi = True
 
 
 class ServoController:
     def __init__(self) -> None:
         if is_rasp_pi:
-            self.chip = lgpio.gpiochip_open(0)
-            lgpio.gpio_claim_output(self.chip, SERVO_PIN)
+            GPIO.setmode(GPIO.BOARD)
+            GPIO.setup(SERVO_PIN, GPIO.OUT)
+            self.pwm = GPIO.PWM(SERVO_PIN, 50)
+            self.pwm.start(0)
 
         # the lock is so multiple users can't use the servo at the same time
         self.lock = asyncio.Lock()
@@ -25,10 +27,13 @@ class ServoController:
 
     async def _set_angle(self, angle: float, sleep_time: float) -> None:
         if is_rasp_pi:
-            pulse_width = int((angle / 180) * 2000 + 500)
-            lgpio.tx_pwm(self.chip, SERVO_PIN, 50, pulse_width / 20000)
+            # convert angle to duty cycle (2 to 12)
+            duty_cycle = (angle / 18) + 2
+            self.pwm.ChangeDutyCycle(duty_cycle)
+            # wait a bit before stopping servo to remove momentum
             await asyncio.sleep(sleep_time)
-            lgpio.tx_pwm(self.chip, SERVO_PIN, 50, 0)
+            # relax servo to stop erratic movements
+            self.pwm.ChangeDutyCycle(0)
 
     async def set_angle(self, angle: float, sleep_time) -> None:
         async with self.lock:
@@ -43,8 +48,8 @@ class ServoController:
 
     def stop(self) -> None:
         if is_rasp_pi:
-            lgpio.tx_pwm(self.chip, SERVO_PIN, 50, 0)
-            lgpio.gpiochip_close(self.chip)
+            self.pwm.stop()
+            GPIO.cleanup()
 
 
 servo_controller = ServoController()
