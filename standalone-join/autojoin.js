@@ -5,25 +5,26 @@ const twilio = require("twilio");
 const { format, createLogger, transports } = require("winston");
 require("dotenv").config();
 
-//
-//
-const isTestUser = false;
-//
-//
+// set this env variable for the student view raspberry pi
+const isStudentView = process.env.IS_STUDENT_VIEW === "true";
+// set this env variable for testing using a non pi device
+const isTestUser = process.env.IS_TEST_USER === "true";
 
 const ROOM_NAME = "Classroom";
 const ROOM_TYPE = "group";
 
-const NAMES = ["Board-View", "Student-View", "Test-User"];
+const WEBMOTI_PI_1 = "Board-View";
+const WEBMOTI_PI_2 = "Student-View";
 
-// set this env variable for the student view raspberry pi
-const isStudentView = process.env.IS_STUDENT_VIEW === "true";
+// const TEST_USERNAME = "Board-View";
+// const TEST_USERNAME = "Student-View";
+const TEST_USERNAME = "Test-User";
 
-let deviceName = NAMES[0];
+let deviceName = WEBMOTI_PI_1;
 if (isStudentView) {
-  deviceName = NAMES[1];
+  deviceName = WEBMOTI_PI_2;
 } else if (isTestUser) {
-  deviceName = NAMES[2];
+  deviceName = TEST_USERNAME;
 }
 
 const logFormat = format.printf(({ level, message, timestamp }) => {
@@ -60,17 +61,18 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const apiKey = process.env.TWILIO_API_KEY_SID;
 const apiSecret = process.env.TWILIO_API_KEY_SECRET;
 const conversationsServiceSid = process.env.TWILIO_CONVERSATIONS_SERVICE_SID;
-
 const webmotiUrl = process.env.WEBMOTI_URL;
 
-if (
-  !accountSid ||
-  !apiKey ||
-  !apiSecret ||
-  !conversationsServiceSid ||
-  !webmotiUrl
-) {
-  logger.error("Missing environment variables");
+const missingVars = [
+  !accountSid && "TWILIO_ACCOUNT_SID",
+  !apiKey && "TWILIO_API_KEY_SID",
+  !apiSecret && "TWILIO_API_KEY_SECRET",
+  !conversationsServiceSid && "TWILIO_CONVERSATIONS_SERVICE_SID",
+  !webmotiUrl && "WEBMOTI_URL",
+].filter(Boolean);
+
+if (missingVars.length > 0) {
+  logger.error(`Missing environment variables: ${missingVars.join(", ")}`);
   process.exit(ERROR_CODES.MISSING_ENV);
 }
 
@@ -296,8 +298,8 @@ const main = async () => {
   await waitForInternet();
 
   const token = generateVideoToken(deviceName, ROOM_NAME);
-  const client = twilio(apiKey, apiSecret, { accountSid });
 
+  const client = twilio(apiKey, apiSecret, { accountSid });
   const room = await ensureRoomExists(client, ROOM_NAME);
   await ensureConversationExists(client, deviceName, room);
 
