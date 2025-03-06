@@ -9,8 +9,10 @@ import { ChatProvider } from './index';
 import useChatContext from '../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 
+const mockMessage = { body: 'newMockMessage', attributes: {} };
+
 const mockConversation: any = new EventEmitter();
-mockConversation.getMessages = jest.fn(() => Promise.resolve({ items: ['mockMessage'] }));
+mockConversation.getMessages = jest.fn(() => Promise.resolve({ items: [mockMessage] }));
 
 const mockConversationsClient: any = new EventEmitter();
 mockConversationsClient.getConversationByUniqueName = jest.fn(() => Promise.resolve(mockConversation));
@@ -25,8 +27,6 @@ const mockOnError = jest.fn();
 
 const mockRoom = { sid: 'mockRoomSid' };
 const wrapper: React.FC = ({ children }) => <ChatProvider>{children}</ChatProvider>;
-
-const mockMessage = { body: 'newMockMessage', attributes: {} };
 
 describe('the ChatProvider component', () => {
   beforeEach(() => {
@@ -65,7 +65,7 @@ describe('the ChatProvider component', () => {
     });
     await waitForNextUpdate();
 
-    expect(result.current.messages).toEqual(['mockMessage']);
+    expect(result.current.messages).toEqual([mockMessage]);
   });
 
   it('should add new messages to the "messages" array', async () => {
@@ -80,7 +80,7 @@ describe('the ChatProvider component', () => {
       mockConversation.emit('messageAdded', mockMessage);
     });
 
-    expect(result.current.messages).toEqual(['mockMessage', mockMessage]);
+    expect(result.current.messages).toEqual([mockMessage, mockMessage]);
   });
 
   it('should set hasUnreadMessages to true when initial messages are loaded while the chat window is closed', async () => {
