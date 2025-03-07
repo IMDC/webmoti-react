@@ -5,7 +5,7 @@ import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import clsx from 'clsx';
 
-import { WEBMOTI_CAMERA_1 } from '../../constants';
+import { WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../../constants';
 import useMainParticipant from '../../hooks/useMainParticipant/useMainParticipant';
 import useParticipantsContext from '../../hooks/useParticipantsContext/useParticipantsContext';
 import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/useScreenShareParticipant';
@@ -50,6 +50,8 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       backgroundColor: 'black',
       borderRadius: '50%',
+      // allow space under the arrow for scrolling to it when list is large
+      marginBottom: `${theme.footerHeight}px`,
     },
   })
 );
@@ -66,9 +68,18 @@ export default function ParticipantList() {
 
   const [showAll, setShowAll] = React.useState(false);
 
-  if (speakerViewParticipants.length === 0) return null; // Don't render this component if there are no remote participants.
+  // Don't render this component if there are no remote participants.
+  if (speakerViewParticipants.length === 0) return null;
 
   const ArrowIcon = showAll ? ArrowUpwardIcon : ArrowDownwardIcon;
+
+  // only show camera 1 in list when camera 2 is main and vice versa
+  const allowedIdentitiesInFiltered =
+    mainParticipant.identity === WEBMOTI_CAMERA_1
+      ? [WEBMOTI_CAMERA_2]
+      : mainParticipant.identity === WEBMOTI_CAMERA_2
+        ? [WEBMOTI_CAMERA_1]
+        : [WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2];
 
   return (
     <aside
@@ -81,9 +92,15 @@ export default function ParticipantList() {
           {showAll && <Participant participant={localParticipant} isLocalParticipant={true} />}
           {speakerViewParticipants.map((participant) => {
             const isSelected = participant === selectedParticipant;
-            const hideParticipant = showAll
-              ? participant === mainParticipant && participant !== screenShareParticipant && !isSelected
-              : participant.identity !== WEBMOTI_CAMERA_1;
+            const isMainParticipant = participant === mainParticipant;
+            const isScreenSharing = participant === screenShareParticipant;
+
+            // show all mode will show all participants except the selected/main or screen share participant
+            const shouldHideInShowAll = (isSelected || isMainParticipant) && !isScreenSharing;
+            // filtered mode will only show board-view and student-view participants
+            const shouldHideInFiltered = !allowedIdentitiesInFiltered.includes(participant.identity);
+            const hideParticipant = showAll ? shouldHideInShowAll : shouldHideInFiltered;
+
             return (
               <Participant
                 key={participant.sid}
