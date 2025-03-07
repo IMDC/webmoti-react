@@ -11,17 +11,14 @@ exports[`the ParticipantList component should correctly render Participant compo
       className="makeStyles-innerScrollContainer-4"
     >
       <Memo(Participant)
-        isLocalParticipant={true}
-        participant="localParticipant"
-      />
-      <Memo(Participant)
         hideParticipant={false}
         isSelected={false}
         key="0"
         onClick={[Function]}
         participant={
           Object {
-            "sid": 0,
+            "identity": "Student-View",
+            "sid": "0",
           }
         }
       />
@@ -32,7 +29,8 @@ exports[`the ParticipantList component should correctly render Participant compo
         onClick={[Function]}
         participant={
           Object {
-            "sid": 1,
+            "identity": "Board-View",
+            "sid": "1",
           }
         }
       />
@@ -43,7 +41,21 @@ exports[`the ParticipantList component should correctly render Participant compo
         onClick={[Function]}
         participant={
           Object {
-            "sid": 2,
+            "identity": "Student-View",
+            "sid": "2",
+          }
+        }
+      />
+    </div>
+    <div
+      className="makeStyles-arrowContainer-5"
+    >
+      <Memo(ForwardRef(ArrowDownwardIcon))
+        onClick={[Function]}
+        style={
+          Object {
+            "color": "white",
+            "cursor": "pointer",
           }
         }
       />
