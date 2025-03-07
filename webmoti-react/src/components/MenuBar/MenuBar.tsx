@@ -13,8 +13,6 @@ import ToggleCaptionsButton from '../Buttons/ToggleCaptionsButton/ToggleCaptions
 import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import NotifyButton from '../Buttons/NotifyButton/NotifyButton';
-import ToggleScreenShareButton from '../Buttons/ToggleScreenShareButton/ToggleScreenShareButton';
-import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/useScreenShareParticipant';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -51,10 +49,6 @@ export default function MenuBar() {
 
   const isReconnecting = roomState === 'reconnecting';
 
-  const screenShareParticipant = useScreenShareParticipant();
-  const isScreenShareSupported = Boolean(navigator.mediaDevices?.getDisplayMedia);
-  const isScreenShareDisabled = Boolean(screenShareParticipant) || !isScreenShareSupported || isReconnecting;
-
   return (
     <footer className={classes.container}>
       <Grid container justifyContent="space-around" alignItems="center">
@@ -74,7 +68,6 @@ export default function MenuBar() {
           <Grid container justifyContent="center" alignItems="center">
             <ToggleAudioButton disabled={isReconnecting} />
             <ToggleVideoButton disabled={isReconnecting} />
-            <ToggleScreenShareButton disabled={isScreenShareDisabled} />
 
             <ToggleCaptionsButton />
 
