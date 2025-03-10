@@ -1,13 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-
-import { Button, CircularProgress, Grid, makeStyles } from '@material-ui/core';
+import { Button, CircularProgress, Grid, makeStyles, Select, MenuItem } from '@material-ui/core';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import HearingIcon from '@material-ui/icons/Hearing';
 import { Conversation } from '@twilio/conversations';
 import clsx from 'clsx';
-
 import FileAttachmentIcon from '../../../icons/FileAttachmentIcon';
 import SendMessageIcon from '../../../icons/SendMessageIcon';
 import { useAppState } from '../../../state';
@@ -69,6 +67,10 @@ const useStyles = makeStyles((theme) => ({
     borderColor: theme.palette.primary.main,
     borderRadius: '4px',
   },
+  voiceSelect: {
+    marginRight: '1em',
+    minWidth: '120px',
+  },
 }));
 
 interface ChatInputProps {
@@ -82,6 +84,19 @@ interface ChatInputProps {
 const ALLOWED_FILE_TYPES =
   'audio/*, image/*, text/*, video/*, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document .xslx, .ppt, .pdf, .key, .svg, .csv';
 
+const VOICE_OPTIONS = [
+  { value: 'MATILDA', label: 'Matilda' },
+  { value: 'ROGER', label: 'Roger' },
+  { value: 'SARAH', label: 'Sarah' },
+  { value: 'CHARLIE', label: 'Charlie' },
+  { value: 'CALLUM', label: 'Callum' },
+  { value: 'RIVER', label: 'River' },
+  { value: 'LIAM', label: 'Liam' },
+  { value: 'ALICE', label: 'Alice' },
+  { value: 'CHRIS', label: 'Chris' },
+  { value: 'LILY', label: 'Lily' },
+];
+
 export default function ChatInput({
   conversation,
   isChatWindowOpen,
@@ -93,13 +108,12 @@ export default function ChatInput({
   const [messageBody, setMessageBody] = useState('');
   const [isSendingFile, setIsSendingFile] = useState(false);
   const [fileSendError, setFileSendError] = useState<string | null>(null);
+  const [selectedVoice, setSelectedVoice] = useState(VOICE_OPTIONS[0].value);
   const isValidMessage = /\S/.test(messageBody);
   const textInputRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isTextareaFocused, setIsTextareaFocused] = useState(false);
-
   const [isTTSLoading, setIsTTSLoading] = useState(false);
-
   const { setError } = useAppState();
 
   useEffect(() => {
@@ -112,6 +126,10 @@ export default function ChatInput({
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessageBody(event.target.value);
+  };
+
+  const handleVoiceChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setSelectedVoice(event.target.value as string);
   };
 
   // ensures pressing enter + shift creates a new line, so that enter on its own only sends the message:
@@ -160,16 +178,14 @@ export default function ChatInput({
     const msg = messageBody.trim();
 
     setIsTTSLoading(true);
-    const ttsMsg = new TTSMessage(msg);
+    const ttsMsg = new TTSMessage(msg, selectedVoice);
 
     try {
       await ttsMsg.fetchSpeech();
-
       ttsMsg.play();
       if (addTTSMsg) {
         addTTSMsg(ttsMsg);
       }
-
       setMessageBody('');
     } catch {
       setError(Error('Failed to fetch speech'));
@@ -241,16 +257,30 @@ export default function ChatInput({
           </Button>
 
           {isTTSModeOn ? (
-            <Button
-              className={classes.button}
-              onClick={handleTtsButton}
-              disabled={!isValidMessage || isTTSLoading}
-              color="primary"
-              variant="contained"
-            >
-              <HearingIcon />
-              {isTTSLoading && <CircularProgress size={24} className={classes.fileButtonLoadingSpinner} />}
-            </Button>
+            <>
+              <Select
+                value={selectedVoice}
+                onChange={handleVoiceChange}
+                className={classes.voiceSelect}
+                variant="outlined"
+              >
+                {VOICE_OPTIONS.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+              <Button
+                className={classes.button}
+                onClick={handleTtsButton}
+                disabled={!isValidMessage || isTTSLoading}
+                color="primary"
+                variant="contained"
+              >
+                <HearingIcon />
+                {isTTSLoading && <CircularProgress size={24} className={classes.fileButtonLoadingSpinner} />}
+              </Button>
+            </>
           ) : (
             <div className={classes.chatButtonContainer}>
               <div className={classes.fileButtonContainer}>
@@ -262,10 +292,8 @@ export default function ChatInput({
                 >
                   <FileAttachmentIcon />
                 </Button>
-
                 {isSendingFile && <CircularProgress size={24} className={classes.fileButtonLoadingSpinner} />}
               </div>
-
               <Button
                 className={classes.button}
                 onClick={() => handleSendMessage(messageBody)}

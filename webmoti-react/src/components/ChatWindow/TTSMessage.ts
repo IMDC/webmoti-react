@@ -2,12 +2,14 @@ import { HTTPS_SERVER_URL } from '../../constants';
 
 export default class TTSMessage {
   text: string;
+  voice: string;
   dateCreated: Date;
   audio: HTMLAudioElement | null = null;
   audioBlob: Blob | null = null;
 
-  constructor(text: string) {
+  constructor(text: string, voice: string) {
     this.text = text;
+    this.voice = voice;
     this.dateCreated = new Date();
   }
 
@@ -15,7 +17,7 @@ export default class TTSMessage {
     const options = {
       method: 'POST',
       headers: { Accept: 'audio/mpeg', 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: this.text }),
+      body: JSON.stringify({ text: this.text, voice: this.voice }),
     };
 
     const response = await fetch(`${HTTPS_SERVER_URL}/tts`, options);

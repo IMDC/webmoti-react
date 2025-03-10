@@ -16,6 +16,7 @@ class TTSRequest(BaseModel):
     """Client request to /tts"""
 
     text: str
+    voice: str
 
 
 class TokenRequest(BaseModel):

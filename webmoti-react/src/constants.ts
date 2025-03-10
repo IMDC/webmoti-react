@@ -25,8 +25,11 @@ export const GALLERY_VIEW_MARGIN = 3;
 export const WEBMOTI_CAMERA_1 = 'Student-View';
 export const WEBMOTI_CAMERA_2 = 'Board-View';
 
-// use API_DOMAIN = '127.0.0.1:8080/api'
-// and HTTPS_SERVER_URL = `http://${API_DOMAIN}` (for testing)
+// uncomment for testing (and comment other)
+// const API_DOMAIN = '127.0.0.1:8080/api'
+// export const HTTPS_SERVER_URL = `http://${API_DOMAIN}`
+// export const WS_SERVER_URL = `ws://${API_DOMAIN}/ws`;
+
 const API_DOMAIN = process.env.REACT_APP_API_DOMAIN;
 export const HTTPS_SERVER_URL = `https://${API_DOMAIN}`;
 export const WS_SERVER_URL = `wss://${API_DOMAIN}/ws`;
