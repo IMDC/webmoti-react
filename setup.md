@@ -14,22 +14,18 @@
   - [Server setup](#server-setup)
   - [Remote.It](#remoteit)
   - [Running the hand server](#running-the-hand-server)
+  - [Making the hand server run on boot](#making-the-hand-server-run-on-boot)
   - [Hand server tests](#hand-server-tests)
 - [Queue](#queue)
   - [Auto open queue (on Windows tablet)](#auto-open-queue-on-windows-tablet)
 - [Tactile notifications](#tactile-notifications)
 - [Standalone Join](#standalone-join)
-  - [Webmoti URL server](#webmoti-url-server)
-  - [Info](#info)
   - [Setting up standalone join](#setting-up-standalone-join)
     - [Setup Node version](#setup-node-version)
     - [Chromium Browser](#chromium-browser)
     - [Install dependencies](#install-dependencies)
     - [Create .env in home directory](#create-env-in-home-directory)
-    - [Code changes](#code-changes)
-    - [Autorun](#autorun)
-- [Microphone Function](#microphone-function)
-- [RaiseHand Function](#raisehand-function)
+    - [Making the autojoin script run on boot](#making-the-autojoin-script-run-on-boot)
 - [Connecting raspberry pi to secure networks (like TMU)](#connecting-raspberry-pi-to-secure-networks-like-tmu)
   - [dhcpcd method](#dhcpcd-method)
   - [Network Manager alternative](#network-manager-alternative)
@@ -44,7 +40,7 @@ Original app template: <https://github.com/twilio/twilio-video-app-react#readme>
 
 1. Install dependencies: `npm install`
 
-2. Install noise cancellation: `npm run noisecancellation:krisp`
+2. (Optional) Install noise cancellation: `npm run noisecancellation:krisp`
 
 3. Install the CLI: `npm install -g twilio-cli` or use
  [scoop](https://www.twilio.com/docs/twilio-cli/getting-started/install#scoop)
@@ -52,7 +48,8 @@ Original app template: <https://github.com/twilio/twilio-video-app-react#readme>
 
 4. Login: `twilio login`
 
-5. Install the plugin: `twilio plugins:install @twilio-labs/plugin-rtc`
+5. Install the plugin (this is an edited version of the `@twilio-labs/plugin-rtc`):
+ `twilio plugins:install plugin-rtc`.
 
 ### Running the App locally for developement
 
@@ -72,7 +69,11 @@ It's set up to use the twilio video `go` room type (2 participant max) when
 - Create a new API Key in the [API Keys Section](https://www.twilio.com/console/video/project/api-keys)
  under Programmable Video Tools in the Twilio Console.
  Take note of the SID and Secret of the new API key.
-- Create a new Conversations service in the [Services section](https://www.twilio.com/console/conversations/services)
+- (This step is optional because plugin-rtc will
+  create a new conversation service called
+  `${APP_NAME}-conversations-service`. Make sure that both the react app .env
+  and the autojoin .env use the same conversation SID, otherwise they will be
+  in isolated chats) Create a new Conversations service in the [Services section](https://www.twilio.com/console/conversations/services)
  under the Conversations tab in the Twilio Console. Take note of the SID generated.
 - Store your Account SID, API Key SID, API Key Secret, and Conversations Service
  SID in a new file called `.env` in the root level of the application (example below).
@@ -82,6 +83,29 @@ TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 TWILIO_API_KEY_SID=SKxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 TWILIO_API_KEY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 TWILIO_CONVERSATIONS_SERVICE_SID=ISxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# Using passcode auth is useful for testing multiple users
+# Un-comment the following line to enable passcode authentication for use with 
+# the Twilio CLI rtc-plugin.
+# See: https://github.com/twilio-labs/plugin-rtc
+# REACT_APP_SET_AUTH=passcode
+
+# Un-comment the following line to enable Google authentication with Firebase.
+REACT_APP_SET_AUTH=firebase
+
+# The following values are used to configure the Firebase library.
+# See https://firebase.google.com/docs/web/setup#config-object
+# These variables must be set if FIREBASE_AUTH is enabled
+REACT_APP_FIREBASE_API_KEY=
+REACT_APP_FIREBASE_AUTH_DOMAIN=
+REACT_APP_FIREBASE_STORAGE_BUCKET=
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=
+
+# set this to the remote.it persistent link (ending in /api)
+REACT_APP_API_DOMAIN=
+
+# set this to the livekit websocket url (if using livekit)
+REACT_APP_LIVEKIT_URL=
 ```
 
 ### Deploying
@@ -100,19 +124,21 @@ Undeploy the app: `npm run delete`
 ```bash
 # run all tests
 npm test
-```
 
-```bash
 # run until fail
 npm run test-bail
-```
 
-```bash
-# run specific test (replace TEST_PATH with actual path)
-npx cross-env TZ=utc jest --config jest.config.js TEST_PATH
+# run specific test (replace TEST_PATH with actual path of the test file)
+# you can get the path by right clicking the file then "Copy Relative Path"
+npm run test-specific TEST_PATH
+
+# update test snapshot for a specific file
+npm run update-snapshots:file TEST_PATH
 ```
 
 #### E2E Tests
+
+(E2E tests are currently disabled in circleci)
 
 ```bash
 # make sure server is running
@@ -137,7 +163,7 @@ npm run storybook
 
 ## Hand server
 
-This runs on the raspberry pi.
+This runs on the raspberry pi (student-view only).
 
 ### Server setup
 
@@ -153,7 +179,7 @@ python -m venv ~/.hand-server-venv
 source ~/.hand-server-venv/bin/activate
 
 # install requirements (in venv)
-pip install -r ~/app/requirements.txt
+pip install -r ~/webmoti-react/hand/app/requirements.txt
 ```
 
 > **Note:** You need to activate the venv when running the hand server or
@@ -164,11 +190,28 @@ pip install -r ~/app/requirements.txt
 Create `.env` file in project root:
 
 ```bash
+# for tactile notifications
 VAPID_PRIVATE_KEY=
-VAPID_EMAIL=mailto:webmoti2@gmail.com
+VAPID_EMAIL=
+
+# for text to speech
 ELEVENLABS_API_KEY=
-PASSWORD=
+
+# for AI schedule
 OPENAI_API_KEY=
+
+# for push to talk (if using)
+LIVEKIT_API_KEY=
+LIVEKIT_API_SECRET=
+
+# for vite client push to talk
+VITE_LIVEKIT_URL=
+# for vite client tactile notifications
+VITE_SAVE_SUB_URL=
+VITE_NOTIF_APP_KEY=
+
+# set APP_ENV to dev for testing, set it to prod on raspberry pi
+APP_ENV=dev
 ```
 
 Vapid key pairs (for push notifications) can be generated using `npx web-push generate-vapid-keys`.
@@ -181,6 +224,19 @@ This needs to be setup on the raspberry pi running the hand server.
 Setup:
 <https://www.remote.it/getting-started/raspberry-pi>
 
+1. Sign into the Remote.It portal <https://app.remote.it>
+2. (Optional - If you already have a persistent link and service setup, then you
+ can restore it and skip step 3 <https://support.remote.it/hc/en-us/articles/15635680105229-Restore-A-Device>)
+3. Click "+" (Add Device) and select "Raspberry Pi", copy the generated code and
+ paste it into the SSH console of your Raspberry Pi
+
+Then to setup the HTTP service:
+
+1. Create new HTTP service
+2. Set service URL to `http://localhost:8080`
+3. Enable the `Persistent public url` switch
+4. Make sure the routing for the link on the board is `[WEBPAGE IP].com/raisehand`
+
 ### Running the hand server
 
 ```bash
@@ -188,16 +244,34 @@ Setup:
 source ~/.hand-server-venv/bin/activate
 # (or activatehs)
 
-python ~/app/main.py
+python ~webmoti-react/hand/app/main.py
 ```
 
-It runs in dev mode by default (code reloading). For prod mode run:
-`export APP_ENV=prod`
-
 Flags:
-(For prod mode)
-`--build`: Enable to run npm build. Only enable if vite project code has changed.
-`--build-only`: Enable to run npm build and exit.
+`--build-only`: Enable to run npm build and exit. (ex: `main.py --build-only`)
+
+This flag is there because you need to build the app after making changes.
+ Alternatively, you can navigate to the directory and `npm run build`
+
+### Making the hand server run on boot
+
+First setup pm2
+
+```bash
+# install pm2 globally
+npm install -g pm2
+
+pm2 startup systemd
+# then copy paste the outputted command into terminal
+```
+
+Then make pm2 run the hand server
+
+```bash
+source ~/.hand-server-venv/bin/activate # or activatehs
+pm2 start python ~/webmoti-react/hand/app/main.py --name hand_server
+pm2 save
+```
 
 ### Hand server tests
 
@@ -206,9 +280,7 @@ Flags:
 pytest
 # more detailed output
 pytest -v
-```
 
-```bash
 # run one
 pytest hand/app/tests/TEST_FILE.py
 # run specific test
@@ -260,23 +332,6 @@ Some phones like Samsung have very aggressive battery optimization and might
 Both raspberry pi boards automatically join the twilio room when they're booted
  using a js script (standalone-join/main.js).
 
-The prof laptop also uses this script to make it easier to setup. If the prof
- laptop is no longer used, please remove the `.env` file located at
- `C:\Users\IMDC\Desktop\WebMoti\.env` to ensure that the API keys are not exposed.
-
-### Webmoti URL server
-
-The raspberry pi boards are able to always know the latest url and password by
- sending a request to this server (webmoti-react/server/get_url.js).
- This is hosted as a twilio serverless function and can be edited in the
- [twilio console](https://console.twilio.com/us1/develop/functions/services).
-
-### Info
-
-- model: Raspberry Pi 4 Model B Rev 1.5
-- imdc1: Student-View (Hand)
-- imdc2: Board-View (Directional mic)
-
 ### Setting up standalone join
 
 #### Setup Node version
@@ -310,62 +365,38 @@ Installing `puppeteer` on raspberry pi (arm64) is broken. It doesn't install
 
 #### Create .env in home directory
 
-Get the `TWILIO_AUTH_TOKEN` from the [Twilio Console](https://www.twilio.com/console).
-
-The `URL_SERVER` is the [Webmoti URL server](#webmoti-url-server) url with
- `/url` as the endpoint.
-
 ```bash
-TWILIO_AUTH_TOKEN=
-URL_SERVER=
+# these are the same values used in the react app .env
+TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_API_KEY_SID=SKxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_API_KEY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_CONVERSATIONS_SERVICE_SID=ISxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# set this to the url of the deployed react app
+WEBMOTI_URL=
+
+# for student-view raspberry pi (remove this for board-view)
+IS_STUDENT_VIEW=true
+
+# for testing autojoin.js
+# IS_TEST_USER=true
 ```
 
-#### Code changes
+#### Making the autojoin script run on boot
 
-Change the variables at the top of the autojoin.js script based on what device
- it's running on
-
-#### Autorun
-
-For autorun on the imdc1 pi, the `launch_autojoin.sh` script needs to be run
- instead of the actual `autojoin.js` script.
-
-```bash
-# for autojoin script
-pm2 start launch_autojoin.sh
-pm2 save
-pm2 startup systemd # for first time setup
-# copy paste outputted command
-sudo reboot # for testing
-```
+> **Note:** If autojoin.js is not launching when rasp pi is in headless mode
+> then you need to download xvfb for running a virtual display and then
+> instead of pm2 start autojoin.js, run pm2 start launch-autojoin.sh.
+>
+> Command: sudo apt install xvfb
+>
+> xvfb might also need to be set to run on boot.
+> (Check pm2 logs first to see if this is the case)
 
 ```bash
-# for hand server
-source ~/.hand-server-venv/bin/activate
-pm2 start python ~/app/main.py --name hand_server
+pm2 start autojoin.js
 pm2 save
 ```
-
-## Microphone Function
-
-- code is hosted locally on a PICO.
-- Two main files main.py and index.html.
-- The PICO board needs both files but will autorun the file main.py.
-- Once code and local hotspot is running from the PICO; Use any touchscreen
- device to connect to this network and hosted webpage.
-- Clicking on any of the 5x4 grid boxes will allow proper communication to the microphone.
-
-## RaiseHand Function
-
-- Two files hosted locally on a PICO
-- Main.py and index.html
-- Runs on hotspot connection via Raspberry Pi plugged in via ETH
-- Once connection is made allow that connection to be made globally via: <https://www.remote.it/getting-started/raspberry-pi>
-- your routing for the link on the board must be `[WEBPAGE IP].com/raisehand` and
- the Service URL must be `http://localhost:8080/raisehand`. Once properly entered
- remote.it will provide a live link.
-- Raising your hand is now possible via the locally hosted code, hotspot connection,
- and proper remote.it IP routing.
 
 ## Connecting raspberry pi to secure networks (like TMU)
 
