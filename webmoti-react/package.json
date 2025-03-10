@@ -103,7 +103,7 @@
     "test": "cross-env TZ=utc jest --config jest.config.js",
     "test-bail": "cross-env TZ=utc jest --config jest.config.js --bail",
     "test-specific": "cross-env TZ=utc jest --config jest.config.js --testPathPattern",
-    "update-snapshots:file": "cross-env TZ=utc jest --config jest.config.js -u --testPathPattern",
+    "update-snapshots": "cross-env TZ=utc jest --config jest.config.js -u --testPathPattern",
     "eject": "react-scripts eject",
     "lint": "eslint src server",
     "lint-fix-imports": "eslint --config .eslintrc_on_save.json --fix",
