@@ -16,7 +16,6 @@ from fastapi.templating import Jinja2Templates
 
 from core.constants import PORT
 from core.logger import LOGGING_CONFIG
-from core.utils import setup_handlers
 from vite_asset import asset, set_asset_dev_mode, vite_hmr_client
 
 # load env variables before setting them in the modules below
@@ -164,8 +163,6 @@ def parse_args():
 
 
 def main():
-    # TODO remove setup_handlers
-    setup_handlers()
     args = parse_args()
 
     if args.build_only:
