@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, CircularProgress, Grid, makeStyles, Select, MenuItem } from '@material-ui/core';
+
+import { Button, CircularProgress, Grid, makeStyles, Select, MenuItem, IconButton } from '@material-ui/core';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import HearingIcon from '@material-ui/icons/Hearing';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import { Conversation } from '@twilio/conversations';
 import clsx from 'clsx';
+
 import FileAttachmentIcon from '../../../icons/FileAttachmentIcon';
 import SendMessageIcon from '../../../icons/SendMessageIcon';
 import { useAppState } from '../../../state';
@@ -70,6 +73,15 @@ const useStyles = makeStyles((theme) => ({
   voiceSelect: {
     marginRight: '1em',
     minWidth: '120px',
+  },
+  menuItem: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+  },
+  previewButton: {
+    marginLeft: '1em',
   },
 }));
 
@@ -194,6 +206,14 @@ export default function ChatInput({
     }
   };
 
+  const handlePreviewVoice = async (voice: string) => {
+    try {
+      await TTSMessage.playVoicePreview(voice);
+    } catch {
+      setError(Error('Failed to fetch speech preview'));
+    }
+  };
+
   return (
     <div className={classes.chatInputContainer}>
       <Snackbar
@@ -265,8 +285,23 @@ export default function ChatInput({
                 variant="outlined"
               >
                 {VOICE_OPTIONS.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+                  <MenuItem key={option.value} value={option.value} className={classes.menuItem}>
+                    <span>{option.label}</span>
+                    <IconButton
+                      size="small"
+                      className={classes.previewButton}
+                      // prevent dropdown menu opening
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePreviewVoice(option.value);
+                      }}
+                    >
+                      <PlayArrowIcon fontSize="small" />
+                    </IconButton>
                   </MenuItem>
                 ))}
               </Select>

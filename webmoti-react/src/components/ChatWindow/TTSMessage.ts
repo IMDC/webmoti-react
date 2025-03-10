@@ -30,6 +30,18 @@ export default class TTSMessage {
     }
   }
 
+  static async playVoicePreview(voice: string): Promise<void> {
+    const response = await fetch(`${HTTPS_SERVER_URL}/tts-preview?voice=${encodeURIComponent(voice)}`);
+
+    if (response.ok) {
+      const data = await response.json();
+      const preview = new Audio(data.preview_url);
+      await preview.play();
+    } else {
+      throw new Error('Failed to get preview');
+    }
+  }
+
   private setAudio(blob: Blob) {
     const audioUrl = URL.createObjectURL(blob);
     this.audio = new Audio(audioUrl);
