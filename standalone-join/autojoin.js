@@ -83,17 +83,17 @@ function generateVideoToken(identity, roomName) {
   const ChatGrant = AccessToken.ChatGrant;
 
   const token = new AccessToken(accountSid, apiKey, apiSecret, {
-    identity: identity.trim(),
-    ttl: 10800, // 3 hours
+    identity: identity,
+    ttl: 14400,
   });
 
   const videoGrant = new VideoGrant({
-    room: roomName.trim(),
+    room: roomName,
   });
   token.addGrant(videoGrant);
 
   const chatGrant = new ChatGrant({
-    serviceSid: conversationsServiceSid.trim(),
+    serviceSid: conversationsServiceSid,
   });
   token.addGrant(chatGrant);
 
