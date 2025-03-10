@@ -1,6 +1,6 @@
 import asyncio
 import json
-from typing import AsyncGenerator, Dict, List, Optional
+from typing import AsyncGenerator, Dict, List, Optional, Tuple
 
 from fastapi import APIRouter
 from sse_starlette.sse import EventSourceResponse
@@ -19,13 +19,13 @@ async def ensure_event() -> None:
         queue_event = asyncio.Event()
 
 
-async def add_to_queue(identity: str) -> bool:
+async def add_to_queue(identity: str) -> Tuple[bool, int]:
     await ensure_event()
     if identity not in queue:
         queue.append(identity)
         queue_event.set()
-        return True
-    return False
+        return True, len(queue)
+    return False, len(queue)
 
 
 async def remove_from_queue(identity: str) -> int:

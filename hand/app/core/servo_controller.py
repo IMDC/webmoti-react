@@ -23,7 +23,6 @@ class ServoController:
 
         # the lock is so multiple users can't use the servo at the same time
         self.lock = asyncio.Lock()
-        self.is_hand_raised = False
 
     async def _set_angle(self, angle: float, sleep_time: float) -> None:
         if is_rasp_pi:
