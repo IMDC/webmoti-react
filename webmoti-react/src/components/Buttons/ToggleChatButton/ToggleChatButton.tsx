@@ -9,7 +9,7 @@ import clsx from 'clsx';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import ChatIcon from '../../../icons/ChatIcon';
-import { checkSystemMsg } from '../../../utils';
+import { checkSystemMsg, checkTTSAudioMsg } from '../../../utils';
 
 export const ANIMATION_DURATION = 700;
 
@@ -65,6 +65,7 @@ export default function ToggleChatButton() {
   const classes = useStyles();
 
   const { isChatWindowOpen, setIsChatWindowOpen, conversation, hasUnreadMessages } = useChatContext();
+
   const { setIsBackgroundSelectionOpen } = useVideoContext();
 
   const [shouldAnimate, setShouldAnimate] = useState(false);
@@ -84,14 +85,26 @@ export default function ToggleChatButton() {
   }, [shouldAnimate]);
 
   useEffect(() => {
-    if (conversation && !isChatWindowOpen) {
-      const handleNewMessage = (message: Message) => {
+    if (conversation) {
+      const handleNewMessage = async (message: Message) => {
         // don't show new msg animation for system messages
         if (checkSystemMsg(message)) {
           return;
         }
 
-        setShouldAnimate(true);
+        if (!isChatWindowOpen) {
+          setShouldAnimate(true);
+        }
+
+        if (!checkTTSAudioMsg(message) || !message.attachedMedia?.length) {
+          return;
+        }
+
+        const tts = message.attachedMedia[0];
+        const audioUrl = await tts.getContentTemporaryUrl();
+        if (audioUrl) {
+          new Audio(audioUrl).play();
+        }
       };
 
       conversation.on('messageAdded', handleNewMessage);

@@ -2,6 +2,7 @@ import { Conversation, JSONObject, Message } from '@twilio/conversations';
 import { isPlainObject } from 'is-plain-object';
 
 import { WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../constants';
+import TTSMessage from '../components/ChatWindow/TTSMessage';
 
 export const isMobile = (() => {
   if (typeof navigator === 'undefined' || typeof navigator.userAgent !== 'string') {
@@ -59,24 +60,48 @@ export const isWebmotiVideo = (identity: string) => {
   return identity === WEBMOTI_CAMERA_1 || identity === WEBMOTI_CAMERA_2;
 };
 
+const getCustomMsgAttribute = (attribute: string) => JSON.stringify({ [attribute]: true });
+
 export const sendSystemMsg = (conversation: Conversation | null, msg: string) => {
   // send with an attribute to differentiate from normal msg
-  conversation?.sendMessage(msg, { attributes: JSON.stringify({ systemMsg: true }) });
+  conversation?.sendMessage(msg, { attributes: getCustomMsgAttribute('systemMsg') });
 };
 
-export const checkSystemMsg = (message: Message) => {
-  // parse attributes of msg
+export const sendSystemAudioMsg = (conversation: Conversation | null, message: TTSMessage) => {
+  if (message.audioBlob === null) {
+    return;
+  }
+
+  // send text message first
+  conversation?.sendMessage(`TTS: ${message.text}`);
+
+  // then send audio file
+  const formData = new FormData();
+  formData.append('media', message.audioBlob, 'TTS.mp3');
+  formData.append('contentType', message.audioBlob.type);
+  conversation?.sendMessage(formData, { attributes: getCustomMsgAttribute('ttsAudioMessage') });
+};
+
+const checkMessageAttribute = (message: Message, attribute: string): boolean => {
   const attrObj = message.attributes as JSONObject;
+
   if (attrObj.attributes === undefined) {
-    // no attributes (not system msg)
+    // attribute isn't there
     return false;
   }
 
-  const attrSysMsg = JSON.parse(attrObj.attributes as string).systemMsg;
-  if (attrSysMsg !== undefined) {
-    // system message attribute is set
-    return true;
+  try {
+    const parsedAttributes = JSON.parse(attrObj.attributes as string);
+    return parsedAttributes[attribute] === true;
+  } catch (error) {
+    return false;
   }
+};
 
-  return false;
+export const checkSystemMsg = (message: Message) => {
+  return checkMessageAttribute(message, 'systemMsg');
+};
+
+export const checkTTSAudioMsg = (message: Message) => {
+  return checkMessageAttribute(message, 'ttsAudioMessage');
 };

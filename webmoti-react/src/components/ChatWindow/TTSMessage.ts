@@ -4,6 +4,7 @@ export default class TTSMessage {
   text: string;
   dateCreated: Date;
   audio: HTMLAudioElement | null = null;
+  audioBlob: Blob | null = null;
 
   constructor(text: string) {
     this.text = text;
@@ -30,6 +31,7 @@ export default class TTSMessage {
   private setAudio(blob: Blob) {
     const audioUrl = URL.createObjectURL(blob);
     this.audio = new Audio(audioUrl);
+    this.audioBlob = blob;
   }
 
   play() {
