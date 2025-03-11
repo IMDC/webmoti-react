@@ -11,7 +11,7 @@ async def test_add_to_queue_new_identity(mocker: MockFixture):
     identity = "user"
     result = await add_to_queue(identity)
 
-    assert result is True
+    assert result == (True, 1)
     assert mock_queue == [identity]
 
 
@@ -22,5 +22,5 @@ async def test_add_to_queue_same_identity(mocker: MockFixture):
 
     result = await add_to_queue(identity)
 
-    assert result is False
+    assert result == (False, 1)
     assert mock_queue == [identity]

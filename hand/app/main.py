@@ -31,7 +31,6 @@ from routes.notifications import router as notifications_router  # noqa: E402
 from routes.push_to_talk import router as push_to_talk_router  # noqa: E402
 from routes.queue_sse import router as queue_router  # noqa: E402
 from routes.raisehand import router as raisehand_router  # noqa: E402
-from routes.raisehand_ws import router as raisehand_ws_router  # noqa: E402
 from routes.schedule import router as schedule_router  # noqa: E402
 from routes.tts import router as tts_router  # noqa: E402
 
@@ -58,7 +57,6 @@ routers = (
     raisehand_router,
     queue_router,
     notifications_router,
-    raisehand_ws_router,
     tts_router,
     captions_router,
     schedule_router,

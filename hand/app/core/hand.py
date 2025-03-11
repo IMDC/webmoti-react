@@ -48,29 +48,20 @@ async def reset_hand_task(identity: str) -> None:
         await asyncio.sleep(HAND_TIMEOUT_SECONDS)
         await expire_hand(identity)
     except asyncio.CancelledError:
-        logging.debug(f"Timer for {identity} was canceled")
+        pass
 
 
-def start_reset_timer(identity: str) -> None:
-    raised_hands[identity] = True
+def manage_reset_timer(identity: str, start: bool) -> None:
+    """Start or stop the reset timer for a raised hand."""
+    if start:
+        raised_hands[identity] = True
 
-    # cancel any existing timer
-    if identity in timers:
-        timers[identity].cancel()
-        del timers[identity]
+        if identity in timers:
+            timers[identity].cancel()
 
-    # run timer
-    task = asyncio.create_task(reset_hand_task(identity))
-    timers[identity] = task
-
-
-def stop_reset_timer(identity: str):
-    # cancel task
-    if identity in timers:
-        timers[identity].cancel()
-        del timers[identity]
-
-    if identity in raised_hands:
+        timers[identity] = asyncio.create_task(reset_hand_task(identity))
+    else:
+        timers.pop(identity, None)
         raised_hands[identity] = False
 
 
@@ -111,16 +102,18 @@ async def raise_hand(mode: Mode) -> None:
         logging.info("Initializing remote.it connection")
 
 
-def get_raise_mode(queue_length: int) -> Mode:
-    return Mode.RAISE if queue_length == 0 else Mode.RAISE_RETURN
+def get_raise_mode(new_queue_length: int) -> Mode:
+    # if new length is 1, there were 0 hands before
+    return Mode.RAISE if new_queue_length == 1 else Mode.RAISE_RETURN
 
 
-def get_lower_mode(queue_length: int) -> Mode:
-    return Mode.LOWER if queue_length == 0 else Mode.LOWER_RETURN
+def get_lower_mode(new_queue_length: int) -> Mode:
+    # if new length is 0, there are now no hands in queue
+    return Mode.LOWER if new_queue_length == 0 else Mode.LOWER_RETURN
 
 
 async def validate_request(
-    mode: str, identity: Optional[str], raised_hands: Dict[str, bool]
+    mode: str, identity: Optional[str]
 ) -> Tuple[Optional[Mode], Optional[str]]:
     try:
         mode_enum = Mode[mode.upper()]
@@ -140,49 +133,47 @@ async def validate_request(
     return mode_enum, None
 
 
-async def handle_raise(
-    identity: str, raised_hands: Dict[str, bool]
-) -> Tuple[Optional[Mode], Optional[str]]:
+async def handle_raise(identity: str) -> Tuple[Optional[Mode], Optional[str]]:
     if raised_hands[identity]:
         return None, f"Hand is already raised for {identity}"
 
-    success, queue_length = await add_to_queue(identity)
-    if success:
-        logging.info(f"Hand raised for {identity}")
-        start_reset_timer(identity)
-        await send_notification(identity)
-        return get_raise_mode(queue_length), None
-    return None, "Hand is already raised"
+    success, new_queue_length = await add_to_queue(identity)
+    if not success:
+        return None, "Hand is already raised"
+
+    manage_reset_timer(identity, start=True)
+    await send_notification(identity)
+
+    logging.info(f"Hand raised for {identity}, queue length: {new_queue_length}")
+    return get_raise_mode(new_queue_length), None
 
 
-async def handle_lower(
-    identity: str, raised_hands: Dict[str, bool]
-) -> Tuple[Optional[Mode], Optional[str]]:
+async def handle_lower(identity: str) -> Tuple[Optional[Mode], Optional[str]]:
     if not raised_hands[identity]:
         return None, f"Hand isn't raised for {identity}"
 
-    queue_length = await remove_from_queue(identity)
-    if queue_length < 0:
-        logging.error(f"Failed to remove {identity} from queue on timer expiration")
-        return
+    manage_reset_timer(identity, start=False)
+    new_queue_length = await remove_from_queue(identity)
+    final_mode = get_lower_mode(new_queue_length)
 
-    await raise_hand(get_lower_mode(queue_length))
-    logging.info(f"Timer expired for {identity}")
+    logging.info(f"Hand lowered for {identity}, queue length: {new_queue_length}")
+    return final_mode, None
 
 
-async def process_hand_request(
-    request: RaiseHandRequest,
-) -> Tuple[Optional[Mode], Optional[str]]:
+async def process_hand_request(request: RaiseHandRequest) -> Optional[str]:
     mode = request.mode
     identity = request.identity
 
-    mode_enum, error = await validate_request(mode, identity, raised_hands)
+    mode_enum, error = await validate_request(mode, identity)
     if error:
-        return None, error
+        return error
 
     if mode_enum == Mode.RAISE:
-        return await handle_raise(identity, raised_hands)
+        mode_enum, error = await handle_raise(identity)
     elif mode_enum == Mode.LOWER:
-        return await handle_lower(identity, raised_hands)
+        mode_enum, error = await handle_lower(identity)
 
-    return mode_enum, None
+    if error is None:
+        await raise_hand(mode_enum)
+
+    return error

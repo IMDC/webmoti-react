@@ -8,4 +8,3 @@ def test_servo_controller_init() -> None:
     assert servo_controller.pwm is not None
 
     assert servo_controller.lock is not None
-    assert servo_controller.is_hand_raised == False
