@@ -1,3 +1,0 @@
-# RPi.GPIO is for rasp pi only
-# TODO fix this not running on rasp pi
-rpi-lgpio==0.6; platform_system == "Linux" and platform_machine == "aarch64"
