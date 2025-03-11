@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     chatWindowContainer: {
       background: '#FFFFFF',
-      zIndex: 9,
+      zIndex: 20,
       display: 'flex',
       flexDirection: 'column',
       borderLeft: '1px solid #E4E7E9',
