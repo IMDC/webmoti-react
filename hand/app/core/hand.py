@@ -176,6 +176,7 @@ async def process_hand_request(request: RaiseHandRequest) -> Optional[str]:
 
     mode_enum, error = await validate_request(mode, identity)
     if error:
+        logging.error(f"Error validating hand: {error}")
         return error
 
     if mode_enum == Mode.RAISE:
@@ -183,7 +184,8 @@ async def process_hand_request(request: RaiseHandRequest) -> Optional[str]:
     elif mode_enum == Mode.LOWER:
         mode_enum, error = await handle_lower(identity)
 
-    if error is None:
-        await raise_hand(mode_enum)
+    if error:
+        logging.error(f"Error processing hand request: {error}")
+        return error
 
-    return error
+    await raise_hand(mode_enum)

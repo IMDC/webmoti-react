@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 
@@ -11,6 +13,7 @@ router = APIRouter(prefix="/api")
 async def raise_hand_endpoint(request: RaiseHandRequest) -> JSONResponse:
     error = await process_hand_request(request)
     if error is not None:
+        logging.error(f"/raisehand error: {error}")
         raise HTTPException(status_code=400, detail=error)
 
     return JSONResponse(content={"message": "OK"}, status_code=200)
