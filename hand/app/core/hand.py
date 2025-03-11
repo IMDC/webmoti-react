@@ -188,4 +188,8 @@ async def process_hand_request(request: RaiseHandRequest) -> Optional[str]:
         logging.error(f"Error processing hand request: {error}")
         return error
 
-    await raise_hand(mode_enum)
+    # schedule this task to run in the background then immediately return None
+    # so client doesn't have to wait for servo to get their response
+    asyncio.create_task(raise_hand(mode_enum))
+
+    return None
