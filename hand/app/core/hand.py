@@ -26,21 +26,25 @@ raised_hands: Dict[str, bool] = defaultdict(lambda: False)
 timers: Dict[str, asyncio.Task] = {}
 
 
+hand_lock = asyncio.Lock()
+
+
 async def expire_hand(identity: str) -> None:
-    if not raised_hands[identity]:
-        # hand is already lowered, skip
-        return
+    async with hand_lock:
+        if not raised_hands[identity]:
+            # hand is already lowered, skip
+            return
 
-    raised_hands[identity] = False
-    if identity in timers:
-        del timers[identity]
+        raised_hands[identity] = False
+        if identity in timers:
+            del timers[identity]
 
-    # lower the physical hand
-    queue_length = await remove_from_queue(identity)
-    if queue_length >= 0:
-        await raise_hand(get_lower_mode(queue_length))
+        # lower the physical hand
+        queue_length = await remove_from_queue(identity)
+        if queue_length >= 0:
+            await raise_hand(get_lower_mode(queue_length))
 
-    logging.info(f"Timer expired for {identity}")
+        logging.info(f"Timer expired for {identity}")
 
 
 async def reset_hand_task(identity: str) -> None:
@@ -51,18 +55,21 @@ async def reset_hand_task(identity: str) -> None:
         pass
 
 
-def manage_reset_timer(identity: str, start: bool) -> None:
+async def manage_reset_timer(identity: str, start: bool) -> None:
     """Start or stop the reset timer for a raised hand."""
-    if start:
-        raised_hands[identity] = True
+    async with hand_lock:
+        if start:
+            raised_hands[identity] = True
 
-        if identity in timers:
-            timers[identity].cancel()
+            if identity in timers:
+                timers[identity].cancel()
 
-        timers[identity] = asyncio.create_task(reset_hand_task(identity))
-    else:
-        timers.pop(identity, None)
-        raised_hands[identity] = False
+            timers[identity] = asyncio.create_task(reset_hand_task(identity))
+        else:
+            if identity in timers:
+                timers[identity].cancel()
+                timers.pop(identity, None)
+            raised_hands[identity] = False
 
 
 async def raise_hand(mode: Mode) -> None:
@@ -124,8 +131,9 @@ async def validate_request(
     if mode_enum in [Mode.RAISE, Mode.LOWER] and not identity:
         return None, f"Identity is required for mode: {mode}"
 
-    if mode_enum in [Mode.WAVE, Mode.WAVE2] and any(raised_hands.values()):
-        return None, f"Can't {mode_enum} while hand is raised"
+    async with hand_lock:
+        if mode_enum in [Mode.WAVE, Mode.WAVE2] and any(raised_hands.values()):
+            return None, f"Can't {mode_enum} while hand is raised"
 
     if mode_enum in [Mode.RAISE_RETURN, Mode.LOWER_RETURN]:
         return None, "Mode not allowed"
@@ -134,14 +142,15 @@ async def validate_request(
 
 
 async def handle_raise(identity: str) -> Tuple[Optional[Mode], Optional[str]]:
-    if raised_hands[identity]:
-        return None, f"Hand is already raised for {identity}"
+    async with hand_lock:
+        if raised_hands[identity]:
+            return None, f"Hand is already raised for {identity}"
 
     success, new_queue_length = await add_to_queue(identity)
     if not success:
         return None, "Hand is already raised"
 
-    manage_reset_timer(identity, start=True)
+    await manage_reset_timer(identity, start=True)
     await send_notification(identity)
 
     logging.info(f"Hand raised for {identity}, queue length: {new_queue_length}")
@@ -149,10 +158,11 @@ async def handle_raise(identity: str) -> Tuple[Optional[Mode], Optional[str]]:
 
 
 async def handle_lower(identity: str) -> Tuple[Optional[Mode], Optional[str]]:
-    if not raised_hands[identity]:
-        return None, f"Hand isn't raised for {identity}"
+    async with hand_lock:
+        if not raised_hands[identity]:
+            return None, f"Hand isn't raised for {identity}"
 
-    manage_reset_timer(identity, start=False)
+    await manage_reset_timer(identity, start=False)
     new_queue_length = await remove_from_queue(identity)
     final_mode = get_lower_mode(new_queue_length)
 
