@@ -2,7 +2,7 @@ import asyncio
 import os
 import platform
 
-from core.constants import SERVO_PIN
+from core.constants import MIN_ANGLE, SERVO_PIN
 
 # this is for running on non rasp pi devices
 is_rasp_pi = False
@@ -31,8 +31,10 @@ class ServoController:
             self.pwm.ChangeDutyCycle(duty_cycle)
             # wait a bit before stopping servo to remove momentum
             await asyncio.sleep(sleep_time)
-            # relax servo to stop erratic movements
-            self.pwm.ChangeDutyCycle(0)
+
+            # if lowering hand, relax servo to stop erratic movements
+            if angle == MIN_ANGLE:
+                self.pwm.ChangeDutyCycle(0)
 
     async def set_angle(self, angle: float, sleep_time) -> None:
         async with self.lock:
