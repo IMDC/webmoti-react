@@ -118,33 +118,30 @@ export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ chil
 
   const sendHandRequest = useCallback(
     async (mode: string, identity: string | null = null, is_silent = false) => {
-      const response = await fetch(`${HTTPS_SERVER_URL}/raisehand`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          mode: mode,
-          identity: identity,
-        }),
-      });
+      try {
+        const response = await fetch(`${HTTPS_SERVER_URL}/raisehand`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ mode, identity }),
+        });
 
-      if (!response.ok && !is_silent) {
-        if (response.status === 503) {
-          // board not connected to wifi
-          setError(Error('WebMoti is offline'));
-        } else {
-          try {
-            const errorBody = await response.json();
-            const errorMessage = JSON.stringify(errorBody);
-            setError(Error(`${response.status} error: ${errorMessage}`));
-          } catch (error) {
-            setError(Error(`${response.status} error: Failed to parse error message`));
+        if (!response.ok && !is_silent) {
+          if (response.status === 503) {
+            setError(new Error('WebMoti is offline'));
+          } else {
+            const text = await response.text();
+            setError(new Error(`HTTP ${response.status}: ${text}`));
           }
         }
-      }
 
-      return response;
+        return response;
+      } catch (err) {
+        console.error('Network error:', err);
+        if (!is_silent) {
+          setError(new Error('Network error'));
+        }
+        return new Response(null, { status: 0 });
+      }
     },
     [setError]
   );
