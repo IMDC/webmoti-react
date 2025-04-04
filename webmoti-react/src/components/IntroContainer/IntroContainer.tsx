@@ -126,7 +126,7 @@ const IntroContainer = (props: IntroContainerProps) => {
                 WebMoti
               </Typography>
 
-              {isMobile && (
+              {!isMobile && (
                 <Typography variant="h6" className={classes.subtitle}>
                   Make Connections Easier
                 </Typography>
