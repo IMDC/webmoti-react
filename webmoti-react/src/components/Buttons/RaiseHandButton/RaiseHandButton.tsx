@@ -87,6 +87,9 @@ export default function RaiseHandButton() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  // avoid double touch events
+  const lastTouch = useRef<number | null>(null);
+
   // this is run when participant joins
   useEffect(() => {
     const initRemoteIt = async () => {
@@ -155,7 +158,15 @@ export default function RaiseHandButton() {
     [conversation, handQueue, sendHandRequest, name]
   );
 
-  const handleMouseDown = () => {
+  const handleMouseDown = (e?: React.MouseEvent | React.TouchEvent) => {
+    // some browsers send simulated mouse events along with touch events
+    if (e && 'touches' in e && e.touches.length > 0) {
+      lastTouch.current = Date.now();
+    } else if (lastTouch.current && Date.now() - lastTouch.current < 500) {
+      // ignore simulated mouse event
+      return;
+    }
+
     if (wasShortcutUsed) {
       setWasShortcutUsed(false);
       setHand(HandActions.Lower);
@@ -302,6 +313,8 @@ export default function RaiseHandButton() {
           <Button
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
+            onTouchStart={handleMouseDown}
+            onTouchEnd={handleMouseUp}
             variant="contained"
             color={isHandRaised ? 'secondary' : 'primary'}
             // countdown > 0 for some time after raising hand

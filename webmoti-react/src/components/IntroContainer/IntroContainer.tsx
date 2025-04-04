@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { makeStyles, Theme, Typography } from '@material-ui/core';
+import { makeStyles, Theme, Typography, useMediaQuery, useTheme } from '@material-ui/core';
 import { useLocation } from 'react-router-dom';
 
 import Swoosh from './swoosh';
@@ -110,6 +110,9 @@ const IntroContainer = (props: IntroContainerProps) => {
   const { user } = useAppState();
   const location = useLocation();
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <div className={classes.background}>
       <img src="/favicon.svg" alt="Logo" className={classes.webmotiLogo} />
@@ -122,9 +125,12 @@ const IntroContainer = (props: IntroContainerProps) => {
               <Typography variant="h6" className={classes.title}>
                 WebMoti
               </Typography>
-              <Typography variant="h6" className={classes.subtitle}>
-                Make Connections Easier
-              </Typography>
+
+              {isMobile && (
+                <Typography variant="h6" className={classes.subtitle}>
+                  Make Connections Easier
+                </Typography>
+              )}
             </div>
           </div>
           <div className={classes.content}>{props.children}</div>
