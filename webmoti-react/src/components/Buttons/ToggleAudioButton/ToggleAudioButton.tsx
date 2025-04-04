@@ -39,8 +39,10 @@ export default function ToggleAudioButton(props: { disabled?: boolean; className
           disabled={!hasAudioTrack || props.disabled}
           startIcon={isAudioEnabled ? <MicIcon /> : <MicOffIcon />}
           data-cy-audio-toggle
+          // override minWidth: 64 for mobile
+          style={{ minWidth: 0 }}
         >
-          {!hasAudioTrack ? 'No Audio' : !isMobile ? (isAudioEnabled ? 'Mute' : 'Unmute') : ''}
+          {!isMobile && (!hasAudioTrack ? 'No Audio' : isAudioEnabled ? 'Mute' : 'Unmute')}
         </Button>
       </span>
     </ShortcutTooltip>

@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { Grid, Theme, Tooltip, createStyles, makeStyles } from '@material-ui/core';
+import { Grid, Theme, Tooltip, createStyles, makeStyles, useMediaQuery, useTheme } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { EmojiPeople } from '@material-ui/icons';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import PanToolIcon from '@material-ui/icons/PanTool';
 import { Message } from '@twilio/conversations';
 
 import { Events, HandActions } from '../../../constants';
@@ -82,6 +83,9 @@ export default function RaiseHandButton() {
   const [isAudioEnabled] = useLocalAudioToggle();
 
   const [wasShortcutUsed, setWasShortcutUsed] = useState(false);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   // this is run when participant joins
   useEffect(() => {
@@ -303,10 +307,10 @@ export default function RaiseHandButton() {
             // countdown > 0 for some time after raising hand
             disabled={isLoading || countdown > 0}
           >
-            {isHandRaised ? 'Lower Hand' : 'Raise Hand'}
+            {isMobile ? <PanToolIcon /> : isHandRaised ? 'Lower Hand' : 'Raise Hand'}
             {isLoading && <CircularProgress size={24} className={classes.progress} />}
 
-            <ShortcutIndicator shortcut="H" />
+            {!isMobile && <ShortcutIndicator shortcut="H" />}
 
             {countdown > 0 && (
               <CircularProgress

@@ -7,12 +7,12 @@ import useRoomState from '../../hooks/useRoomState/useRoomState';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import AudioMixer from '../AudioMixer/AudioMixer';
 import EndCallButton from '../Buttons/EndCallButton/EndCallButton';
+import NotifyButton from '../Buttons/NotifyButton/NotifyButton';
 import RaiseHandButton from '../Buttons/RaiseHandButton/RaiseHandButton';
 import ToggleAudioButton from '../Buttons/ToggleAudioButton/ToggleAudioButton';
 import ToggleCaptionsButton from '../Buttons/ToggleCaptionsButton/ToggleCaptionsButton';
 import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
-import NotifyButton from '../Buttons/NotifyButton/NotifyButton';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -69,22 +69,24 @@ export default function MenuBar() {
             <ToggleAudioButton disabled={isReconnecting} />
             <ToggleVideoButton disabled={isReconnecting} />
 
-            <ToggleCaptionsButton />
+            <Hidden mdDown>
+              <ToggleCaptionsButton />
+            </Hidden>
 
             <RaiseHandButton />
             <NotifyButton />
 
             <AudioMixer />
 
-            {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && (
-              <span style={{ marginLeft: '10px' }}>
-                <ToggleChatButton />
-              </span>
-            )}
-
-            <ControlsMenu />
-
             <Hidden mdDown>
+              {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && (
+                <span style={{ marginLeft: '10px' }}>
+                  <ToggleChatButton />
+                </span>
+              )}
+
+              <ControlsMenu />
+
               <Menu />
             </Hidden>
           </Grid>

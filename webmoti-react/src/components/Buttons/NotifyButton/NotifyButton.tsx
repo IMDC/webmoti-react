@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 
-import { Tooltip } from '@material-ui/core';
+import { Tooltip, useMediaQuery, useTheme } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+import NotificationImportantIcon from '@material-ui/icons/NotificationImportant';
 import { Message } from '@twilio/conversations';
 
 import { MsgTypes, WEBMOTI_CAMERA_1 } from '../../../constants';
@@ -20,6 +21,9 @@ export default function NotifyButton() {
 
   const { room } = useVideoContext();
   const name = room?.localParticipant?.identity || 'Participant';
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
     const handleMessageAdded = (message: Message) => {
@@ -61,8 +65,9 @@ export default function NotifyButton() {
       <Tooltip title="Play an audio notification in the physical classroom">
         <span>
           <Button variant="contained" color="primary" onClick={notifyProfessor} style={{ marginLeft: '10px' }}>
-            Sound Alert
-            <ShortcutIndicator shortcut="A" />
+            {isMobile ? <NotificationImportantIcon /> : 'Sound Alert'}
+
+            {!isMobile && <ShortcutIndicator shortcut="A" />}
           </Button>
         </span>
       </Tooltip>

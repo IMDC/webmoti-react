@@ -1,7 +1,10 @@
-import { Grid, makeStyles, Theme, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Theme, Typography, useMediaQuery, useTheme } from '@material-ui/core';
 
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import EndCallButton from '../Buttons/EndCallButton/EndCallButton';
+import ToggleCaptionsButton from '../Buttons/ToggleCaptionsButton/ToggleCaptionsButton';
+import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
+import ControlsMenu from '../MenuBar/ControlsMenu/ControlsMenu';
 import Menu from '../MenuBar/Menu/Menu';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -39,13 +42,22 @@ export default function MobileTopMenuBar() {
   const classes = useStyles();
   const { room } = useVideoContext();
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <Grid container alignItems="center" justifyContent="space-between" className={classes.container}>
       <div className={classes.row}>
         <Typography variant="subtitle1" component="span">
           {/* only show room name in dev */}
-          {process.env.NODE_ENV === 'development' && room!.name}
+          {process.env.NODE_ENV === 'development' && !isMobile && room!.name}
         </Typography>
+
+        <ControlsMenu />
+
+        <ToggleCaptionsButton />
+
+        {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />}
       </div>
 
       <div>

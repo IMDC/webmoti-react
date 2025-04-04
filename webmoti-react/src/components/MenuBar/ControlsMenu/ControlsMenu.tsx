@@ -1,7 +1,19 @@
 import { useRef, useState } from 'react';
 
-import { Button, Divider, Grid, Popover, Theme, Typography, createStyles, makeStyles } from '@material-ui/core';
+import {
+  Button,
+  Divider,
+  Grid,
+  Popover,
+  Theme,
+  Typography,
+  createStyles,
+  makeStyles,
+  useMediaQuery,
+  useTheme,
+} from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 import NotifyDropdown from './NotifyDropdown';
 import NotifySlider from './NotifySlider';
@@ -18,6 +30,15 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     cameraControlsPopover: {
       padding: theme.spacing(2),
+    },
+    controlsButton: {
+      paddingRight: 0,
+      minWidth: 0,
+      paddingLeft: 15,
+
+      [theme.breakpoints.down('sm')]: {
+        paddingLeft: 0,
+      },
     },
   })
 );
@@ -44,11 +65,14 @@ export default function ControlsMenu() {
     }
   });
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <>
       <ShortcutTooltip shortcut="C" isAltDown>
-        <Button ref={openBtnRef} onClick={handleCameraControlsClick}>
-          Controls <ExpandMoreIcon />
+        <Button ref={openBtnRef} onClick={handleCameraControlsClick} className={classes.controlsButton}>
+          {isMobile ? <SettingsIcon /> : 'Controls'} <ExpandMoreIcon />
         </Button>
       </ShortcutTooltip>
 

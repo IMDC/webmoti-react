@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { IconButton } from '@material-ui/core';
+import { IconButton, makeStyles } from '@material-ui/core';
 import { ClosedCaption } from '@material-ui/icons';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import useWebSocket from 'react-use-websocket';
@@ -16,9 +16,21 @@ interface AudioToggleDetail {
 }
 interface AudioToggleEvent extends CustomEvent<AudioToggleDetail> {}
 
+const useStyles = makeStyles((theme) => ({
+  iconButton: {
+    padding: 10,
+    marginRight: 10,
+
+    [theme.breakpoints.down('sm')]: {
+      marginRight: 0,
+    },
+  },
+}));
+
 export default function ToggleCaptionsButton() {
   const { room } = useVideoContext();
   const [isAudioEnabled] = useLocalAudioToggle();
+  const classes = useStyles();
 
   const [snackbarError, setSnackbarError] = useState('');
 
@@ -144,7 +156,7 @@ export default function ToggleCaptionsButton() {
           setSnackbarError('');
         }}
       />
-      <IconButton onClick={toggleCaptions}>
+      <IconButton onClick={toggleCaptions} className={classes.iconButton}>
         <ClosedCaption color={displayCaptions ? 'primary' : 'inherit'} />
       </IconButton>
     </>

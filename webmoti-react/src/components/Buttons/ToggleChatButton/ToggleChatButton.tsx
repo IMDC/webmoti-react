@@ -59,6 +59,17 @@ const useStyles = makeStyles({
       opacity: 0,
     },
   },
+  btn: {
+    paddingLeft: 15,
+    paddingRight: 15,
+    minWidth: 0,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  iconSpacing: {
+    marginRight: 8,
+  },
 });
 
 export default function ToggleChatButton() {
@@ -114,21 +125,27 @@ export default function ToggleChatButton() {
     }
   }, [conversation, isChatWindowOpen]);
 
+  const icon = (
+    <div
+      className={clsx(classes.iconContainer, {
+        [classes.iconSpacing]: !isMobile,
+      })}
+    >
+      <ChatIcon />
+      <div className={clsx(classes.ring, { [classes.animateRing]: shouldAnimate })} />
+      <div className={clsx(classes.circle, { [classes.hasUnreadMessages]: hasUnreadMessages })} />
+    </div>
+  );
+
   return (
     <Button
       data-cy-chat-button
       onClick={toggleChatWindow}
       disabled={!conversation}
       variant="outlined"
-      startIcon={
-        <div className={classes.iconContainer}>
-          <ChatIcon />
-          <div className={clsx(classes.ring, { [classes.animateRing]: shouldAnimate })} />
-          <div className={clsx(classes.circle, { [classes.hasUnreadMessages]: hasUnreadMessages })} />
-        </div>
-      }
+      className={classes.btn}
     >
-      {isMobile ? '' : 'Chat'}
+      {isMobile ? icon : <>{icon} Chat</>}
     </Button>
   );
 }
