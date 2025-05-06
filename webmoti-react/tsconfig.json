@@ -25,6 +25,12 @@
   },
   "include": [
     "src",
-    "server"
-  ]
+    "server",
+    "setupTests.ts"
+  ],
+  "types": [
+    "node",
+    "jest",
+    "@testing-library/jest-dom"
+  ],
 }
