@@ -65,6 +65,7 @@ export default function Snackbar({ headline, message, variant, open, handleClose
 
   return (
     <MUISnackbar
+      data-testid="mui-snackbar"
       anchorOrigin={{
         vertical: 'top',
         horizontal: 'right',

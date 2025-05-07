@@ -132,8 +132,11 @@ export default function ToggleChatButton() {
       })}
     >
       <ChatIcon />
-      <div className={clsx(classes.ring, { [classes.animateRing]: shouldAnimate })} />
-      <div className={clsx(classes.circle, { [classes.hasUnreadMessages]: hasUnreadMessages })} />
+      <div className={clsx(classes.ring, { [classes.animateRing]: shouldAnimate })} data-testid="chat-ring-animation" />
+      <div
+        className={clsx(classes.circle, { [classes.hasUnreadMessages]: hasUnreadMessages })}
+        data-testid="unread-indicator"
+      />
     </div>
   );
 

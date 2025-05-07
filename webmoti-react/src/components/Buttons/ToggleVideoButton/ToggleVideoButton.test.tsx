@@ -1,11 +1,9 @@
-import { Button } from '@material-ui/core';
-import { mount } from 'enzyme';
+import { screen, render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import ToggleVideoButton from './ToggleVideoButton';
 import useDevices from '../../../hooks/useDevices/useDevices';
 import useLocalVideoToggle from '../../../hooks/useLocalVideoToggle/useLocalVideoToggle';
-import VideoOffIcon from '../../../icons/VideoOffIcon';
-import VideoOnIcon from '../../../icons/VideoOnIcon';
 
 jest.mock('../../../hooks/useDevices/useDevices');
 jest.mock('../../../hooks/useLocalVideoToggle/useLocalVideoToggle');
@@ -19,46 +17,61 @@ describe('the ToggleVideoButton component', () => {
   });
 
   it('should render correctly when video is enabled', () => {
-    mockUseLocalVideoToggle.mockImplementation(() => [true, () => {}]);
-    const wrapper = mount(<ToggleVideoButton />);
-    expect(wrapper.find(VideoOnIcon)).toHaveLength(1);
-    expect(wrapper.text()).toBe('Stop My Video');
+    mockUseLocalVideoToggle.mockImplementation(() => [true, jest.fn()]);
+
+    render(<ToggleVideoButton />);
+    expect(screen.getByTestId('video-on-icon')).toBeInTheDocument();
+    expect(screen.getByRole('button')).toHaveTextContent('Stop My Video');
   });
 
   it('should render correctly when video is disabled', () => {
-    mockUseLocalVideoToggle.mockImplementation(() => [false, () => {}]);
-    const wrapper = mount(<ToggleVideoButton />);
-    expect(wrapper.find(VideoOffIcon)).toHaveLength(1);
-    expect(wrapper.text()).toBe('Start My Video');
+    mockUseLocalVideoToggle.mockImplementation(() => [false, jest.fn()]);
+
+    render(<ToggleVideoButton />);
+    expect(screen.getByTestId('video-off-icon')).toBeInTheDocument();
+    expect(screen.getByRole('button')).toHaveTextContent('Start My Video');
   });
 
   it('should render correctly when no video devices exist', () => {
-    mockUseLocalVideoToggle.mockImplementation(() => [true, () => {}]);
+    mockUseLocalVideoToggle.mockImplementation(() => [true, jest.fn()]);
     mockUseDevices.mockImplementationOnce(() => ({ hasVideoInputDevices: false }));
-    const wrapper = mount(<ToggleVideoButton />);
-    expect(wrapper.find(VideoOnIcon)).toHaveLength(1);
-    expect(wrapper.find(Button).prop('disabled')).toEqual(true);
-    expect(wrapper.text()).toBe('No Video');
+
+    render(<ToggleVideoButton />);
+    expect(screen.getByTestId('video-on-icon')).toBeInTheDocument();
+    expect(screen.getByRole('button')).toBeDisabled();
+    expect(screen.getByRole('button')).toHaveTextContent('No Video');
   });
 
-  it('should call the correct toggle function when clicked', () => {
-    const mockFn = jest.fn();
-    mockUseLocalVideoToggle.mockImplementation(() => [false, mockFn]);
-    const wrapper = mount(<ToggleVideoButton />);
-    wrapper.find(Button).simulate('click');
-    expect(mockFn).toHaveBeenCalled();
+  it('should call the correct toggle function when clicked', async () => {
+    const mockToggle = jest.fn();
+    mockUseLocalVideoToggle.mockImplementation(() => [false, mockToggle]);
+
+    render(<ToggleVideoButton />);
+    await userEvent.click(screen.getByRole('button'));
+    expect(mockToggle).toHaveBeenCalled();
   });
 
-  it('should throttle the toggle function to 200ms', () => {
-    const mockFn = jest.fn();
-    mockUseLocalVideoToggle.mockImplementation(() => [false, mockFn]);
-    const wrapper = mount(<ToggleVideoButton />);
-    Date.now = () => 100000;
-    wrapper.find(Button).simulate('click'); // Should register
-    Date.now = () => 100500;
-    wrapper.find(Button).simulate('click'); // Should be ignored
-    Date.now = () => 100501;
-    wrapper.find(Button).simulate('click'); // Should register
-    expect(mockFn).toHaveBeenCalledTimes(2);
+  it('should throttle the toggle function to 200ms', async () => {
+    const mockToggle = jest.fn();
+    mockUseLocalVideoToggle.mockImplementation(() => [false, mockToggle]);
+
+    const nowSpy = jest.spyOn(Date, 'now');
+    nowSpy.mockReturnValue(100000);
+
+    render(<ToggleVideoButton />);
+    const button = screen.getByRole('button');
+
+    await userEvent.click(button); // Should register
+    expect(mockToggle).toHaveBeenCalledTimes(1);
+
+    nowSpy.mockReturnValue(100500);
+    await userEvent.click(button); // Should be ignored
+    expect(mockToggle).toHaveBeenCalledTimes(1);
+
+    nowSpy.mockReturnValue(100501);
+    await userEvent.click(button); // Should register
+    expect(mockToggle).toHaveBeenCalledTimes(2);
+
+    nowSpy.mockRestore();
   });
 });

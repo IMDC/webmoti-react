@@ -1,8 +1,8 @@
 import { EventEmitter } from 'events';
 
-import { Button } from '@material-ui/core';
-import { shallow, mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
+import { screen, render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import ToggleChatButton, { ANIMATION_DURATION } from './ToggleChatButton';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
@@ -36,8 +36,10 @@ mockUseWebmotiVideoContext.mockImplementation(() => ({}));
 
 describe('the ToggleChatButton component', () => {
   it('should be enabled when a conversation is present', () => {
-    const wrapper = shallow(<ToggleChatButton />);
-    expect(wrapper.prop('disabled')).toBe(false);
+    render(<ToggleChatButton />);
+
+    const button = screen.getByRole('button');
+    expect(button).not.toBeDisabled();
   });
 
   it('should be disabled when a conversation is not present', () => {
@@ -46,13 +48,16 @@ describe('the ToggleChatButton component', () => {
       isChatWindowOpen: false,
       conversation: null,
     }));
-    const wrapper = shallow(<ToggleChatButton />);
-    expect(wrapper.prop('disabled')).toBe(true);
+
+    render(<ToggleChatButton />);
+    const button = screen.getByRole('button');
+    expect(button).toBeDisabled();
   });
 
-  it('should call the correct toggle function when clicked', () => {
-    const wrapper = shallow(<ToggleChatButton />);
-    wrapper.find(Button).simulate('click');
+  it('should call the correct toggle function when clicked', async () => {
+    render(<ToggleChatButton />);
+    const button = screen.getByRole('button');
+    await userEvent.click(button);
     expect(mockToggleChatWindow).toHaveBeenCalledWith(true);
   });
 
@@ -64,9 +69,9 @@ describe('the ToggleChatButton component', () => {
       hasUnreadMessages: true,
     }));
 
-    const wrapper = mount(<ToggleChatButton />);
-    const notificationCircle = wrapper.findWhere((node) => node.prop('className')?.includes('circle'));
-    expect(notificationCircle.prop('className')).toContain('hasUnreadMessages');
+    render(<ToggleChatButton />);
+    const indicator = screen.getByTestId('unread-indicator');
+    expect(indicator.className).toContain('hasUnreadMessages');
   });
 
   it('should not show an indicator when there are no unread messages', () => {
@@ -77,9 +82,9 @@ describe('the ToggleChatButton component', () => {
       hasUnreadMessages: false,
     }));
 
-    const wrapper = mount(<ToggleChatButton />);
-    const notificationCircle = wrapper.findWhere((node) => node.prop('className')?.includes('circle'));
-    expect(notificationCircle.prop('className')).not.toContain('hasUnreadMessages');
+    render(<ToggleChatButton />);
+    const indicator = screen.getByTestId('unread-indicator');
+    expect(indicator.className).not.toContain('hasUnreadMessages');
   });
 
   it(`should add the 'animate' class for ${ANIMATION_DURATION}ms when a new message is received when the chat window is closed`, () => {
@@ -90,25 +95,21 @@ describe('the ToggleChatButton component', () => {
       conversation: mockConversation,
     }));
 
-    const wrapper = mount(<ToggleChatButton />);
-    let notificationRing = wrapper.findWhere((node) => node.prop('className')?.includes('ring'));
-    expect(notificationRing.prop('className')).not.toContain('animate');
+    render(<ToggleChatButton />);
+    const indicatorRing = screen.getByTestId('chat-ring-animation');
+    expect(indicatorRing.className).not.toContain('animate');
 
     act(() => {
       mockConversation.emit('messageAdded');
     });
-    wrapper.update();
 
-    notificationRing = wrapper.findWhere((node) => node.prop('className')?.includes('ring'));
-    expect(notificationRing.prop('className')).toContain('animate');
+    expect(indicatorRing.className).toContain('animate');
 
     act(() => {
       jest.advanceTimersByTime(ANIMATION_DURATION);
     });
-    wrapper.update();
 
-    notificationRing = wrapper.findWhere((node) => node.prop('className')?.includes('ring'));
-    expect(notificationRing.prop('className')).not.toContain('animate');
+    expect(indicatorRing.className).not.toContain('animate');
   });
 
   it(`should not add the 'animate' class when a new message is received when the chat window is open`, () => {
@@ -118,16 +119,14 @@ describe('the ToggleChatButton component', () => {
       conversation: mockConversation,
     }));
 
-    const wrapper = mount(<ToggleChatButton />);
-    let notificationRing = wrapper.findWhere((node) => node.prop('className')?.includes('ring'));
-    expect(notificationRing.prop('className')).not.toContain('animate');
+    render(<ToggleChatButton />);
+    const indicatorRing = screen.getByTestId('chat-ring-animation');
+    expect(indicatorRing.className).not.toContain('animate');
 
     act(() => {
       mockConversation.emit('messageAdded');
     });
-    wrapper.update();
 
-    notificationRing = wrapper.findWhere((node) => node.prop('className')?.includes('ring'));
-    expect(notificationRing.prop('className')).not.toContain('animate');
+    expect(indicatorRing.className).not.toContain('animate');
   });
 });

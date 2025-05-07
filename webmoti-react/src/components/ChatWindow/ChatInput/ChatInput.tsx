@@ -230,6 +230,7 @@ export default function ChatInput({
         component does not work well in Firefox. See: https://github.com/twilio/twilio-video-app-react/issues/498
         */}
         <TextareaAutosize
+          data-testid="chatinput-textarea"
           minRows={1}
           maxRows={3}
           className={classes.textArea}
@@ -253,6 +254,7 @@ export default function ChatInput({
         {/* Since the file input element is invisible, we can hardcode an empty string as its value.
         This allows users to upload the same file multiple times. */}
         <input
+          data-testid="file-input"
           ref={fileInputRef}
           type="file"
           style={{ display: 'none' }}
@@ -320,6 +322,7 @@ export default function ChatInput({
             <div className={classes.chatButtonContainer}>
               <div className={classes.fileButtonContainer}>
                 <Button
+                  data-testid="attach-file-button"
                   className={classes.button}
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isSendingFile}
@@ -327,7 +330,13 @@ export default function ChatInput({
                 >
                   <FileAttachmentIcon />
                 </Button>
-                {isSendingFile && <CircularProgress size={24} className={classes.fileButtonLoadingSpinner} />}
+                {isSendingFile && (
+                  <CircularProgress
+                    data-testid="file-upload-spinner"
+                    size={24}
+                    className={classes.fileButtonLoadingSpinner}
+                  />
+                )}
               </div>
               <Button
                 className={classes.button}
@@ -336,6 +345,7 @@ export default function ChatInput({
                 variant="contained"
                 disabled={!isValidMessage}
                 data-cy-send-message-button
+                data-testid="send-message-button"
               >
                 <SendMessageIcon />
               </Button>
