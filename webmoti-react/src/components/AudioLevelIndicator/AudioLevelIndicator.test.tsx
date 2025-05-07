@@ -1,43 +1,49 @@
-import { shallow } from 'enzyme';
+import { render, screen } from '@testing-library/react';
 
 import AudioLevelIndicator from './AudioLevelIndicator';
-import MicOff from '@material-ui/icons/MicOff';
 import useIsTrackEnabled from '../../hooks/useIsTrackEnabled/useIsTrackEnabled';
 import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
 jest.mock('../../hooks/useIsTrackEnabled/useIsTrackEnabled');
 jest.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
-mockUseWebmotiVideoContext.mockImplementation(() => ({ isMuted: () => true }));
-
 const mockUseIsTrackEnabled = useIsTrackEnabled as jest.Mock<boolean>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
 
-describe('the AudioLevelIndicator component', () => {
+beforeEach(() => {
+  mockUseWebmotiVideoContext.mockReturnValue({ isMuted: () => true });
+});
+
+describe('AudioLevelIndicator', () => {
   describe('when the audioTrack is not enabled', () => {
-    mockUseIsTrackEnabled.mockImplementation(() => false);
-    const wrapper = shallow(<AudioLevelIndicator color="#123456" />);
-
-    it('should render a mute icon', () => {
-      expect(wrapper.exists('[data-test-audio-mute-icon]')).toBe(true);
+    beforeEach(() => {
+      mockUseIsTrackEnabled.mockReturnValue(false);
     });
 
-    it('should change the color of the mute icon when color prop is used', () => {
-      expect(wrapper.find('[data-test-audio-mute-icon]').find({ fill: '#123456' }).exists()).toBeTruthy();
+    it('renders the mute icon', () => {
+      render(<AudioLevelIndicator color="#123456" />);
+      const muteIcon = screen.getByTestId('audio-mute-icon');
+      expect(muteIcon).toBeInTheDocument();
+
+      const fillElement = muteIcon.querySelector('[fill="#123456"]');
+      expect(fillElement).toBeInTheDocument();
     });
   });
 
   describe('when the audioTrack is enabled', () => {
-    mockUseIsTrackEnabled.mockImplementation(() => true);
-    const wrapper = shallow(<AudioLevelIndicator color="#123456" />);
-
-    it('should render the audio level icon', () => {
-      expect(wrapper.exists(MicOff)).toBe(false);
-      expect(wrapper.exists('[data-test-audio-indicator]')).toBe(true);
+    beforeEach(() => {
+      mockUseIsTrackEnabled.mockReturnValue(true);
     });
 
-    it('should change the color of the audio level icon when color prop is used', () => {
-      expect(wrapper.find('[data-test-audio-indicator]').find({ fill: '#123456' }).exists()).toBeTruthy();
+    it('renders the audio level indicator instead of mute icon', () => {
+      render(<AudioLevelIndicator color="#123456" />);
+      expect(screen.queryByTestId('audio-mute-icon')).toBeNull();
+
+      const indicator = screen.getByTestId('audio-indicator');
+      expect(indicator).toBeInTheDocument();
+
+      const fillElement = indicator.querySelector('[fill="#123456"]');
+      expect(fillElement).toBeInTheDocument();
     });
   });
 });

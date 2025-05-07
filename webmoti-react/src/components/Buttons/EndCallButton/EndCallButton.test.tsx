@@ -1,25 +1,28 @@
-import { shallow } from 'enzyme';
+import { render, screen, fireEvent } from '@testing-library/react';
 
 import EndCallButton from './EndCallButton';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 
 jest.mock('../../../hooks/useChatContext/useChatContext');
 
-const mockUseChatContext = useChatContext as jest.Mock<any>;
-mockUseChatContext.mockImplementation(() => ({}));
+const mockDisconnect = jest.fn();
 
-const mockVideoContext = {
+jest.mock('../../../hooks/useVideoContext/useVideoContext', () => () => ({
   room: {
-    disconnect: jest.fn(),
+    disconnect: mockDisconnect,
   },
-};
+}));
 
-jest.mock('../../../hooks/useVideoContext/useVideoContext', () => () => mockVideoContext);
+describe('EndCallButton', () => {
+  beforeEach(() => {
+    (useChatContext as jest.Mock).mockReturnValue({});
+    mockDisconnect.mockClear();
+  });
 
-describe('End Call button', () => {
-  it('should disconnect from the room when clicked', () => {
-    const wrapper = shallow(<EndCallButton />);
-    wrapper.simulate('click');
-    expect(mockVideoContext.room.disconnect).toHaveBeenCalled();
+  it('calls room.disconnect when clicked', () => {
+    render(<EndCallButton />);
+    const button = screen.getByRole('button');
+    fireEvent.click(button);
+    expect(mockDisconnect).toHaveBeenCalled();
   });
 });

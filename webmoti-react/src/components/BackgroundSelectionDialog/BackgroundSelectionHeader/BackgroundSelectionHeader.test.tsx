@@ -1,17 +1,15 @@
-import React from 'react';
-import { shallow } from 'enzyme';
-import CloseIcon from '../../../icons/CloseIcon';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
 import BackgroundSelectionHeader from './BackgroundSelectionHeader';
 
 const mockCloseDialog = jest.fn();
 
 describe('The Background Selection Header Component', () => {
-  it('should close the selection dialog when "X" is clicked', () => {
-    const wrapper = shallow(<BackgroundSelectionHeader onClose={mockCloseDialog} />);
-    wrapper
-      .find(CloseIcon)
-      .parent()
-      .simulate('click');
+  it('should close the selection dialog when "X" is clicked', async () => {
+    render(<BackgroundSelectionHeader onClose={mockCloseDialog} />);
+    const button = screen.getByRole('button');
+    await userEvent.click(button);
     expect(mockCloseDialog).toHaveBeenCalled();
   });
 });

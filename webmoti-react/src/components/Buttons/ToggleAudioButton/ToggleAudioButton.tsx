@@ -37,7 +37,17 @@ export default function ToggleAudioButton(props: { disabled?: boolean; className
           className={props.className}
           onClick={handleAudioToggle}
           disabled={!hasAudioTrack || props.disabled}
-          startIcon={isAudioEnabled ? <MicIcon /> : <MicOffIcon />}
+          startIcon={
+            isAudioEnabled ? (
+              <span data-testid="mic-icon">
+                <MicIcon />
+              </span>
+            ) : (
+              <span data-testid="mic-off-icon">
+                <MicOffIcon />
+              </span>
+            )
+          }
           data-cy-audio-toggle
           // override minWidth: 64 for mobile
           style={{ minWidth: 0 }}

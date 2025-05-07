@@ -127,7 +127,7 @@ function AudioLevelIndicator({ audioTrack, color = 'white', participant }: Audio
   const isClassroomAndMuted = participant?.identity === WEBMOTI_CAMERA_1 && isMuted;
 
   return isTrackEnabled && !isClassroomAndMuted ? (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" data-test-audio-indicator>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" data-testid="audio-indicator">
       <defs>
         <clipPath id={clipPathId}>
           <rect ref={SVGRectRef} x="0" y="14" width="24" height="24" />
@@ -158,7 +158,7 @@ function AudioLevelIndicator({ audioTrack, color = 'white', participant }: Audio
       height="24"
       viewBox="0 0 24 24"
       transform="translate(-0.5, 0)"
-      data-test-audio-mute-icon
+      data-testid="audio-mute-icon"
     >
       <g fill="none" fillRule="evenodd">
         <path

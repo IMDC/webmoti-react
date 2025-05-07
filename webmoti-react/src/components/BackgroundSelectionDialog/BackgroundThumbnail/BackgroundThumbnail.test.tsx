@@ -1,8 +1,6 @@
-import React from 'react';
+import { fireEvent, render, screen } from '@testing-library/react';
+
 import BackgroundThumbnail from './BackgroundThumbnail';
-import BlurIcon from '@material-ui/icons/BlurOnOutlined';
-import NoneIcon from '@material-ui/icons/NotInterestedOutlined';
-import { shallow } from 'enzyme';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 
 jest.mock('../../../hooks/useVideoContext/useVideoContext');
@@ -16,21 +14,25 @@ mockUseVideoContext.mockImplementation(() => ({
   setBackgroundSettings: mockSetBackgroundSettings,
 }));
 
-describe('The BackgroundThumbanil component', () => {
+describe('The BackgroundThumbnail component', () => {
   it('should update the background settings when clicked', () => {
-    const wrapper = shallow(<BackgroundThumbnail thumbnail={'none'} index={5} />);
-    wrapper.simulate('click');
+    render(<BackgroundThumbnail thumbnail={'none'} index={5} />);
+    fireEvent.click(screen.getByTestId('background-thumbnail'));
     expect(mockSetBackgroundSettings).toHaveBeenCalledWith({ index: 5, type: 'none' });
   });
 
+  // when testing background thumbnail with 'none' or 'icon', use icon-container test id
+  // for 'image', use 'image-container'
   it('should not be selected when thumbnail prop and backgroundSettings type are not equivalent (icon)', () => {
-    const wrapper = shallow(<BackgroundThumbnail thumbnail={'none'} />);
-    expect(wrapper.find('.selected').exists()).toBe(false);
+    render(<BackgroundThumbnail thumbnail={'none'} />);
+    const iconContainer = screen.getByTestId('icon-container');
+    expect(iconContainer).not.toHaveClass('selected');
   });
 
   it('should be selected when thumbnail prop and backgroundSettings type are equivalent (icon)', () => {
-    const wrapper = shallow(<BackgroundThumbnail thumbnail={'blur'} />);
-    expect(wrapper.find('.selected').exists()).toBe(true);
+    render(<BackgroundThumbnail thumbnail={'blur'} />);
+    const iconContainer = screen.getByTestId('icon-container');
+    expect(iconContainer).toHaveClass('selected');
   });
 
   it('should be selected when thumbnail prop and backgroundSettings type are equivalent (image)', () => {
@@ -41,8 +43,10 @@ describe('The BackgroundThumbanil component', () => {
       },
       setBackgroundSettings: mockSetBackgroundSettings,
     }));
-    const wrapper = shallow(<BackgroundThumbnail thumbnail={'image'} index={1} />);
-    expect(wrapper.find('.selected').exists()).toBe(true);
+
+    render(<BackgroundThumbnail thumbnail={'image'} index={1} />);
+    const imageContainer = screen.getByTestId('image-container');
+    expect(imageContainer).toHaveClass('selected');
   });
 
   it('should not be selected when thumbnail and backgroundSettings type are not equivlanet (image)', () => {
@@ -53,23 +57,29 @@ describe('The BackgroundThumbanil component', () => {
       },
       setBackgroundSettings: mockSetBackgroundSettings,
     }));
-    const wrapper = shallow(<BackgroundThumbnail thumbnail={'image'} index={5} />);
-    expect(wrapper.find('.selected').exists()).toBe(false);
+
+    render(<BackgroundThumbnail thumbnail={'image'} index={5} />);
+    const imageContainer = screen.getByTestId('image-container');
+    expect(imageContainer).not.toHaveClass('selected');
   });
 
   it("should contain the NoneIcon when thumbnail is set to 'none'", () => {
-    const wrapper = shallow(<BackgroundThumbnail thumbnail={'none'} />);
-    expect(wrapper.containsMatchingElement(<NoneIcon />)).toBe(true);
+    render(<BackgroundThumbnail thumbnail={'none'} />);
+    const noneIcon = screen.getByTestId('none-icon');
+    expect(noneIcon).toBeInTheDocument();
   });
 
   it("should contain the BlurIcon when thumbnail is set to 'blur'", () => {
-    const wrapper = shallow(<BackgroundThumbnail thumbnail={'blur'} />);
-    expect(wrapper.containsMatchingElement(<BlurIcon />)).toBe(true);
+    render(<BackgroundThumbnail thumbnail={'blur'} />);
+    const blurIcon = screen.getByTestId('blur-icon');
+    expect(blurIcon).toBeInTheDocument();
   });
 
   it("should not have any icons when thumbnail is set to 'image'", () => {
-    const wrapper = shallow(<BackgroundThumbnail thumbnail={'image'} />);
-    expect(wrapper.containsMatchingElement(<BlurIcon />)).toBe(false);
-    expect(wrapper.containsMatchingElement(<NoneIcon />)).toBe(false);
+    render(<BackgroundThumbnail thumbnail={'image'} />);
+    const noneIcon = screen.queryByTestId('none-icon');
+    const blurIcon = screen.queryByTestId('blur-icon');
+    expect(noneIcon).not.toBeInTheDocument();
+    expect(blurIcon).not.toBeInTheDocument();
   });
 });

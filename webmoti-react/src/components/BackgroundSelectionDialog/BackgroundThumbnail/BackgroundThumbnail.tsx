@@ -125,13 +125,19 @@ export default function BackgroundThumbnail({
           index: index,
         })
       }
+      data-testid="background-thumbnail"
     >
       {ThumbnailIcon ? (
-        <div className={clsx(classes.thumbIconContainer, { selected: thumbnailSelected })}>
-          <ThumbnailIcon className={classes.thumbIcon} />
+        <div className={clsx(classes.thumbIconContainer, { selected: thumbnailSelected })} data-testid="icon-container">
+          <ThumbnailIcon className={classes.thumbIcon} data-testid={`${thumbnail}-icon`} />
         </div>
       ) : (
-        <img className={clsx(classes.thumbImage, { selected: thumbnailSelected })} src={imagePath} alt={description} />
+        <img
+          className={clsx(classes.thumbImage, { selected: thumbnailSelected })}
+          src={imagePath}
+          alt={description}
+          data-testid="image-container"
+        />
       )}
       <div className={classes.thumbOverlay}>{name}</div>
     </div>

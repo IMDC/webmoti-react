@@ -1,15 +1,13 @@
 import EventEmitter from 'events';
 
-import { Button } from '@material-ui/core';
-import { mount } from 'enzyme';
+import { screen, render, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import ToggleAudioButton from './ToggleAudioButton';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useLocalAudioToggle from '../../../hooks/useLocalAudioToggle/useLocalAudioToggle';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
-import MicIcon from '../../../icons/MicIcon';
-import MicOffIcon from '../../../icons/MicOffIcon';
 import { isWebmotiVideo } from '../../../utils';
 
 jest.mock('../../../hooks/useLocalAudioToggle/useLocalAudioToggle');
@@ -37,32 +35,41 @@ describe('the ToggleAudioButton component', () => {
 
   it('should render correctly when audio is enabled', () => {
     mockUseLocalAudioToggle.mockImplementation(() => [true, () => {}]);
-    const wrapper = mount(<ToggleAudioButton />);
-    expect(wrapper.find(MicIcon).length).toEqual(1);
-    expect(wrapper.text()).toContain('Mute');
+
+    render(<ToggleAudioButton />);
+    const button = screen.getByRole('button');
+    expect(within(button).getByText('Mute')).toBeInTheDocument();
+    expect(screen.getByTestId('mic-icon')).toBeInTheDocument();
   });
 
   it('should render correctly when audio is disabled', () => {
     mockUseLocalAudioToggle.mockImplementation(() => [false, () => {}]);
-    const wrapper = mount(<ToggleAudioButton />);
-    expect(wrapper.find(MicOffIcon).length).toEqual(1);
-    expect(wrapper.text()).toContain('Unmute');
+
+    render(<ToggleAudioButton />);
+    expect(screen.getByTestId('mic-off-icon')).toBeInTheDocument();
+    const button = screen.getByRole('button');
+    expect(within(button).getByText('Unmute')).toBeInTheDocument();
   });
 
   it('should render correctly when there are no audio tracks', () => {
     mockUseLocalAudioToggle.mockImplementation(() => [true, () => {}]);
     mockUseVideoContext.mockImplementationOnce(() => ({ localTracks: [{ kind: 'video' }] }));
-    const wrapper = mount(<ToggleAudioButton />);
-    expect(wrapper.find(MicIcon).length).toEqual(1);
-    expect(wrapper.text()).toContain('No Audio');
-    expect(wrapper.find(Button).prop('disabled')).toBeTruthy();
+
+    render(<ToggleAudioButton />);
+    expect(screen.getByTestId('mic-icon')).toBeInTheDocument();
+
+    const button = screen.getByRole('button');
+    expect(within(button).getByText('No Audio')).toBeInTheDocument();
+    expect(button).toBeDisabled();
   });
 
-  it('should call the correct toggle function when clicked', () => {
+  it('should call the correct toggle function when clicked', async () => {
     const mockFn = jest.fn();
     mockUseLocalAudioToggle.mockImplementation(() => [false, mockFn]);
-    const wrapper = mount(<ToggleAudioButton />);
-    wrapper.find(Button).simulate('click');
+
+    render(<ToggleAudioButton />);
+    const button = screen.getByRole('button');
+    await userEvent.click(button)
     expect(mockFn).toHaveBeenCalled();
   });
 });
