@@ -1,4 +1,5 @@
-import React, { PropsWithChildren } from 'react';
+import { PropsWithChildren } from 'react';
+
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -6,9 +7,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Divider from '@material-ui/core/Divider';
-import packageJSON from '../../../package.json';
-
 import Video from 'twilio-video';
+
+import packageJSON from '../../../package.json';
 import { useAppState } from '../../state';
 
 interface AboutDialogProps {
@@ -19,8 +20,8 @@ interface AboutDialogProps {
 function AboutDialog({ open, onClose }: PropsWithChildren<AboutDialogProps>) {
   const { roomType } = useAppState();
   return (
-    <Dialog open={open} onClose={onClose} fullWidth={true} maxWidth="xs">
-      <DialogTitle>About</DialogTitle>
+    <Dialog open={open} onClose={onClose} fullWidth={true} maxWidth="xs" aria-labelledby="about-dialog-title">
+      <DialogTitle id="about-dialog-title">About</DialogTitle>
       <Divider />
       <DialogContent>
         <DialogContentText>Browser supported: {String(Video.isSupported)}</DialogContentText>

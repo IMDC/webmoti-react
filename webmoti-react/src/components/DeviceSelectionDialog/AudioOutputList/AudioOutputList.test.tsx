@@ -1,7 +1,6 @@
-import React from 'react';
+import { screen, render } from '@testing-library/react';
+
 import AudioOutputList from './AudioOutputList';
-import { Select, Typography } from '@material-ui/core';
-import { shallow } from 'enzyme';
 import useDevices from '../../../hooks/useDevices/useDevices';
 import { useAppState } from '../../../state';
 
@@ -21,31 +20,21 @@ const mockDevice = {
 describe('the AudioOutputList component', () => {
   it('should display the name of the active output device if only one is available', () => {
     mockUseDevices.mockImplementation(() => ({ audioOutputDevices: [mockDevice] }));
-    const wrapper = shallow(<AudioOutputList />);
-    expect(wrapper.find(Select).exists()).toBe(false);
-    expect(
-      wrapper
-        .find(Typography)
-        .at(1)
-        .text()
-    ).toBe('mock device');
+    render(<AudioOutputList />);
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+    expect(screen.getByText('mock device')).toBeInTheDocument();
   });
 
   it('should display "System Default Audio Output" when no audio output devices are available', () => {
     mockUseDevices.mockImplementation(() => ({ audioOutputDevices: [] }));
-    const wrapper = shallow(<AudioOutputList />);
-    expect(wrapper.find(Select).exists()).toBe(false);
-    expect(
-      wrapper
-        .find(Typography)
-        .at(1)
-        .text()
-    ).toBe('System Default Audio Output');
+    render(<AudioOutputList />);
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+    expect(screen.getByText('System Default Audio Output')).toBeInTheDocument();
   });
 
   it('should display a Select menu when multiple audio output devices are available', () => {
     mockUseDevices.mockImplementation(() => ({ audioOutputDevices: [mockDevice, mockDevice] }));
-    const wrapper = shallow(<AudioOutputList />);
-    expect(wrapper.find(Select).exists()).toBe(true);
+    render(<AudioOutputList />);
+    expect(screen.queryByRole('button')).toBeInTheDocument();
   });
 });

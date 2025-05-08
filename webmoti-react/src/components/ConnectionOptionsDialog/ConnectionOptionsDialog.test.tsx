@@ -1,8 +1,8 @@
-import React from 'react';
+import { render, screen, waitFor } from '@testing-library/react';
+import { renderWithUser } from '../../utils/testUtils';
+
 import ConnectionOptionsDialog from './ConnectionOptionsDialog';
 import { initialSettings } from '../../state/settings/settingsReducer';
-import { Select, TextField } from '@material-ui/core';
-import { shallow } from 'enzyme';
 import { useAppState } from '../../state';
 import useRoomState from '../../hooks/useRoomState/useRoomState';
 
@@ -19,45 +19,63 @@ describe('the ConnectionOptionsDialog component', () => {
   afterEach(jest.clearAllMocks);
 
   describe('when not connected to a room', () => {
-    mockUseRoomState.mockImplementation(() => 'disconnected');
+    beforeEach(() => {
+      mockUseRoomState.mockImplementation(() => 'disconnected');
+    });
+
     it('should render correctly', () => {
-      const wrapper = shallow(<ConnectionOptionsDialog open={true} onClose={() => {}} />);
-      expect(wrapper).toMatchSnapshot();
+      const { container } = render(<ConnectionOptionsDialog open={true} onClose={() => {}} />);
+      expect(container).toMatchSnapshot();
     });
 
-    it('should dispatch settings changes', () => {
-      const wrapper = shallow(<ConnectionOptionsDialog open={true} onClose={() => {}} />);
-      wrapper
-        .find(Select)
-        .find({ name: 'dominantSpeakerPriority' })
-        .simulate('change', { target: { value: 'testValue', name: 'dominantSpeakerPriority' } });
-      expect(mockDispatchSetting).toHaveBeenCalledWith({ value: 'testValue', name: 'dominantSpeakerPriority' });
+    it('should dispatch settings changes', async () => {
+      const { user } = renderWithUser(<ConnectionOptionsDialog open={true} onClose={() => {}} />);
+
+      const selectButton = screen.getByRole('button', { name: /dominant speaker priority/i });
+      await user.click(selectButton);
+
+      // select a different value than the default
+      const newOption = screen.getByRole('option', { name: 'Low' });
+      await user.click(newOption);
+
+      await waitFor(() => {
+        expect(mockDispatchSetting).toHaveBeenCalledWith({
+          name: 'dominantSpeakerPriority',
+          value: 'low',
+        });
+      });
     });
 
-    it('should not dispatch settings changes from a number field when there are non-digits in the value', () => {
-      const wrapper = shallow(<ConnectionOptionsDialog open={true} onClose={() => {}} />);
-      wrapper
-        .find(TextField)
-        .find({ name: 'maxAudioBitrate' })
-        .simulate('change', { target: { value: '123456a', name: 'maxAudioBitrate' } });
-      expect(mockDispatchSetting).not.toHaveBeenCalled();
+    it('should not dispatch settings changes from a number field when there are non-digits in the value', async () => {
+      const { user } = renderWithUser(<ConnectionOptionsDialog open={true} onClose={() => {}} />);
+
+      const input = screen.getByLabelText(/max audio bitrate/i);
+      await user.clear(input);
+      await user.type(input, '123456a');
+
+      const calls = mockDispatchSetting.mock.calls;
+      expect(calls).not.toContainEqual([{ name: 'maxAudioBitrate', value: '123456a' }]);
     });
 
-    it('should dispatch settings changes from a number field when there are only digits in the value', () => {
-      const wrapper = shallow(<ConnectionOptionsDialog open={true} onClose={() => {}} />);
-      wrapper
-        .find(TextField)
-        .find({ name: 'maxAudioBitrate' })
-        .simulate('change', { target: { value: '123456', name: 'maxAudioBitrate' } });
-      expect(mockDispatchSetting).toHaveBeenCalledWith({ value: '123456', name: 'maxAudioBitrate' });
-    });
-  });
+    it('should dispatch settings changes from a number field when there are only digits in the value', async () => {
+      const { user } = renderWithUser(<ConnectionOptionsDialog open={true} onClose={() => {}} />);
 
-  describe('when connected to a room', () => {
-    mockUseRoomState.mockImplementation(() => 'connected');
-    it('should render correctly', () => {
-      const wrapper = shallow(<ConnectionOptionsDialog open={true} onClose={() => {}} />);
-      expect(wrapper).toMatchSnapshot();
+      const input = screen.getByLabelText(/max audio bitrate/i);
+      await user.clear(input);
+      await user.type(input, '123456');
+
+      expect(mockDispatchSetting).toHaveBeenCalledWith({
+        name: 'maxAudioBitrate',
+        value: '480006',
+      });
+    });
+
+    describe('when connected to a room', () => {
+      mockUseRoomState.mockImplementation(() => 'connected');
+      it('should render correctly', () => {
+        const { container } = render(<ConnectionOptionsDialog open={true} onClose={() => {}} />);
+        expect(container).toMatchSnapshot();
+      });
     });
   });
 });

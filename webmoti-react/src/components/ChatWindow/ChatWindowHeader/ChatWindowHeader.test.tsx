@@ -1,7 +1,6 @@
-import React from 'react';
-import { shallow } from 'enzyme';
+import { screen } from '@testing-library/react';
+import { renderWithUser } from '../../../utils/testUtils';
 
-import CloseIcon from '../../../icons/CloseIcon';
 import ChatWindowHeader from './ChatWindowHeader';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 
@@ -13,12 +12,11 @@ const mockToggleChatWindow = jest.fn();
 mockUseChatContext.mockImplementation(() => ({ setIsChatWindowOpen: mockToggleChatWindow }));
 
 describe('the CloseChatWindowHeader component', () => {
-  it('should close the chat window when "X" is clicked on', () => {
-    const wrapper = shallow(<ChatWindowHeader />);
-    wrapper
-      .find(CloseIcon)
-      .parent()
-      .simulate('click');
+  it('should close the chat window when "X" is clicked on', async () => {
+    const { user } = renderWithUser(<ChatWindowHeader />);
+    const closeButton = screen.getByRole('button');
+
+    await user.click(closeButton);
     expect(mockToggleChatWindow).toHaveBeenCalledWith(false);
   });
 });

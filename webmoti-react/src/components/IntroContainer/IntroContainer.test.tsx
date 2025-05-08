@@ -1,70 +1,80 @@
-import React from 'react';
-import IntroContainer from './IntroContainer';
-import { shallow } from 'enzyme';
+import { render, screen } from '@testing-library/react';
 import { useLocation } from 'react-router-dom';
-import { useAppState } from '../../state';
-import UserMenu from './UserMenu/UserMenu';
 
-jest.mock('react-router-dom', () => {
-  return {
-    useLocation: jest.fn(),
-  };
-});
+import IntroContainer from './IntroContainer';
+import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
+import { useAppState } from '../../state';
+
+jest.mock('react-router-dom', () => ({
+  useLocation: jest.fn(),
+}));
 jest.mock('../../state');
+jest.mock('../../hooks/useVideoContext/useVideoContext');
 
 const mockUseLocation = useLocation as jest.Mock<any>;
 const mockUseAppState = useAppState as jest.Mock<any>;
+const mockUseVideoContext = useVideoContext as jest.Mock<any>;
 
-mockUseLocation.mockImplementation(() => ({ pathname: '/' }));
-mockUseAppState.mockImplementation(() => ({ user: undefined }));
+mockUseVideoContext.mockImplementation(() => ({
+  localTracks: [{ kind: 'audio' }],
+}));
 
-describe('the IntroContainer component', () => {
-  it('should render the UserMenu when a user object exists and the pathname is not /login', () => {
+describe('IntroContainer', () => {
+  beforeEach(() => {
+    mockUseLocation.mockReset();
+    mockUseAppState.mockReset();
+    process.env.REACT_APP_SET_AUTH = 'firebase';
+  });
+
+  it('renders UserMenu when user exists and pathname is not /login', () => {
     mockUseLocation.mockImplementation(() => ({ pathname: '/test' }));
-    mockUseAppState.mockImplementation(() => ({ user: {} }));
+    mockUseAppState.mockImplementation(() => ({ user: { displayName: 'Test User' } }));
 
-    const wrapper = shallow(
+    render(
       <IntroContainer>
         <span>Test Content</span>
       </IntroContainer>
     );
 
-    expect(wrapper.find(UserMenu).exists()).toBe(true);
+    expect(screen.getByTestId('user-menu')).toBeInTheDocument();
   });
 
-  it('should not render the UserMenu when the pathname is /login', () => {
+  it('does not render UserMenu when pathname is /login', () => {
     mockUseLocation.mockImplementation(() => ({ pathname: '/login' }));
-    mockUseAppState.mockImplementation(() => ({ user: {} }));
+    mockUseAppState.mockImplementation(() => ({ user: { displayName: 'Test User' } }));
 
-    const wrapper = shallow(
+    render(
       <IntroContainer>
         <span>Test Content</span>
       </IntroContainer>
     );
 
-    expect(wrapper.find(UserMenu).exists()).toBe(false);
+    expect(screen.queryByTestId('user-menu')).not.toBeInTheDocument();
   });
 
-  it('should not render the UserMenu when a user object does not exist', () => {
+  it('does not render UserMenu when user is undefined', () => {
     mockUseLocation.mockImplementation(() => ({ pathname: '/test' }));
     mockUseAppState.mockImplementation(() => ({ user: undefined }));
 
-    const wrapper = shallow(
+    render(
       <IntroContainer>
         <span>Test Content</span>
       </IntroContainer>
     );
 
-    expect(wrapper.find(UserMenu).exists()).toBe(false);
+    expect(screen.queryByTestId('user-menu')).not.toBeInTheDocument();
   });
 
-  it('should render children', () => {
-    const wrapper = shallow(
+  it('renders children content', () => {
+    mockUseLocation.mockImplementation(() => ({ pathname: '/test' }));
+    mockUseAppState.mockImplementation(() => ({ user: undefined }));
+
+    render(
       <IntroContainer>
         <span>Test Content</span>
       </IntroContainer>
     );
 
-    expect(wrapper.find('span').text()).toBe('Test Content');
+    expect(screen.getByText('Test Content')).toBeInTheDocument();
   });
 });

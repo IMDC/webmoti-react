@@ -1,7 +1,7 @@
-import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import makeStyles from '@material-ui/styles/makeStyles';
 import Person from '@material-ui/icons/Person';
+import makeStyles from '@material-ui/styles/makeStyles';
+
 import { StateContextType } from '../../../../state';
 
 const useStyles = makeStyles({
@@ -14,7 +14,7 @@ const useStyles = makeStyles({
 export function getInitials(name: string) {
   return name
     .split(' ')
-    .map(text => text[0])
+    .map((text) => text[0])
     .join('')
     .toUpperCase();
 }
@@ -24,8 +24,10 @@ export default function UserAvatar({ user }: { user: StateContextType['user'] })
   const { displayName, photoURL } = user!;
 
   return photoURL ? (
-    <Avatar src={photoURL} />
+    <Avatar src={photoURL} data-testid="user-avatar-photo" />
   ) : (
-    <Avatar className={classes.red}>{displayName ? getInitials(displayName) : <Person />}</Avatar>
+    <Avatar className={classes.red} data-testid="user-avatar-initials">
+      {displayName ? getInitials(displayName) : <Person />}
+    </Avatar>
   );
 }

@@ -40,7 +40,7 @@ const UserMenu: React.FC = () => {
 
   if (process.env.REACT_APP_SET_AUTH === 'passcode') {
     return (
-      <div className={classes.userContainer}>
+      <div className={classes.userContainer} data-testid="user-menu">
         <Link onClick={handleSignOut} className={classes.logoutLink}>
           Logout
         </Link>
@@ -50,7 +50,7 @@ const UserMenu: React.FC = () => {
 
   if (process.env.REACT_APP_SET_AUTH === 'firebase') {
     return (
-      <div className={classes.userContainer}>
+      <div className={classes.userContainer} data-testid="user-menu">
         <UserAvatar user={user} />
         <Button onClick={() => setMenuOpen(isOpen => !isOpen)} ref={anchorRef} className={classes.userButton}>
           {user!.displayName}

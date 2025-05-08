@@ -1,41 +1,65 @@
-import React from 'react';
+import { render } from '@testing-library/react';
+
 import LocalVideoPreview from './LocalVideoPreview';
-import { IVideoContext } from '../../../VideoProvider';
-import { shallow } from 'enzyme';
 import useVideoContext from '../../../../hooks/useVideoContext/useVideoContext';
-import AvatarIcon from '../../../../icons/AvatarIcon';
+import useWebmotiVideoContext from '../../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
 jest.mock('../../../../hooks/useVideoContext/useVideoContext');
 jest.mock('../../../../hooks/useMediaStreamTrack/useMediaStreamTrack');
+jest.mock('../../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 
-const mockedVideoContext = useVideoContext as jest.Mock<IVideoContext>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
+
+jest.mock('../../../VideoTrack/VideoTrack', () => ({
+  __esModule: true,
+  default: () => <div data-testid="video-track" />,
+}));
+
+jest.mock('../../../../icons/AvatarIcon', () => () => <div data-testid="avatar-icon" />);
+
+const mockedVideoContext = useVideoContext as jest.Mock;
+
+mockUseWebmotiVideoContext.mockImplementation(() => ({
+  isMuted: false,
+}));
 
 describe('the LocalVideoPreview component', () => {
-  it('it should render a VideoTrack component when there is a "camera" track', () => {
-    mockedVideoContext.mockImplementation(() => {
-      return {
-        localTracks: [
-          {
-            name: '',
-            kind: 'video',
-            attach: jest.fn(),
-            detach: jest.fn(),
-            mediaStreamTrack: { getSettings: () => ({}) },
-          },
-        ],
-      } as any;
-    });
-    const wrapper = shallow(<LocalVideoPreview identity="Test User" />);
-    expect(wrapper.find('VideoTrack').exists()).toEqual(true);
+  it('should render a VideoTrack component when there is a "camera" track', () => {
+    mockedVideoContext.mockImplementation(() => ({
+      localTracks: [
+        {
+          name: '',
+          kind: 'video',
+          attach: jest.fn(),
+          detach: jest.fn(),
+          mediaStreamTrack: { getSettings: () => ({}) },
+          on: jest.fn(),
+          off: jest.fn(),
+        },
+      ],
+    }));
+
+    const { getByTestId, queryByTestId } = render(<LocalVideoPreview identity="Test User" />);
+    expect(getByTestId('video-track')).toBeInTheDocument();
+    expect(queryByTestId('avatar-icon')).not.toBeInTheDocument();
   });
 
   it('should render the AvatarIcon when there are no "camera" tracks', () => {
-    mockedVideoContext.mockImplementation(() => {
-      return {
-        localTracks: [{ name: 'microphone', attach: jest.fn(), detach: jest.fn() }],
-      } as any;
-    });
-    const wrapper = shallow(<LocalVideoPreview identity="Test User" />);
-    expect(wrapper.find(AvatarIcon).exists()).toEqual(true);
+    mockedVideoContext.mockImplementation(() => ({
+      localTracks: [
+        {
+          name: 'microphone',
+          kind: 'audio',
+          attach: jest.fn(),
+          detach: jest.fn(),
+          on: jest.fn(),
+          off: jest.fn(),
+        },
+      ],
+    }));
+
+    const { getByTestId, queryByTestId } = render(<LocalVideoPreview identity="Test User" />);
+    expect(getByTestId('avatar-icon')).toBeInTheDocument();
+    expect(queryByTestId('video-track')).not.toBeInTheDocument();
   });
 });

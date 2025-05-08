@@ -1,5 +1,7 @@
 import { EventEmitter } from 'events';
-import { mount } from 'enzyme';
+
+import { render, screen } from '@testing-library/react';
+
 import { ParticipantAudioTracks } from './ParticipantAudioTracks';
 import useParticipants from '../../hooks/useParticipants/useParticipants';
 
@@ -9,7 +11,7 @@ jest.mock('../../hooks/useVideoContext/useVideoContext', () => () => ({
 }));
 
 function MockAudioTrack() {
-  return <div>Mock Audio Track</div>;
+  return <div data-testid="mock-audio-track">Mock Audio Track</div>;
 }
 
 jest.mock('../../hooks/useParticipants/useParticipants');
@@ -39,7 +41,7 @@ mockUseParticipants.mockImplementation(() => [
 
 describe('the ParticipantAudioTracks component', () => {
   it('should render the audio tracks for all participants', () => {
-    const wrapper = mount(<ParticipantAudioTracks />);
-    expect(wrapper.find(MockAudioTrack).length).toBe(2);
+    render(<ParticipantAudioTracks />);
+    expect(screen.getAllByTestId('mock-audio-track')).toHaveLength(2);
   });
 });

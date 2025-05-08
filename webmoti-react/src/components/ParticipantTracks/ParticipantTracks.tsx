@@ -1,4 +1,3 @@
-import React from 'react';
 import { Participant, Track } from 'twilio-video';
 import Publication from '../Publication/Publication';
 import usePublications from '../../hooks/usePublications/usePublications';
@@ -30,26 +29,27 @@ export default function ParticipantTracks({
 
   let filteredPublications;
 
-  if (enableScreenShare && publications.some(p => p.trackName.includes('screen'))) {
+  if (enableScreenShare && publications.some((p) => p.trackName.includes('screen'))) {
     // When displaying a screenshare track is allowed, and a screen share track exists,
     // remove all video tracks without the name 'screen'.
-    filteredPublications = publications.filter(p => p.trackName.includes('screen') || p.kind !== 'video');
+    filteredPublications = publications.filter((p) => p.trackName.includes('screen') || p.kind !== 'video');
   } else {
     // Else, remove all screenshare tracks
-    filteredPublications = publications.filter(p => !p.trackName.includes('screen'));
+    filteredPublications = publications.filter((p) => !p.trackName.includes('screen'));
   }
 
   return (
     <>
-      {filteredPublications.map(publication => (
-        <Publication
-          key={publication.kind}
-          publication={publication}
-          participant={participant}
-          isLocalParticipant={isLocalParticipant}
-          videoOnly={videoOnly}
-          videoPriority={videoPriority}
-        />
+      {filteredPublications.map((publication) => (
+        <div key={publication.trackSid} data-testid={`publication-${publication.trackSid}`}>
+          <Publication
+            publication={publication}
+            participant={participant}
+            isLocalParticipant={isLocalParticipant}
+            videoOnly={videoOnly}
+            videoPriority={videoPriority}
+          />
+        </div>
       ))}
     </>
   );

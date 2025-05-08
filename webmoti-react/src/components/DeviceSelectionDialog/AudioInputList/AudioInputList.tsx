@@ -1,17 +1,17 @@
-import React from 'react';
-import AudioLevelIndicator from '../../AudioLevelIndicator/AudioLevelIndicator';
-import { LocalAudioTrack } from 'twilio-video';
 import { FormControl, MenuItem, Typography, Select, Grid } from '@material-ui/core';
+import { LocalAudioTrack } from 'twilio-video';
+
 import { SELECTED_AUDIO_INPUT_KEY } from '../../../constants';
 import useDevices from '../../../hooks/useDevices/useDevices';
 import useMediaStreamTrack from '../../../hooks/useMediaStreamTrack/useMediaStreamTrack';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
+import AudioLevelIndicator from '../../AudioLevelIndicator/AudioLevelIndicator';
 
 export default function AudioInputList() {
   const { audioInputDevices } = useDevices();
   const { localTracks } = useVideoContext();
 
-  const localAudioTrack = localTracks.find(track => track.kind === 'audio') as LocalAudioTrack;
+  const localAudioTrack = localTracks.find((track) => track.kind === 'audio') as LocalAudioTrack;
   const srcMediaStreamTrack = localAudioTrack?.noiseCancellation?.sourceTrack;
   const mediaStreamTrack = useMediaStreamTrack(localAudioTrack);
   const localAudioInputDeviceId =
@@ -31,11 +31,11 @@ export default function AudioInputList() {
           {audioInputDevices.length > 1 ? (
             <FormControl fullWidth>
               <Select
-                onChange={e => replaceTrack(e.target.value as string)}
+                onChange={(e) => replaceTrack(e.target.value as string)}
                 value={localAudioInputDeviceId || ''}
                 variant="outlined"
               >
-                {audioInputDevices.map(device => (
+                {audioInputDevices.map((device) => (
                   <MenuItem value={device.deviceId} key={device.deviceId}>
                     {device.label}
                   </MenuItem>

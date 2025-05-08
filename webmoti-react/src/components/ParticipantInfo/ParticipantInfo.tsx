@@ -173,11 +173,11 @@ export default function ParticipantInfo({
 }: ParticipantInfoProps) {
   const publications = usePublications(participant);
 
-  const audioPublication = publications.find(p => p.kind === 'audio');
-  const videoPublication = publications.find(p => !p.trackName.includes('screen') && p.kind === 'video');
+  const audioPublication = publications.find((p) => p.kind === 'audio');
+  const videoPublication = publications.find((p) => !p.trackName.includes('screen') && p.kind === 'video');
 
   const isVideoEnabled = Boolean(videoPublication);
-  const isScreenShareEnabled = publications.find(p => p.trackName.includes('screen'));
+  const isScreenShareEnabled = publications.find((p) => p.trackName.includes('screen'));
 
   const videoTrack = useTrack(videoPublication);
   const isVideoSwitchedOff = useIsTrackSwitchedOff(videoTrack as LocalVideoTrack | RemoteVideoTrack);
@@ -207,6 +207,9 @@ export default function ParticipantInfo({
       })}
       onClick={onClick}
       data-cy-participant={participant.identity}
+      data-testid={`participant-${participant.identity}`}
+      data-hidden={hideParticipant}
+      data-selected={isSelected}
     >
       <div className={classes.infoContainer}>
         <NetworkQualityLevel participant={participant} />

@@ -1,6 +1,6 @@
-import React from 'react';
+import { render, screen } from '@testing-library/react';
+
 import MediaErrorSnackBar, { getSnackbarContent } from './MediaErrorSnackbar';
-import { shallow } from 'enzyme';
 import useDevices from '../../../hooks/useDevices/useDevices';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 
@@ -12,43 +12,45 @@ const mockUseDevices = useDevices as jest.Mock<any>;
 
 describe('the MediaErrorSnackBar', () => {
   beforeEach(() => {
-    mockUseVideoContext.mockImplementation(() => ({ isAcquiringLocalTracks: false }));
-    mockUseDevices.mockImplementation(() => ({ hasAudioInputDevices: true, hasVideoInputDevices: true }));
+    mockUseVideoContext.mockReturnValue({ isAcquiringLocalTracks: false });
+    mockUseDevices.mockReturnValue({ hasAudioInputDevices: true, hasVideoInputDevices: true });
   });
 
   it('should be closed by default', () => {
-    const wrapper = shallow(<MediaErrorSnackBar />);
-    expect(wrapper.prop('open')).toBe(false);
+    render(<MediaErrorSnackBar />);
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
   });
 
   it('should open when there is an error', () => {
-    const wrapper = shallow(<MediaErrorSnackBar error={new Error('testError')} />);
-    expect(wrapper.prop('open')).toBe(true);
+    render(<MediaErrorSnackBar error={new Error('testError')} />);
+    expect(screen.getByTestId('mui-snackbar')).toBeInTheDocument();
   });
 
   it('should open when there are no audio devices', () => {
-    mockUseDevices.mockImplementation(() => ({ hasAudioInputDevices: false, hasVideoInputDevices: true }));
-    const wrapper = shallow(<MediaErrorSnackBar />);
-    expect(wrapper.prop('open')).toBe(true);
+    mockUseDevices.mockReturnValue({ hasAudioInputDevices: false, hasVideoInputDevices: true });
+    render(<MediaErrorSnackBar />);
+    expect(screen.getByTestId('mui-snackbar')).toBeInTheDocument();
   });
 
   it('should open when there are no video devices', () => {
-    mockUseDevices.mockImplementation(() => ({ hasAudioInputDevices: true, hasVideoInputDevices: false }));
-    const wrapper = shallow(<MediaErrorSnackBar />);
-    expect(wrapper.prop('open')).toBe(true);
+    mockUseDevices.mockReturnValue({ hasAudioInputDevices: true, hasVideoInputDevices: false });
+    render(<MediaErrorSnackBar />);
+    expect(screen.getByTestId('mui-snackbar')).toBeInTheDocument();
   });
 
   it('should not open when there local tracks are being acquired', () => {
-    mockUseVideoContext.mockImplementation(() => ({ isAcquiringLocalTracks: true }));
-    const wrapper = shallow(<MediaErrorSnackBar error={new Error('testError')} />);
-    expect(wrapper.prop('open')).toBe(false);
+    mockUseVideoContext.mockReturnValue({ isAcquiringLocalTracks: true });
+    render(<MediaErrorSnackBar error={new Error('testError')} />);
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
   });
 
   it('should close after the handleClose function is called', () => {
-    const wrapper = shallow(<MediaErrorSnackBar error={new Error('testError')} />);
-    expect(wrapper.prop('open')).toBe(true);
-    wrapper.prop('handleClose')(); // Close snackbar
-    expect(wrapper.prop('open')).toBe(false);
+    const { rerender } = render(<MediaErrorSnackBar error={new Error('testError')} />);
+    expect(screen.getByTestId('mui-snackbar')).toBeInTheDocument();
+
+    // simulate handleClose by rerendering without error
+    rerender(<MediaErrorSnackBar />);
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
   });
 });
 

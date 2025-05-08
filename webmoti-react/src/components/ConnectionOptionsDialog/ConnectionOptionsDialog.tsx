@@ -93,6 +93,7 @@ export default function ConnectionOptionsDialog({ open, onClose }: { open: boole
                 disabled={isDisabled}
                 name={inputLabels.dominantSpeakerPriority}
                 label={inputLabels.dominantSpeakerPriority}
+                labelId={inputLabels.dominantSpeakerPriority}
                 value={withDefault(settings.dominantSpeakerPriority)}
                 onChange={handleChange}
               >
