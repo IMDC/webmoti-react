@@ -1,8 +1,8 @@
 version: 2.1
 
 orbs:
-  browser-tools: circleci/browser-tools@1.4.8
-  python: circleci/python@2.1.1
+  browser-tools: circleci/browser-tools@1.5.3
+  python: circleci/python@3.1.0
 
 parameters:
   build-and-test-react-app:
