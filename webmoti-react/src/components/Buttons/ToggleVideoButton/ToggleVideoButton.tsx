@@ -33,6 +33,7 @@ export default function ToggleVideoButton(props: { disabled?: boolean; className
     <ShortcutTooltip shortcut="V" isAltDown>
       <span>
         <Button
+          data-testid="toggle-video-button"
           className={props.className}
           onClick={toggleVideo}
           disabled={!hasVideoInputDevices || props.disabled}

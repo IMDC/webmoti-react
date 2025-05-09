@@ -143,6 +143,7 @@ export default function ToggleChatButton() {
   return (
     <Button
       data-cy-chat-button
+      data-testid="toggle-chat-button"
       onClick={toggleChatWindow}
       disabled={!conversation}
       variant="outlined"

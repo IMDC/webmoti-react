@@ -49,6 +49,7 @@ export default function ToggleAudioButton(props: { disabled?: boolean; className
             )
           }
           data-cy-audio-toggle
+          data-testid="toggle-audio-button"
           // override minWidth: 64 for mobile
           style={{ minWidth: 0 }}
         >

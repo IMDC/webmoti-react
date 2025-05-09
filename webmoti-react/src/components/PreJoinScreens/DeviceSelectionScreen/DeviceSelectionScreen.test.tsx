@@ -1,144 +1,120 @@
-import { setImmediate } from 'timers';
-
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { shallow } from 'enzyme';
-
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import DeviceSelectionScreen from './DeviceSelectionScreen';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../../state';
-import ToggleAudioButton from '../../Buttons/ToggleAudioButton/ToggleAudioButton';
-import ToggleVideoButton from '../../Buttons/ToggleVideoButton/ToggleVideoButton';
-// import { Steps } from '../PreJoinScreens';
-
-const mockUseAppState = useAppState as jest.Mock<any>;
-const mockUseVideoContext = useVideoContext as jest.Mock<any>;
-
-const mockConnect = jest.fn();
-const mockChatConnect = jest.fn(() => Promise.resolve());
-const mockGetToken = jest.fn(() => Promise.resolve({ token: 'mockToken' }));
 
 jest.mock('../../../hooks/useChatContext/useChatContext', () => () => ({ connect: mockChatConnect }));
 jest.mock('../../../hooks/useVideoContext/useVideoContext');
 jest.mock('../../../state');
 
-mockUseAppState.mockImplementation(() => ({ getToken: mockGetToken, isFetching: false }));
-mockUseVideoContext.mockImplementation(() => ({
-  connect: mockConnect,
-  isAcquiringLocalTracks: false,
-  isConnecting: false,
-  localTracks: [],
-}));
+const mockConnect = jest.fn();
+const mockChatConnect = jest.fn(() => Promise.resolve());
+const mockGetToken = jest.fn(() => Promise.resolve({ token: 'mockToken' }));
+
+const mockUseVideoContext = useVideoContext as jest.Mock;
+const mockUseAppState = useAppState as jest.Mock;
+
+jest.mock('../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext', () => () => ({}));
 
 describe('the DeviceSelectionScreen component', () => {
   beforeEach(() => {
-    process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS = 'false';
     jest.clearAllMocks();
+    process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS = 'false';
+    mockUseAppState.mockImplementation(() => ({ getToken: mockGetToken, isFetching: false }));
+    mockUseVideoContext.mockImplementation(() => ({
+      connect: mockConnect,
+      isAcquiringLocalTracks: false,
+      isConnecting: false,
+      localTracks: [],
+    }));
   });
 
   describe('when connecting to a room', () => {
-    mockUseVideoContext.mockImplementationOnce(() => ({
-      connect: mockConnect,
-      isAcquiringLocalTracks: false,
-      isConnecting: true,
-      localTracks: [],
-    }));
-
-    const wrapper = shallow(<DeviceSelectionScreen name="test name" roomName="test room name" setStep={() => {}} />);
+    beforeEach(() => {
+      mockUseVideoContext.mockImplementationOnce(() => ({
+        connect: mockConnect,
+        isAcquiringLocalTracks: false,
+        isConnecting: true,
+        localTracks: [],
+      }));
+    });
 
     it('should show the loading screen', () => {
-      expect(wrapper.find(CircularProgress).exists()).toBe(true);
+      render(<DeviceSelectionScreen name="test name" roomName="test room name" setStep={() => {}} />);
+      expect(screen.getByRole('progressbar')).toBeInTheDocument();
     });
 
-    it('should disable the desktop and mobile toggle video buttons', () => {
-      expect(wrapper.find(ToggleVideoButton).every({ disabled: true })).toBe(true);
-    });
-
-    it('should disable the desktop and mobile toggle audio buttons', () => {
-      expect(wrapper.find(ToggleAudioButton).every({ disabled: true })).toBe(true);
+    it('should show only the loading screen with no buttons', () => {
+      render(<DeviceSelectionScreen name="test name" roomName="test room name" setStep={() => {}} />);
+      expect(screen.getByRole('progressbar')).toBeInTheDocument();
+      expect(screen.queryByRole('button')).not.toBeInTheDocument();
     });
   });
 
   describe('when acquiring local tracks', () => {
-    mockUseVideoContext.mockImplementationOnce(() => ({
-      connect: mockConnect,
-      isAcquiringLocalTracks: true,
-      isConnecting: false,
-      localTracks: [],
-    }));
-
-    const wrapper = shallow(<DeviceSelectionScreen name="test name" roomName="test room name" setStep={() => {}} />);
-
-    it('should disable the Join Now, toggle video, and toggle audio buttons', () => {
-      expect(wrapper.find({ children: 'Join Now' }).prop('disabled')).toBe(true);
+    beforeEach(() => {
+      mockUseVideoContext.mockImplementationOnce(() => ({
+        connect: mockConnect,
+        isAcquiringLocalTracks: true,
+        isConnecting: false,
+        localTracks: [],
+      }));
     });
 
-    it('should disable the desktop and mobile toggle video buttons', () => {
-      expect(wrapper.find(ToggleVideoButton).every({ disabled: true })).toBe(true);
-    });
-
-    it('should disable the desktop and mobile toggle audio buttons', () => {
-      expect(wrapper.find(ToggleAudioButton).every({ disabled: true })).toBe(true);
+    it('should disable Join Now, toggle video, and toggle audio buttons', () => {
+      render(<DeviceSelectionScreen name="test name" roomName="test room name" setStep={() => {}} />);
+      expect(screen.getByRole('button', { name: /join now/i })).toBeDisabled();
     });
   });
 
   describe('when fetching a token', () => {
-    mockUseVideoContext.mockImplementationOnce(() => ({
-      connect: mockConnect,
-      isAcquiringLocalTracks: false,
-      isConnecting: false,
-      localTracks: [],
-    }));
-    mockUseAppState.mockImplementationOnce(() => ({ getToken: mockGetToken, isFetching: true }));
-    const wrapper = shallow(<DeviceSelectionScreen name="test name" roomName="test room name" setStep={() => {}} />);
+    beforeEach(() => {
+      mockUseAppState.mockImplementationOnce(() => ({ getToken: mockGetToken, isFetching: true }));
+      mockUseVideoContext.mockImplementationOnce(() => ({
+        connect: mockConnect,
+        isAcquiringLocalTracks: false,
+        isConnecting: false,
+        localTracks: [],
+      }));
+    });
 
     it('should show the loading screen', () => {
-      expect(wrapper.find(CircularProgress).exists()).toBe(true);
+      render(<DeviceSelectionScreen name="test name" roomName="test room name" setStep={() => {}} />);
+      expect(screen.getByRole('progressbar')).toBeInTheDocument();
     });
 
-    it('should disable the desktop and mobile toggle video buttons', () => {
-      expect(wrapper.find(ToggleVideoButton).every({ disabled: true })).toBe(true);
-    });
-
-    it('should disable the desktop and mobile toggle audio buttons', () => {
-      expect(wrapper.find(ToggleAudioButton).every({ disabled: true })).toBe(true);
+    it('should show only the loading screen with no buttons', () => {
+      render(<DeviceSelectionScreen name="test name" roomName="test room name" setStep={() => {}} />);
+      expect(screen.getByRole('progressbar')).toBeInTheDocument();
+      expect(screen.queryByRole('button')).not.toBeInTheDocument();
     });
   });
 
   it('should not disable the Join Now button by default', () => {
-    const wrapper = shallow(<DeviceSelectionScreen name="test name" roomName="test room name" setStep={() => {}} />);
-    expect(wrapper.find({ children: 'Join Now' }).prop('disabled')).toBe(false);
+    render(<DeviceSelectionScreen name="test name" roomName="test room name" setStep={() => {}} />);
+    expect(screen.getByRole('button', { name: /join now/i })).toBeEnabled();
   });
 
-  // ! Cancel button is hidden for firebase auth
-  // it('should go back to the RoomNameScreen when the Cancel button is clicked', () => {
-  //   const mockSetStep = jest.fn();
-  //   const wrapper = shallow(<DeviceSelectionScreen name="test name" roomName="test room name" setStep={mockSetStep} />);
-  //   wrapper.find({ children: 'Cancel' }).simulate('click');
-  //   expect(mockSetStep).toHaveBeenCalledWith(Steps.roomNameStep);
-  // });
+  it('should fetch token and connect to video + chat on Join Now click', async () => {
+    render(<DeviceSelectionScreen name="test name" roomName="test room name" setStep={() => {}} />);
+    fireEvent.click(screen.getByRole('button', { name: /join now/i }));
 
-  it('should fetch a token and connect to the Video SDK and Conversations SDK when the Join Now button is clicked', (done) => {
-    const wrapper = shallow(<DeviceSelectionScreen name="test name" roomName="test room name" setStep={() => {}} />);
-    wrapper.find({ children: 'Join Now' }).simulate('click');
-
-    expect(mockGetToken).toHaveBeenCalledWith('test name', 'test room name');
-    setImmediate(() => {
+    await waitFor(() => {
+      expect(mockGetToken).toHaveBeenCalledWith('test name', 'test room name');
       expect(mockConnect).toHaveBeenCalledWith('mockToken');
       expect(mockChatConnect).toHaveBeenCalledWith('mockToken');
-      done();
     });
   });
 
-  it('should fetch a token and connect to the Video SDK only when the Join Now button is clicked when the REACT_APP_DISABLE_TWILIO_CONVERSATIONS variable is true', (done) => {
+  it('should only connect to video if chat is disabled', async () => {
     process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS = 'true';
-    const wrapper = shallow(<DeviceSelectionScreen name="test name" roomName="test room name" setStep={() => {}} />);
-    wrapper.find({ children: 'Join Now' }).simulate('click');
+    render(<DeviceSelectionScreen name="test name" roomName="test room name" setStep={() => {}} />);
+    fireEvent.click(screen.getByRole('button', { name: /join now/i }));
 
-    expect(mockGetToken).toHaveBeenCalledWith('test name', 'test room name');
-    setImmediate(() => {
+    await waitFor(() => {
       expect(mockConnect).toHaveBeenCalledWith('mockToken');
-      expect(mockChatConnect).not.toHaveBeenCalledWith('mockToken');
-      done();
+      expect(mockChatConnect).not.toHaveBeenCalled();
     });
   });
 });

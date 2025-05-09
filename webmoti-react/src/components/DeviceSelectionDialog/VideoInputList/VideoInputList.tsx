@@ -24,7 +24,7 @@ export default function VideoInputList() {
   const { videoInputDevices } = useDevices();
   const { localTracks } = useVideoContext();
 
-  const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
+  const localVideoTrack = localTracks.find((track) => track.kind === 'video') as LocalVideoTrack | undefined;
   const mediaStreamTrack = useMediaStreamTrack(localVideoTrack);
   const [storedLocalVideoDeviceId, setStoredLocalVideoDeviceId] = useState(
     window.localStorage.getItem(SELECTED_VIDEO_INPUT_KEY)
@@ -55,11 +55,11 @@ export default function VideoInputList() {
             Video Input
           </Typography>
           <Select
-            onChange={e => replaceTrack(e.target.value as string)}
+            onChange={(e) => replaceTrack(e.target.value as string)}
             value={localVideoInputDeviceId || ''}
             variant="outlined"
           >
-            {videoInputDevices.map(device => (
+            {videoInputDevices.map((device) => (
               <MenuItem value={device.deviceId} key={device.deviceId}>
                 {device.label}
               </MenuItem>
@@ -71,7 +71,9 @@ export default function VideoInputList() {
           <Typography variant="subtitle2" gutterBottom>
             Video Input
           </Typography>
-          <Typography>{localVideoTrack?.mediaStreamTrack.label || 'No Local Video'}</Typography>
+          <Typography data-testid="video-device-name">
+            {localVideoTrack?.mediaStreamTrack.label || 'No Local Video'}
+          </Typography>
         </>
       )}
     </div>

@@ -127,13 +127,13 @@ export default function MainParticipantInfo({ participant, children }: MainParti
   const isRemoteParticipantScreenSharing = screenShareParticipant && screenShareParticipant !== localParticipant;
 
   const publications = usePublications(participant);
-  const videoPublication = publications.find(p => !p.trackName.includes('screen') && p.kind === 'video');
-  const screenSharePublication = publications.find(p => p.trackName.includes('screen'));
+  const videoPublication = publications.find((p) => !p.trackName.includes('screen') && p.kind === 'video');
+  const screenSharePublication = publications.find((p) => p.trackName.includes('screen'));
 
   const videoTrack = useTrack(screenSharePublication || videoPublication);
   const isVideoEnabled = Boolean(videoTrack);
 
-  const audioPublication = publications.find(p => p.kind === 'audio');
+  const audioPublication = publications.find((p) => p.kind === 'audio');
   const audioTrack = useTrack(audioPublication) as LocalAudioTrack | RemoteAudioTrack | undefined;
 
   // WEBMOTI_CAMERA_2 (board) camera is never switched off
@@ -148,6 +148,7 @@ export default function MainParticipantInfo({ participant, children }: MainParti
     <div
       data-cy-main-participant
       data-cy-participant={participant.identity}
+      data-testid={`main-participant-${participant.identity}`}
       className={clsx(classes.container, {
         [classes.fullWidth]: !isRemoteParticipantScreenSharing,
       })}
@@ -156,7 +157,7 @@ export default function MainParticipantInfo({ participant, children }: MainParti
         <div style={{ display: 'flex' }}>
           <div className={classes.identity}>
             <AudioLevelIndicator audioTrack={audioTrack} />
-            <Typography variant="body1" color="inherit">
+            <Typography variant="body1" color="inherit" data-testid="participant-identity">
               {participant.identity}
               {isLocal && ' (You)'}
               {screenSharePublication && ' - Screen'}
@@ -171,7 +172,7 @@ export default function MainParticipantInfo({ participant, children }: MainParti
           >
             <div className={classes.recordingIndicator}>
               <div className={classes.circle}></div>
-              <Typography variant="body1" color="inherit" data-cy-recording-indicator>
+              <Typography variant="body1" color="inherit" data-cy-recording-indicator data-testid="recording-indicator">
                 Recording
               </Typography>
             </div>
@@ -179,12 +180,12 @@ export default function MainParticipantInfo({ participant, children }: MainParti
         )}
       </div>
       {(!isVideoEnabled || isVideoSwitchedOff) && (
-        <div className={classes.avatarContainer}>
+        <div className={classes.avatarContainer} data-testid="avatar-icon">
           <AvatarIcon />
         </div>
       )}
       {isParticipantReconnecting && (
-        <div className={classes.reconnectingContainer}>
+        <div className={classes.reconnectingContainer} data-testid="reconnecting-overlay">
           <Typography variant="body1" style={{ color: 'white' }}>
             Reconnecting...
           </Typography>

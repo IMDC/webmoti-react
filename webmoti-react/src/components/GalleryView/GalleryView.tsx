@@ -134,14 +134,22 @@ export function GalleryView() {
     <div className={classes.container}>
       <div className={clsx(classes.buttonContainer, classes.buttonContainerLeft)}>
         {!(currentPage === 1) && (
-          <IconButton className={classes.paginationButton} onClick={() => setCurrentPage((page) => page - 1)}>
+          <IconButton
+            data-testid="pagination-prev-button"
+            className={classes.paginationButton}
+            onClick={() => setCurrentPage((page) => page - 1)}
+          >
             <ArrowBack />
           </IconButton>
         )}
       </div>
       <div className={clsx(classes.buttonContainer, classes.buttonContainerRight)}>
         {!(currentPage === totalPages) && (
-          <IconButton className={classes.paginationButton} onClick={() => setCurrentPage((page) => page + 1)}>
+          <IconButton
+            data-testid="pagination-next-button"
+            className={classes.paginationButton}
+            onClick={() => setCurrentPage((page) => page + 1)}
+          >
             <ArrowForward />
           </IconButton>
         )}
@@ -149,6 +157,7 @@ export function GalleryView() {
       <div className={classes.paginationContainer}>
         {totalPages > 1 && (
           <Pagination
+            data-testid="pagination"
             className={classes.pagination}
             page={currentPage}
             count={totalPages}
@@ -176,7 +185,7 @@ export function GalleryView() {
         }}
       />
 
-      <div className={classes.participantContainer} ref={containerRef}>
+      <div className={classes.participantContainer} ref={containerRef} data-testid="participant-container">
         {paginatedParticipants.map((participant) => (
           <div
             key={participant.sid}

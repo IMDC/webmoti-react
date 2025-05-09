@@ -1,81 +1,76 @@
-import React from 'react';
+import { render, screen } from '@testing-library/react';
+import { MemoryRouter, Route, Switch } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
 import { useAppState } from '../../state';
-import { mount } from 'enzyme';
-import { MemoryRouter } from 'react-router-dom';
-
-const mockUseAppState = useAppState as jest.Mock<any>;
 
 jest.mock('../../state');
+const mockUseAppState = useAppState as jest.Mock<any>;
 
 const MockComponent = () => <h1>test</h1>;
 
-describe('the PrivateRoute component', () => {
+describe('PrivateRoute', () => {
   describe('with auth enabled', () => {
-    describe('when isAuthReady is true', () => {
-      it('should redirect to /login when there is no user', () => {
-        process.env.REACT_APP_SET_AUTH = 'firebase';
-        mockUseAppState.mockImplementation(() => ({ user: false, isAuthReady: true }));
-        const wrapper = mount(
-          <MemoryRouter initialEntries={['/']}>
-            <PrivateRoute exact path="/">
-              <MockComponent />
-            </PrivateRoute>
-          </MemoryRouter>
-        );
-        const history = wrapper.find('Router').prop('history') as any;
-        expect(history.location.pathname).toEqual('/login');
-        expect(wrapper.exists(MockComponent)).toBe(false);
-      });
-
-      it('should render children when there is a user', () => {
-        process.env.REACT_APP_SET_AUTH = 'firebase';
-        mockUseAppState.mockImplementation(() => ({ user: {}, isAuthReady: true }));
-        const wrapper = mount(
-          <MemoryRouter initialEntries={['/']}>
-            <PrivateRoute exact path="/">
-              <MockComponent />
-            </PrivateRoute>
-          </MemoryRouter>
-        );
-        const history = wrapper.find('Router').prop('history') as any;
-        expect(history.location.pathname).toEqual('/');
-        expect(wrapper.exists(MockComponent)).toBe(true);
-      });
+    beforeEach(() => {
+      process.env.REACT_APP_SET_AUTH = 'firebase';
     });
 
-    describe('when isAuthReady is false', () => {
-      it('should not render children', () => {
-        process.env.REACT_APP_SET_AUTH = 'firebase';
-        mockUseAppState.mockImplementation(() => ({ user: false, isAuthReady: false }));
-        const wrapper = mount(
-          <MemoryRouter initialEntries={['/']}>
+    it('redirects to /login when no user and auth is ready', () => {
+      mockUseAppState.mockReturnValue({ user: null, isAuthReady: true });
+
+      render(
+        <MemoryRouter initialEntries={['/']}>
+          <Switch>
             <PrivateRoute exact path="/">
-              <MockComponent />
+              <h1>test</h1>
             </PrivateRoute>
-          </MemoryRouter>
-        );
-        const history = wrapper.find('Router').prop('history') as any;
-        expect(history.location.pathname).toEqual('/');
-        expect(wrapper.exists(MockComponent)).toBe(false);
-      });
+            <Route path="/login">
+              <h1>login</h1>
+            </Route>
+          </Switch>
+        </MemoryRouter>
+      );
+
+      expect(screen.getByText('login')).toBeInTheDocument();
+      expect(screen.queryByText('test')).not.toBeInTheDocument();
+    });
+
+    it('renders children when user is present and auth is ready', () => {
+      mockUseAppState.mockReturnValue({ user: {}, isAuthReady: true });
+
+      render(
+        <MemoryRouter initialEntries={['/']}>
+          <PrivateRoute exact path="/" component={MockComponent} />
+        </MemoryRouter>
+      );
+
+      expect(screen.getByText('test')).toBeInTheDocument();
+    });
+
+    it('renders nothing when auth is not ready', () => {
+      mockUseAppState.mockReturnValue({ user: null, isAuthReady: false });
+
+      const { container } = render(
+        <MemoryRouter initialEntries={['/']}>
+          <PrivateRoute exact path="/" component={MockComponent} />
+        </MemoryRouter>
+      );
+
+      expect(container.firstChild).toBeNull();
     });
   });
 
   describe('with auth disabled', () => {
-    it('should render children when there is no user and isAuthReady is false', () => {
+    it('renders children regardless of user or authReady', () => {
       delete process.env.REACT_APP_SET_AUTH;
-      mockUseAppState.mockImplementation(() => ({ user: null, isAuthReady: false }));
-      const wrapper = mount(
+      mockUseAppState.mockReturnValue({ user: null, isAuthReady: false });
+
+      render(
         <MemoryRouter initialEntries={['/']}>
-          <PrivateRoute exact path="/">
-            <MockComponent />
-          </PrivateRoute>
+          <PrivateRoute exact path="/" component={MockComponent} />
         </MemoryRouter>
       );
-      const history = wrapper.find('Router').prop('history') as any;
-      expect(history.location.pathname).toEqual('/');
-      expect(wrapper.exists(MockComponent)).toBe(true);
+
+      expect(screen.getByText('test')).toBeInTheDocument();
     });
   });
 });

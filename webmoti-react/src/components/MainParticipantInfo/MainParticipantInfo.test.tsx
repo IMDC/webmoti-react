@@ -1,13 +1,14 @@
-import { shallow } from 'enzyme';
-import AvatarIcon from '../../icons/AvatarIcon';
-import MainParticipantInfo from './MainParticipantInfo';
+import { render, screen } from '@testing-library/react';
 
+import MainParticipantInfo from './MainParticipantInfo';
+import { createMockParticipant, createMockRoom } from '../../__mocks__/mockCreator';
 import useIsRecording from '../../hooks/useIsRecording/useIsRecording';
 import useIsTrackSwitchedOff from '../../hooks/useIsTrackSwitchedOff/useIsTrackSwitchedOff';
 import useParticipantIsReconnecting from '../../hooks/useParticipantIsReconnecting/useParticipantIsReconnecting';
 import usePublications from '../../hooks/usePublications/usePublications';
 import useTrack from '../../hooks/useTrack/useTrack';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
+import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
 jest.mock('../../hooks/useParticipantNetworkQualityLevel/useParticipantNetworkQualityLevel', () => () => 4);
 jest.mock('../../hooks/usePublications/usePublications');
@@ -16,6 +17,7 @@ jest.mock('../../hooks/useTrack/useTrack');
 jest.mock('../../hooks/useVideoContext/useVideoContext');
 jest.mock('../../hooks/useParticipantIsReconnecting/useParticipantIsReconnecting');
 jest.mock('../../hooks/useIsRecording/useIsRecording');
+jest.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 
 const mockUsePublications = usePublications as jest.Mock<any>;
 const mockUseIsTrackSwitchedOff = useIsTrackSwitchedOff as jest.Mock<any>;
@@ -24,116 +26,103 @@ const mockUseVideoContext = useVideoContext as jest.Mock<any>;
 const mockUseParticipantIsReconnecting = useParticipantIsReconnecting as jest.Mock<boolean>;
 const mockUseIsRecording = useIsRecording as jest.Mock<boolean>;
 
-describe('the MainParticipantInfo component', () => {
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
+mockUseWebmotiVideoContext.mockImplementation(() => ({}));
+
+const mockLocalParticipant = createMockParticipant();
+
+describe('MainParticipantInfo component', () => {
   beforeEach(jest.clearAllMocks);
 
   beforeEach(() => {
-    mockUseVideoContext.mockImplementation(() => ({ room: { localParticipant: {} } }));
+    mockUseVideoContext.mockImplementation(() => ({
+      room: createMockRoom(),
+    }));
     mockUsePublications.mockImplementation(() => [{ trackName: '', kind: 'video' }]);
     mockUseTrack.mockImplementation((track: any) => track);
     mockUseIsTrackSwitchedOff.mockImplementation(() => false);
   });
 
-  it('should render the AvatarIcon component when no video tracks are published', () => {
+  it('should render AvatarIcon when no video tracks are published', () => {
     mockUsePublications.mockImplementationOnce(() => []);
-    const wrapper = shallow(
-      <MainParticipantInfo participant={{ identity: 'mockIdentity' } as any}>mock children</MainParticipantInfo>
-    );
-    expect(wrapper.find(AvatarIcon).exists()).toBe(true);
+    render(<MainParticipantInfo participant={mockLocalParticipant}>mock children</MainParticipantInfo>);
+    expect(screen.getByTestId('avatar-icon')).toBeInTheDocument();
   });
 
-  it('should not render the AvatarIcon component when video tracks are published', () => {
+  it('should not render AvatarIcon when video tracks are published', () => {
     mockUsePublications.mockImplementationOnce(() => [{ trackName: '', kind: 'video' }]);
-    const wrapper = shallow(
-      <MainParticipantInfo participant={{ identity: 'mockIdentity' } as any}>mock children</MainParticipantInfo>
-    );
-    expect(wrapper.find(AvatarIcon).exists()).toBe(false);
+    render(<MainParticipantInfo participant={mockLocalParticipant}>mock children</MainParticipantInfo>);
+    expect(screen.queryByTestId('avatar-icon')).not.toBeInTheDocument();
   });
 
-  it('should not render the AvatarIcon component when the user has disabled their video and is sharing their screen', () => {
+  it('should not render AvatarIcon when screen share is active', () => {
     mockUsePublications.mockImplementationOnce(() => [{ trackName: 'screen-123456' }]);
-    const wrapper = shallow(
-      <MainParticipantInfo participant={{ identity: 'mockIdentity' } as any}>mock children</MainParticipantInfo>
-    );
-    expect(wrapper.find(AvatarIcon).exists()).toBe(false);
+    render(<MainParticipantInfo participant={mockLocalParticipant}>mock children</MainParticipantInfo>);
+    expect(screen.queryByTestId('avatar-icon')).not.toBeInTheDocument();
   });
 
-  it('should render the AvatarIcon component when video is switched off', () => {
+  it('should render AvatarIcon when video is switched off', () => {
     mockUseIsTrackSwitchedOff.mockImplementationOnce(() => true);
-    const wrapper = shallow(
-      <MainParticipantInfo participant={{ identity: 'mockIdentity' } as any}>mock children</MainParticipantInfo>
-    );
-    expect(wrapper.find(AvatarIcon).exists()).toBe(true);
+    render(<MainParticipantInfo participant={mockLocalParticipant}>mock children</MainParticipantInfo>);
+    expect(screen.getByTestId('avatar-icon')).toBeInTheDocument();
   });
 
-  it('should not render the reconnecting UI when the user is connected', () => {
+  it('should not render reconnecting UI when connected', () => {
     mockUseParticipantIsReconnecting.mockImplementationOnce(() => false);
     mockUsePublications.mockImplementation(() => [{ trackName: '', kind: 'video' }]);
-    const wrapper = shallow(
-      <MainParticipantInfo participant={{ identity: 'mockIdentity' } as any}>mock children</MainParticipantInfo>
-    );
-    expect(wrapper.text()).not.toContain('Reconnecting...');
+    render(<MainParticipantInfo participant={mockLocalParticipant}>mock children</MainParticipantInfo>);
+    expect(screen.queryByTestId('reconnecting-overlay')).not.toBeInTheDocument();
   });
 
-  it('should render the reconnecting UI when the user is reconnecting', () => {
+  it('should render reconnecting UI when reconnecting', () => {
     mockUseParticipantIsReconnecting.mockImplementationOnce(() => true);
     mockUsePublications.mockImplementation(() => [{ trackName: '', kind: 'video' }]);
-    const wrapper = shallow(
-      <MainParticipantInfo participant={{ identity: 'mockIdentity' } as any}>mock children</MainParticipantInfo>
-    );
-    expect(wrapper.text()).toContain('Reconnecting...');
+    render(<MainParticipantInfo participant={mockLocalParticipant}>mock children</MainParticipantInfo>);
+    expect(screen.getByTestId('reconnecting-overlay')).toBeInTheDocument();
   });
 
-  it('should use the switchOff status of the screen share track when it is available', () => {
+  it('should use screen share track if available', () => {
     mockUsePublications.mockImplementationOnce(() => [{ trackName: 'screen' }, { trackName: '', kind: 'video' }]);
-    shallow(<MainParticipantInfo participant={{ identity: 'mockIdentity' } as any}>mock children</MainParticipantInfo>);
+    render(<MainParticipantInfo participant={mockLocalParticipant}>mock children</MainParticipantInfo>);
     expect(mockUseTrack).toHaveBeenCalledWith({ trackName: 'screen' });
   });
 
-  it('should use the switchOff status of the camera track when the screen share track is not available', () => {
+  it('should use camera track if screen share is not available', () => {
     mockUsePublications.mockImplementationOnce(() => [{ trackName: '', kind: 'video' }]);
-    shallow(<MainParticipantInfo participant={{ identity: 'mockIdentity' } as any}>mock children</MainParticipantInfo>);
+    render(<MainParticipantInfo participant={mockLocalParticipant}>mock children</MainParticipantInfo>);
     expect(mockUseTrack).toHaveBeenCalledWith({ trackName: '', kind: 'video' });
   });
 
-  it('should add "(You)" to the participants identity when they are the localParticipant', () => {
-    const mockParticipant = { identity: 'mockIdentity' } as any;
+  it('should show identity with "(You)" when local participant', () => {
+    const mockParticipant = mockLocalParticipant;
     mockUseVideoContext.mockImplementationOnce(() => ({ room: { localParticipant: mockParticipant } }));
-    const wrapper = shallow(<MainParticipantInfo participant={mockParticipant}>mock children</MainParticipantInfo>);
-    expect(wrapper.text()).toContain('mockIdentity (You)');
+    render(<MainParticipantInfo participant={mockParticipant}>mock children</MainParticipantInfo>);
+    expect(screen.getByTestId('participant-identity')).toHaveTextContent('mockIdentity (You)');
   });
 
-  it('should not add "(You)" to the participants identity when they are the localParticipant', () => {
-    const wrapper = shallow(
-      <MainParticipantInfo participant={{ identity: 'mockIdentity' } as any}>mock children</MainParticipantInfo>
-    );
-    expect(wrapper.text()).not.toContain('mockIdentity (You)');
+  it('should show identity without "(You)" when not local participant', () => {
+    render(<MainParticipantInfo participant={mockLocalParticipant}>mock children</MainParticipantInfo>);
+    expect(screen.getByTestId('participant-identity')).toHaveTextContent(/^mockIdentity$/);
   });
 
-  it('should add "- Screen" to the participants identity when they are screen sharing', () => {
+  it('should append "- Screen" when screen sharing', () => {
     mockUsePublications.mockImplementationOnce(() => [
       { trackName: 'screen', kind: 'video' },
       { trackName: '', kind: 'video' },
     ]);
-    const wrapper = shallow(
-      <MainParticipantInfo participant={{ identity: 'mockIdentity' } as any}>mock children</MainParticipantInfo>
-    );
-    expect(wrapper.text()).toContain('mockIdentity - Screen');
+    render(<MainParticipantInfo participant={mockLocalParticipant}>mock children</MainParticipantInfo>);
+    expect(screen.getByTestId('participant-identity')).toHaveTextContent('mockIdentity - Screen');
   });
 
-  it('should not render the recording indicator when isRecording is false', () => {
+  it('should not show recording indicator when not recording', () => {
     mockUseIsRecording.mockImplementationOnce(() => false);
-    const wrapper = shallow(
-      <MainParticipantInfo participant={{ identity: 'mockIdentity' } as any}>mock children</MainParticipantInfo>
-    );
-    expect(wrapper.text()).not.toContain('Recording');
+    render(<MainParticipantInfo participant={mockLocalParticipant}>mock children</MainParticipantInfo>);
+    expect(screen.queryByTestId('recording-indicator')).not.toBeInTheDocument();
   });
 
-  it('should render the recording indicator when isRecording is true', () => {
+  it('should show recording indicator when recording', () => {
     mockUseIsRecording.mockImplementationOnce(() => true);
-    const wrapper = shallow(
-      <MainParticipantInfo participant={{ identity: 'mockIdentity' } as any}>mock children</MainParticipantInfo>
-    );
-    expect(wrapper.text()).toContain('Recording');
+    render(<MainParticipantInfo participant={mockLocalParticipant}>mock children</MainParticipantInfo>);
+    expect(screen.getByTestId('recording-indicator')).toBeInTheDocument();
   });
 });
