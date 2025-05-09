@@ -1,13 +1,10 @@
-import { setImmediate } from 'timers';
-
 import React from 'react';
 
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import { useParams } from 'react-router-dom';
 
 // import DeviceSelectionScreen from './DeviceSelectionScreen/DeviceSelectionScreen';
-import MediaErrorSnackbar from './MediaErrorSnackbar/MediaErrorSnackbar';
 import PreJoinScreens from './PreJoinScreens';
 // import RoomNameScreen from './RoomNameScreen/RoomNameScreen';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
@@ -20,6 +17,7 @@ delete window.location;
 // @ts-ignore
 window.location = {
   pathname: '',
+  // @ts-ignore
   search: '',
   origin: '',
 };
@@ -27,10 +25,17 @@ window.location = {
 const mockReplaceState = jest.fn();
 Object.defineProperty(window.history, 'replaceState', { value: mockReplaceState });
 
+jest.mock('./MediaErrorSnackbar/MediaErrorSnackbar', () => {
+  const mockFn = jest.fn(() => null);
+  return {
+    __esModule: true,
+    default: mockFn,
+  };
+});
+
 jest.mock('../../state');
 jest.mock('react-router-dom', () => ({ useParams: jest.fn() }));
 jest.mock('../../hooks/useVideoContext/useVideoContext');
-jest.mock('./MediaErrorSnackbar/MediaErrorSnackbar', () => () => null);
 const mockUseAppState = useAppState as jest.Mock<any>;
 const mockUseParams = useParams as jest.Mock<any>;
 const mockUseVideoContext = useVideoContext as jest.Mock<any>;
@@ -49,11 +54,11 @@ const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
 mockUseWebmotiVideoContext.mockImplementation(() => ({}));
 
 describe('the PreJoinScreens component', () => {
-  beforeEach(jest.clearAllMocks);
   beforeEach(() => {
+    jest.clearAllMocks();
     mockUseAppState.mockImplementation(() => ({ user: { displayName: 'Test User' } }));
     mockUseParams.mockImplementation(() => ({ URLRoomName: 'testRoom' }));
-    mockUseVideoContext.mockImplementation(() => ({ getAudioAndVideoTracks: () => Promise.resolve() }));
+    mockUseWebmotiVideoContext.mockImplementation(() => ({}));
   });
 
   // ! Room name screen is not shown when using firebase auth
@@ -116,19 +121,18 @@ describe('the PreJoinScreens component', () => {
   // });
 
   it('should capture errors from getAudioAndVideoTracks and pass them to the MediaErrorSnackbar component', async () => {
-    const mockGetAudioAndVideoTracks = jest.fn(() => Promise.reject('testError'));
-    mockUseVideoContext.mockImplementation(() => ({ getAudioAndVideoTracks: mockGetAudioAndVideoTracks }));
+    const error = 'testError';
+    const mockGetTracks = jest.fn(() => Promise.reject(error));
+    mockUseVideoContext.mockImplementation(() => ({ getAudioAndVideoTracks: mockGetTracks }));
 
-    const wrapper = mount(<PreJoinScreens />);
-
-    // This may look odd, but it prevents 'An update to PreJoinScreens inside a test was not wrapped in act(...)' warning.
     await act(async () => {
-      await new Promise(setImmediate);
-      wrapper.update();
+      render(<PreJoinScreens />);
     });
 
-    const error = wrapper.find(MediaErrorSnackbar).prop('error');
-    expect(error).toBe('testError');
-    expect(mockGetAudioAndVideoTracks).toHaveBeenCalledTimes(1); // This makes sure that 'getAudioAndVideoTracks' isn't called repeatedly
+    expect(mockGetTracks).toHaveBeenCalledTimes(1);
+
+    const { default: mockMediaErrorSnackbar } = jest.requireMock('./MediaErrorSnackbar/MediaErrorSnackbar');
+
+    expect(mockMediaErrorSnackbar).toHaveBeenCalledWith(expect.objectContaining({ error }), expect.anything());
   });
 });

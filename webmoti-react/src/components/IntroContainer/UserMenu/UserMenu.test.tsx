@@ -1,9 +1,8 @@
-import React from 'react';
-import { Button, Link, Menu, MenuItem } from '@material-ui/core';
-import { shallow } from 'enzyme';
-import { useAppState } from '../../../state';
-import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
+import { render, screen, fireEvent } from '@testing-library/react';
+
 import UserMenu from './UserMenu';
+import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
+import { useAppState } from '../../../state';
 
 jest.mock('../../../state');
 jest.mock('../../../hooks/useVideoContext/useVideoContext');
@@ -13,12 +12,16 @@ const mockUseVideoContext = useVideoContext as jest.Mock<any>;
 
 describe('the UserMenu component', () => {
   const mockTrack = { stop: jest.fn() };
-  mockUseVideoContext.mockImplementation(() => ({ localTracks: [mockTrack] }));
-  const mockSignOut = jest.fn(() => Promise.resolve());
-  mockUseAppState.mockImplementation(() => ({
-    user: { displayName: 'Test User' },
-    signOut: mockSignOut,
-  }));
+  const mockSignOut = jest.fn();
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockUseVideoContext.mockImplementation(() => ({ localTracks: [mockTrack] }));
+    mockUseAppState.mockImplementation(() => ({
+      user: { displayName: 'Test User' },
+      signOut: mockSignOut,
+    }));
+  });
 
   describe('when logged in with firebase', () => {
     beforeAll(() => {
@@ -26,18 +29,19 @@ describe('the UserMenu component', () => {
     });
 
     it('should open the menu when clicked', () => {
-      const wrapper = shallow(<UserMenu />);
-      expect(wrapper.find(Menu).prop('open')).toBe(false);
-      wrapper.find(Button).simulate('click');
-      expect(wrapper.find(Menu).prop('open')).toBe(true);
+      render(<UserMenu />);
+      expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+
+      fireEvent.click(screen.getByRole('button', { name: /test user/i }));
+
+      expect(screen.getByRole('menu')).toBeInTheDocument();
     });
 
-    it('should stop all tracks and signout when the Logout button is clicked', () => {
-      const wrapper = shallow(<UserMenu />);
-      wrapper
-        .find(MenuItem)
-        .last()
-        .simulate('click');
+    it('should stop all tracks and sign out when logout is clicked', () => {
+      render(<UserMenu />);
+      fireEvent.click(screen.getByRole('button', { name: /test user/i }));
+      fireEvent.click(screen.getByText('Logout'));
+
       expect(mockTrack.stop).toHaveBeenCalled();
       expect(mockSignOut).toHaveBeenCalled();
     });
@@ -48,9 +52,10 @@ describe('the UserMenu component', () => {
       process.env.REACT_APP_SET_AUTH = 'passcode';
     });
 
-    it('should stop all tracks and signout when the Logout link is clicked', () => {
-      const wrapper = shallow(<UserMenu />);
-      wrapper.find(Link).simulate('click');
+    it('should stop all tracks and sign out when logout link is clicked', () => {
+      render(<UserMenu />);
+      fireEvent.click(screen.getByText('Logout'));
+
       expect(mockTrack.stop).toHaveBeenCalled();
       expect(mockSignOut).toHaveBeenCalled();
     });

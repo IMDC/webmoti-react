@@ -47,7 +47,7 @@ function BackgroundSelectionDialog() {
             index={index}
             imagePath={image.thumb}
             description={image.description}
-            key={image.thumb}
+            key={`${image.thumb}-${index}`}
           />
         ))}
       </div>

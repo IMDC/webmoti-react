@@ -99,6 +99,7 @@ export function MobileGalleryView() {
             {page.map(participant => (
               <div
                 data-test-id="participantContainer"
+                data-testid="participantContainer"
                 style={isMobileLandscape ? landscapeParticipantVideoStyles : portraitParticipantVideoStyles}
                 key={participant.sid}
               >

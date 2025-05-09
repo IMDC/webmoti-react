@@ -1,70 +1,55 @@
-import React from 'react';
-import { mount } from 'enzyme';
+import { render, screen, act } from '@testing-library/react';
 import RecordingNotifications from './RecordingNotifications';
-import Snackbar from '../Snackbar/Snackbar';
 import useIsRecording from '../../hooks/useIsRecording/useIsRecording';
 
 jest.mock('../../hooks/useIsRecording/useIsRecording');
 const mockUseIsRecording = useIsRecording as jest.Mock<boolean | null>;
 
-describe('the RecordingNotification component', () => {
-  beforeEach(() => mockUseIsRecording.mockImplementation(() => null));
+describe('the RecordingNotifications component', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockUseIsRecording.mockImplementation(() => null);
+  });
 
   it('should not display a notification when recording is not in progress', () => {
-    const wrapper = mount(<RecordingNotifications />);
-    expect(
-      wrapper
-        .find(Snackbar)
-        .find({ open: true })
-        .exists()
-    ).toBe(false);
+    render(<RecordingNotifications />);
+    expect(screen.queryByText(/recording/i)).not.toBeInTheDocument();
   });
 
-  it('should display "Recording In Progress" Snackbar when a user joins a room and recording is in progress', () => {
+  it('should display "Recording is in progress." when recording is active on join', () => {
     mockUseIsRecording.mockImplementation(() => true);
-    const wrapper = mount(<RecordingNotifications />);
-
-    expect(
-      wrapper
-        .find('Snackbar')
-        .find({ open: true })
-        .first()
-        .prop('headline')
-    ).toMatchInlineSnapshot(`"Recording is in progress."`);
+    render(<RecordingNotifications />);
+    expect(screen.getByText('Recording is in progress.')).toBeInTheDocument();
   });
 
-  it('should display "Recording Started" Snackbar when a recording is started after a user joins a room', () => {
-    const wrapper = mount(<RecordingNotifications />);
-    mockUseIsRecording.mockImplementation(() => false);
-    wrapper.setProps({}); // Set value of prevIsRecording.current
+  it('should display "Recording has started." when recording starts after join', () => {
+    let isRecording = false;
+    mockUseIsRecording.mockImplementation(() => isRecording);
 
-    mockUseIsRecording.mockImplementation(() => true);
-    wrapper.setProps({}); // Set value of prevIsRecording.current
-    wrapper.setProps({}); // Trigger re-render now that prevIsRecording.current is set
+    const { rerender } = render(<RecordingNotifications />);
 
-    expect(
-      wrapper
-        .find('Snackbar')
-        .find({ open: true })
-        .first()
-        .prop('headline')
-    ).toMatchInlineSnapshot(`"Recording has started."`);
+    act(() => {
+      isRecording = true;
+      mockUseIsRecording.mockImplementation(() => isRecording);
+      rerender(<RecordingNotifications />);
+    });
+
+    expect(screen.getByText('Recording has started.')).toBeInTheDocument();
   });
 
-  it('should display "Recording Complete" Snackbar when a recording stops ', () => {
-    mockUseIsRecording.mockImplementation(() => true);
-    const wrapper = mount(<RecordingNotifications />);
+  it('should display "Recording Complete" when recording stops after being active', () => {
+    let isRecording = true;
+    mockUseIsRecording.mockImplementation(() => isRecording);
 
-    mockUseIsRecording.mockImplementation(() => false);
-    wrapper.setProps({}); // Set value of prevIsRecording.current
-    wrapper.setProps({}); // Trigger re-render now that prevIsRecording.current is set
+    const { rerender } = render(<RecordingNotifications />);
 
-    expect(
-      wrapper
-        .find('Snackbar')
-        .find({ open: true })
-        .first()
-        .prop('headline')
-    ).toMatchInlineSnapshot(`"Recording Complete"`);
+    act(() => {
+      isRecording = false;
+      mockUseIsRecording.mockImplementation(() => isRecording);
+      rerender(<RecordingNotifications />);
+    });
+
+    expect(screen.getByText('Recording Complete')).toBeInTheDocument();
+    expect(screen.getByText(/Twilio Console/)).toBeInTheDocument();
   });
 });

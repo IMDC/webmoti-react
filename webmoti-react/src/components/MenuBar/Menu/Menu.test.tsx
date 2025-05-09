@@ -1,23 +1,13 @@
-import { Button, MenuItem } from '@material-ui/core';
-import MenuContainer from '@material-ui/core/Menu';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreIcon from '@material-ui/icons/MoreVert';
-import { render, fireEvent } from '@testing-library/react';
-import { shallow } from 'enzyme';
-
+import { render, fireEvent, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import Menu from './Menu';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useFlipCameraToggle from '../../../hooks/useFlipCameraToggle/useFlipCameraToggle';
-// import useIsRecording from '../../../hooks/useIsRecording/useIsRecording';
-import useLocalVideoToggle from '../../../hooks/useLocalVideoToggle/useLocalVideoToggle';
 import useRoomState from '../../../hooks/useRoomState/useRoomState';
 import useScreenShareParticipant from '../../../hooks/useScreenShareParticipant/useScreenShareParticipant';
-import FlipCameraIcon from '../../../icons/FlipCameraIcon';
-import { useAppState } from '../../../state';
-import AboutDialog from '../../AboutDialog/AboutDialog';
-import DeviceSelectionDialog from '../../DeviceSelectionDialog/DeviceSelectionDialog';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useAppState } from '../../../state';
 
 jest.mock('../../../hooks/useFlipCameraToggle/useFlipCameraToggle');
 jest.mock('@material-ui/core/useMediaQuery');
@@ -36,277 +26,146 @@ jest.mock('../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 const mockUseFlipCameraToggle = useFlipCameraToggle as jest.Mock<any>;
 const mockUseMediaQuery = useMediaQuery as jest.Mock<boolean>;
 const mockUseAppState = useAppState as jest.Mock<any>;
-// const mockUseIsRecording = useIsRecording as jest.Mock<boolean>;
 const mockUseChatContext = useChatContext as jest.Mock<any>;
-const mockUseLocalVideoToggle = useLocalVideoToggle as jest.Mock<any>;
+const mockUseRoomState = useRoomState as jest.Mock<any>;
+const mockUseScreenShareParticipant = useScreenShareParticipant as jest.Mock<any>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
 
 const mockToggleChatWindow = jest.fn();
-mockUseChatContext.mockImplementation(() => ({ setIsChatWindowOpen: mockToggleChatWindow }));
-mockUseLocalVideoToggle.mockImplementation(() => [true, () => {}]);
+const mockSetIsGalleryViewActive = jest.fn();
 
-const mockUseRoomState = useRoomState as jest.Mock<any>;
-mockUseRoomState.mockImplementation(() => 'connected');
-
-const mockUseScreenShareParticipant = useScreenShareParticipant as jest.Mock<any>;
-mockUseScreenShareParticipant.mockImplementation(() => 'mockParticipant');
-
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
-mockUseWebmotiVideoContext.mockImplementation(() => ({}));
-
-describe('the Menu component', () => {
-  let mockUpdateRecordingRules: jest.Mock<any>;
-  let mockSetIsGalleryViewActive = jest.fn();
-
-  beforeEach(() => jest.clearAllMocks());
-
-  beforeAll(() => {
-    mockUpdateRecordingRules = jest.fn(() => Promise.resolve());
-    mockUseAppState.mockImplementation(() => ({
-      isFetching: false,
-      updateRecordingRules: mockUpdateRecordingRules,
-      roomType: 'group',
-      setIsGalleryViewActive: mockSetIsGalleryViewActive,
-    }));
-    mockUseFlipCameraToggle.mockImplementation(() => ({
-      flipCameraDisabled: false,
-      flipCameraSupported: false,
-    }));
+beforeAll(() => {
+  Object.defineProperty(global.navigator, 'mediaDevices', {
+    writable: true,
+    value: {
+      addEventListener: jest.fn(),
+      getUserMedia: jest.fn(),
+      enumerateDevices: jest.fn().mockResolvedValue([
+        { kind: 'audioinput', deviceId: 'audio-1', label: 'Mic' },
+        { kind: 'videoinput', deviceId: 'video-1', label: 'Camera' },
+        { kind: 'audiooutput', deviceId: 'output-1', label: 'Speaker' },
+      ]),
+      removeEventListener: jest.fn(),
+    },
   });
 
-  // describe('the recording button', () => {
-  //   describe('while recording is in progress', () => {
-  //     beforeAll(() => {
-  //       mockUseIsRecording.mockImplementation(() => true);
-  //     });
+  mockUseFlipCameraToggle.mockImplementation(() => ({
+    flipCameraDisabled: false,
+    flipCameraSupported: false,
+  }));
+});
 
-  //     it('should display "Stop Recording"', () => {
-  //       const { getByText } = render(<Menu />);
-  //       fireEvent.click(getByText('More'));
+beforeEach(() => {
+  jest.clearAllMocks();
+  mockUseChatContext.mockImplementation(() => ({ setIsChatWindowOpen: mockToggleChatWindow }));
+  mockUseRoomState.mockImplementation(() => 'connected');
+  mockUseScreenShareParticipant.mockImplementation(() => 'mockParticipant');
+  mockUseWebmotiVideoContext.mockImplementation(() => ({}));
+});
 
-  //       expect(getByText('Stop Recording')).toBeTruthy();
-  //     });
-
-  //     it('should correctly update recording rules and display the snackbar when the user clicks on the Stop Recording button', () => {
-  //       const { getByText } = render(<Menu />);
-  //       fireEvent.click(getByText('More'));
-
-  //       fireEvent.click(getByText('Stop Recording'));
-
-  //       expect(mockUpdateRecordingRules).toHaveBeenCalledWith('mockRoomSid', [{ all: true, type: 'exclude' }]);
-  //       waitForElement(() => getByText('You can view the recording in the Twilio Console'));
-  //     });
-  //   });
-
-  //   describe('while recording is not in progress', () => {
-  //     beforeAll(() => {
-  //       mockUseIsRecording.mockImplementation(() => false);
-  //     });
-
-  //     it('should render the recording button in group rooms', () => {
-  //       mockUseAppState.mockImplementation(() => ({
-  //         isFetching: false,
-  //         updateRecordingRules: mockUpdateRecordingRules,
-  //         roomType: 'group',
-  //         setIsGalleryViewActive: mockSetIsGalleryViewActive,
-  //       }));
-  //       const { getByText } = render(<Menu />);
-  //       fireEvent.click(getByText('More'));
-  //       expect(getByText('Start Recording')).toBeTruthy();
-  //     });
-
-  //     it('should render the recording button in group-small rooms', () => {
-  //       mockUseAppState.mockImplementation(() => ({
-  //         isFetching: false,
-  //         updateRecordingRules: mockUpdateRecordingRules,
-  //         roomType: 'group-small',
-  //         setIsGalleryViewActive: mockSetIsGalleryViewActive,
-  //       }));
-  //       const { getByText } = render(<Menu />);
-  //       fireEvent.click(getByText('More'));
-  //       expect(getByText('Start Recording')).toBeTruthy();
-  //     });
-
-  //     it('should not render the recording button in go rooms', () => {
-  //       mockUseAppState.mockImplementation(() => ({
-  //         isFetching: false,
-  //         updateRecordingRules: mockUpdateRecordingRules,
-  //         roomType: 'go',
-  //         setIsGalleryViewActive: mockSetIsGalleryViewActive,
-  //       }));
-  //       const { getByText, queryByText } = render(<Menu />);
-  //       fireEvent.click(getByText('More'));
-  //       expect(queryByText('Start Recording')).toBeNull();
-  //     });
-
-  //     it('should not render the recording button in peer-to-peer rooms', () => {
-  //       mockUseAppState.mockImplementation(() => ({
-  //         isFetching: false,
-  //         updateRecordingRules: mockUpdateRecordingRules,
-  //         roomType: 'peer-to-peer',
-  //         setIsGalleryViewActive: mockSetIsGalleryViewActive,
-  //       }));
-  //       const { getByText, queryByText } = render(<Menu />);
-  //       fireEvent.click(getByText('More'));
-  //       expect(queryByText('Start Recording')).toBeNull();
-  //     });
-
-  //     it('should render the recording button when roomType is undefined', () => {
-  //       mockUseAppState.mockImplementation(() => ({
-  //         isFetching: false,
-  //         updateRecordingRules: mockUpdateRecordingRules,
-  //         roomType: undefined,
-  //         setIsGalleryViewActive: mockSetIsGalleryViewActive,
-  //       }));
-  //       const { getByText } = render(<Menu />);
-  //       fireEvent.click(getByText('More'));
-  //       expect(getByText('Start Recording')).toBeTruthy();
-  //     });
-
-  //     it('should display "Start Recording"', () => {
-  //       const { getByText } = render(<Menu />);
-  //       fireEvent.click(getByText('More'));
-
-  //       expect(getByText('Start Recording')).toBeTruthy();
-  //     });
-
-  //     it('should correctly update recording rules and display the snackbar when the user clicks on the Start Recording button', () => {
-  //       const { getByText } = render(<Menu />);
-  //       fireEvent.click(getByText('More'));
-
-  //       fireEvent.click(getByText('Start Recording'));
-  //       expect(mockUpdateRecordingRules).toHaveBeenCalledWith('mockRoomSid', [{ all: true, type: 'include' }]);
-  //     });
-
-  //     it('should disable the Start Recording button when isFetching is true', async () => {
-  //       mockUseAppState.mockImplementationOnce(() => ({ isFetching: true }));
-  //       const wrapper = shallow(<Menu />);
-
-  //       expect(wrapper.find(MenuItem).at(1).prop('disabled')).toBe(true);
-  //     });
-  //   });
-  // });
-
+describe('Menu component', () => {
   describe('on desktop devices', () => {
-    beforeAll(() => {
+    beforeEach(() => {
       mockUseMediaQuery.mockImplementation(() => false);
-      mockUseFlipCameraToggle.mockImplementation(() => ({
-        flipCameraDisabled: false,
-        flipCameraSupported: false,
+      mockUseAppState.mockImplementation(() => ({
+        isFetching: false,
+        updateRecordingRules: jest.fn(),
+        roomType: 'group',
+        setIsGalleryViewActive: mockSetIsGalleryViewActive,
+        isGalleryViewActive: false,
       }));
     });
 
     it('should open the Menu when the Button is clicked', () => {
-      const wrapper = shallow(<Menu />);
-      expect(wrapper.find(MenuContainer).prop('open')).toBe(false);
-      wrapper.find(Button).simulate('click');
-      expect(wrapper.find(MenuContainer).prop('open')).toBe(true);
+      render(<Menu />);
+      expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+      fireEvent.click(screen.getByRole('button', { name: /more/i }));
+      expect(screen.getByRole('menu')).toBeInTheDocument();
     });
 
-    it('should open the AboutDialog when the About button is clicked', () => {
-      const wrapper = shallow(<Menu />);
-      expect(wrapper.find(AboutDialog).prop('open')).toBe(false);
-      wrapper
-        .find(MenuItem)
-        .filterWhere((node) => node.text().includes('About'))
-        .simulate('click');
-      expect(wrapper.find(AboutDialog).prop('open')).toBe(true);
+    it('should open the AboutDialog when About button is clicked', () => {
+      render(<Menu />);
+      fireEvent.click(screen.getByRole('button', { name: /more/i }));
+      fireEvent.click(screen.getByText('About'));
+      expect(screen.getByRole('heading', { name: /about/i })).toBeInTheDocument();
     });
 
-    it('should open the DeviceSelectionDialog when the Settings button is clicked', () => {
-      const wrapper = shallow(<Menu />);
-      expect(wrapper.find(DeviceSelectionDialog).prop('open')).toBe(false);
-      wrapper
-        .find(MenuItem)
-        .filterWhere((node) => node.text().includes('Audio and Video Settings'))
-        .simulate('click');
-      expect(wrapper.find(DeviceSelectionDialog).prop('open')).toBe(true);
+    it('should open the DeviceSelectionDialog when Settings is clicked', () => {
+      render(<Menu />);
+      fireEvent.click(screen.getByRole('button', { name: /more/i }));
+      fireEvent.click(screen.getByText('Audio and Video Settings'));
+      expect(screen.getByRole('heading', { name: /audio and video settings/i })).toBeInTheDocument();
     });
 
-    it('should show the Gallery View button when gallery view is inactive', () => {
-      mockUseAppState.mockImplementation(() => ({
-        setIsGalleryViewActive: mockSetIsGalleryViewActive,
-        isGalleryViewActive: false,
-      }));
-
-      const { getByText } = render(<Menu />);
-      fireEvent.click(getByText('More'));
-      fireEvent.click(getByText('Gallery View'));
-
+    it('should toggle to Gallery View when inactive', () => {
+      render(<Menu />);
+      fireEvent.click(screen.getByRole('button', { name: /more/i }));
+      fireEvent.click(screen.getByText('Gallery View'));
       expect(mockSetIsGalleryViewActive.mock.calls[0][0](false)).toBe(true);
     });
 
-    it('should show the Speaker View button when gallery view is active', () => {
+    it('should toggle to Speaker View when active', () => {
       mockUseAppState.mockImplementation(() => ({
         setIsGalleryViewActive: mockSetIsGalleryViewActive,
         isGalleryViewActive: true,
       }));
-
-      const { getByText } = render(<Menu />);
-      fireEvent.click(getByText('More'));
-      fireEvent.click(getByText('Speaker View'));
-
+      render(<Menu />);
+      fireEvent.click(screen.getByRole('button', { name: /more/i }));
+      fireEvent.click(screen.getByText('Speaker View'));
       expect(mockSetIsGalleryViewActive.mock.calls[0][0](true)).toBe(false);
     });
 
-    it('should render the correct icon', () => {
-      const wrapper = shallow(<Menu />);
-      expect(wrapper.find(ExpandMoreIcon).exists()).toBe(true);
-      expect(wrapper.find(MoreIcon).exists()).toBe(false);
-    });
-
     it('should not render the Flip Camera button', () => {
-      const wrapper = shallow(<Menu />);
-      expect(wrapper.find(FlipCameraIcon).exists()).toBe(false);
+      render(<Menu />);
+      fireEvent.click(screen.getByRole('button', { name: /more/i }));
+      expect(screen.queryByText('Flip Camera')).toBeNull();
     });
   });
 
   describe('on mobile devices', () => {
-    beforeAll(() => {
+    beforeEach(() => {
       mockUseMediaQuery.mockImplementation(() => true);
+      mockUseAppState.mockImplementation(() => ({
+        setIsGalleryViewActive: mockSetIsGalleryViewActive,
+        isGalleryViewActive: false,
+      }));
+    });
+
+    it('should render Flip Camera when supported', () => {
       mockUseFlipCameraToggle.mockImplementation(() => ({
+        flipCameraSupported: true,
         flipCameraDisabled: false,
-        flipCameraSupported: true,
+        toggleFacingMode: jest.fn(),
       }));
+
+      render(<Menu />);
+      fireEvent.click(screen.getByLabelText('More options'));
+      expect(screen.getByText('Flip Camera')).toBeInTheDocument();
+      expect(screen.getByText('Flip Camera').closest('li')).not.toHaveAttribute('aria-disabled', 'true');
     });
 
-    it('should render the correct icon', () => {
-      const wrapper = shallow(<Menu />);
-      expect(wrapper.find(ExpandMoreIcon).exists()).toBe(false);
-      expect(wrapper.find(MoreIcon).exists()).toBe(true);
-    });
-
-    it('should render non-disabled Flip Camera button when flipCameraSupported is true', () => {
-      const wrapper = shallow(<Menu />);
-      expect(wrapper.find(FlipCameraIcon).exists()).toBe(true);
-      expect(
-        wrapper
-          .find(MenuItem)
-          .filterWhere((node) => node.text().includes('Flip Camera'))
-          .prop('disabled')
-      ).toBe(false);
-    });
-
-    it('should render a disabled Flip Camera button when flipCameraSupported is true, and flipCameraDisabled is true', () => {
-      mockUseFlipCameraToggle.mockImplementationOnce(() => ({
+    it('should disable Flip Camera when flipCameraDisabled is true', () => {
+      mockUseFlipCameraToggle.mockImplementation(() => ({
+        flipCameraSupported: true,
         flipCameraDisabled: true,
-        flipCameraSupported: true,
+        toggleFacingMode: jest.fn(),
       }));
-      const wrapper = shallow(<Menu />);
-      expect(wrapper.find(FlipCameraIcon).exists()).toBe(true);
-      expect(
-        wrapper
-          .find(MenuItem)
-          .filterWhere((node) => node.text().includes('Flip Camera'))
-          .prop('disabled')
-      ).toBe(true);
+
+      render(<Menu />);
+      fireEvent.click(screen.getByLabelText('More options'));
+      expect(screen.getByText('Flip Camera').closest('li')).toHaveAttribute('aria-disabled', 'true');
     });
 
-    it('should not render Flip Camera button when flipCameraSupported is false', () => {
-      mockUseFlipCameraToggle.mockImplementationOnce(() => ({
+    it('should not show Flip Camera when unsupported', () => {
+      mockUseFlipCameraToggle.mockImplementation(() => ({
         flipCameraSupported: false,
+        flipCameraDisabled: false,
+        toggleFacingMode: jest.fn(),
       }));
-      const wrapper = shallow(<Menu />);
-      expect(wrapper.find(FlipCameraIcon).exists()).toBe(false);
+
+      render(<Menu />);
+      fireEvent.click(screen.getByLabelText('More options'));
+      expect(screen.queryByText('Flip Camera')).toBeNull();
     });
   });
 });

@@ -1,38 +1,72 @@
-import React from 'react';
+import { render } from '@testing-library/react';
 import Publication from './Publication';
-import { shallow } from 'enzyme';
 import useTrack from '../../hooks/useTrack/useTrack';
+import * as VideoTrackModule from '../VideoTrack/VideoTrack';
 
 jest.mock('../../hooks/useTrack/useTrack');
-const mockUseTrack = useTrack as jest.Mock<any>;
+jest.mock('../VideoTrack/VideoTrack', () => ({
+  __esModule: true,
+  default: jest.fn(() => <div data-testid="video-track" />),
+}));
+
+const mockUseTrack = useTrack as jest.Mock;
 
 describe('the Publication component', () => {
+  const mockPublication = 'mockPublication' as any;
+  const mockParticipant = { identity: 'some-user' } as any;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   describe('when track.kind is "video"', () => {
     it('should render a VideoTrack', () => {
       mockUseTrack.mockImplementation(() => ({ kind: 'video', name: '' }));
-      const wrapper = shallow(
-        <Publication isLocalParticipant publication={'mockPublication' as any} participant={'mockParticipant' as any} />
+
+      const { getByTestId } = render(
+        <Publication
+          isLocalParticipant
+          publication={mockPublication}
+          participant={mockParticipant}
+        />
       );
+
       expect(useTrack).toHaveBeenCalledWith('mockPublication');
-      expect(wrapper.find('VideoTrack').length).toBe(1);
+      expect(getByTestId('video-track')).toBeInTheDocument();
     });
 
     it('should ignore the "isLocalParticipant" prop when track.name contains "screen"', () => {
       mockUseTrack.mockImplementation(() => ({ kind: 'video', name: 'screen-123456' }));
-      const wrapper = shallow(
-        <Publication isLocalParticipant publication={'mockPublication' as any} participant={'mockParticipant' as any} />
+
+      render(
+        <Publication
+          isLocalParticipant
+          publication={mockPublication}
+          participant={mockParticipant}
+        />
       );
-      expect(useTrack).toHaveBeenCalledWith('mockPublication');
-      expect(wrapper.find({ isLocal: false }).length).toBe(1);
+
+      expect(VideoTrackModule.default).toHaveBeenCalledWith(
+        expect.objectContaining({ isLocal: false }),
+        expect.anything()
+      );
     });
 
-    it('should use the "isLocalParticipant" prop when track.name does not contain "screen" and track.kind is "video"', () => {
+    it('should use "isLocalParticipant" when track.name does not contain "screen"', () => {
       mockUseTrack.mockImplementation(() => ({ kind: 'video', name: '' }));
-      const wrapper = shallow(
-        <Publication isLocalParticipant publication={'mockPublication' as any} participant={'mockParticipant' as any} />
+
+      render(
+        <Publication
+          isLocalParticipant
+          publication={mockPublication}
+          participant={mockParticipant}
+        />
       );
-      expect(useTrack).toHaveBeenCalledWith('mockPublication');
-      expect(wrapper.find({ isLocal: true }).length).toBe(1);
+
+      expect(VideoTrackModule.default).toHaveBeenCalledWith(
+        expect.objectContaining({ isLocal: true }),
+        expect.anything()
+      );
     });
   });
 });

@@ -1,215 +1,175 @@
-import { MobileGalleryView } from './MobileGalleryView';
-import { shallow } from 'enzyme';
-import { useAppState } from '../../state';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { render, screen } from '@testing-library/react';
+
+import { MobileGalleryView } from './MobileGalleryView';
 import useParticipantContext from '../../hooks/useParticipantsContext/useParticipantsContext';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
-
-const mockLocalParticipant = { identity: 'test-local-participant', sid: 0 };
+import { createMockParticipant, createMockRoom } from '../../__mocks__/mockCreator';
 
 jest.mock('swiper/react', () => ({
-  Swiper: jest.fn(),
-  SwiperSlide: jest.fn(),
+  Swiper: ({ children }: any) => <div>{children}</div>,
+  SwiperSlide: ({ children }: any) => <div>{children}</div>,
 }));
-
 jest.mock('swiper', () => ({
   Pagination: jest.fn(),
 }));
-
-jest.mock('../../hooks/useParticipantsContext/useParticipantsContext');
 jest.mock('../../hooks/useVideoContext/useVideoContext');
-jest.mock('../../state');
+jest.mock('../../hooks/useParticipantsContext/useParticipantsContext');
+// jest.mock('../../state');
 jest.mock('@material-ui/core/useMediaQuery');
 
-const mockUseVideoContext = useVideoContext as jest.Mock<any>;
-const mockUseParticipantContext = useParticipantContext as jest.Mock<any>;
-const mockUseAppState = useAppState as jest.Mock<any>;
-const mockUseMediaQuery = useMediaQuery as jest.Mock<any>;
+const mockUseMediaQuery = useMediaQuery as jest.Mock;
+const mockUseVideoContext = useVideoContext as jest.Mock;
+const mockUseParticipantContext = useParticipantContext as jest.Mock;
+// const mockUseAppState = useAppState as jest.Mock;
 
-mockUseAppState.mockImplementation(() => ({ maxGalleryViewParticipants: 9 }));
+jest.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext', () => () => ({}));
+
+jest.mock('../../state', () => ({
+  __esModule: true,
+  useAppState: jest.fn(() => ({
+    isGalleryViewActive: true,
+    maxGalleryViewParticipants: 9,
+  })),
+}));
+
+const localParticipant = createMockParticipant('test-local-participant', 0);
+
+const p1 = createMockParticipant('participant-1', 1);
+const p2 = createMockParticipant('participant-2', 2);
+const p3 = createMockParticipant('participant-3', 3);
+const p4 = createMockParticipant('participant-4', 4);
+
 mockUseVideoContext.mockImplementation(() => ({
-  room: {
-    localParticipant: mockLocalParticipant,
-  },
-}));
-mockUseParticipantContext.mockImplementation(() => ({
-  mobileGalleryViewParticipants: [],
+  room: createMockRoom('mockroom', localParticipant),
 }));
 
-describe('the MobileGalleryView component', () => {
-  describe('in portrait orientation', () => {
+// beforeEach(() => {
+//   jest.clearAllMocks();
+// });
+
+const renderView = () => render(<MobileGalleryView />);
+
+describe('MobileGalleryView', () => {
+  describe('portrait orientation', () => {
     beforeEach(() => {
       mockUseMediaQuery.mockImplementation(() => false);
     });
 
-    it('should render correctly when there is only the localParticipant', () => {
+    it('renders one participant', () => {
       mockUseParticipantContext.mockImplementation(() => ({
         mobileGalleryViewParticipants: [],
       }));
-
-      const wrapper = shallow(<MobileGalleryView />);
-      const containers = wrapper.find('[data-test-id="participantContainer"]');
-      expect(containers.length).toBe(1);
-      expect(containers.prop('style')).toMatchObject({
-        height: '100%',
-        width: '100%',
-      });
+      renderView();
+      const containers = screen.getAllByTestId('participantContainer');
+      expect(containers).toHaveLength(1);
+      expect(containers[0]).toHaveStyle('width: 100%');
+      expect(containers[0]).toHaveStyle('height: 100%');
     });
 
-    it('should render correctly when there is one participant plus the localParticipant', () => {
+    it('renders two participants', () => {
       mockUseParticipantContext.mockImplementation(() => ({
-        mobileGalleryViewParticipants: [{ identity: 'test-participant-1', sid: 1 }],
+        mobileGalleryViewParticipants: [p1],
       }));
-
-      const wrapper = shallow(<MobileGalleryView />);
-      const containers = wrapper.find('[data-test-id="participantContainer"]');
-      expect(containers.length).toBe(2);
-      expect(containers.at(0).prop('style')).toMatchObject({
-        height: '50%',
-        width: '100%',
-      });
+      renderView();
+      const containers = screen.getAllByTestId('participantContainer');
+      expect(containers).toHaveLength(2);
+      expect(containers[0]).toHaveStyle('width: 100%');
+      expect(containers[0]).toHaveStyle('height: 50%');
     });
 
-    it('should render correctly when there are two participants plus the localParticipant', () => {
+    it('renders three participants', () => {
       mockUseParticipantContext.mockImplementation(() => ({
-        mobileGalleryViewParticipants: [
-          { identity: 'test-participant-1', sid: 1 },
-          { identity: 'test-participant-2', sid: 2 },
-        ],
+        mobileGalleryViewParticipants: [p1, p2],
       }));
-
-      const wrapper = shallow(<MobileGalleryView />);
-      const containers = wrapper.find('[data-test-id="participantContainer"]');
-      expect(containers.length).toBe(3);
-      expect(containers.at(0).prop('style')).toMatchObject({
-        height: '33.33%',
-        width: '100%',
-      });
+      renderView();
+      const containers = screen.getAllByTestId('participantContainer');
+      expect(containers).toHaveLength(3);
+      expect(containers[0]).toHaveStyle('width: 100%');
+      expect(containers[0]).toHaveStyle('height: 33.33%');
     });
 
-    it('should render correctly when there are 3 participants plus the localParticipant', () => {
+    it('renders four participants', () => {
       mockUseParticipantContext.mockImplementation(() => ({
-        mobileGalleryViewParticipants: [
-          { identity: 'test-participant-1', sid: 1 },
-          { identity: 'test-participant-2', sid: 2 },
-          { identity: 'test-participant-3', sid: 3 },
-        ],
+        mobileGalleryViewParticipants: [p1, p2, p3],
       }));
-
-      const wrapper = shallow(<MobileGalleryView />);
-      const containers = wrapper.find('[data-test-id="participantContainer"]');
-      expect(containers.length).toBe(4);
-      expect(containers.at(0).prop('style')).toMatchObject({
-        height: '50%',
-        width: '50%',
-      });
+      renderView();
+      const containers = screen.getAllByTestId('participantContainer');
+      expect(containers).toHaveLength(4);
+      expect(containers[0]).toHaveStyle('width: 50%');
+      expect(containers[0]).toHaveStyle('height: 50%');
     });
 
-    it('should render correctly when there are 3 or more participants plus the localParticipant', () => {
+    it('renders five participants', () => {
       mockUseParticipantContext.mockImplementation(() => ({
-        mobileGalleryViewParticipants: [
-          { identity: 'test-participant-1', sid: 1 },
-          { identity: 'test-participant-2', sid: 2 },
-          { identity: 'test-participant-3', sid: 3 },
-          { identity: 'test-participant-4', sid: 4 },
-        ],
+        mobileGalleryViewParticipants: [p1, p2, p3, p4],
       }));
-
-      const wrapper = shallow(<MobileGalleryView />);
-      const containers = wrapper.find('[data-test-id="participantContainer"]');
-      expect(containers.length).toBe(5);
-      expect(containers.at(0).prop('style')).toMatchObject({
-        height: '33.33%',
-        width: '50%',
-      });
+      renderView();
+      const containers = screen.getAllByTestId('participantContainer');
+      expect(containers).toHaveLength(5);
+      expect(containers[0]).toHaveStyle('width: 50%');
+      expect(containers[0]).toHaveStyle('height: 33.33%');
     });
   });
 
-  describe('in landscape orientation', () => {
+  describe('landscape orientation', () => {
     beforeEach(() => {
-      mockUseMediaQuery.mockImplementation(() => true);
+      mockUseMediaQuery.mockImplementation(() => true); 
     });
 
-    it('should render correctly when there is only the localParticipant', () => {
+    it('renders one participant', () => {
       mockUseParticipantContext.mockImplementation(() => ({
         mobileGalleryViewParticipants: [],
       }));
-
-      const wrapper = shallow(<MobileGalleryView />);
-      const containers = wrapper.find('[data-test-id="participantContainer"]');
-      expect(containers.length).toBe(1);
-      expect(containers.at(0).prop('style')).toMatchObject({
-        height: '100%',
-        width: '100%',
-      });
+      renderView();
+      const containers = screen.getAllByTestId('participantContainer');
+      expect(containers).toHaveLength(1);
+      expect(containers[0]).toHaveStyle('width: 100%');
+      expect(containers[0]).toHaveStyle('height: 100%');
     });
 
-    it('should render correctly when there is one participant plus the localParticipant', () => {
+    it('renders two participants', () => {
       mockUseParticipantContext.mockImplementation(() => ({
-        mobileGalleryViewParticipants: [{ identity: 'test-participant-1', sid: 1 }],
+        mobileGalleryViewParticipants: [p1],
       }));
-
-      const wrapper = shallow(<MobileGalleryView />);
-      const containers = wrapper.find('[data-test-id="participantContainer"]');
-      expect(containers.length).toBe(2);
-      expect(containers.at(0).prop('style')).toMatchObject({
-        height: '100%',
-        width: '50%',
-      });
+      renderView();
+      const containers = screen.getAllByTestId('participantContainer');
+      expect(containers).toHaveLength(2);
+      expect(containers[0]).toHaveStyle('width: 50%');
+      expect(containers[0]).toHaveStyle('height: 100%');
     });
 
-    it('should render correctly when there are two participants plus the localParticipant', () => {
+    it('renders three participants', () => {
       mockUseParticipantContext.mockImplementation(() => ({
-        mobileGalleryViewParticipants: [
-          { identity: 'test-participant-1', sid: 1 },
-          { identity: 'test-participant-2', sid: 2 },
-        ],
+        mobileGalleryViewParticipants: [p1, p2],
       }));
-
-      const wrapper = shallow(<MobileGalleryView />);
-      const containers = wrapper.find('[data-test-id="participantContainer"]');
-      expect(containers.length).toBe(3);
-      expect(containers.at(0).prop('style')).toMatchObject({
-        height: '100%',
-        width: '33.33%',
-      });
+      renderView();
+      const containers = screen.getAllByTestId('participantContainer');
+      expect(containers).toHaveLength(3);
+      expect(containers[0]).toHaveStyle('width: 33.33%');
+      expect(containers[0]).toHaveStyle('height: 100%');
     });
 
-    it('should render correctly when there are 3 participants plus the localParticipant', () => {
+    it('renders four participants', () => {
       mockUseParticipantContext.mockImplementation(() => ({
-        mobileGalleryViewParticipants: [
-          { identity: 'test-participant-1', sid: 1 },
-          { identity: 'test-participant-2', sid: 2 },
-          { identity: 'test-participant-3', sid: 3 },
-        ],
+        mobileGalleryViewParticipants: [p1, p2, p3],
       }));
-
-      const wrapper = shallow(<MobileGalleryView />);
-      const containers = wrapper.find('[data-test-id="participantContainer"]');
-      expect(containers.length).toBe(4);
-      expect(containers.at(0).prop('style')).toMatchObject({
-        height: '50%',
-        width: '50%',
-      });
+      renderView();
+      const containers = screen.getAllByTestId('participantContainer');
+      expect(containers).toHaveLength(4);
+      expect(containers[0]).toHaveStyle('width: 50%');
+      expect(containers[0]).toHaveStyle('height: 50%');
     });
 
-    it('should render correctly when there are 3 or more participants plus the localParticipant', () => {
+    it('renders five participants', () => {
       mockUseParticipantContext.mockImplementation(() => ({
-        mobileGalleryViewParticipants: [
-          { identity: 'test-participant-1', sid: 1 },
-          { identity: 'test-participant-2', sid: 2 },
-          { identity: 'test-participant-3', sid: 3 },
-          { identity: 'test-participant-4', sid: 4 },
-        ],
+        mobileGalleryViewParticipants: [p1, p2, p3, p4],
       }));
-
-      const wrapper = shallow(<MobileGalleryView />);
-      const containers = wrapper.find('[data-test-id="participantContainer"]');
-      expect(containers.length).toBe(5);
-      expect(containers.at(0).prop('style')).toMatchObject({
-        height: '50%',
-        width: '33.33%',
-      });
+      renderView();
+      const containers = screen.getAllByTestId('participantContainer');
+      expect(containers).toHaveLength(5);
+      expect(containers[0]).toHaveStyle('width: 33.33%');
+      expect(containers[0]).toHaveStyle('height: 50%');
     });
   });
 });

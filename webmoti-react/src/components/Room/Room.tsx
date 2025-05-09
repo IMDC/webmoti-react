@@ -94,6 +94,7 @@ export default function Room() {
 
   return (
     <div
+      data-testid="room-container"
       className={clsx(classes.container, {
         [classes.rightDrawerOpen]: isChatWindowOpen || isBackgroundSelectionOpen,
       })}
@@ -107,14 +108,14 @@ export default function Room() {
 
       {isGalleryViewActive ? (
         isMobile ? (
-          <MobileGalleryView />
+          <MobileGalleryView data-testid="mobile-gallery-view" />
         ) : (
-          <GalleryView />
+          <GalleryView data-testid="gallery-view" />
         )
       ) : (
         <>
-          <MainParticipant />
-          <ParticipantList />
+          <MainParticipant data-testid="main-participant" />
+          <ParticipantList data-testid="participant-list" />
         </>
       )}
 

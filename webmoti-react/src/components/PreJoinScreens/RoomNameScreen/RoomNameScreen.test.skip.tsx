@@ -1,25 +1,22 @@
-import { TextField } from '@material-ui/core';
-import { shallow } from 'enzyme';
-
+import { render, screen } from '@testing-library/react';
 import RoomNameScreen from './RoomNameScreen';
-import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import { useAppState } from '../../../state';
 
 jest.mock('../../../state');
-jest.mock('../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
-
 const mockUseAppState = useAppState as jest.Mock<any>;
-
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
-mockUseWebmotiVideoContext.mockImplementation(() => ({}));
 
 // !
 // ! we don't use the customIdentity query parameter so these tests aren't needed
 // !
 describe.skip('the RoomNameScreen component', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should render correctly when there is no logged-in user', () => {
-    mockUseAppState.mockImplementationOnce(() => ({ user: undefined }));
-    const wrapper = shallow(
+    mockUseAppState.mockImplementation(() => ({ user: undefined }));
+
+    render(
       <RoomNameScreen
         name="test"
         roomName="testRoom"
@@ -29,13 +26,14 @@ describe.skip('the RoomNameScreen component', () => {
       />
     );
 
-    expect(wrapper.text()).toContain("Enter your name and the name of a room you'd like to join");
-    expect(wrapper.find(TextField).length).toBe(2);
+    expect(screen.getByText('Enter your first name and click continue')).toBeInTheDocument();
+    expect(screen.getByLabelText(/your first name/i)).toBeInTheDocument();
   });
 
   it('should render correctly when there is a logged-in user', () => {
-    mockUseAppState.mockImplementationOnce(() => ({ user: { displayName: 'Test Name' } }));
-    const wrapper = shallow(
+    mockUseAppState.mockImplementation(() => ({ user: { displayName: 'Test Name' } }));
+
+    render(
       <RoomNameScreen
         name="test"
         roomName="testRoom"
@@ -45,22 +43,19 @@ describe.skip('the RoomNameScreen component', () => {
       />
     );
 
-    expect(wrapper.text()).toContain("Enter the name of a room you'd like to join");
-    expect(wrapper.find(TextField).length).toBe(1);
+    expect(screen.getByText('Enter your first name and click continue')).toBeInTheDocument();
+    expect(screen.queryByLabelText(/your first name/i)).not.toBeInTheDocument();
   });
 
-  it('should render correctly when there is a logged-in user and "customIdentity=true" query parameter"', () => {
-    mockUseAppState.mockImplementationOnce(() => ({ user: { displayName: 'Test Name' } }));
+  it('should render name field when user is logged in but "customIdentity=true" is in the query string', () => {
+    mockUseAppState.mockImplementation(() => ({ user: { displayName: 'Test Name' } }));
 
-    // @ts-ignore
-    delete window.location;
+    Object.defineProperty(window, 'location', {
+      writable: true,
+      value: { search: '?customIdentity=true' },
+    });
 
-    // @ts-ignore
-    window.location = {
-      search: 'customIdentity=true',
-    };
-
-    const wrapper = shallow(
+    render(
       <RoomNameScreen
         name="test"
         roomName="testRoom"
@@ -70,7 +65,7 @@ describe.skip('the RoomNameScreen component', () => {
       />
     );
 
-    expect(wrapper.text()).toContain("Enter your name and the name of a room you'd like to join");
-    expect(wrapper.find(TextField).length).toBe(2);
+    expect(screen.getByText('Enter your first name and click continue')).toBeInTheDocument();
+    expect(screen.getByLabelText(/your first name/i)).toBeInTheDocument();
   });
 });

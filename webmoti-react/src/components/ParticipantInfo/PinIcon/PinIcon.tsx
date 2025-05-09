@@ -1,4 +1,3 @@
-import React from 'react';
 import Tooltip from '@material-ui/core/Tooltip';
 import SvgIcon from '@material-ui/core/SvgIcon';
 
@@ -6,6 +5,7 @@ export default function PinIcon() {
   return (
     <Tooltip title="Participant is pinned. Click to un-pin." placement="top">
       <SvgIcon
+        data-testid="pin-icon"
         style={{ float: 'right', background: 'rgba(0, 0, 0, 0.5)', padding: '0.1em', boxSizing: 'content-box' }}
         width="26"
         height="26"

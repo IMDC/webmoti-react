@@ -1,13 +1,10 @@
-import { shallow } from 'enzyme';
-
+import { render, screen } from '@testing-library/react';
 import ParticipantInfo from './ParticipantInfo';
-import PinIcon from './PinIcon/PinIcon';
+import { createMockPublication } from '../../__mocks__/mockCreator';
 import useIsTrackSwitchedOff from '../../hooks/useIsTrackSwitchedOff/useIsTrackSwitchedOff';
 import useParticipantIsReconnecting from '../../hooks/useParticipantIsReconnecting/useParticipantIsReconnecting';
 import usePublications from '../../hooks/usePublications/usePublications';
 import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
-import AvatarIcon from '../../icons/AvatarIcon';
-import ScreenShareIcon from '../../icons/ScreenShareIcon';
 import { useAppState } from '../../state';
 
 jest.mock('../../state');
@@ -21,68 +18,73 @@ const mockUseAppState = useAppState as jest.Mock<any>;
 const mockUsePublications = usePublications as jest.Mock<any>;
 const mockUseIsTrackSwitchedOff = useIsTrackSwitchedOff as jest.Mock<any>;
 const mockUseParticipantIsReconnecting = useParticipantIsReconnecting as jest.Mock<boolean>;
-
 const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
-mockUseWebmotiVideoContext.mockImplementation(() => ({ isCameraOneOff: () => false, isCameraTwoOff: () => false }));
 
+mockUseWebmotiVideoContext.mockImplementation(() => ({
+  isCameraOneOff: () => false,
+  isCameraTwoOff: () => false,
+}));
 mockUseAppState.mockImplementation(() => ({ isGalleryViewActive: false }));
+
+const mockVideoPublication = createMockPublication('video');
+const mockScreenSharePublication = createMockPublication('video', 'screen');
 
 describe('the ParticipantInfo component', () => {
   it('should render the AvatarIcon component when no video tracks are published', () => {
     mockUsePublications.mockImplementation(() => []);
-    const wrapper = shallow(
+    render(
       <ParticipantInfo onClick={() => {}} isSelected={false} participant={{ identity: 'mockIdentity' } as any}>
         mock children
       </ParticipantInfo>
     );
-    expect(wrapper.find(AvatarIcon).exists()).toBe(true);
+    expect(screen.getByTestId('avatar-icon')).toBeInTheDocument();
   });
 
   it('should not display the AvatarIcon component when a video track is published', () => {
-    mockUsePublications.mockImplementation(() => [{ trackName: '', kind: 'video' }]);
-    const wrapper = shallow(
+    mockUsePublications.mockImplementation(() => [mockVideoPublication]);
+    render(
       <ParticipantInfo onClick={() => {}} isSelected={false} participant={{ identity: 'mockIdentity' } as any}>
         mock children
       </ParticipantInfo>
     );
-    expect(wrapper.find(AvatarIcon).exists()).toBe(false);
+    expect(screen.queryByTestId('avatar-icon')).not.toBeInTheDocument();
   });
 
   it('should render the AvatarIcon component when the video track is switchedOff', () => {
     mockUseIsTrackSwitchedOff.mockImplementation(() => true);
-    mockUsePublications.mockImplementation(() => [{ trackName: '', kind: 'video' }]);
-    const wrapper = shallow(
+    mockUsePublications.mockImplementation(() => [mockVideoPublication]);
+    render(
       <ParticipantInfo onClick={() => {}} isSelected={false} participant={{ identity: 'mockIdentity' } as any}>
         mock children
       </ParticipantInfo>
     );
-    expect(wrapper.find(AvatarIcon).exists()).toBe(true);
+    expect(screen.getByTestId('avatar-icon')).toBeInTheDocument();
   });
 
   it('should not render the reconnecting UI when the user is connected', () => {
     mockUseParticipantIsReconnecting.mockImplementationOnce(() => false);
-    mockUsePublications.mockImplementation(() => [{ trackName: '', kind: 'video' }]);
-    const wrapper = shallow(
+    mockUsePublications.mockImplementation(() => [mockVideoPublication]);
+    render(
       <ParticipantInfo onClick={() => {}} isSelected={false} participant={{ identity: 'mockIdentity' } as any}>
         mock children
       </ParticipantInfo>
     );
-    expect(wrapper.text()).not.toContain('Reconnecting...');
+    expect(screen.queryByText('Reconnecting...')).not.toBeInTheDocument();
   });
 
   it('should render the reconnecting UI when the user is reconnecting', () => {
     mockUseParticipantIsReconnecting.mockImplementationOnce(() => true);
-    mockUsePublications.mockImplementation(() => [{ trackName: '', kind: 'video' }]);
-    const wrapper = shallow(
+    mockUsePublications.mockImplementation(() => [mockVideoPublication]);
+    render(
       <ParticipantInfo onClick={() => {}} isSelected={false} participant={{ identity: 'mockIdentity' } as any}>
         mock children
       </ParticipantInfo>
     );
-    expect(wrapper.text()).toContain('Reconnecting...');
+    expect(screen.getByText('Reconnecting...')).toBeInTheDocument();
   });
 
   it('should add hideParticipant class to container component when hideParticipant prop is true', () => {
-    const wrapper = shallow(
+    render(
       <ParticipantInfo
         onClick={() => {}}
         isSelected={false}
@@ -92,11 +94,12 @@ describe('the ParticipantInfo component', () => {
         mock children
       </ParticipantInfo>
     );
-    expect(wrapper.prop('className')).toContain('hideParticipant');
+    const container = screen.getByTestId('participant-mockIdentity');
+    expect(container.className).toMatch(/hideParticipant/);
   });
 
   it('should not add hideParticipant class to container component when hideParticipant prop is false', () => {
-    const wrapper = shallow(
+    render(
       <ParticipantInfo
         onClick={() => {}}
         isSelected={false}
@@ -106,71 +109,74 @@ describe('the ParticipantInfo component', () => {
         mock children
       </ParticipantInfo>
     );
-    expect(wrapper.prop('className')).not.toContain('hideParticipant');
+    const container = screen.getByTestId('participant-mockIdentity');
+    expect(container.className).not.toMatch(/hideParticipant/);
   });
 
   it('should add cursorPointer class to container component when onClick prop is present', () => {
-    const wrapper = shallow(
+    render(
       <ParticipantInfo isSelected={false} participant={{ identity: 'mockIdentity' } as any} onClick={() => {}}>
         mock children
       </ParticipantInfo>
     );
-    expect(wrapper.prop('className')).toContain('cursorPointer');
+    const container = screen.getByTestId('participant-mockIdentity');
+    expect(container.className).toMatch(/cursorPointer/);
   });
 
   it('should not add cursorPointer class to container component when onClick prop is not present', () => {
-    const wrapper = shallow(
+    render(
       <ParticipantInfo isSelected={false} participant={{ identity: 'mockIdentity' } as any}>
         mock children
       </ParticipantInfo>
     );
-    expect(wrapper.prop('className')).not.toContain('cursorPointer');
+    const container = screen.getByTestId('participant-mockIdentity');
+    expect(container.className).not.toMatch(/cursorPointer/);
   });
 
   it('should render the PinIcon component when the participant is selected', () => {
-    mockUsePublications.mockImplementation(() => [{ trackName: '', kind: 'video' }]);
-    const wrapper = shallow(
+    mockUsePublications.mockImplementation(() => [mockVideoPublication]);
+    render(
       <ParticipantInfo onClick={() => {}} isSelected={true} participant={{ identity: 'mockIdentity' } as any}>
         mock children
       </ParticipantInfo>
     );
-    expect(wrapper.exists(PinIcon)).toBe(true);
+    expect(screen.getByTestId('pin-icon')).toBeInTheDocument();
   });
 
   it('should not render the PinIcon component when the participant is not selected', () => {
-    mockUsePublications.mockImplementation(() => [{ trackName: '', kind: 'video' }]);
-    const wrapper = shallow(
+    mockUsePublications.mockImplementation(() => [mockVideoPublication]);
+    render(
       <ParticipantInfo onClick={() => {}} isSelected={false} participant={{ identity: 'mockIdentity' } as any}>
         mock children
       </ParticipantInfo>
     );
-    expect(wrapper.exists(PinIcon)).toBe(false);
+    expect(screen.queryByTestId('pin-icon')).not.toBeInTheDocument();
   });
 
   it('should render the ScreenShareIcon component when the participant is sharing their screen', () => {
-    mockUsePublications.mockImplementation(() => [{ trackName: 'screen', kind: 'video' }]);
-    const wrapper = shallow(
+    mockUsePublications.mockImplementation(() => [mockScreenSharePublication]);
+    render(
       <ParticipantInfo onClick={() => {}} isSelected={false} participant={{ identity: 'mockIdentity' } as any}>
         mock children
       </ParticipantInfo>
     );
-    expect(wrapper.exists(ScreenShareIcon)).toBe(true);
+    expect(screen.getByTestId('screen-share-icon')).toBeInTheDocument();
   });
 
   it('should not render the ScreenShareIcon component when the participant is not sharing their screen', () => {
-    mockUsePublications.mockImplementation(() => [{ trackName: '', kind: 'video' }]);
-    const wrapper = shallow(
+    mockUsePublications.mockImplementation(() => [mockVideoPublication]);
+    render(
       <ParticipantInfo onClick={() => {}} isSelected={false} participant={{ identity: 'mockIdentity' } as any}>
         mock children
       </ParticipantInfo>
     );
-    expect(wrapper.exists(ScreenShareIcon)).toBe(false);
+    expect(screen.queryByTestId('screen-share-icon')).not.toBeInTheDocument();
   });
 
   it('should add "(You)" to the participants identity when they are the localParticipant', () => {
     mockUseIsTrackSwitchedOff.mockImplementation(() => false);
-    mockUsePublications.mockImplementation(() => [{ trackName: '', kind: 'video' }]);
-    const wrapper = shallow(
+    mockUsePublications.mockImplementation(() => [mockVideoPublication]);
+    render(
       <ParticipantInfo
         onClick={() => {}}
         isSelected={false}
@@ -180,17 +186,17 @@ describe('the ParticipantInfo component', () => {
         mock children
       </ParticipantInfo>
     );
-    expect(wrapper.text()).toContain('mockIdentity (You)');
+    expect(screen.getByText('mockIdentity (You)')).toBeInTheDocument();
   });
 
-  it('should not add "(You)" to the participants identity when they are the localParticipant', () => {
+  it('should not add "(You)" to the participants identity when they are not the localParticipant', () => {
     mockUseIsTrackSwitchedOff.mockImplementation(() => false);
-    mockUsePublications.mockImplementation(() => [{ trackName: '', kind: 'video' }]);
-    const wrapper = shallow(
+    mockUsePublications.mockImplementation(() => [mockVideoPublication]);
+    render(
       <ParticipantInfo onClick={() => {}} isSelected={false} participant={{ identity: 'mockIdentity' } as any}>
         mock children
       </ParticipantInfo>
     );
-    expect(wrapper.text()).not.toContain('mockIdentity (You)');
+    expect(screen.queryByText('mockIdentity (You)')).not.toBeInTheDocument();
   });
 });

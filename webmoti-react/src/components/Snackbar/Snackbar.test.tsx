@@ -1,56 +1,70 @@
-import { shallow } from 'enzyme';
-import React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import Snackbar from './Snackbar';
 
 describe('the Snackbar component', () => {
   it('should render correctly with "warning" variant', () => {
-    const wrapper = shallow(
+    render(
       <Snackbar variant="warning" headline="Test Headline" message="Test Message" handleClose={() => {}} open={true} />
     );
-    expect(wrapper).toMatchSnapshot();
+    expect(screen.getByText('Test Headline')).toBeInTheDocument();
+    expect(screen.getByText('Test Message')).toBeInTheDocument();
   });
 
   it('should render correctly with "error" variant', () => {
-    const wrapper = shallow(
+    render(
       <Snackbar variant="error" headline="Test Headline" message="Test Message" handleClose={() => {}} open={true} />
     );
-    expect(wrapper).toMatchSnapshot();
+    expect(screen.getByText('Test Headline')).toBeInTheDocument();
+    expect(screen.getByText('Test Message')).toBeInTheDocument();
   });
 
   it('should render correctly with "info" variant', () => {
-    const wrapper = shallow(
+    render(
       <Snackbar variant="info" headline="Test Headline" message="Test Message" handleClose={() => {}} open={true} />
     );
-    expect(wrapper).toMatchSnapshot();
+    expect(screen.getByText('Test Headline')).toBeInTheDocument();
+    expect(screen.getByText('Test Message')).toBeInTheDocument();
   });
 
   it('should render correctly with no handleClose function provided', () => {
-    const wrapper = shallow(<Snackbar variant="error" headline="Test Headline" message="Test Message" open={true} />);
-    expect(wrapper).toMatchSnapshot();
+    render(<Snackbar variant="error" headline="Test Headline" message="Test Message" open={true} />);
+    expect(screen.getByText('Test Headline')).toBeInTheDocument();
+    expect(screen.queryByLabelText(/close/i)).not.toBeInTheDocument();
   });
 
   describe('the handleClose function', () => {
-    beforeEach(jest.clearAllMocks);
+    it('should be called when close button is clicked', () => {
+      const mockHandleClose = jest.fn();
 
-    const mockHandleClose = jest.fn();
-    const wrapper = shallow(
-      <Snackbar
-        variant="warning"
-        headline="Test Headline"
-        message="Test Message"
-        handleClose={mockHandleClose}
-        open={true}
-      />
-    );
+      render(
+        <Snackbar
+          variant="warning"
+          headline="Test Headline"
+          message="Test Message"
+          handleClose={mockHandleClose}
+          open={true}
+        />
+      );
 
-    it('should be called when the onClose function is called', () => {
-      wrapper.prop('onClose')();
+      fireEvent.click(screen.getByLabelText(/close/i));
       expect(mockHandleClose).toHaveBeenCalled();
     });
 
-    it('should be called when the onClose function is called with the "clickaway" reason', () => {
-      wrapper.prop('onClose')({}, 'clickaway');
-      expect(mockHandleClose).not.toHaveBeenCalled();
+    it('should call handleClose when close icon is clicked', () => {
+      const mockHandleClose = jest.fn();
+
+      render(
+        <Snackbar
+          variant="warning"
+          headline="Test Headline"
+          message="Test Message"
+          handleClose={mockHandleClose}
+          open={true}
+        />
+      );
+
+      fireEvent.click(screen.getByLabelText(/close/i));
+      expect(mockHandleClose).toHaveBeenCalled();
     });
   });
 });

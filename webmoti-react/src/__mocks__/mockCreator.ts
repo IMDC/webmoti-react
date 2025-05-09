@@ -44,3 +44,21 @@ export function createMockConversation(): any {
     off: jest.fn(),
   };
 }
+
+export function createMockPublication(
+  kind: 'audio' | 'video' = 'video',
+  trackName = '',
+  isSubscribed = true,
+  trackSid = 'mockTrackSid',
+  overrides = {}
+): any {
+  return {
+    trackName,
+    kind,
+    isSubscribed,
+    track: { sid: trackSid },
+    on: jest.fn(),
+    off: jest.fn(),
+    ...overrides,
+  };
+}

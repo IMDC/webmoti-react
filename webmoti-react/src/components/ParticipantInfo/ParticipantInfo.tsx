@@ -231,7 +231,7 @@ export default function ParticipantInfo({
       </div>
       <div className={classes.innerContainer}>
         {isCameraOffOrVideoDisabled && (
-          <div className={classes.avatarContainer}>
+          <div className={classes.avatarContainer} data-testid="avatar-icon">
             <AvatarIcon />
           </div>
         )}

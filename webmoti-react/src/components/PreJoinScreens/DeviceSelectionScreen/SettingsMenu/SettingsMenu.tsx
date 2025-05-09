@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import Button from '@material-ui/core/Button';
 import MenuContainer from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -30,17 +30,23 @@ export default function SettingsMenu({ mobileButtonClass }: { mobileButtonClass?
           onClick={() => setMenuOpen(true)}
           startIcon={<MoreIcon />}
           className={mobileButtonClass}
+          data-testid="settings-button"
         >
           More
         </Button>
       ) : (
-        <Button ref={anchorRef} onClick={() => setMenuOpen(true)} startIcon={<SettingsIcon />}>
+        <Button
+          ref={anchorRef}
+          onClick={() => setMenuOpen(true)}
+          startIcon={<SettingsIcon />}
+          data-testid="settings-button"
+        >
           Settings
         </Button>
       )}
       <MenuContainer
         open={menuOpen}
-        onClose={() => setMenuOpen(isOpen => !isOpen)}
+        onClose={() => setMenuOpen((isOpen) => !isOpen)}
         anchorEl={anchorRef.current}
         getContentAnchorEl={null}
         anchorOrigin={{
@@ -52,14 +58,14 @@ export default function SettingsMenu({ mobileButtonClass }: { mobileButtonClass?
           horizontal: 'center',
         }}
       >
-        <MenuItem onClick={() => setAboutOpen(true)}>
+        <MenuItem onClick={() => setAboutOpen(true)} data-testid="about-menuitem">
           <Typography variant="body1">About</Typography>
         </MenuItem>
-        <MenuItem onClick={() => setDeviceSettingsOpen(true)}>
+        <MenuItem onClick={() => setDeviceSettingsOpen(true)} data-testid="device-settings-menuitem">
           <Typography variant="body1">Audio and Video Settings</Typography>
         </MenuItem>
         {roomType !== 'peer-to-peer' && roomType !== 'go' && (
-          <MenuItem onClick={() => setConnectionSettingsOpen(true)}>
+          <MenuItem onClick={() => setConnectionSettingsOpen(true)} data-testid="connection-settings-menuitem">
             <Typography variant="body1">Connection Settings</Typography>
           </MenuItem>
         )}
@@ -71,20 +77,24 @@ export default function SettingsMenu({ mobileButtonClass }: { mobileButtonClass?
           setMenuOpen(false);
         }}
       />
-      <DeviceSelectionDialog
-        open={deviceSettingsOpen}
-        onClose={() => {
-          setDeviceSettingsOpen(false);
-          setMenuOpen(false);
-        }}
-      />
-      <ConnectionOptionsDialog
-        open={connectionSettingsOpen}
-        onClose={() => {
-          setConnectionSettingsOpen(false);
-          setMenuOpen(false);
-        }}
-      />
+      <div data-testid="device-selection-dialog">
+        <DeviceSelectionDialog
+          open={deviceSettingsOpen}
+          onClose={() => {
+            setDeviceSettingsOpen(false);
+            setMenuOpen(false);
+          }}
+        />
+      </div>
+      <div data-testid="connection-options-dialog">
+        <ConnectionOptionsDialog
+          open={connectionSettingsOpen}
+          onClose={() => {
+            setConnectionSettingsOpen(false);
+            setMenuOpen(false);
+          }}
+        />
+      </div>
     </>
   );
 }

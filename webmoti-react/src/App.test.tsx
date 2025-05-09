@@ -1,50 +1,46 @@
-import React from 'react';
+import { render, screen } from '@testing-library/react';
 import App from './App';
-import MenuBar from './components/MenuBar/MenuBar';
-import PreJoinScreens from './components/PreJoinScreens/PreJoinScreens';
-import Room from './components/Room/Room';
-import { shallow } from 'enzyme';
-import useHeight from './hooks/useHeight/useHeight';
 import useRoomState from './hooks/useRoomState/useRoomState';
-
-jest.mock('swiper/react', () => ({
-  Swiper: jest.fn(),
-  SwiperSlide: jest.fn(),
-}));
-
-jest.mock('swiper', () => ({
-  Pagination: jest.fn(),
-}));
+import useHeight from './hooks/useHeight/useHeight';
 
 jest.mock('./hooks/useRoomState/useRoomState');
 jest.mock('./hooks/useHeight/useHeight');
 
-const mockUseRoomState = useRoomState as jest.Mock<any>;
-const mockUseHeight = useHeight as jest.Mock<any>;
+jest.mock('./components/PreJoinScreens/PreJoinScreens', () => () => <div data-testid="PreJoinScreens" />);
+jest.mock('./components/Room/Room', () => () => <div data-testid="Room" />);
+jest.mock('./components/MenuBar/MenuBar', () => () => <div data-testid="MenuBar" />);
+jest.mock('./components/MobileTopMenuBar/MobileTopMenuBar', () => () => <div />);
+jest.mock('./components/ReconnectingNotification/ReconnectingNotification', () => () => <div />);
+jest.mock('./components/RecordingNotifications/RecordingNotifications', () => () => <div />);
 
-mockUseHeight.mockImplementation(() => '500px');
+const mockUseRoomState = useRoomState as jest.Mock;
+const mockUseHeight = useHeight as jest.Mock;
 
-describe('the App component', () => {
-  it('should render correctly when disconnected from a room', () => {
-    mockUseRoomState.mockImplementation(() => 'disconnected');
-    const wrapper = shallow(<App />);
+mockUseHeight.mockReturnValue('500px');
 
-    expect(wrapper.find(PreJoinScreens).exists()).toBe(true);
-    expect(wrapper.find(Room).exists()).toBe(false);
-    expect(wrapper.find(MenuBar).exists()).toBe(false);
+describe('App component', () => {
+  it('renders PreJoinScreens when disconnected', () => {
+    mockUseRoomState.mockReturnValue('disconnected');
+    const { container } = render(<App />);
+
+    expect(screen.getByTestId('PreJoinScreens')).toBeInTheDocument();
+    expect(screen.queryByTestId('Room')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('MenuBar')).not.toBeInTheDocument();
+    expect(container.firstChild).toHaveStyle('height: 500px');
   });
 
-  it('should render correctly when connected (or reconnecting) to a room', () => {
-    mockUseRoomState.mockImplementation(() => 'connected');
-    const wrapper = shallow(<App />);
+  it('renders Room and MenuBar when connected', () => {
+    mockUseRoomState.mockReturnValue('connected');
+    render(<App />);
 
-    expect(wrapper.find(PreJoinScreens).exists()).toBe(false);
-    expect(wrapper.find(Room).exists()).toBe(true);
-    expect(wrapper.find(MenuBar).exists()).toBe(true);
+    expect(screen.getByTestId('Room')).toBeInTheDocument();
+    expect(screen.getByTestId('MenuBar')).toBeInTheDocument();
+    expect(screen.queryByTestId('PreJoinScreens')).not.toBeInTheDocument();
   });
 
-  it('should set the height of the main container using the useHeight hook', () => {
-    const wrapper = shallow(<App />);
-    expect(wrapper.prop('style')).toEqual({ height: '500px' });
+  it('applies height from useHeight to outer container', () => {
+    mockUseRoomState.mockReturnValue('disconnected');
+    const { container } = render(<App />);
+    expect(container.firstChild).toHaveStyle('height: 500px');
   });
 });
