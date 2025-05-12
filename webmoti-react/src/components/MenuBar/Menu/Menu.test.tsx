@@ -1,4 +1,5 @@
 import { render, fireEvent, screen } from '@testing-library/react';
+
 import '@testing-library/jest-dom';
 import Menu from './Menu';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
@@ -6,7 +7,9 @@ import useFlipCameraToggle from '../../../hooks/useFlipCameraToggle/useFlipCamer
 import useRoomState from '../../../hooks/useRoomState/useRoomState';
 import useScreenShareParticipant from '../../../hooks/useScreenShareParticipant/useScreenShareParticipant';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
+
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+
 import { useAppState } from '../../../state';
 
 jest.mock('../../../hooks/useFlipCameraToggle/useFlipCameraToggle');
@@ -22,6 +25,14 @@ jest.mock('../../../hooks/useLocalVideoToggle/useLocalVideoToggle');
 jest.mock('../../../hooks/useRoomState/useRoomState');
 jest.mock('../../../hooks/useScreenShareParticipant/useScreenShareParticipant');
 jest.mock('../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
+// silence act warnings by mocking useDevices
+jest.mock('../../../hooks/useDevices/useDevices', () => () => ({
+  audioInputDevices: [],
+  audioOutputDevices: [],
+  videoInputDevices: [],
+  hasAudioInputDevices: true,
+  hasVideoInputDevices: true,
+}));
 
 const mockUseFlipCameraToggle = useFlipCameraToggle as jest.Mock<any>;
 const mockUseMediaQuery = useMediaQuery as jest.Mock<boolean>;

@@ -1,9 +1,10 @@
-import React from 'react';
-import LoginPage from './LoginPage';
-import { act, fireEvent, render, waitForElement } from '@testing-library/react';
-import { useAppState } from '../../state';
-import { useLocation, useHistory } from 'react-router-dom';
 import { setImmediate } from 'timers';
+
+import { act, fireEvent, render, waitFor } from '@testing-library/react';
+import { useLocation, useHistory } from 'react-router-dom';
+
+import LoginPage from './LoginPage';
+import { useAppState } from '../../state';
 
 jest.mock('react-router-dom', () => {
   return {
@@ -41,7 +42,7 @@ describe('the LoginPage component', () => {
       expect(getByText('Sign in with Google')).toBeTruthy();
     });
 
-    it('should redirect the user to "/" after signIn when there is no previous location', done => {
+    it('should redirect the user to "/" after signIn when there is no previous location', (done) => {
       process.env.REACT_APP_SET_AUTH = 'firebase';
       mockUseAppState.mockImplementation(() => ({ user: null, signIn: () => Promise.resolve(), isAuthReady: true }));
       const { getByText } = render(<LoginPage />);
@@ -52,7 +53,7 @@ describe('the LoginPage component', () => {
       });
     });
 
-    it('should redirect the user to their previous location after signIn', done => {
+    it('should redirect the user to their previous location after signIn', (done) => {
       process.env.REACT_APP_SET_AUTH = 'firebase';
       mockUseLocation.mockImplementation(() => ({ state: { from: { pathname: '/room/test' } } }));
       mockUseAppState.mockImplementation(() => ({ user: null, signIn: () => Promise.resolve(), isAuthReady: true }));
@@ -74,7 +75,7 @@ describe('the LoginPage component', () => {
   });
 
   describe('with passcode auth enabled', () => {
-    it('should call sign in with the supplied passcode', done => {
+    it('should call sign in with the supplied passcode', (done) => {
       const mockSignin = jest.fn(() => Promise.resolve());
       process.env.REACT_APP_SET_AUTH = 'passcode';
       mockUseAppState.mockImplementation(() => ({ user: null, signIn: mockSignin, isAuthReady: true }));
@@ -107,7 +108,7 @@ describe('the LoginPage component', () => {
         fireEvent.submit(getByText('Submit'));
       });
 
-      const element = await waitForElement(() => getByText('Test Error'));
+      const element = await waitFor(() => getByText('Test Error'));
       expect(element).toBeTruthy();
     });
   });

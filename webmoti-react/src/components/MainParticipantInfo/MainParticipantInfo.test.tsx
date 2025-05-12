@@ -29,14 +29,15 @@ const mockUseIsRecording = useIsRecording as jest.Mock<boolean>;
 const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
 mockUseWebmotiVideoContext.mockImplementation(() => ({}));
 
-const mockLocalParticipant = createMockParticipant();
+const mockLocalParticipant = createMockParticipant('mockIdentity', 0);
+const mockRemoteParticipant = createMockParticipant('remoteIdentity', 1);
 
 describe('MainParticipantInfo component', () => {
   beforeEach(jest.clearAllMocks);
 
   beforeEach(() => {
     mockUseVideoContext.mockImplementation(() => ({
-      room: createMockRoom(),
+      room: createMockRoom('mockroom', mockLocalParticipant),
     }));
     mockUsePublications.mockImplementation(() => [{ trackName: '', kind: 'video' }]);
     mockUseTrack.mockImplementation((track: any) => track);
@@ -101,8 +102,8 @@ describe('MainParticipantInfo component', () => {
   });
 
   it('should show identity without "(You)" when not local participant', () => {
-    render(<MainParticipantInfo participant={mockLocalParticipant}>mock children</MainParticipantInfo>);
-    expect(screen.getByTestId('participant-identity')).toHaveTextContent(/^mockIdentity$/);
+    render(<MainParticipantInfo participant={mockRemoteParticipant}>mock children</MainParticipantInfo>);
+    expect(screen.getByTestId('participant-identity')).toHaveTextContent(/^remoteIdentity$/);
   });
 
   it('should append "- Screen" when screen sharing', () => {
@@ -110,8 +111,8 @@ describe('MainParticipantInfo component', () => {
       { trackName: 'screen', kind: 'video' },
       { trackName: '', kind: 'video' },
     ]);
-    render(<MainParticipantInfo participant={mockLocalParticipant}>mock children</MainParticipantInfo>);
-    expect(screen.getByTestId('participant-identity')).toHaveTextContent('mockIdentity - Screen');
+    render(<MainParticipantInfo participant={mockRemoteParticipant}>mock children</MainParticipantInfo>);
+    expect(screen.getByTestId('participant-identity')).toHaveTextContent('remoteIdentity - Screen');
   });
 
   it('should not show recording indicator when not recording', () => {

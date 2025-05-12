@@ -90,6 +90,7 @@ exports[`the ParticipantList component should correctly render Participant compo
           >
             <div
               class="makeStyles-avatarContainer-9"
+              data-testid="avatar-icon"
             >
               <svg
                 height="73"
@@ -196,6 +197,7 @@ exports[`the ParticipantList component should correctly render Participant compo
           >
             <div
               class="makeStyles-avatarContainer-9"
+              data-testid="avatar-icon"
             >
               <svg
                 height="73"
@@ -299,6 +301,7 @@ exports[`the ParticipantList component should correctly render Participant compo
               <svg
                 aria-hidden="true"
                 class="MuiSvgIcon-root"
+                data-testid="pin-icon"
                 focusable="false"
                 height="26"
                 style="float: right; background: rgba(0, 0, 0, 0.5); padding: 0.1em; box-sizing: content-box;"
@@ -320,6 +323,7 @@ exports[`the ParticipantList component should correctly render Participant compo
           >
             <div
               class="makeStyles-avatarContainer-9"
+              data-testid="avatar-icon"
             >
               <svg
                 height="73"
