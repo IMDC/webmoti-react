@@ -55,14 +55,6 @@
     "typescript": "^4.6.2"
   },
   "devDependencies": {
-    "@storybook/addon-actions": "^6.5.10",
-    "@storybook/addon-essentials": "^6.5.10",
-    "@storybook/addon-links": "^6.5.10",
-    "@storybook/builder-webpack5": "^6.5.10",
-    "@storybook/manager-webpack5": "^6.5.10",
-    "@storybook/node-logger": "^6.5.10",
-    "@storybook/preset-create-react-app": "^4.1.2",
-    "@storybook/react": "^6.5.10",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^12.1.5",
     "@testing-library/react-hooks": "^3.2.1",
@@ -110,8 +102,6 @@
     "deploy-debug": "cross-env REACT_APP_SET_AUTH=firebase REACT_APP_ROOM_TYPE=group npm run build && twilio rtc:apps:video:deploy --authentication=firebase --app-directory ./build --override --room-type=group -l debug",
     "view": "twilio rtc:apps:video:view",
     "delete": "twilio rtc:apps:video:delete",
-    "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public",
     "prepare": "cd .. && husky twilio-video-app-react/.husky"
   },
   "eslintConfig": {
@@ -121,17 +111,7 @@
     "rules": {
       "no-shadow": "off",
       "@typescript-eslint/no-shadow": 1
-    },
-    "overrides": [
-      {
-        "files": [
-          "**/*.stories.*"
-        ],
-        "rules": {
-          "import/no-anonymous-default-export": "off"
-        }
-      }
-    ]
+    }
   },
   "browserslist": {
     "production": [
