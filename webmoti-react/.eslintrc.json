@@ -1,0 +1,9 @@
+{
+    "extends": [
+        "react-app"
+    ],
+    "rules": {
+        "no-shadow": "off",
+        "@typescript-eslint/no-shadow": 1
+    }
+}
