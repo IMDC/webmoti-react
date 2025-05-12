@@ -37,7 +37,7 @@ export default function useConnectionOptions() {
     // video: { height: 1920, frameRate: 24, width: 1080 },
 
     //@ts-ignore - Internal use only. This property is not exposed in type definitions.
-    environment: process.env.REACT_APP_TWILIO_ENVIRONMENT,
+    environment: import.meta.env.VITE_TWILIO_ENVIRONMENT,
   };
 
   // For mobile browsers, limit the maximum incoming video bitrate to 2.5 Mbps.
@@ -45,7 +45,7 @@ export default function useConnectionOptions() {
     connectionOptions!.bandwidthProfile!.video!.maxSubscriptionBitrate = 2500000;
   }
 
-  if (process.env.REACT_APP_TWILIO_ENVIRONMENT === 'dev') {
+  if (import.meta.env.VITE_TWILIO_ENVIRONMENT === 'dev') {
     //@ts-ignore - Internal use only. This property is not exposed in type definitions.
     connectionOptions!.wsServer = 'wss://us2.vss.dev.twilio.com/signaling';
   }

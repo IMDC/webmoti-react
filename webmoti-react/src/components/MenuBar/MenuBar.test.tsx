@@ -67,7 +67,7 @@ describe('the MenuBar component', () => {
   beforeEach(() => {
     //@ts-ignore
     utils.isMobile = false;
-    process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS = 'false';
+    process.env.VITE_DISABLE_TWILIO_CONVERSATIONS = 'false';
   });
 
   // TODO move ToggleScreenShareButton tests to Menu.test.tsx (toggleScreenShare was moved to menu)
@@ -126,13 +126,13 @@ describe('the MenuBar component', () => {
   //   expect(wrapper.find(ToggleScreenShareButton).exists()).toBe(false);
   // });
 
-  // it('should render the ToggleChatButton when REACT_APP_DISABLE_TWILIO_CONVERSATIONS is not true', () => {
+  // it('should render the ToggleChatButton when VITE_DISABLE_TWILIO_CONVERSATIONS is not true', () => {
   //   render(<MenuBar />);
   //   expect(screen.getByTestId('toggle-chat-button')).toBeInTheDocument();
   // });
 
-  // it('should hide the ToggleChatButton when REACT_APP_DISABLE_TWILIO_CONVERSATIONS is true', () => {
-  //   process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS = 'true';
+  // it('should hide the ToggleChatButton when VITE_DISABLE_TWILIO_CONVERSATIONS is true', () => {
+  //   process.env.VITE_DISABLE_TWILIO_CONVERSATIONS = 'true';
   //   render(<MenuBar />);
   //   expect(screen.getByTestId('toggle-chat-button')).not.toBeInTheDocument();
   // });

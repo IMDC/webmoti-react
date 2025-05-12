@@ -22,8 +22,7 @@ const recordingRulesFunction: ServerlessFunction =
 const recordingRulesEndpoint = createExpressHandler(recordingRulesFunction);
 
 const noopMiddleware: RequestHandler = (_, __, next) => next();
-const authMiddleware =
-  process.env.REACT_APP_SET_AUTH === 'firebase' ? require('./firebaseAuthMiddleware') : noopMiddleware;
+const authMiddleware = process.env.VITE_SET_AUTH === 'firebase' ? require('./firebaseAuthMiddleware') : noopMiddleware;
 
 app.all('/token', authMiddleware, tokenEndpoint);
 app.all('/recordingrules', authMiddleware, recordingRulesEndpoint);

@@ -79,7 +79,7 @@ export default function MenuBar() {
             <AudioMixer />
 
             <Hidden mdDown>
-              {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && (
+              {import.meta.env.VITE_DISABLE_TWILIO_CONVERSATIONS !== 'true' && (
                 <span style={{ marginLeft: '10px' }}>
                   <ToggleChatButton />
                 </span>

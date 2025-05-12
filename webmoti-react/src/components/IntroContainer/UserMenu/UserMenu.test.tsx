@@ -25,7 +25,7 @@ describe('the UserMenu component', () => {
 
   describe('when logged in with firebase', () => {
     beforeAll(() => {
-      process.env.REACT_APP_SET_AUTH = 'firebase';
+      process.env.VITE_SET_AUTH = 'firebase';
     });
 
     it('should open the menu when clicked', () => {
@@ -49,7 +49,7 @@ describe('the UserMenu component', () => {
 
   describe('when logged in with passcode auth', () => {
     beforeAll(() => {
-      process.env.REACT_APP_SET_AUTH = 'passcode';
+      process.env.VITE_SET_AUTH = 'passcode';
     });
 
     it('should stop all tracks and sign out when logout link is clicked', () => {

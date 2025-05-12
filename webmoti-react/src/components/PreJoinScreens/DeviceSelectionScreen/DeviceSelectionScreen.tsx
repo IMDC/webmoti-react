@@ -86,7 +86,7 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
   const handleJoin = () => {
     getToken(name, roomName).then(({ token }) => {
       videoConnect(token);
-      process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
+      import.meta.env.VITE_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
     });
   };
 
@@ -189,7 +189,7 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
 
             <Grid item md={5} sm={12} xs={12}>
               <div className={classes.joinButtons}>
-                {process.env.REACT_APP_SET_AUTH === 'passcode' ? (
+                {import.meta.env.VITE_SET_AUTH === 'passcode' ? (
                   <Button variant="outlined" color="primary" onClick={() => setStep(Steps.roomNameStep)}>
                     Cancel
                   </Button>

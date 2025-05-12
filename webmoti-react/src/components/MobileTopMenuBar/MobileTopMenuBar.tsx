@@ -57,7 +57,7 @@ export default function MobileTopMenuBar() {
 
         <ToggleCaptionsButton />
 
-        {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />}
+        {import.meta.env.VITE_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />}
       </div>
 
       <div>

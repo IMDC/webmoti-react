@@ -11,7 +11,7 @@ const MockComponent = () => <h1>test</h1>;
 describe('PrivateRoute', () => {
   describe('with auth enabled', () => {
     beforeEach(() => {
-      process.env.REACT_APP_SET_AUTH = 'firebase';
+      process.env.VITE_SET_AUTH = 'firebase';
     });
 
     it('redirects to /login when no user and auth is ready', () => {
@@ -61,7 +61,7 @@ describe('PrivateRoute', () => {
 
   describe('with auth disabled', () => {
     it('renders children regardless of user or authReady', () => {
-      delete process.env.REACT_APP_SET_AUTH;
+      delete process.env.VITE_SET_AUTH;
       mockUseAppState.mockReturnValue({ user: null, isAuthReady: false });
 
       render(

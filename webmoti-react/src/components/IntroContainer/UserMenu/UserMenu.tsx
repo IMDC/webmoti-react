@@ -34,11 +34,11 @@ const UserMenu: React.FC = () => {
   const anchorRef = useRef<HTMLButtonElement>(null);
 
   const handleSignOut = useCallback(() => {
-    localTracks.forEach(track => track.stop());
+    localTracks.forEach((track) => track.stop());
     signOut?.();
   }, [localTracks, signOut]);
 
-  if (process.env.REACT_APP_SET_AUTH === 'passcode') {
+  if (import.meta.env.VITE_SET_AUTH === 'passcode') {
     return (
       <div className={classes.userContainer} data-testid="user-menu">
         <Link onClick={handleSignOut} className={classes.logoutLink}>
@@ -48,17 +48,17 @@ const UserMenu: React.FC = () => {
     );
   }
 
-  if (process.env.REACT_APP_SET_AUTH === 'firebase') {
+  if (import.meta.env.VITE_SET_AUTH === 'firebase') {
     return (
       <div className={classes.userContainer} data-testid="user-menu">
         <UserAvatar user={user} />
-        <Button onClick={() => setMenuOpen(isOpen => !isOpen)} ref={anchorRef} className={classes.userButton}>
+        <Button onClick={() => setMenuOpen((isOpen) => !isOpen)} ref={anchorRef} className={classes.userButton}>
           {user!.displayName}
           <ExpandMoreIcon />
         </Button>
         <Menu
           open={menuOpen}
-          onClose={() => setMenuOpen(isOpen => !isOpen)}
+          onClose={() => setMenuOpen((isOpen) => !isOpen)}
           anchorEl={anchorRef.current}
           getContentAnchorEl={null}
           anchorOrigin={{

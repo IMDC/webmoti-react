@@ -23,7 +23,7 @@ describe('IntroContainer', () => {
   beforeEach(() => {
     mockUseLocation.mockReset();
     mockUseAppState.mockReset();
-    process.env.REACT_APP_SET_AUTH = 'firebase';
+    process.env.VITE_SET_AUTH = 'firebase';
   });
 
   it('renders UserMenu when user exists and pathname is not /login', () => {

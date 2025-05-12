@@ -18,7 +18,7 @@ const room = new Room({
 
 let token: string;
 
-const livekitUrl = process.env.REACT_APP_LIVEKIT_URL;
+const livekitUrl = import.meta.env.VITE_LIVEKIT_URL;
 
 export default function LivekitConnectButton() {
   const [isConnected, setIsConnected] = useState(false);

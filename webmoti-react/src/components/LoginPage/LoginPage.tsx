@@ -61,7 +61,7 @@ export default function LoginPage() {
   const [passcode, setPasscode] = useState('');
   const [authError, setAuthError] = useState<Error | null>(null);
 
-  const isAuthEnabled = Boolean(process.env.REACT_APP_SET_AUTH);
+  const isAuthEnabled = Boolean(import.meta.env.VITE_SET_AUTH);
 
   const login = () => {
     setAuthError(null);
@@ -69,7 +69,7 @@ export default function LoginPage() {
       .then(() => {
         history.replace(location?.state?.from || { pathname: '/' });
       })
-      .catch(err => setAuthError(err));
+      .catch((err) => setAuthError(err));
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -87,7 +87,7 @@ export default function LoginPage() {
 
   return (
     <IntroContainer>
-      {process.env.REACT_APP_SET_AUTH === 'firebase' && (
+      {import.meta.env.VITE_SET_AUTH === 'firebase' && (
         <>
           <Typography variant="h5" className={classes.gutterBottom}>
             Sign in to join the classroom
@@ -99,7 +99,7 @@ export default function LoginPage() {
         </>
       )}
 
-      {process.env.REACT_APP_SET_AUTH === 'passcode' && (
+      {import.meta.env.VITE_SET_AUTH === 'passcode' && (
         <>
           <Typography variant="h5" className={classes.gutterBottom}>
             Enter passcode to join a room
