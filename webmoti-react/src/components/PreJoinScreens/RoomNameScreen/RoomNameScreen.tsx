@@ -63,9 +63,7 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
       <Typography variant="h5" className={classes.gutterBottom}>
         Join Classroom
       </Typography>
-      <Typography variant="body1">
-        Enter your first name and click continue
-      </Typography>
+      <Typography variant="body1">Enter your first name and click continue</Typography>
       <form onSubmit={handleSubmit}>
         <div className={classes.inputContainer}>
           {!hasUsername && (
@@ -85,7 +83,7 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
           )}
           {/* hide room name field when running prod */}
           {/* (it confuses participants and we only need one room for now) */}
-          {process.env.NODE_ENV === 'development' && (
+          {import.meta.env.MODE === 'development' && (
             <div className={classes.textFieldContainer}>
               <InputLabel shrink htmlFor="input-room-name">
                 Room Name

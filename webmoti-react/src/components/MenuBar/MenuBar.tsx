@@ -56,7 +56,7 @@ export default function MenuBar() {
           <Grid style={{ flex: 1 }}>
             <Typography variant="body1">
               {/* only show room name in dev */}
-              {process.env.NODE_ENV === 'development' && `${room!.name}`}
+              {import.meta.env.MODE === 'development' && `${room!.name}`}
               {/* {' | '}
               {participants.length + 1} participant
               {participants.length ? 's' : ''} */}

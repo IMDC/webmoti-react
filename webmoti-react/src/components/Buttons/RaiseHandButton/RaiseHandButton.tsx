@@ -101,7 +101,7 @@ export default function RaiseHandButton() {
       // the service can be offline here, it's just to make the initial connection
       const response = await sendHandRequest('INIT', null, true);
 
-      if (process.env.NODE_ENV !== 'test') {
+      if (import.meta.env.MODE !== 'test') {
         console.log(`Remote.It init: ${response.status}`);
       }
     };
