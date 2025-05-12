@@ -3,7 +3,7 @@ import firebaseAdmin from 'firebase-admin';
 
 firebaseAdmin.initializeApp({
   credential: firebaseAdmin.credential.cert(require('../../plugin-rtc/firebase_service_account.json')),
-  // databaseURL: process.env.VITE_FIREBASE_DATABASE_URL,
+  // databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
 });
 
 const firebaseAuthMiddleware: RequestHandler = async (req, res, next) => {

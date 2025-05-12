@@ -45,7 +45,7 @@ export const StateContext = createContext<StateContextType>(null!);
   The 'react-hooks/rules-of-hooks' linting rules prevent React Hooks from being called
   inside of if() statements. This is because hooks must always be called in the same order
   every time a component is rendered. The 'react-hooks/rules-of-hooks' rule is disabled below
-  because the "if (import.meta.env.VITE_SET_AUTH === 'firebase')" statements are evaluated
+  because the "if (process.env.REACT_APP_SET_AUTH === 'firebase')" statements are evaluated
   at build time (not runtime). If the statement evaluates to false, then the code is not
   included in the bundle that is produced (due to tree-shaking). Thus, in this instance, it
   is ok to call hooks inside if() statements.
@@ -87,12 +87,12 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
     setDisplayCaptions,
   } as StateContextType;
 
-  if (import.meta.env.VITE_SET_AUTH === 'firebase') {
+  if (process.env.REACT_APP_SET_AUTH === 'firebase') {
     contextValue = {
       ...contextValue,
       ...useFirebaseAuth(), // eslint-disable-line react-hooks/rules-of-hooks
     };
-  } else if (import.meta.env.VITE_SET_AUTH === 'passcode') {
+  } else if (process.env.REACT_APP_SET_AUTH === 'passcode') {
     contextValue = {
       ...contextValue,
       ...usePasscodeAuth(), // eslint-disable-line react-hooks/rules-of-hooks
@@ -101,7 +101,7 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
     contextValue = {
       ...contextValue,
       getToken: async (user_identity, room_name) => {
-        const endpoint = import.meta.env.VITE_TOKEN_ENDPOINT || '/token';
+        const endpoint = process.env.REACT_APP_TOKEN_ENDPOINT || '/token';
 
         return fetch(endpoint, {
           method: 'POST',
@@ -111,7 +111,7 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
           body: JSON.stringify({
             user_identity,
             room_name,
-            create_conversation: import.meta.env.VITE_DISABLE_TWILIO_CONVERSATIONS !== 'true',
+            create_conversation: process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true',
           }),
         })
           .then((res) => res.json())
@@ -125,7 +125,7 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
       },
 
       updateRecordingRules: async (room_sid, rules) => {
-        const endpoint = import.meta.env.VITE_TOKEN_ENDPOINT || '/recordingrules';
+        const endpoint = process.env.REACT_APP_TOKEN_ENDPOINT || '/recordingrules';
 
         return fetch(endpoint, {
           headers: {

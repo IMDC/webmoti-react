@@ -50,14 +50,14 @@ export default function MobileTopMenuBar() {
       <div className={classes.row}>
         <Typography variant="subtitle1" component="span">
           {/* only show room name in dev */}
-          {import.meta.env.MODE === 'development' && !isMobile && room!.name}
+          {process.env.NODE_ENV === 'development' && !isMobile && room!.name}
         </Typography>
 
         <ControlsMenu />
 
         <ToggleCaptionsButton />
 
-        {import.meta.env.VITE_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />}
+        {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />}
       </div>
 
       <div>

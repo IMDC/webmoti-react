@@ -156,7 +156,7 @@ export const connect = (...params) => {
   action('Connected to Twilio Video Room')(...params);
   if (!isConnected) {
     isConnected = true;
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       setTimeout(() => resolve(mockRoom), 1000);
     });
   } else {
@@ -172,7 +172,7 @@ const defaults = {
 export default defaults;
 
 // Disable conversations
-process.env.VITE_DISABLE_TWILIO_CONVERSATIONS = 'true';
+process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS = 'true';
 
 // The decorator to be used in ./storybook/preview to apply the mock to all stories
 export function decorator(story, { args }) {

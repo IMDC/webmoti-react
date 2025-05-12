@@ -101,7 +101,7 @@ describe('the usePasscodeAuth hook', () => {
       );
       const { result, waitForNextUpdate } = renderHook(usePasscodeAuth, { wrapper });
       await waitForNextUpdate();
-      result.current.signIn('123456').catch((err) => {
+      result.current.signIn('123456').catch(err => {
         expect(err.message).toBe('Passcode is incorrect');
       });
     });
@@ -113,7 +113,7 @@ describe('the usePasscodeAuth hook', () => {
       );
       const { result, waitForNextUpdate } = renderHook(usePasscodeAuth, { wrapper });
       await waitForNextUpdate();
-      result.current.signIn('123456').catch((err) => {
+      result.current.signIn('123456').catch(err => {
         expect(err.message).toBe('Passcode has expired');
       });
     });
@@ -134,14 +134,15 @@ describe('the usePasscodeAuth hook', () => {
       });
 
       expect(window.fetch).toHaveBeenLastCalledWith('/token', {
-        body: '{"user_identity":"test-name","room_name":"test-room","passcode":"123123","create_room":true,"create_conversation":true}',
+        body:
+          '{"user_identity":"test-name","room_name":"test-room","passcode":"123123","create_room":true,"create_conversation":true}',
         headers: { 'content-type': 'application/json' },
         method: 'POST',
       });
     });
 
-    it('should call the API with the correct parameters when VITE_DISABLE_TWILIO_CONVERSATIONS is true', async () => {
-      process.env.VITE_DISABLE_TWILIO_CONVERSATIONS = 'true';
+    it('should call the API with the correct parameters when REACT_APP_DISABLE_TWILIO_CONVERSATIONS is true', async () => {
+      process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS = 'true';
 
       // @ts-ignore
       window.fetch = jest.fn(() =>
@@ -156,13 +157,14 @@ describe('the usePasscodeAuth hook', () => {
       });
 
       expect(window.fetch).toHaveBeenLastCalledWith('/token', {
-        body: '{"user_identity":"test-name","room_name":"test-room","passcode":"123123","create_room":true,"create_conversation":false}',
+        body:
+          '{"user_identity":"test-name","room_name":"test-room","passcode":"123123","create_room":true,"create_conversation":false}',
         headers: { 'content-type': 'application/json' },
         method: 'POST',
       });
 
       // reset the environment variable
-      delete process.env.VITE_DISABLE_TWILIO_CONVERSATIONS;
+      delete process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS;
     });
 
     it('should return a token', async () => {
@@ -196,7 +198,7 @@ describe('the usePasscodeAuth hook', () => {
         Promise.resolve({ status: 401, json: () => Promise.resolve({ error: { message: 'passcode expired' } }) })
       );
 
-      result.current.getToken('test-name', 'test-room').catch((err) => {
+      result.current.getToken('test-name', 'test-room').catch(err => {
         expect(err.message).toBe('Passcode has expired');
       });
     });
@@ -255,7 +257,8 @@ describe('the verifyPasscode function', () => {
   it('should call the API with the correct parameters', async () => {
     await verifyPasscode('123456');
     expect(window.fetch).toHaveBeenLastCalledWith('/token', {
-      body: '{"user_identity":"temp-name","room_name":"temp-room","passcode":"123456","create_room":false,"create_conversation":false}',
+      body:
+        '{"user_identity":"temp-name","room_name":"temp-room","passcode":"123456","create_room":false,"create_conversation":false}',
       headers: { 'content-type': 'application/json' },
       method: 'POST',
     });

@@ -38,8 +38,8 @@ describe('the useAppState hook', () => {
     expect(result.error.message).toEqual('useAppState must be used within the AppStateProvider');
   });
 
-  it('should get a token using the VITE_TOKEN_ENDPOINT environment variable when avaiable', async () => {
-    process.env.VITE_TOKEN_ENDPOINT = 'http://test.com/api/token';
+  it('should get a token using the REACT_APP_TOKEN_ENDPOINT environment variable when avaiable', async () => {
+    process.env.REACT_APP_TOKEN_ENDPOINT = 'http://test.com/api/token';
 
     const { result } = renderHook(useAppState, { wrapper });
 
@@ -59,7 +59,7 @@ describe('the useAppState hook', () => {
 
   describe('with auth disabled', () => {
     it('should not use any auth hooks', async () => {
-      delete process.env.VITE_SET_AUTH;
+      delete process.env.REACT_APP_SET_AUTH;
       renderHook(useAppState, { wrapper });
       expect(useFirebaseAuth).not.toHaveBeenCalled();
       expect(usePasscodeAuth).not.toHaveBeenCalled();
@@ -68,7 +68,7 @@ describe('the useAppState hook', () => {
 
   describe('with firebase auth enabled', () => {
     it('should use the useFirebaseAuth hook', async () => {
-      process.env.VITE_SET_AUTH = 'firebase';
+      process.env.REACT_APP_SET_AUTH = 'firebase';
       const { result } = renderHook(useAppState, { wrapper });
       expect(useFirebaseAuth).toHaveBeenCalled();
       expect(result.current.user).toBe('firebaseUser');
@@ -77,7 +77,7 @@ describe('the useAppState hook', () => {
 
   describe('with passcode auth enabled', () => {
     it('should use the usePasscodeAuth hook', async () => {
-      process.env.VITE_SET_AUTH = 'passcode';
+      process.env.REACT_APP_SET_AUTH = 'passcode';
       const { result } = renderHook(useAppState, { wrapper });
       expect(usePasscodeAuth).toHaveBeenCalled();
       expect(result.current.user).toBe('passcodeUser');
@@ -87,11 +87,11 @@ describe('the useAppState hook', () => {
   describe('the getToken function', () => {
     it('should set isFetching to true after getToken is called, and false after getToken succeeds', async () => {
       // Using passcode auth because it's easier to mock the getToken function
-      process.env.VITE_SET_AUTH = 'passcode';
+      process.env.REACT_APP_SET_AUTH = 'passcode';
       mockUsePasscodeAuth.mockImplementation(() => {
         return {
           getToken: () =>
-            new Promise((resolve) => {
+            new Promise(resolve => {
               // Using fake timers so we can control when the promise resolves
               setTimeout(() => resolve({ text: () => 'mockVideoToken' }), 10);
             }),
@@ -115,7 +115,7 @@ describe('the useAppState hook', () => {
     });
 
     it('should set isFetching to true after getToken is called, and false after getToken fails', async () => {
-      process.env.VITE_SET_AUTH = 'passcode';
+      process.env.REACT_APP_SET_AUTH = 'passcode';
       mockUsePasscodeAuth.mockImplementation(() => {
         return {
           getToken: () =>

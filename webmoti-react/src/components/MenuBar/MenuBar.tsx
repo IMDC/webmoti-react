@@ -56,7 +56,7 @@ export default function MenuBar() {
           <Grid style={{ flex: 1 }}>
             <Typography variant="body1">
               {/* only show room name in dev */}
-              {import.meta.env.MODE === 'development' && `${room!.name}`}
+              {process.env.NODE_ENV === 'development' && `${room!.name}`}
               {/* {' | '}
               {participants.length + 1} participant
               {participants.length ? 's' : ''} */}
@@ -79,7 +79,7 @@ export default function MenuBar() {
             <AudioMixer />
 
             <Hidden mdDown>
-              {import.meta.env.VITE_DISABLE_TWILIO_CONVERSATIONS !== 'true' && (
+              {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && (
                 <span style={{ marginLeft: '10px' }}>
                   <ToggleChatButton />
                 </span>

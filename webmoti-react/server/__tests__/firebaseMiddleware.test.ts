@@ -1,5 +1,5 @@
 /* eslint-disable import/first */
-// process.env.VITE_FIREBASE_DATABASE_URL = 'mockURL';
+// process.env.REACT_APP_FIREBASE_DATABASE_URL = 'mockURL';
 
 import firebaseAuthMiddleware from '../firebaseAuthMiddleware';
 import firebaseAdmin from 'firebase-admin';

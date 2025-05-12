@@ -3,7 +3,7 @@ runtime: nodejs20
 entrypoint: npm run server
 
 env_variables:
-  VITE_SET_AUTH: 'firebase'
+  REACT_APP_SET_AUTH: 'firebase'
 
 handlers:
   - url: /.*

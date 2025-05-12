@@ -22,7 +22,7 @@ describe('the AboutDialog component', () => {
   });
 
   it('should display the package.json version', () => {
-    process.env.VITE_VERSION = '1.3';
+    process.env.REACT_APP_VERSION = '1.3';
     const { getByText } = render(<AboutDialog open={true} onClose={() => {}} />);
     expect(getByText('App Version: 1.3')).toBeTruthy();
   });
@@ -59,8 +59,8 @@ describe('the AboutDialog component', () => {
     beforeEach(() => {
       // @ts-ignore
       process.env = {
-        VITE_GIT_TAG: 'v0.1',
-        VITE_GIT_COMMIT: '01b2c3',
+        REACT_APP_GIT_TAG: 'v0.1',
+        REACT_APP_GIT_COMMIT: '01b2c3',
       };
     });
 
