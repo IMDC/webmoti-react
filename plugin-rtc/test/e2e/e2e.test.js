@@ -23,7 +23,7 @@ jest.mock('../../src/constants', () => ({
 }));
 
 function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function getPasscode(output) {
@@ -96,7 +96,7 @@ describe('the RTC Twilio-CLI Plugin', () => {
     let webAppURL;
     let passcode;
 
-    beforeAll(async done => {
+    beforeAll(async () => {
       stdout.start();
       await DeployCommand.run([
         '--authentication',
@@ -108,7 +108,6 @@ describe('the RTC Twilio-CLI Plugin', () => {
       passcode = getPasscode(stdout.output);
       URL = getURL(stdout.output);
       webAppURL = getWebAppURL(stdout.output);
-      done();
     });
 
     afterAll(async () => {
@@ -155,7 +154,7 @@ describe('the RTC Twilio-CLI Plugin', () => {
         // Find the deployed conversations service
         const deployedConversationsServices = await twilioClient.conversations.services.list();
         const deployedConversationsService = deployedConversationsServices.find(
-          service => (service.sid = conversationServiceSid)
+          (service) => (service.sid = conversationServiceSid)
         );
 
         // Find the conversation participant
@@ -164,7 +163,7 @@ describe('the RTC Twilio-CLI Plugin', () => {
           .conversations(room.sid)
           .participants.list();
         const conversationParticipant = conversationParticipants.find(
-          participant => participant.identity === 'test user'
+          (participant) => participant.identity === 'test user'
         );
 
         expect(deployedConversationsService).toBeDefined();
@@ -202,7 +201,7 @@ describe('the RTC Twilio-CLI Plugin', () => {
         // Find the deployed conversations service
         const deployedConversationsServices = await twilioClient.conversations.services.list();
         const deployedConversationsService = deployedConversationsServices.find(
-          service => (service.sid = conversationServiceSid)
+          (service) => (service.sid = conversationServiceSid)
         );
 
         const conversationPromise = twilioClient.conversations
@@ -217,7 +216,7 @@ describe('the RTC Twilio-CLI Plugin', () => {
         superagent
           .post(`${URL}/token`)
           .send({ passcode: '0000' })
-          .catch(e => expect(e.status).toBe(401));
+          .catch((e) => expect(e.status).toBe(401));
       });
 
       it('should display a URL which returns the web app', async () => {
@@ -275,7 +274,7 @@ describe('the RTC Twilio-CLI Plugin', () => {
         const testWebAppURL = getWebAppURL(stdout.output);
         expect(updatedPasscode).not.toEqual(passcode);
         expect(testURL).toEqual(URL);
-        superagent.get(`${testWebAppURL}`).catch(e => expect(e.status).toBe(404));
+        superagent.get(`${testWebAppURL}`).catch((e) => expect(e.status).toBe(404));
       });
     });
   });
@@ -285,14 +284,13 @@ describe('the RTC Twilio-CLI Plugin', () => {
     let passcode;
     let webAppURL;
 
-    beforeAll(async done => {
+    beforeAll(async () => {
       stdout.start();
       await DeployCommand.run(['--authentication', 'passcode', '--room-type', 'go']);
       stdout.stop();
       passcode = getPasscode(stdout.output);
       URL = getURL(stdout.output);
       webAppURL = getWebAppURL(stdout.output);
-      done();
     });
 
     afterAll(async () => {
@@ -331,7 +329,7 @@ describe('the RTC Twilio-CLI Plugin', () => {
         superagent
           .post(`${URL}/token`)
           .send({ passcode: '0000' })
-          .catch(e => expect(e.status).toBe(401));
+          .catch((e) => expect(e.status).toBe(401));
       });
 
       it('should not display an app URL', () => {
@@ -339,7 +337,7 @@ describe('the RTC Twilio-CLI Plugin', () => {
       });
 
       it('should return a 404 from "/"', () => {
-        superagent.get(`${URL}`).catch(e => expect(e.status).toBe(404));
+        superagent.get(`${URL}`).catch((e) => expect(e.status).toBe(404));
       });
     });
 
