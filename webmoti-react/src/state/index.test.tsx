@@ -35,7 +35,7 @@ describe('the useAppState hook', () => {
 
   it('should throw an error if used outside of AppStateProvider', () => {
     const { result } = renderHook(useAppState);
-    expect(result.error.message).toEqual('useAppState must be used within the AppStateProvider');
+    expect(result.error?.message).toEqual('useAppState must be used within the AppStateProvider');
   });
 
   it('should get a token using the REACT_APP_TOKEN_ENDPOINT environment variable when avaiable', async () => {

@@ -1,6 +1,6 @@
-import { act, HookResult, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react-hooks';
 import { EventEmitter } from 'events';
-import { Participant, Room } from 'twilio-video';
+import { Room } from 'twilio-video';
 import useSelectedParticipant, { SelectedParticipantProvider } from './useSelectedParticipant';
 import { useAppState } from '../../../state';
 
@@ -12,7 +12,7 @@ mockUseAppState.mockImplementation(() => ({ isGalleryViewActive: false }));
 
 describe('the useSelectedParticipant hook', () => {
   let mockRoom: Room;
-  let result: HookResult<readonly [Participant | null, (participant: Participant) => void]>;
+  let result: any;
 
   beforeEach(() => (mockRoom = new EventEmitter() as Room));
 

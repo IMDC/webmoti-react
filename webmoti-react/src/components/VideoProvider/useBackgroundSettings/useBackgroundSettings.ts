@@ -100,7 +100,7 @@ const images = [
   },
 ];
 
-const isDesktopChrome = /Chrome/.test(navigator.userAgent);
+// const isDesktopChrome = /Chrome/.test(navigator.userAgent);
 let imageElements = new Map();
 
 const getImage = (index: number): Promise<HTMLImageElement> => {
@@ -174,7 +174,8 @@ export default function useBackgroundSettings(videoTrack: LocalVideoTrack | unde
           assetsPath: virtualBackgroundAssets,
           // Disable debounce only on desktop Chrome as other browsers either
           // do not support WebAssembly SIMD or they degrade performance.
-          debounce: !isDesktopChrome,
+          // debounce: !isDesktopChrome,
+          // ! debounce was removed in new version of library
         });
         await blurProcessor.loadModel();
       }
@@ -184,7 +185,8 @@ export default function useBackgroundSettings(videoTrack: LocalVideoTrack | unde
           backgroundImage: await getImage(0),
           // Disable debounce only on desktop Chrome as other browsers either
           // do not support WebAssembly SIMD or they degrade performance.
-          debounce: !isDesktopChrome,
+          // debounce: !isDesktopChrome,
+          // ! debounce was removed in new version of library
           fitType: ImageFit.Cover,
         });
         await virtualBackgroundProcessor.loadModel();
