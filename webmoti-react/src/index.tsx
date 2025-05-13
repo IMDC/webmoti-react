@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom';
 
 import { CssBaseline } from '@material-ui/core';
-import { MuiThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider } from '@mui/material/styles';
 
 import { Redirect, Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import App from './App';
@@ -37,7 +37,7 @@ const VideoApp = () => {
 };
 
 export const ReactApp = () => (
-  <MuiThemeProvider theme={theme}>
+  <ThemeProvider theme={theme}>
     <CssBaseline />
     <UnsupportedBrowserWarning>
       <Router>
@@ -57,7 +57,7 @@ export const ReactApp = () => (
         </AppStateProvider>
       </Router>
     </UnsupportedBrowserWarning>
-  </MuiThemeProvider>
+  </ThemeProvider>
 );
 
 ReactDOM.render(<ReactApp />, document.getElementById('root'));
