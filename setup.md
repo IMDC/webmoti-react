@@ -88,24 +88,24 @@ TWILIO_CONVERSATIONS_SERVICE_SID=ISxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 # Un-comment the following line to enable passcode authentication for use with 
 # the Twilio CLI rtc-plugin.
 # See: https://github.com/twilio-labs/plugin-rtc
-# VITE_SET_AUTH=passcode
+# REACT_APP_SET_AUTH=passcode
 
 # Un-comment the following line to enable Google authentication with Firebase.
-VITE_SET_AUTH=firebase
+REACT_APP_SET_AUTH=firebase
 
 # The following values are used to configure the Firebase library.
 # See https://firebase.google.com/docs/web/setup#config-object
 # These variables must be set if FIREBASE_AUTH is enabled
-VITE_FIREBASE_API_KEY=
-VITE_FIREBASE_AUTH_DOMAIN=
-VITE_FIREBASE_STORAGE_BUCKET=
-VITE_FIREBASE_MESSAGING_SENDER_ID=
+REACT_APP_FIREBASE_API_KEY=
+REACT_APP_FIREBASE_AUTH_DOMAIN=
+REACT_APP_FIREBASE_STORAGE_BUCKET=
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=
 
 # set this to the remote.it persistent link (ending in /api)
-VITE_API_DOMAIN=
+REACT_APP_API_DOMAIN=
 
 # set this to the livekit websocket url (if using livekit)
-VITE_LIVEKIT_URL=
+REACT_APP_LIVEKIT_URL=
 ```
 
 ### Deploying
@@ -205,10 +205,10 @@ LIVEKIT_API_KEY=
 LIVEKIT_API_SECRET=
 
 # for vite client push to talk
-VITE_LIVEKIT_URL=
+REACT_APP_LIVEKIT_URL=
 # for vite client tactile notifications
-VITE_SAVE_SUB_URL=
-VITE_NOTIF_APP_KEY=
+REACT_APP_SAVE_SUB_URL=
+REACT_APP_NOTIF_APP_KEY=
 
 # set APP_ENV to dev for testing, set it to prod on raspberry pi
 APP_ENV=dev
