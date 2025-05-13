@@ -18,15 +18,13 @@ describe('the useDevices hook', () => {
 
   it('should return the correct default values', async () => {
     const { result, waitForNextUpdate } = renderHook(useDevices);
-    expect(result.current).toMatchInlineSnapshot(`
-      Object {
-        "audioInputDevices": Array [],
-        "audioOutputDevices": Array [],
-        "hasAudioInputDevices": false,
-        "hasVideoInputDevices": false,
-        "videoInputDevices": Array [],
-      }
-    `);
+    expect(result.current).toEqual({
+      audioInputDevices: [],
+      audioOutputDevices: [],
+      hasAudioInputDevices: false,
+      hasVideoInputDevices: false,
+      videoInputDevices: [],
+    });
 
     await waitForNextUpdate();
   });

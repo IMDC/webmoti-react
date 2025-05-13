@@ -1,7 +1,7 @@
 import 'dotenv/config';
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
+import type { ServerlessContext, ServerlessFunction } from './types';
 import Twilio from 'twilio';
-import { ServerlessContext, ServerlessFunction } from './types';
 
 const {
   TWILIO_ACCOUNT_SID,
