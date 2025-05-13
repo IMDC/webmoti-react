@@ -1,9 +1,10 @@
 import React from 'react';
 
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import clsx from 'clsx';
+import { Theme } from '@mui/material/styles';
 
 import { WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../../constants';
 import useMainParticipant from '../../hooks/useMainParticipant/useMainParticipant';

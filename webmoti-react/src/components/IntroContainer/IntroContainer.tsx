@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { makeStyles, Theme, Typography, useMediaQuery, useTheme } from '@material-ui/core';
+import { makeStyles, Typography, useMediaQuery } from '@material-ui/core';
+import { Theme, useTheme } from '@mui/material/styles';
+
 import { useLocation } from 'react-router-dom';
 
 import Swoosh from './swoosh';

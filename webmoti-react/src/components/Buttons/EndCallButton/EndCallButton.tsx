@@ -1,5 +1,6 @@
-import { Button, useMediaQuery, useTheme } from '@material-ui/core';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { Button, useMediaQuery } from '@material-ui/core';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
+import { useTheme, Theme } from '@mui/material/styles';
 import clsx from 'clsx';
 import CallEndIcon from '@material-ui/icons/CallEnd';
 

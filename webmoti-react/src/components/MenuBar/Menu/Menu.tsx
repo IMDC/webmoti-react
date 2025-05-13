@@ -7,10 +7,10 @@ import {
   Typography,
   Grid,
   Tooltip,
-  Theme,
-  useMediaQuery,
   styled,
 } from '@material-ui/core';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { Theme } from '@mui/material/styles';
 import { CalendarToday, CalendarViewDay, SupervisorAccount, Search } from '@material-ui/icons';
 import CollaborationViewIcon from '@material-ui/icons/AccountBox';
 import GridViewIcon from '@material-ui/icons/Apps';

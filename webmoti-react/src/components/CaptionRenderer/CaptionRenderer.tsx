@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { Theme, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
+import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@material-ui/core/styles';
 import useWebSocket from 'react-use-websocket';
 

@@ -1,4 +1,5 @@
-import { makeStyles, Typography, Grid, Button, Theme, Hidden, Switch, Tooltip } from '@material-ui/core';
+import { makeStyles, Typography, Grid, Button, Hidden, Switch, Tooltip } from '@material-ui/core';
+import { Theme } from '@mui/material/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Divider from '@material-ui/core/Divider';
 import FormControlLabel from '@material-ui/core/FormControlLabel';

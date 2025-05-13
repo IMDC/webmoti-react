@@ -1,5 +1,6 @@
 import { Grid, Hidden, Typography } from '@material-ui/core';
-import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
+import { Theme } from '@mui/material/styles';
 
 import ControlsMenu from './ControlsMenu/ControlsMenu';
 import Menu from './Menu/Menu';

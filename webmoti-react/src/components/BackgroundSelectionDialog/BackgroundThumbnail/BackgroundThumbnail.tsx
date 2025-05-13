@@ -1,4 +1,5 @@
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
+import { Theme } from '@mui/material/styles';
 import BlurIcon from '@material-ui/icons/BlurOnOutlined';
 import NoneIcon from '@material-ui/icons/NotInterestedOutlined';
 import clsx from 'clsx';

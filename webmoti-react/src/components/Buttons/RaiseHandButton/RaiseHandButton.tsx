@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { Grid, Theme, Tooltip, createStyles, makeStyles, useMediaQuery, useTheme } from '@material-ui/core';
+import { Grid, Tooltip, createStyles, makeStyles, useMediaQuery } from '@material-ui/core';
+import { useTheme, Theme } from '@mui/material/styles';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';

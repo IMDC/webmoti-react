@@ -9,13 +9,13 @@ import {
   Dialog,
   DialogActions,
   Button,
-  Theme,
   DialogTitle,
   Hidden,
   FormControlLabel,
   Switch,
   Tooltip,
 } from '@material-ui/core';
+import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@material-ui/core/styles';
 import VideoInputList from './VideoInputList/VideoInputList';
 import MaxGalleryViewParticipants from './MaxGalleryViewParticipants/MaxGalleryViewParticipants';

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-
-import { Theme, makeStyles, useMediaQuery, useTheme } from '@material-ui/core';
+import { Theme } from '@mui/material/styles';
+import { makeStyles, useMediaQuery, useTheme } from '@material-ui/core';
 import clsx from 'clsx';
 import { Room as IRoom, Participant } from 'twilio-video';
 

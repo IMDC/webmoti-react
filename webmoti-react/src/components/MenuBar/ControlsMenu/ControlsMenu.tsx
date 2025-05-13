@@ -5,13 +5,14 @@ import {
   Divider,
   Grid,
   Popover,
-  Theme,
   Typography,
   createStyles,
   makeStyles,
   useMediaQuery,
   useTheme,
 } from '@material-ui/core';
+import { Theme } from '@mui/material/styles';
+
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import SettingsIcon from '@material-ui/icons/Settings';
 

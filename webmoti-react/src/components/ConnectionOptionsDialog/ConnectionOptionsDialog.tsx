@@ -12,9 +12,9 @@ import {
   MenuItem,
   Select,
   TextField,
-  Theme,
   Typography,
 } from '@material-ui/core';
+import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@material-ui/core/styles';
 import { inputLabels, Settings } from '../../state/settings/settingsReducer';
 import { useAppState } from '../../state';

@@ -2,7 +2,11 @@ import { useEffect, useRef } from 'react';
 
 import { Fireworks } from '@fireworks-js/react';
 import type { FireworksHandlers } from '@fireworks-js/react';
-import { IconButton, makeStyles, createStyles, Theme, useTheme, useMediaQuery } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
+import { useTheme, Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import ArrowForward from '@material-ui/icons/ArrowForward';
 import { Pagination } from '@material-ui/lab';

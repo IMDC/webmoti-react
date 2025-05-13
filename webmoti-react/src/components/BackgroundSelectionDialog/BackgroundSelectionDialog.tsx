@@ -1,5 +1,6 @@
 import Drawer from '@material-ui/core/Drawer';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
+import { Theme } from '@mui/material/styles';
 
 import BackgroundSelectionHeader from './BackgroundSelectionHeader/BackgroundSelectionHeader';
 import BackgroundThumbnail from './BackgroundThumbnail/BackgroundThumbnail';

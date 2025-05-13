@@ -15,9 +15,9 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Theme,
   Typography,
 } from '@material-ui/core';
+import { Theme } from '@mui/material/styles';
 import { Refresh } from '@material-ui/icons';
 
 import { HTTPS_SERVER_URL } from '../../constants';
