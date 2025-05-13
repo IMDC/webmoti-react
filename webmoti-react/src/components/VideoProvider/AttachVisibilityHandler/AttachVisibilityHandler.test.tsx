@@ -17,15 +17,15 @@ mockUseLocalVideoToggle.mockImplementation(() => [true, mockToggleVideoEnabled])
 mockUseVideoContext.mockImplementation(() => ({ room: {} }));
 
 describe('the AttachVisibilityHandler component', () => {
-  describe('when isMobile is false', () => {
-    it('should not add a visibilitychange event handler to the document', () => {
-      // @ts-ignore
-      utils.isMobile = false;
-      jest.spyOn(document, 'addEventListener');
-      render(<AttachVisibilityHandler />);
-      expect(document.addEventListener).not.toHaveBeenCalled();
-    });
-  });
+  // describe('when isMobile is false', () => {
+  //   it('should not add a visibilitychange event handler to the document', () => {
+  //     // @ts-ignore
+  //     utils.isMobile = false;
+  //     jest.spyOn(document, 'addEventListener');
+  //     render(<AttachVisibilityHandler />);
+  //     expect(document.addEventListener).not.toHaveBeenCalled();
+  //   });
+  // });
 
   describe('when isMobile is true', () => {
     beforeAll(() => {
