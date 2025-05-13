@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 
-import { Tooltip, useMediaQuery, useTheme } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import NotificationImportantIcon from '@material-ui/icons/NotificationImportant';
+import { useMediaQuery, useTheme } from '@mui/material';
+import { Button, Tooltip } from '@mui/material';
+import NotificationImportantIcon from '@mui/icons-material/NotificationImportant';
 import { Message } from '@twilio/conversations';
 
 import { MsgTypes, WEBMOTI_CAMERA_1 } from '../../../constants';

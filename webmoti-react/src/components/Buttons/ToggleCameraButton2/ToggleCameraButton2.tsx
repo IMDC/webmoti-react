@@ -1,4 +1,4 @@
-import Button from '@material-ui/core/Button';
+import { Button } from '@mui/material';
 
 import { WEBMOTI_CAMERA_2 } from '../../../constants';
 import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';

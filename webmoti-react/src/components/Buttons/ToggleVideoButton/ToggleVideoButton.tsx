@@ -1,7 +1,6 @@
 import { useCallback, useRef } from 'react';
 
-import { useMediaQuery, useTheme } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
+import { Button, useTheme, useMediaQuery } from '@mui/material';
 
 import useDevices from '../../../hooks/useDevices/useDevices';
 import useLocalVideoToggle from '../../../hooks/useLocalVideoToggle/useLocalVideoToggle';

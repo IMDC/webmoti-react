@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-import { IconButton } from '@material-ui/core';
-import { CalendarToday } from '@material-ui/icons';
+import { IconButton } from '@mui/material';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 import ViewScheduleModal from '../../ViewScheduleModal/ViewScheduleModal';
 
@@ -21,7 +21,7 @@ export default function ToggleScheduleButton() {
       <ViewScheduleModal open={openScheduleModal} onClose={handleCloseScheduleModal} />
 
       <IconButton onClick={handleOpenScheduleModal}>
-        <CalendarToday />
+        <CalendarTodayIcon />
       </IconButton>
     </>
   );

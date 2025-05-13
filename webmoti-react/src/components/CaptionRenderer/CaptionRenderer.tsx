@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { Typography } from '@material-ui/core';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@material-ui/core/styles';
+import { Typography, Theme } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import useWebSocket from 'react-use-websocket';
 
 import { Caption } from './CaptionTypes';

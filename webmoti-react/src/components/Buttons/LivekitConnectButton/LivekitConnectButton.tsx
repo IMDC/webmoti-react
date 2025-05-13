@@ -1,8 +1,7 @@
-import Button from '@material-ui/core/Button';
+import { Button, CircularProgress } from '@mui/material';
 import { RemoteParticipant, RemoteTrack, RemoteTrackPublication, Room, RoomEvent, Track } from 'livekit-client';
 import { useState } from 'react';
 import { HTTPS_SERVER_URL } from '../../../constants';
-import { CircularProgress } from '@material-ui/core';
 
 const room = new Room({
   adaptiveStream: false,

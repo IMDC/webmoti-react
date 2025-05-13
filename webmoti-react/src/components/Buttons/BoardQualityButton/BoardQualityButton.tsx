@@ -1,7 +1,11 @@
 import { useState } from 'react';
 
-import { Grid, Typography } from '@material-ui/core';
-import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
+import {
+  Grid,
+  Typography,
+  ToggleButton,
+  ToggleButtonGroup
+} from '@mui/material';
 import { RemoteVideoTrack } from 'twilio-video';
 
 import { WEBMOTI_CAMERA_2 } from '../../../constants';

@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { Box, Button, Popover, TextField, Typography } from '@material-ui/core';
-import MicIcon from '@material-ui/icons/Mic';
-import MicOffIcon from '@material-ui/icons/MicOff';
-import VolumeOffIcon from '@material-ui/icons/VolumeOff';
-import VolumeUpIcon from '@material-ui/icons/VolumeUp';
+import {
+  Mic as MicIcon,
+  MicOff as MicOffIcon,
+  VolumeOff as VolumeOffIcon,
+  VolumeUp as VolumeUpIcon,
+} from '@mui/icons-material';
+import { Box, Button, Popover, TextField, Typography } from '@mui/material';
 import { Message } from '@twilio/conversations';
 
 import { WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../../constants';

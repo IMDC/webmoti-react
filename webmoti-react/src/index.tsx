@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom';
 
-import { CssBaseline } from '@material-ui/core';
+import { CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 
 import { Redirect, Route, BrowserRouter as Router, Switch } from 'react-router-dom';

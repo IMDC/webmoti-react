@@ -1,4 +1,4 @@
-import { styled } from '@material-ui/core/styles';
+import { styled } from '@mui/material/styles';
 import { Theme } from '@mui/material/styles';
 
 import MenuBar from './components/MenuBar/MenuBar';

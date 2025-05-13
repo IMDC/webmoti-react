@@ -1,14 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { Grid, Tooltip, createStyles, makeStyles, useMediaQuery } from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
 import { useTheme, Theme } from '@mui/material/styles';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Chip from '@material-ui/core/Chip';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { EmojiPeople } from '@material-ui/icons';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import PanToolIcon from '@material-ui/icons/PanTool';
+import { Button, Box, Chip, CircularProgress, Grid, Tooltip, useMediaQuery } from '@mui/material';
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import PanToolIcon from '@mui/icons-material/PanTool';
 import { Message } from '@twilio/conversations';
 
 import { Events, HandActions } from '../../../constants';
@@ -24,40 +21,38 @@ import ShortcutIndicator from '../../ShortcutIndicator/ShortcutIndicator';
 
 const maxQueueDisplay = 5;
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    handQueueBanner: {
-      position: 'fixed',
-      zIndex: 8,
-      bottom: `${theme.footerHeight}px`,
-      left: 0,
-      right: 0,
-      height: '104px',
-    },
-    handQueue: {
-      background: 'white',
-      borderRadius: '16px',
-      padding: theme.spacing(2),
-      boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9)',
-    },
-    centerIcon: {
-      marginRight: '5px',
-      verticalAlign: 'middle',
-    },
-    queueSpeaker: {
-      backgroundColor: theme.palette.primary.main,
-      color: '#fff',
-      fontWeight: 'bold',
-    },
-    progress: {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      marginTop: -12,
-      marginLeft: -12,
-    },
-  })
-);
+const useStyles = makeStyles((theme: Theme) => ({
+  handQueueBanner: {
+    position: 'fixed',
+    zIndex: 8,
+    bottom: `${theme.footerHeight}px`,
+    left: 0,
+    right: 0,
+    height: '104px',
+  },
+  handQueue: {
+    background: 'white',
+    borderRadius: '16px',
+    padding: theme.spacing(2),
+    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9)',
+  },
+  centerIcon: {
+    marginRight: '5px',
+    verticalAlign: 'middle',
+  },
+  queueSpeaker: {
+    backgroundColor: theme.palette.primary.main,
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  progress: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
+  },
+}));
 
 export default function RaiseHandButton() {
   const classes = useStyles();
@@ -281,7 +276,7 @@ export default function RaiseHandButton() {
               <Box key={idx} m={0.5}>
                 {idx === 0 && (
                   <>
-                    <EmojiPeople className={classes.centerIcon} />
+                    <EmojiPeopleIcon className={classes.centerIcon} />
                     <ArrowRightIcon color="primary" className={classes.centerIcon} />
                   </>
                 )}

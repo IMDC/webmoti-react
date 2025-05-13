@@ -1,17 +1,15 @@
-import { makeStyles, createStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    messageInfoContainer: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      padding: '1.425em 0 0.083em',
-      fontSize: '12px',
-      color: '#606B85',
-    },
-  })
-);
+const useStyles = makeStyles(() => ({
+  messageInfoContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '1.425em 0 0.083em',
+    fontSize: '12px',
+    color: '#606B85',
+  },
+}));
 
 interface MessageInfoProps {
   author?: string;

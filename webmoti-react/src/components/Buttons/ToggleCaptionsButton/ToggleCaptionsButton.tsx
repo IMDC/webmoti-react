@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { IconButton, makeStyles } from '@material-ui/core';
-import { ClosedCaption } from '@material-ui/icons';
+import ClosedCaptionIcon from '@mui/icons-material/ClosedCaption';
+import { IconButton, Theme } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import useWebSocket from 'react-use-websocket';
 
@@ -16,7 +17,7 @@ interface AudioToggleDetail {
 }
 interface AudioToggleEvent extends CustomEvent<AudioToggleDetail> {}
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   iconButton: {
     padding: 10,
     marginRight: 10,
@@ -157,7 +158,7 @@ export default function ToggleCaptionsButton() {
         }}
       />
       <IconButton onClick={toggleCaptions} className={classes.iconButton}>
-        <ClosedCaption color={displayCaptions ? 'primary' : 'inherit'} />
+        <ClosedCaptionIcon color={displayCaptions ? 'primary' : 'inherit'} />
       </IconButton>
     </>
   );

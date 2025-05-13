@@ -1,7 +1,6 @@
-import { makeStyles, createStyles } from '@material-ui/core/styles';
+import { makeStyles, createStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
-import BlurIcon from '@material-ui/icons/BlurOnOutlined';
-import NoneIcon from '@material-ui/icons/NotInterestedOutlined';
+import { BlurOn, FilterNone } from '@mui/icons-material';
 import clsx from 'clsx';
 
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
@@ -111,8 +110,8 @@ export default function BackgroundThumbnail({
     ? backgroundSettings.index === index && backgroundSettings.type === 'image'
     : backgroundSettings.type === thumbnail;
   const icons = {
-    none: NoneIcon,
-    blur: BlurIcon,
+    none: FilterNone,
+    blur: BlurOn,
     image: null,
   };
   const ThumbnailIcon = icons[thumbnail];

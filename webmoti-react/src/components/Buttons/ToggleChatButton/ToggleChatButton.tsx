@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 
-import { useMediaQuery, useTheme } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
+import { makeStyles } from '@mui/styles';
+import { Button, useMediaQuery, useTheme } from '@mui/material';
 import { Message } from '@twilio/conversations';
 import clsx from 'clsx';
 

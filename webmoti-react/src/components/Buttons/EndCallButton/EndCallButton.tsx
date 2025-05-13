@@ -1,26 +1,24 @@
-import { Button, useMediaQuery } from '@material-ui/core';
-import { createStyles, makeStyles } from '@material-ui/core/styles';
+import { Button, useMediaQuery } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import { useTheme, Theme } from '@mui/material/styles';
 import clsx from 'clsx';
-import CallEndIcon from '@material-ui/icons/CallEnd';
+import CallEndIcon from '@mui/icons-material/CallEnd';
 
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    button: {
-      background: theme.brand,
-      color: 'white',
-      '&:hover': {
-        background: '#000000',
-      },
-      paddingLeft: 5,
-      paddingRight: 5,
-      minWidth: 0,
+const useStyles = makeStyles((theme: Theme) => ({
+  button: {
+    background: theme.brand,
+    color: 'white',
+    '&:hover': {
+      background: '#000000',
     },
-  })
-);
+    paddingLeft: 5,
+    paddingRight: 5,
+    minWidth: 0,
+  },
+}));
 
 export default function EndCallButton(props: { className?: string }) {
   const classes = useStyles();

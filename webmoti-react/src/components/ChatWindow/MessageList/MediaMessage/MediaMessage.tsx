@@ -1,5 +1,5 @@
 import FileDownloadIcon from '../../../../icons/FileDownloadIcon';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import { Media } from '@twilio/conversations';
 
 const useStyles = makeStyles({

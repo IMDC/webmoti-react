@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-import { Button, CircularProgress, Grid } from '@material-ui/core';
-import { EmojiPeople } from '@material-ui/icons';
+import { Button, CircularProgress, Grid } from '@mui/material';
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 
 import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
@@ -40,7 +40,7 @@ export default function WaveHandButton() {
           <span>
             <Button onClick={wave} disabled={isLoading1} variant="contained">
               Wave
-              <EmojiPeople />
+              <EmojiPeopleIcon />
               {isLoading1 && <CircularProgress size={24} />}
             </Button>
           </span>
@@ -52,8 +52,8 @@ export default function WaveHandButton() {
           <span>
             <Button onClick={wave2} disabled={isLoading2} variant="contained">
               Wave Twice
-              <EmojiPeople />
-              <EmojiPeople />
+              <EmojiPeopleIcon />
+              <EmojiPeopleIcon />
               {isLoading2 && <CircularProgress size={24} />}
             </Button>
           </span>

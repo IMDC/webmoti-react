@@ -1,5 +1,4 @@
-import { useMediaQuery, useTheme } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
+import { Button, useMediaQuery, useTheme } from '@mui/material';
 
 import useLocalAudioToggle from '../../../hooks/useLocalAudioToggle/useLocalAudioToggle';
 import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';

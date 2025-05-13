@@ -1,4 +1,4 @@
-import { Slider, Typography } from '@material-ui/core';
+import { Slider, Typography } from '@mui/material';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
 export default function VideoRotationSlider() {

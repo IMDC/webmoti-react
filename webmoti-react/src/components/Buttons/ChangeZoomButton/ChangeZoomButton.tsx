@@ -1,6 +1,4 @@
-import { Grid, Typography } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
+import { Grid, Typography, Button, ButtonGroup } from '@mui/material';
 
 import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';

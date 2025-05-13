@@ -1,11 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { Button, CircularProgress, Grid, makeStyles, Select, MenuItem, IconButton } from '@material-ui/core';
-import TextareaAutosize from '@material-ui/core/TextareaAutosize';
-import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import HearingIcon from '@material-ui/icons/Hearing';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import { makeStyles } from '@mui/styles';
+import {
+  Button,
+  CircularProgress,
+  Grid,
+  Select,
+  MenuItem,
+  IconButton,
+  Theme,
+  TextareaAutosize,
+  SelectChangeEvent,
+} from '@mui/material';
+import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import HearingIcon from '@mui/icons-material/Hearing';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { Conversation } from '@twilio/conversations';
 import clsx from 'clsx';
 
@@ -16,7 +26,7 @@ import { isMobile } from '../../../utils';
 import Snackbar from '../../Snackbar/Snackbar';
 import TTSMessage from '../TTSMessage';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   chatInputContainer: {
     borderTop: '1px solid #e4e7e9',
     borderBottom: '1px solid #e4e7e9',
@@ -140,7 +150,7 @@ export default function ChatInput({
     setMessageBody(event.target.value);
   };
 
-  const handleVoiceChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleVoiceChange = (event: SelectChangeEvent) => {
     setSelectedVoice(event.target.value as string);
   };
 
