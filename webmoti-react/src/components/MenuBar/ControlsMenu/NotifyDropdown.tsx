@@ -12,7 +12,7 @@ export default function NotifyDropdown() {
   };
 
   return (
-    <Select value={soundKey} label="Sound" onChange={handleChange}>
+    <Select variant="standard" value={soundKey} label="Sound" onChange={handleChange}>
       {/* add all sounds as menu items */}
       {Object.entries(Sounds).map(([key, value]) => (
         <MenuItem key={key} value={key}>

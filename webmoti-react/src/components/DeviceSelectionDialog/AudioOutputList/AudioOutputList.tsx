@@ -11,7 +11,7 @@ export default function AudioOutputList() {
   return (
     <div className="inputSelect">
       {audioOutputDevices.length > 1 ? (
-        <FormControl fullWidth>
+        <FormControl variant="standard" fullWidth>
           <Typography variant="subtitle2" gutterBottom>
             Audio Output
           </Typography>

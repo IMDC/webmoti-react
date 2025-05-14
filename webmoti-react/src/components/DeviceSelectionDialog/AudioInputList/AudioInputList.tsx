@@ -29,7 +29,7 @@ export default function AudioInputList() {
       <Grid container alignItems="center" justifyContent="space-between">
         <div className="inputSelect">
           {audioInputDevices.length > 1 ? (
-            <FormControl fullWidth>
+            <FormControl variant="standard" fullWidth>
               <Select
                 onChange={(e) => replaceTrack(e.target.value as string)}
                 value={localAudioInputDeviceId || ''}

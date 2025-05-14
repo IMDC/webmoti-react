@@ -89,17 +89,17 @@ export default function ConnectionOptionsDialog({ open, onClose }: { open: boole
           </Grid>
 
           <Grid item sm={6} xs={12}>
-            <FormControl className={classes.formControl}>
+            <FormControl variant="standard" className={classes.formControl}>
               <InputLabel id={inputLabels.dominantSpeakerPriority}>Dominant Speaker Priority:</InputLabel>
               <Select
+                variant="standard"
                 fullWidth
                 disabled={isDisabled}
                 name={inputLabels.dominantSpeakerPriority}
                 label={inputLabels.dominantSpeakerPriority}
                 labelId={inputLabels.dominantSpeakerPriority}
                 value={withDefault(settings.dominantSpeakerPriority)}
-                onChange={handleChange}
-              >
+                onChange={handleChange}>
                 <MenuItem value="low">Low</MenuItem>
                 <MenuItem value="standard">Standard</MenuItem>
                 <MenuItem value="high">High</MenuItem>
@@ -107,16 +107,16 @@ export default function ConnectionOptionsDialog({ open, onClose }: { open: boole
               </Select>
             </FormControl>
 
-            <FormControl className={classes.formControl}>
+            <FormControl variant="standard" className={classes.formControl}>
               <InputLabel id={inputLabels.trackSwitchOffMode}>Track Switch Off Mode:</InputLabel>
               <Select
+                variant="standard"
                 fullWidth
                 disabled={isDisabled}
                 name={inputLabels.trackSwitchOffMode}
                 label={inputLabels.trackSwitchOffMode}
                 value={withDefault(settings.trackSwitchOffMode)}
-                onChange={handleChange}
-              >
+                onChange={handleChange}>
                 <MenuItem value="predicted">Predicted</MenuItem>
                 <MenuItem value="detected">Detected</MenuItem>
                 <MenuItem value="disabled">Disabled</MenuItem>
@@ -124,16 +124,16 @@ export default function ConnectionOptionsDialog({ open, onClose }: { open: boole
               </Select>
             </FormControl>
 
-            <FormControl className={classes.formControl}>
+            <FormControl variant="standard" className={classes.formControl}>
               <InputLabel id={inputLabels.bandwidthProfileMode}>Mode:</InputLabel>
               <Select
+                variant="standard"
                 fullWidth
                 disabled={isDisabled}
                 name={inputLabels.bandwidthProfileMode}
                 label={inputLabels.bandwidthProfileMode}
                 value={withDefault(settings.bandwidthProfileMode)}
-                onChange={handleChange}
-              >
+                onChange={handleChange}>
                 <MenuItem value="grid">Grid</MenuItem>
                 <MenuItem value="collaboration">Collaboration</MenuItem>
                 <MenuItem value="presentation">Presentation</MenuItem>
@@ -142,40 +142,41 @@ export default function ConnectionOptionsDialog({ open, onClose }: { open: boole
             </FormControl>
           </Grid>
           <Grid item sm={6} xs={12}>
-            <FormControl className={classes.formControl}>
+            <FormControl variant="standard" className={classes.formControl}>
               <InputLabel id={inputLabels.clientTrackSwitchOffControl}>Client Track Switch Off Control:</InputLabel>
               <Select
+                variant="standard"
                 fullWidth
                 disabled={isDisabled}
                 name={inputLabels.clientTrackSwitchOffControl}
                 label={inputLabels.clientTrackSwitchOffControl}
                 value={withDefault(settings.clientTrackSwitchOffControl)}
-                onChange={handleChange}
-              >
+                onChange={handleChange}>
                 <MenuItem value="auto">Auto</MenuItem>
                 <MenuItem value="manual">Manual</MenuItem>
                 <MenuItem value="default">Default</MenuItem>
               </Select>
             </FormControl>
 
-            <FormControl className={classes.formControl}>
+            <FormControl variant="standard" className={classes.formControl}>
               <InputLabel id={inputLabels.contentPreferencesMode}>Content Preferences Mode:</InputLabel>
               <Select
+                variant="standard"
                 fullWidth
                 disabled={isDisabled}
                 name={inputLabels.contentPreferencesMode}
                 label={inputLabels.contentPreferencesMode}
                 value={withDefault(settings.contentPreferencesMode)}
-                onChange={handleChange}
-              >
+                onChange={handleChange}>
                 <MenuItem value="auto">Auto</MenuItem>
                 <MenuItem value="manual">Manual</MenuItem>
                 <MenuItem value="default">Default</MenuItem>
               </Select>
             </FormControl>
 
-            <FormControl className={classes.formControl}>
+            <FormControl variant="standard" className={classes.formControl}>
               <TextField
+                variant="standard"
                 disabled={isDisabled}
                 fullWidth
                 id={inputLabels.maxAudioBitrate}
@@ -183,8 +184,7 @@ export default function ConnectionOptionsDialog({ open, onClose }: { open: boole
                 placeholder="Leave blank for no limit"
                 name={inputLabels.maxAudioBitrate}
                 value={withDefault(settings.maxAudioBitrate)}
-                onChange={handleNumberChange}
-              />
+                onChange={handleNumberChange} />
             </FormControl>
           </Grid>
         </Grid>

@@ -121,24 +121,24 @@ export default function SetScheduleModal({ open, onClose }: SetScheduleModalProp
 
           <form onSubmit={handleSubmit} style={{ width: '100%', marginTop: '20px' }}>
             <TextField
+              variant="standard"
               label="Class Start Time"
               type="time"
               value={startTime}
               onChange={(e) => setStartTime(e.target.value)}
               InputLabelProps={{ shrink: true }}
               fullWidth
-              style={{ marginBottom: '20px' }}
-            />
+              style={{ marginBottom: '20px' }} />
 
             <TextField
+              variant="standard"
               label="Class End Time"
               type="time"
               value={endTime}
               onChange={(e) => setEndTime(e.target.value)}
               InputLabelProps={{ shrink: true }}
               fullWidth
-              style={{ marginBottom: '20px' }}
-            />
+              style={{ marginBottom: '20px' }} />
 
             <input accept="*/*" style={{ display: 'none' }} id="upload-file" type="file" onChange={handleFileChange} />
 

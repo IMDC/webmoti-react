@@ -52,7 +52,7 @@ export default function VideoInputList() {
         </div>
       )}
       {videoInputDevices.length > 1 ? (
-        <FormControl fullWidth>
+        <FormControl variant="standard" fullWidth>
           <Typography variant="subtitle2" gutterBottom>
             Video Input
           </Typography>
