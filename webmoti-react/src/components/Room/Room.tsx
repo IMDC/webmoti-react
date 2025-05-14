@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
-import { Theme } from '@mui/material/styles';
-import { makeStyles, useMediaQuery, useTheme } from '@material-ui/core';
+
+import { useMediaQuery, useTheme,Theme } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import clsx from 'clsx';
 import { Room as IRoom, Participant } from 'twilio-video';
 
@@ -9,13 +10,13 @@ import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/use
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../state';
 import BackgroundSelectionDialog from '../BackgroundSelectionDialog/BackgroundSelectionDialog';
+import { CaptionRenderer } from '../CaptionRenderer/CaptionRenderer';
 import ChatWindow from '../ChatWindow/ChatWindow';
 import { GalleryView } from '../GalleryView/GalleryView';
 import MainParticipant from '../MainParticipant/MainParticipant';
 import { MobileGalleryView } from '../MobileGalleryView/MobileGalleryView';
 import { ParticipantAudioTracks } from '../ParticipantAudioTracks/ParticipantAudioTracks';
 import ParticipantList from '../ParticipantList/ParticipantList';
-import { CaptionRenderer } from '../CaptionRenderer/CaptionRenderer';
 
 const useStyles = makeStyles((theme: Theme) => {
   const totalMobileSidebarHeight = `${

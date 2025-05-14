@@ -1,8 +1,16 @@
-import { makeStyles, Typography, Grid, Button, Hidden, Switch, Tooltip } from '@material-ui/core';
-import { Theme } from '@mui/material/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Divider from '@material-ui/core/Divider';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import {
+  Typography,
+  Grid,
+  Button,
+  Hidden,
+  Switch,
+  Tooltip,
+  CircularProgress,
+  Divider,
+  FormControlLabel,
+  Theme,
+} from '@mui/material';
+import { makeStyles } from '@mui/styles';
 
 import LocalVideoPreview from './LocalVideoPreview/LocalVideoPreview';
 import SettingsMenu from './SettingsMenu/SettingsMenu';
@@ -149,7 +157,6 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
                 <Typography variant="subtitle2">Noise Cancellation</Typography>
                 <Tooltip
                   title="Suppress background noise from your microphone"
-                  interactive
                   leaveDelay={250}
                   leaveTouchDelay={15000}
                   enterTouchDelay={0}

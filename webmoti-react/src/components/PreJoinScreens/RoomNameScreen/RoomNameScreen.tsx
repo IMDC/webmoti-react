@@ -1,6 +1,7 @@
 import { ChangeEvent, FormEvent } from 'react';
 
-import { Typography, makeStyles, TextField, Grid, Button, InputLabel, Theme } from '@material-ui/core';
+import { Typography, TextField, Grid, Button, InputLabel, Theme } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 
 import { useAppState } from '../../../state';
 
@@ -63,9 +64,7 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
       <Typography variant="h5" className={classes.gutterBottom}>
         Join Classroom
       </Typography>
-      <Typography variant="body1">
-        Enter your first name and click continue
-      </Typography>
+      <Typography variant="body1">Enter your first name and click continue</Typography>
       <form onSubmit={handleSubmit}>
         <div className={classes.inputContainer}>
           {!hasUsername && (

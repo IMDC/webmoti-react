@@ -1,5 +1,13 @@
 import { useState, useRef } from 'react';
 
+import CollaborationViewIcon from '@mui/icons-material/AccountBox';
+import GridViewIcon from '@mui/icons-material/Apps';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import CalendarViewDayIcon from '@mui/icons-material/CalendarViewDay';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import MoreIcon from '@mui/icons-material/MoreVert';
+import SearchIcon from '@mui/icons-material/Search';
+import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import {
   Button,
   Menu as MuiMenu,
@@ -8,14 +16,9 @@ import {
   Grid,
   Tooltip,
   styled,
-} from '@material-ui/core';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { Theme } from '@mui/material/styles';
-import { CalendarToday, CalendarViewDay, SupervisorAccount, Search } from '@material-ui/icons';
-import CollaborationViewIcon from '@material-ui/icons/AccountBox';
-import GridViewIcon from '@material-ui/icons/Apps';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreIcon from '@material-ui/icons/MoreVert';
+  useMediaQuery,
+  Theme,
+} from '@mui/material';
 import { isSupported } from '@twilio/video-processors';
 import { VideoRoomMonitor } from '@twilio/video-room-monitor';
 
@@ -33,10 +36,10 @@ import SettingsIcon from '../../../icons/SettingsIcon';
 import { useAppState } from '../../../state';
 import { isMobile } from '../../../utils';
 import AboutDialog from '../../AboutDialog/AboutDialog';
+import LivekitConnectButton from '../../Buttons/LivekitConnectButton/LivekitConnectButton';
 import DeviceSelectionDialog from '../../DeviceSelectionDialog/DeviceSelectionDialog';
 import SetScheduleModal from '../../SetScheduleModal/SetScheduleModal';
 import ViewScheduleModal from '../../ViewScheduleModal/ViewScheduleModal';
-import LivekitConnectButton from '../../Buttons/LivekitConnectButton/LivekitConnectButton';
 
 const IconContainer = styled('div')({
   display: 'flex',
@@ -151,7 +154,7 @@ export default function Menu({ buttonClassName }: MenuProps) {
         ]
       : []),
     {
-      icon: <Search style={{ fill: '#707578', width: '0.9em' }} />,
+      icon: <SearchIcon style={{ fill: '#707578', width: '0.9em' }} />,
       label: 'Room Monitor',
       onClick: () => {
         VideoRoomMonitor.toggleMonitor();
@@ -159,12 +162,12 @@ export default function Menu({ buttonClassName }: MenuProps) {
       },
     },
     {
-      icon: <CalendarToday style={{ fill: '#707578', width: '0.9em' }} />,
+      icon: <CalendarTodayIcon style={{ fill: '#707578', width: '0.9em' }} />,
       label: 'Set Schedule',
       onClick: () => setSetScheduleOpen(true),
     },
     {
-      icon: <CalendarViewDay style={{ fill: '#707578', width: '0.9em' }} />,
+      icon: <CalendarViewDayIcon style={{ fill: '#707578', width: '0.9em' }} />,
       label: 'View Schedule',
       onClick: () => setViewScheduleOpen(true),
     },
@@ -197,7 +200,7 @@ export default function Menu({ buttonClassName }: MenuProps) {
       onClick: () => setAboutOpen(true),
     },
     {
-      icon: <SupervisorAccount style={{ fill: '#707578', width: '0.9em' }} />,
+      icon: <SupervisorAccountIcon style={{ fill: '#707578', width: '0.9em' }} />,
       label: 'Admin',
       onClick: handleAdminLogin,
     },

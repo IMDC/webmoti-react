@@ -1,6 +1,4 @@
-import React from 'react';
-
-import { MenuItem, Select } from '@material-ui/core';
+import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
 
 import { Sounds } from '../../../components/WebmotiVideoProvider/index';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
@@ -8,7 +6,7 @@ import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWeb
 export default function NotifyDropdown() {
   const { soundKey, setSoundKey } = useWebmotiVideoContext();
 
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleChange = (event: SelectChangeEvent) => {
     const key = event.target.value as string;
     setSoundKey(key);
   };

@@ -1,17 +1,14 @@
-// import { Button, Grid, Typography } from '@material-ui/core';
-
 import { act, render, screen } from '@testing-library/react';
 
 import MenuBar from './MenuBar';
 import { createMockConversation, createMockLocalTrack, createMockRoom } from '../../__mocks__/mockCreator';
 import useChatContext from '../../hooks/useChatContext/useChatContext';
+import useDevices from '../../hooks/useDevices/useDevices';
 import useParticipants from '../../hooks/useParticipants/useParticipants';
 import useRoomState from '../../hooks/useRoomState/useRoomState';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import * as utils from '../../utils';
-// import ToggleScreenShareButton from '../Buttons/ToggleScreenShareButton/ToggleScreenShareButton';
-import useDevices from '../../hooks/useDevices/useDevices';
 
 jest.mock('../../hooks/useRoomState/useRoomState');
 jest.mock('../../hooks/useVideoContext/useVideoContext');

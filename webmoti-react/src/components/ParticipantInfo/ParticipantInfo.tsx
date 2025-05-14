@@ -1,16 +1,15 @@
-import { createStyles, makeStyles } from '@material-ui/core/styles';
-import { Theme } from '@mui/material/styles';
-import clsx from 'clsx';
 import React from 'react';
+
+import { Theme, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import clsx from 'clsx';
 import { LocalAudioTrack, LocalVideoTrack, Participant, RemoteAudioTrack, RemoteVideoTrack } from 'twilio-video';
 
-import Typography from '@material-ui/core/Typography';
 import AvatarIcon from '../../icons/AvatarIcon';
 import ScreenShareIcon from '../../icons/ScreenShareIcon';
 import AudioLevelIndicator from '../AudioLevelIndicator/AudioLevelIndicator';
 import NetworkQualityLevel from '../NetworkQualityLevel/NetworkQualityLevel';
 import PinIcon from './PinIcon/PinIcon';
-
 import { WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../../constants';
 import useIsTrackSwitchedOff from '../../hooks/useIsTrackSwitchedOff/useIsTrackSwitchedOff';
 import useParticipantIsReconnecting from '../../hooks/useParticipantIsReconnecting/useParticipantIsReconnecting';
@@ -21,137 +20,135 @@ import { useAppState } from '../../state';
 
 const borderWidth = 2;
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      isolation: 'isolate',
+const useStyles = makeStyles((theme: Theme) => ({
+  container: {
+    isolation: 'isolate',
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+    height: 0,
+    overflow: 'hidden',
+    marginBottom: '0.5em',
+    '& video': {
+      objectFit: 'contain !important',
+    },
+    borderRadius: '4px',
+    border: `${theme.participantBorderWidth}px solid rgb(245, 248, 255)`,
+    paddingTop: `calc(${(9 / 16) * 100}% - ${theme.participantBorderWidth}px)`,
+    background: 'black',
+    [theme.breakpoints.down('sm')]: {
+      height: theme.sidebarMobileHeight,
+      width: `${(theme.sidebarMobileHeight * 16) / 9}px`,
+      marginRight: '8px',
+      marginBottom: '0',
+      fontSize: '12px',
+      paddingTop: `${theme.sidebarMobileHeight - 2}px`,
+    },
+  },
+  innerContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+  },
+  infoContainer: {
+    // allow clicks to pass through to video track
+    pointerEvents: 'none',
+    position: 'absolute',
+    zIndex: 2,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    height: '100%',
+    width: '100%',
+    background: 'transparent',
+    top: 0,
+  },
+  avatarContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'black',
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    zIndex: 1,
+    [theme.breakpoints.down('sm')]: {
+      '& svg': {
+        transform: 'scale(0.7)',
+      },
+    },
+  },
+  reconnectingContainer: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'rgba(40, 42, 43, 0.75)',
+    zIndex: 1,
+  },
+  screenShareIconContainer: {
+    background: 'rgba(0, 0, 0, 0.5)',
+    padding: '0.18em 0.3em',
+    marginRight: '0.3em',
+    display: 'flex',
+    '& path': {
+      fill: 'white',
+    },
+  },
+  identity: {
+    background: 'rgba(0, 0, 0, 0.5)',
+    color: 'white',
+    padding: '0.18em 0.3em 0.18em 0',
+    margin: 0,
+    display: 'flex',
+    alignItems: 'center',
+  },
+  infoRowBottom: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+  },
+  typography: {
+    color: 'white',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '0.75rem',
+    },
+  },
+  hideParticipant: {
+    display: 'none',
+  },
+  cursorPointer: {
+    cursor: 'pointer',
+  },
+  galleryView: {
+    border: `${theme.participantBorderWidth}px solid ${theme.galleryViewBackgroundColor}`,
+    borderRadius: '8px',
+    [theme.breakpoints.down('sm')]: {
       position: 'relative',
-      display: 'flex',
-      alignItems: 'center',
-      height: 0,
-      overflow: 'hidden',
-      marginBottom: '0.5em',
+      width: '100%',
+      height: '100%',
+      padding: '0',
+      fontSize: '12px',
+      margin: '0',
       '& video': {
-        objectFit: 'contain !important',
-      },
-      borderRadius: '4px',
-      border: `${theme.participantBorderWidth}px solid rgb(245, 248, 255)`,
-      paddingTop: `calc(${(9 / 16) * 100}% - ${theme.participantBorderWidth}px)`,
-      background: 'black',
-      [theme.breakpoints.down('sm')]: {
-        height: theme.sidebarMobileHeight,
-        width: `${(theme.sidebarMobileHeight * 16) / 9}px`,
-        marginRight: '8px',
-        marginBottom: '0',
-        fontSize: '12px',
-        paddingTop: `${theme.sidebarMobileHeight - 2}px`,
+        objectFit: 'cover !important',
       },
     },
-    innerContainer: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
-    },
-    infoContainer: {
-      // allow clicks to pass through to video track
-      pointerEvents: 'none',
-      position: 'absolute',
-      zIndex: 2,
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      height: '100%',
-      width: '100%',
-      background: 'transparent',
-      top: 0,
-    },
-    avatarContainer: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: 'black',
-      position: 'absolute',
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0,
-      zIndex: 1,
-      [theme.breakpoints.down('sm')]: {
-        '& svg': {
-          transform: 'scale(0.7)',
-        },
-      },
-    },
-    reconnectingContainer: {
-      position: 'absolute',
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: 'rgba(40, 42, 43, 0.75)',
-      zIndex: 1,
-    },
-    screenShareIconContainer: {
-      background: 'rgba(0, 0, 0, 0.5)',
-      padding: '0.18em 0.3em',
-      marginRight: '0.3em',
-      display: 'flex',
-      '& path': {
-        fill: 'white',
-      },
-    },
-    identity: {
-      background: 'rgba(0, 0, 0, 0.5)',
-      color: 'white',
-      padding: '0.18em 0.3em 0.18em 0',
-      margin: 0,
-      display: 'flex',
-      alignItems: 'center',
-    },
-    infoRowBottom: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-    },
-    typography: {
-      color: 'white',
-      [theme.breakpoints.down('sm')]: {
-        fontSize: '0.75rem',
-      },
-    },
-    hideParticipant: {
-      display: 'none',
-    },
-    cursorPointer: {
-      cursor: 'pointer',
-    },
-    galleryView: {
-      border: `${theme.participantBorderWidth}px solid ${theme.galleryViewBackgroundColor}`,
-      borderRadius: '8px',
-      [theme.breakpoints.down('sm')]: {
-        position: 'relative',
-        width: '100%',
-        height: '100%',
-        padding: '0',
-        fontSize: '12px',
-        margin: '0',
-        '& video': {
-          objectFit: 'cover !important',
-        },
-      },
-    },
-    dominantSpeaker: {
-      border: `solid ${borderWidth}px #7BEAA5`,
-    },
-  })
-);
+  },
+  dominantSpeaker: {
+    border: `solid ${borderWidth}px #7BEAA5`,
+  },
+}));
 
 interface ParticipantInfoProps {
   participant: Participant;

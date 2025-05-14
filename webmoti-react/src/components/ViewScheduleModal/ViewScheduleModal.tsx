@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 
+import RefreshIcon from '@mui/icons-material/Refresh';
 import {
   Backdrop,
-  createStyles,
   Fade,
   Grid,
   IconButton,
-  makeStyles,
   Modal,
   Paper,
   Table,
@@ -16,28 +15,26 @@ import {
   TableHead,
   TableRow,
   Typography,
-} from '@material-ui/core';
-import { Theme } from '@mui/material/styles';
-import { Refresh } from '@material-ui/icons';
+  Theme,
+} from '@mui/material';
+import { makeStyles } from '@mui/styles';
 
 import { HTTPS_SERVER_URL } from '../../constants';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    modal: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    paper: {
-      backgroundColor: theme.palette.background.paper,
-      border: '2px solid #000',
-      boxShadow: theme.shadows[5],
-      padding: theme.spacing(2, 4, 3),
-    },
-  })
-);
+const useStyles = makeStyles((theme: Theme) => ({
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
+}));
 
 interface ViewScheduleModalProps {
   open: boolean;
@@ -94,7 +91,7 @@ export default function ViewScheduleModal({ open, onClose }: ViewScheduleModalPr
 
             <Grid item>
               <IconButton onClick={getSchedule}>
-                <Refresh />
+                <RefreshIcon />
               </IconButton>
             </Grid>
           </Grid>

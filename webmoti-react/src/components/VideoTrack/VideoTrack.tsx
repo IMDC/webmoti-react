@@ -1,14 +1,13 @@
 import { useCallback, useEffect, useRef } from 'react';
 
-import { styled } from '@material-ui/core/styles';
+import { styled } from '@mui/material';
 import { Track } from 'twilio-video';
 
+import { Events } from '../../constants';
 import useMediaStreamTrack from '../../hooks/useMediaStreamTrack/useMediaStreamTrack';
 import useVideoTrackDimensions from '../../hooks/useVideoTrackDimensions/useVideoTrackDimensions';
 import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
-
 import { IVideoTrack } from '../../types';
-import { Events } from '../../constants';
 
 const Video = styled('video')({
   width: '100%',

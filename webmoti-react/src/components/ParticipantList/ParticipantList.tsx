@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { makeStyles, createStyles } from '@material-ui/core/styles';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import { makeStyles } from '@mui/styles';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import clsx from 'clsx';
-import { Theme } from '@mui/material/styles';
+import { Theme } from '@mui/material';
 
 import { WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../../constants';
 import useMainParticipant from '../../hooks/useMainParticipant/useMainParticipant';
@@ -14,48 +14,46 @@ import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import Participant from '../Participant/Participant';
 import useSelectedParticipant from '../VideoProvider/useSelectedParticipant/useSelectedParticipant';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      overflowY: 'auto',
-      background: 'rgb(79, 83, 85)',
-      gridArea: '1 / 2 / 1 / 3',
-      zIndex: 5,
-      [theme.breakpoints.down('sm')]: {
-        gridArea: '2 / 1 / 3 / 3',
-        overflowY: 'initial',
-        overflowX: 'auto',
-        display: 'flex',
-      },
-    },
-    transparentBackground: {
-      background: 'transparent',
-    },
-    scrollContainer: {
+const useStyles = makeStyles((theme: Theme) => ({
+  container: {
+    overflowY: 'auto',
+    background: 'rgb(79, 83, 85)',
+    gridArea: '1 / 2 / 1 / 3',
+    zIndex: 5,
+    [theme.breakpoints.down('sm')]: {
+      gridArea: '2 / 1 / 3 / 3',
+      overflowY: 'initial',
+      overflowX: 'auto',
       display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      width: '100%',
     },
-    innerScrollContainer: {
-      width: `calc(${theme.sidebarWidth}px - 3em)`,
-      padding: '1.5em 0',
-      [theme.breakpoints.down('sm')]: {
-        width: 'auto',
-        padding: `${theme.sidebarMobilePadding}px`,
-        display: 'flex',
-      },
-    },
-    arrowContainer: {
+  },
+  transparentBackground: {
+    background: 'transparent',
+  },
+  scrollContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '100%',
+  },
+  innerScrollContainer: {
+    width: `calc(${theme.sidebarWidth}px - 3em)`,
+    padding: '1.5em 0',
+    [theme.breakpoints.down('sm')]: {
+      width: 'auto',
+      padding: `${theme.sidebarMobilePadding}px`,
       display: 'flex',
-      justifyContent: 'center',
-      backgroundColor: 'black',
-      borderRadius: '50%',
-      // allow space under the arrow for scrolling to it when list is large
-      marginBottom: `${theme.footerHeight}px`,
     },
-  })
-);
+  },
+  arrowContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    backgroundColor: 'black',
+    borderRadius: '50%',
+    // allow space under the arrow for scrolling to it when list is large
+    marginBottom: `${theme.footerHeight}px`,
+  },
+}));
 
 export default function ParticipantList() {
   const classes = useStyles();

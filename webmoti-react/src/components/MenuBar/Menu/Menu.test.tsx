@@ -8,7 +8,7 @@ import useRoomState from '../../../hooks/useRoomState/useRoomState';
 import useScreenShareParticipant from '../../../hooks/useScreenShareParticipant/useScreenShareParticipant';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useMediaQuery } from '@mui/material';
 
 import { useAppState } from '../../../state';
 

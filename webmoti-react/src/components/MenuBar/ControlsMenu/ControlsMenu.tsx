@@ -6,43 +6,37 @@ import {
   Grid,
   Popover,
   Typography,
-  createStyles,
-  makeStyles,
   useMediaQuery,
   useTheme,
-} from '@material-ui/core';
-import { Theme } from '@mui/material/styles';
-
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import SettingsIcon from '@material-ui/icons/Settings';
+  Theme,
+} from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 import NotifyDropdown from './NotifyDropdown';
 import NotifySlider from './NotifySlider';
 import useSetupHotkeys from '../../../hooks/useSetupHotkeys/useSetupHotkeys';
-// import BoardQualityButton from '../../Buttons/BoardQualityButton/BoardQualityButton';
 import ChangeZoomButton from '../../Buttons/ChangeZoomButton/ChangeZoomButton';
 import MuteClassroomButton from '../../Buttons/MuteClassroomButton/MuteClassroomButton';
 import ToggleCameraButton from '../../Buttons/ToggleCameraButton/ToggleCameraButton';
 import ToggleCameraButton2 from '../../Buttons/ToggleCameraButton2/ToggleCameraButton2';
-// import WaveHandButton from '../../Buttons/WaveHandButton/WaveHandButton';
 import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    cameraControlsPopover: {
-      padding: theme.spacing(2),
-    },
-    controlsButton: {
-      paddingRight: 0,
-      minWidth: 0,
-      paddingLeft: 15,
+const useStyles = makeStyles((theme: Theme) => ({
+  cameraControlsPopover: {
+    padding: theme.spacing(2),
+  },
+  controlsButton: {
+    paddingRight: 0,
+    minWidth: 0,
+    paddingLeft: 15,
 
-      [theme.breakpoints.down('sm')]: {
-        paddingLeft: 0,
-      },
+    [theme.breakpoints.down('sm')]: {
+      paddingLeft: 0,
     },
-  })
-);
+  },
+}));
 
 export default function ControlsMenu() {
   const classes = useStyles();

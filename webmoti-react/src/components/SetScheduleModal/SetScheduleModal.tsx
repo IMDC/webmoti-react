@@ -1,37 +1,24 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 
-import {
-  Backdrop,
-  Button,
-  CircularProgress,
-  createStyles,
-  Fade,
-  Grid,
-  makeStyles,
-  Modal,
-  TextField,
-  Theme,
-  Typography,
-} from '@material-ui/core';
+import { Backdrop, Button, CircularProgress, Fade, Grid, Modal, TextField, Theme, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 
 import { HTTPS_SERVER_URL } from '../../constants';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    modal: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    paper: {
-      backgroundColor: theme.palette.background.paper,
-      border: '2px solid #000',
-      boxShadow: theme.shadows[5],
-      padding: theme.spacing(2, 4, 3),
-    },
-  })
-);
+const useStyles = makeStyles((theme: Theme) => ({
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
+}));
 
 interface SetScheduleModalProps {
   open: boolean;

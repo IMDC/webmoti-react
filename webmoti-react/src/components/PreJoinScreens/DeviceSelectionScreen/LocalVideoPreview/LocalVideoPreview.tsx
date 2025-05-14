@@ -1,10 +1,11 @@
-import AvatarIcon from '../../../../icons/AvatarIcon';
-import { makeStyles, Typography } from '@material-ui/core';
-import { Theme } from '@mui/material/styles';
-import LocalAudioLevelIndicator from '../../../LocalAudioLevelIndicator/LocalAudioLevelIndicator';
+import { Typography,Theme } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import { LocalVideoTrack } from 'twilio-video';
-import VideoTrack from '../../../VideoTrack/VideoTrack';
+
 import useVideoContext from '../../../../hooks/useVideoContext/useVideoContext';
+import AvatarIcon from '../../../../icons/AvatarIcon';
+import LocalAudioLevelIndicator from '../../../LocalAudioLevelIndicator/LocalAudioLevelIndicator';
+import VideoTrack from '../../../VideoTrack/VideoTrack';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {

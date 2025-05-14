@@ -1,10 +1,12 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { makeStyles, Typography, Button, MenuItem, Link } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { useAppState } from '../../../state';
+
+import { Typography, Button, MenuItem, Link, Menu } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { makeStyles } from '@mui/styles';
+
 import UserAvatar from './UserAvatar/UserAvatar';
-import Menu from '@material-ui/core/Menu';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
+import { useAppState } from '../../../state';
 
 const useStyles = makeStyles({
   userContainer: {
@@ -34,7 +36,7 @@ const UserMenu: React.FC = () => {
   const anchorRef = useRef<HTMLButtonElement>(null);
 
   const handleSignOut = useCallback(() => {
-    localTracks.forEach(track => track.stop());
+    localTracks.forEach((track) => track.stop());
     signOut?.();
   }, [localTracks, signOut]);
 
@@ -52,15 +54,14 @@ const UserMenu: React.FC = () => {
     return (
       <div className={classes.userContainer} data-testid="user-menu">
         <UserAvatar user={user} />
-        <Button onClick={() => setMenuOpen(isOpen => !isOpen)} ref={anchorRef} className={classes.userButton}>
+        <Button onClick={() => setMenuOpen((isOpen) => !isOpen)} ref={anchorRef} className={classes.userButton}>
           {user!.displayName}
           <ExpandMoreIcon />
         </Button>
         <Menu
           open={menuOpen}
-          onClose={() => setMenuOpen(isOpen => !isOpen)}
+          onClose={() => setMenuOpen((isOpen) => !isOpen)}
           anchorEl={anchorRef.current}
-          getContentAnchorEl={null}
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'center',

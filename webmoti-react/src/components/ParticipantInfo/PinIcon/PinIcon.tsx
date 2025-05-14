@@ -1,5 +1,4 @@
-import Tooltip from '@material-ui/core/Tooltip';
-import SvgIcon from '@material-ui/core/SvgIcon';
+import { Tooltip, SvgIcon } from '@mui/material';
 
 export default function PinIcon() {
   return (

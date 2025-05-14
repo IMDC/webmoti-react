@@ -1,6 +1,6 @@
-import Avatar from '@material-ui/core/Avatar';
-import Person from '@material-ui/icons/Person';
-import makeStyles from '@material-ui/styles/makeStyles';
+import PersonIcon from '@mui/icons-material/Person';
+import { Avatar } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 
 import { StateContextType } from '../../../../state';
 
@@ -27,7 +27,7 @@ export default function UserAvatar({ user }: { user: StateContextType['user'] })
     <Avatar src={photoURL} data-testid="user-avatar-photo" />
   ) : (
     <Avatar className={classes.red} data-testid="user-avatar-initials">
-      {displayName ? getInitials(displayName) : <Person />}
+      {displayName ? getInitials(displayName) : <PersonIcon />}
     </Avatar>
   );
 }

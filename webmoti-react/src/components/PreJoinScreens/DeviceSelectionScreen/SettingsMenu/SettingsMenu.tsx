@@ -1,11 +1,6 @@
 import { useState, useRef } from 'react';
-import Button from '@material-ui/core/Button';
-import MenuContainer from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import MoreIcon from '@material-ui/icons/MoreVert';
-import Typography from '@material-ui/core/Typography';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { Theme } from '@mui/material/styles';
+import { Button, Menu as MenuContainer, Typography, useMediaQuery, Theme, MenuItem } from '@mui/material';
+import MoreIcon from '@mui/icons-material/MoreVert';
 
 import AboutDialog from '../../../AboutDialog/AboutDialog';
 import ConnectionOptionsDialog from '../../../ConnectionOptionsDialog/ConnectionOptionsDialog';
@@ -49,7 +44,6 @@ export default function SettingsMenu({ mobileButtonClass }: { mobileButtonClass?
         open={menuOpen}
         onClose={() => setMenuOpen((isOpen) => !isOpen)}
         anchorEl={anchorRef.current}
-        getContentAnchorEl={null}
         anchorOrigin={{
           vertical: 'top',
           horizontal: isMobile ? 'left' : 'right',

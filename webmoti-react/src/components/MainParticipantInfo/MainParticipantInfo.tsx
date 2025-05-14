@@ -1,14 +1,11 @@
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import clsx from 'clsx';
 import React from 'react';
+
+import { Tooltip, Typography, Theme } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import clsx from 'clsx';
 import { LocalAudioTrack, LocalVideoTrack, Participant, RemoteAudioTrack, RemoteVideoTrack } from 'twilio-video';
 
-import Tooltip from '@material-ui/core/Tooltip';
-import Typography from '@material-ui/core/Typography';
-import AvatarIcon from '../../icons/AvatarIcon';
-import AudioLevelIndicator from '../AudioLevelIndicator/AudioLevelIndicator';
-import NetworkQualityLevel from '../NetworkQualityLevel/NetworkQualityLevel';
-
+import { WEBMOTI_CAMERA_2 } from '../../constants';
 import useIsRecording from '../../hooks/useIsRecording/useIsRecording';
 import useIsTrackSwitchedOff from '../../hooks/useIsTrackSwitchedOff/useIsTrackSwitchedOff';
 import useParticipantIsReconnecting from '../../hooks/useParticipantIsReconnecting/useParticipantIsReconnecting';
@@ -16,7 +13,9 @@ import usePublications from '../../hooks/usePublications/usePublications';
 import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/useScreenShareParticipant';
 import useTrack from '../../hooks/useTrack/useTrack';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
-import { WEBMOTI_CAMERA_2 } from '../../constants';
+import AvatarIcon from '../../icons/AvatarIcon';
+import AudioLevelIndicator from '../AudioLevelIndicator/AudioLevelIndicator';
+import NetworkQualityLevel from '../NetworkQualityLevel/NetworkQualityLevel';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {

@@ -1,8 +1,11 @@
-import { Fade, Tooltip, withStyles } from '@material-ui/core';
-import ShortcutIndicator from '../ShortcutIndicator/ShortcutIndicator';
 import { ReactElement } from 'react';
 
-const LightTooltip = withStyles((theme) => ({
+import { Fade, Tooltip, Theme } from '@mui/material';
+import { withStyles } from '@mui/styles';
+
+import ShortcutIndicator from '../ShortcutIndicator/ShortcutIndicator';
+
+const LightTooltip = withStyles((theme: Theme) => ({
   tooltip: {
     backgroundColor: theme.palette.common.white,
     color: 'rgba(0, 0, 0, 0.87)',

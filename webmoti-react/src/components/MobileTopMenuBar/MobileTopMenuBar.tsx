@@ -1,5 +1,6 @@
-import { Grid, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core';
-import { Theme } from '@mui/material/styles';
+import { Grid, Typography, useMediaQuery, useTheme, Theme } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import EndCallButton from '../Buttons/EndCallButton/EndCallButton';
 import ToggleCaptionsButton from '../Buttons/ToggleCaptionsButton/ToggleCaptionsButton';

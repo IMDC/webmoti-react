@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { makeStyles, Typography, useMediaQuery } from '@material-ui/core';
-import { Theme, useTheme } from '@mui/material/styles';
+import { Typography, useMediaQuery, Theme, useTheme } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 
 import { useLocation } from 'react-router-dom';
 

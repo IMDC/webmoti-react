@@ -1,4 +1,4 @@
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useMediaQuery } from '@mui/material';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 

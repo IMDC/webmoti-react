@@ -1,17 +1,13 @@
-import React, { ChangeEvent, useState, FormEvent } from 'react';
-import { useAppState } from '../../state';
+import { ChangeEvent, useState, FormEvent } from 'react';
 
-import Button from '@material-ui/core/Button';
-import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
-import Grid from '@material-ui/core/Grid';
-import { ReactComponent as GoogleLogo } from './google-logo.svg';
-import { InputLabel, Theme } from '@material-ui/core';
-import IntroContainer from '../IntroContainer/IntroContainer';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-
-import { makeStyles } from '@material-ui/core/styles';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import { Button, Grid, InputLabel, Theme, TextField, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import { useLocation, useHistory } from 'react-router-dom';
+
+import { ReactComponent as GoogleLogo } from './google-logo.svg';
+import { useAppState } from '../../state';
+import IntroContainer from '../IntroContainer/IntroContainer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   googleButton: {
@@ -69,7 +65,7 @@ export default function LoginPage() {
       .then(() => {
         history.replace(location?.state?.from || { pathname: '/' });
       })
-      .catch(err => setAuthError(err));
+      .catch((err) => setAuthError(err));
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {

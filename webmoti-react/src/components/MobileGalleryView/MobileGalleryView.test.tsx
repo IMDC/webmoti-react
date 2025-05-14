@@ -1,4 +1,4 @@
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useMediaQuery } from '@mui/material';
 import { render, screen } from '@testing-library/react';
 
 import { MobileGalleryView } from './MobileGalleryView';
@@ -114,7 +114,7 @@ describe('MobileGalleryView', () => {
 
   describe('landscape orientation', () => {
     beforeEach(() => {
-      mockUseMediaQuery.mockImplementation(() => true); 
+      mockUseMediaQuery.mockImplementation(() => true);
     });
 
     it('renders one participant', () => {

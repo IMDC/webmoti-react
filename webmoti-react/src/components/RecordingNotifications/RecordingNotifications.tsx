@@ -1,7 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Link } from '@material-ui/core';
-import Snackbar from '../Snackbar/Snackbar';
+import { useEffect, useRef, useState } from 'react';
+
+import { Link } from '@mui/material';
+
 import useIsRecording from '../../hooks/useIsRecording/useIsRecording';
+import Snackbar from '../Snackbar/Snackbar';
 
 enum Snackbars {
   none,

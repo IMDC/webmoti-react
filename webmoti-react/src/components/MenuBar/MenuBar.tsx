@@ -1,6 +1,5 @@
-import { Grid, Hidden, Typography } from '@material-ui/core';
-import { createStyles, makeStyles } from '@material-ui/core/styles';
-import { Theme } from '@mui/material/styles';
+import { Grid, Hidden, Typography, Theme } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 
 import ControlsMenu from './ControlsMenu/ControlsMenu';
 import Menu from './Menu/Menu';
@@ -15,31 +14,29 @@ import ToggleCaptionsButton from '../Buttons/ToggleCaptionsButton/ToggleCaptions
 import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      backgroundColor: theme.palette.background.default,
-      bottom: 0,
-      left: 0,
-      right: 0,
-      height: `${theme.footerHeight}px`,
-      position: 'fixed',
-      display: 'flex',
-      padding: '0 1.43em',
-      zIndex: 10,
-      [theme.breakpoints.down('md')]: {
-        height: `${theme.mobileFooterHeight}px`,
-        padding: 0,
-      },
+const useStyles = makeStyles((theme: Theme) => ({
+  container: {
+    backgroundColor: theme.palette.background.default,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: `${theme.footerHeight}px`,
+    position: 'fixed',
+    display: 'flex',
+    padding: '0 1.43em',
+    zIndex: 10,
+    [theme.breakpoints.down('md')]: {
+      height: `${theme.mobileFooterHeight}px`,
+      padding: 0,
     },
-    hideMobile: {
-      display: 'initial',
-      [theme.breakpoints.down('md')]: {
-        display: 'none',
-      },
+  },
+  hideMobile: {
+    display: 'initial',
+    [theme.breakpoints.down('md')]: {
+      display: 'none',
     },
-  })
-);
+  },
+}));
 
 export default function MenuBar() {
   const classes = useStyles();

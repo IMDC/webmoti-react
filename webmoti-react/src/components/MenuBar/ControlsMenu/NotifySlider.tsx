@@ -1,6 +1,6 @@
-import { Grid, Slider } from '@material-ui/core';
-import VolumeDown from '@material-ui/icons/VolumeDown';
-import VolumeUp from '@material-ui/icons/VolumeUp';
+import { Grid, Slider } from '@mui/material';
+import VolumeDownIcon from '@mui/icons-material/VolumeDown';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
@@ -14,7 +14,7 @@ export default function NotifySlider() {
   return (
     <Grid container spacing={2}>
       <Grid item>
-        <VolumeDown />
+        <VolumeDownIcon />
       </Grid>
 
       <Grid item xs>
@@ -22,7 +22,7 @@ export default function NotifySlider() {
       </Grid>
 
       <Grid item>
-        <VolumeUp />
+        <VolumeUpIcon />
       </Grid>
     </Grid>
   );

@@ -1,7 +1,8 @@
-import { Card, CardContent, Typography, makeStyles } from '@material-ui/core';
+import { Card, CardContent, Typography, Theme } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import clsx from 'clsx';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   card: {
     height: 20,
     backgroundColor: theme.palette.primary.dark,
