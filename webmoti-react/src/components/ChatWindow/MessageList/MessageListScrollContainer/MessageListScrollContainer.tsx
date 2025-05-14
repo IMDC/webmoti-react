@@ -1,11 +1,12 @@
 /* istanbul ignore file */
-import React from 'react';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import Button from '@material-ui/core/Button';
-import clsx from 'clsx';
+import React, { ReactNode } from 'react';
+
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import { Button } from '@mui/material';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Message } from '@twilio/conversations';
+import clsx from 'clsx';
 import throttle from 'lodash.throttle';
-import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles';
 
 const styles = createStyles({
   outerContainer: {
@@ -43,6 +44,7 @@ const styles = createStyles({
 
 interface MessageListScrollContainerProps extends WithStyles<typeof styles> {
   messages: Message[];
+  children?: ReactNode;
 }
 
 interface MessageListScrollContainerState {
@@ -88,7 +90,7 @@ export class MessageListScrollContainer extends React.Component<
     } else if (hasNewMessages) {
       const numberOfNewMessages = this.props.messages.length - prevProps.messages.length;
 
-      this.setState(previousState => ({
+      this.setState((previousState) => ({
         // If there's at least one new message, show the 'new message' button:
         showButton: !previousState.isScrolledToBottom,
         // If 'new message' button is visible,
@@ -115,7 +117,7 @@ export class MessageListScrollContainer extends React.Component<
         innerScrollContainerEl.clientHeight + innerScrollContainerEl.scrollTop - innerScrollContainerEl!.scrollHeight
       ) < 1;
 
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       isScrolledToBottom,
       showButton: isScrolledToBottom ? false : prevState.showButton,
     }));

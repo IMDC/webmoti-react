@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+
 import {
   Button,
   Dialog,
@@ -11,14 +12,16 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  SelectChangeEvent,
   TextField,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@material-ui/core/styles';
-import { inputLabels, Settings } from '../../state/settings/settingsReducer';
-import { useAppState } from '../../state';
+import { makeStyles } from '@mui/styles';
+
 import useRoomState from '../../hooks/useRoomState/useRoomState';
+import { useAppState } from '../../state';
+import { inputLabels, Settings } from '../../state/settings/settingsReducer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -60,14 +63,14 @@ export default function ConnectionOptionsDialog({ open, onClose }: { open: boole
   const isDisabled = roomState !== 'disconnected';
 
   const handleChange = useCallback(
-    (e: React.ChangeEvent<{ value: unknown; name?: string }>) => {
+    (e: SelectChangeEvent) => {
       dispatchSetting({ name: e.target.name as keyof Settings, value: e.target.value as string });
     },
     [dispatchSetting]
   );
 
   const handleNumberChange = useCallback(
-    (e: React.ChangeEvent<{ value: unknown; name?: string }>) => {
+    (e: React.ChangeEvent<HTMLInputElement>) => {
       if (!/[^\d]/.test(e.target.value as string)) handleChange(e);
     },
     [handleChange]

@@ -1,7 +1,3 @@
-import React from 'react';
-
-import AudioInputList from './AudioInputList/AudioInputList';
-import AudioOutputList from './AudioOutputList/AudioOutputList';
 import {
   DialogContent,
   Typography,
@@ -14,17 +10,20 @@ import {
   FormControlLabel,
   Switch,
   Tooltip,
-} from '@material-ui/core';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@material-ui/core/styles';
-import VideoInputList from './VideoInputList/VideoInputList';
+  Theme,
+} from '@mui/material';
+import { makeStyles } from '@mui/styles';
+
+import AudioInputList from './AudioInputList/AudioInputList';
+import AudioOutputList from './AudioOutputList/AudioOutputList';
 import MaxGalleryViewParticipants from './MaxGalleryViewParticipants/MaxGalleryViewParticipants';
+import VideoInputList from './VideoInputList/VideoInputList';
 import { useKrispToggle } from '../../hooks/useKrispToggle/useKrispToggle';
-import SmallCheckIcon from '../../icons/SmallCheckIcon';
+import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import InfoIconOutlined from '../../icons/InfoIconOutlined';
 import KrispLogo from '../../icons/KrispLogo';
+import SmallCheckIcon from '../../icons/SmallCheckIcon';
 import { useAppState } from '../../state';
-import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -103,7 +102,6 @@ export default function DeviceSelectionDialog({ open, onClose }: { open: boolean
                 <KrispLogo />
                 <Tooltip
                   title="Suppress background noise from your microphone"
-                  interactive
                   leaveDelay={250}
                   leaveTouchDelay={15000}
                   enterTouchDelay={0}

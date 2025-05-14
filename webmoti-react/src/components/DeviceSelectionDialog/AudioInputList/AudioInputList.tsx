@@ -1,4 +1,4 @@
-import { FormControl, MenuItem, Typography, Select, Grid } from '@material-ui/core';
+import { FormControl, MenuItem, Typography, Select, Grid } from '@mui/material';
 import { LocalAudioTrack } from 'twilio-video';
 
 import { SELECTED_AUDIO_INPUT_KEY } from '../../../constants';

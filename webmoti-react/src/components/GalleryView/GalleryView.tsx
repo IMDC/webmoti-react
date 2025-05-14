@@ -2,14 +2,11 @@ import { useEffect, useRef } from 'react';
 
 import { Fireworks } from '@fireworks-js/react';
 import type { FireworksHandlers } from '@fireworks-js/react';
-import { IconButton } from '@material-ui/core';
-import { createStyles, makeStyles } from '@material-ui/core/styles';
-import { useTheme, Theme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import { IconButton, useTheme, Theme, useMediaQuery, Pagination } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 
-import ArrowBack from '@material-ui/icons/ArrowBack';
-import ArrowForward from '@material-ui/icons/ArrowForward';
-import { Pagination } from '@material-ui/lab';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import clsx from 'clsx';
 
 import { usePagination } from './usePagination/usePagination';
@@ -23,68 +20,66 @@ import Participant from '../Participant/Participant';
 
 const CONTAINER_GUTTER = '50px';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      background: theme.galleryViewBackgroundColor,
-      position: 'relative',
-      gridArea: '1 / 1 / 2 / 3',
-    },
-    participantContainer: {
-      position: 'absolute',
-      display: 'flex',
-      top: CONTAINER_GUTTER,
-      right: CONTAINER_GUTTER,
-      bottom: CONTAINER_GUTTER,
-      left: CONTAINER_GUTTER,
-      margin: '0 auto',
-      alignContent: 'center',
-      flexWrap: 'wrap',
-      justifyContent: 'center',
-    },
-    buttonContainer: {
-      position: 'absolute',
-      top: 0,
-      bottom: 0,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
+const useStyles = makeStyles((theme: Theme) => ({
+  container: {
+    background: theme.galleryViewBackgroundColor,
+    position: 'relative',
+    gridArea: '1 / 1 / 2 / 3',
+  },
+  participantContainer: {
+    position: 'absolute',
+    display: 'flex',
+    top: CONTAINER_GUTTER,
+    right: CONTAINER_GUTTER,
+    bottom: CONTAINER_GUTTER,
+    left: CONTAINER_GUTTER,
+    margin: '0 auto',
+    alignContent: 'center',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+  },
+  buttonContainer: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 
-    buttonContainerLeft: {
-      right: `calc(100% - ${CONTAINER_GUTTER})`,
-      left: 0,
+  buttonContainerLeft: {
+    right: `calc(100% - ${CONTAINER_GUTTER})`,
+    left: 0,
+  },
+  buttonContainerRight: {
+    right: 0,
+    left: `calc(100% - ${CONTAINER_GUTTER})`,
+  },
+  pagination: {
+    '& .MuiPaginationItem-root': {
+      color: 'white',
     },
-    buttonContainerRight: {
-      right: 0,
-      left: `calc(100% - ${CONTAINER_GUTTER})`,
+  },
+  paginationButton: {
+    color: 'black',
+    background: 'rgba(255, 255, 255, 0.8)',
+    width: '40px',
+    height: '40px',
+    '&:hover': {
+      background: 'rgba(255, 255, 255)',
     },
-    pagination: {
-      '& .MuiPaginationItem-root': {
-        color: 'white',
-      },
-    },
-    paginationButton: {
-      color: 'black',
-      background: 'rgba(255, 255, 255, 0.8)',
-      width: '40px',
-      height: '40px',
-      '&:hover': {
-        background: 'rgba(255, 255, 255)',
-      },
-    },
-    paginationContainer: {
-      position: 'absolute',
-      top: `calc(100% - ${CONTAINER_GUTTER})`,
-      right: 0,
-      bottom: 0,
-      left: 0,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  })
-);
+  },
+  paginationContainer: {
+    position: 'absolute',
+    top: `calc(100% - ${CONTAINER_GUTTER})`,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+}));
 
 export function GalleryView() {
   const classes = useStyles();
@@ -143,7 +138,7 @@ export function GalleryView() {
             className={classes.paginationButton}
             onClick={() => setCurrentPage((page) => page - 1)}
           >
-            <ArrowBack />
+            <ArrowBackIcon />
           </IconButton>
         )}
       </div>
@@ -154,7 +149,7 @@ export function GalleryView() {
             className={classes.paginationButton}
             onClick={() => setCurrentPage((page) => page + 1)}
           >
-            <ArrowForward />
+            <ArrowForwardIcon />
           </IconButton>
         )}
       </div>

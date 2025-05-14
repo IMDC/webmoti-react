@@ -1,12 +1,9 @@
-import React, { PropsWithChildren } from 'react';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import enhanceMessage from './enhanceMessage';
+import { PropsWithChildren } from 'react';
+
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { TwilioError } from 'twilio-video';
+
+import enhanceMessage from './enhanceMessage';
 
 interface ErrorDialogProps {
   dismissError: Function;
