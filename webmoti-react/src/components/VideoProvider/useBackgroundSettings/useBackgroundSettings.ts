@@ -172,6 +172,7 @@ export default function useBackgroundSettings(videoTrack: LocalVideoTrack | unde
       if (!blurProcessor) {
         blurProcessor = new GaussianBlurBackgroundProcessor({
           assetsPath: virtualBackgroundAssets,
+          blurFilterRadius: 15,
           // Disable debounce only on desktop Chrome as other browsers either
           // do not support WebAssembly SIMD or they degrade performance.
           // debounce: !isDesktopChrome,

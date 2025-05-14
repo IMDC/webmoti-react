@@ -66,7 +66,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 
   [`& .${classes.listSection}`]: {
     margin: '2em 0 0.8em',
-    '&:first-child': {
+    '&:first-of-type': {
       margin: '1em 0 2em 0',
     },
   },

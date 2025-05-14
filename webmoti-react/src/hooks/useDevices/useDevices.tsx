@@ -14,11 +14,19 @@ export default function useDevices() {
   });
 
   useEffect(() => {
-    const getDevices = () => getDeviceInfo().then(devices => setDeviceInfo(devices));
+    let isMounted = true;
+
+    const getDevices = () =>
+      getDeviceInfo().then((devices) => {
+        if (isMounted) {
+          setDeviceInfo(devices);
+        }
+      });
     navigator.mediaDevices.addEventListener('devicechange', getDevices);
     getDevices();
 
     return () => {
+      isMounted = false;
       navigator.mediaDevices.removeEventListener('devicechange', getDevices);
     };
   }, []);

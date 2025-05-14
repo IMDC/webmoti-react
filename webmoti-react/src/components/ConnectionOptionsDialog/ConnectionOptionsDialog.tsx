@@ -58,7 +58,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   [`& .${classes.formControl}`]: {
     display: 'block',
     margin: '1.5em 0',
-    '&:first-child': {
+    '&:first-of-type': {
       margin: '0 0 1.5em 0',
     },
   },

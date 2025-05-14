@@ -59,6 +59,9 @@ export default function ToggleCaptionsButton() {
       setDisplayCaptions(false);
       await stopRecordingCaptions();
     },
+    onError: async () => {
+      // suppress error messages
+    },
   });
 
   const startRecordingCaptions = useCallback(async () => {
