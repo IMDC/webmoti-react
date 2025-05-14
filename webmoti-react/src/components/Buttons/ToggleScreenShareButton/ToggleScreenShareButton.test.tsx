@@ -44,7 +44,7 @@ describe('the ToggleScreenShareButton component', () => {
     const button = screen.getByRole('button');
     expect(button).toBeDisabled();
 
-    expect(button.closest('[title]')).toHaveAttribute('title', SHARE_IN_PROGRESS_TEXT);
+    expect(screen.getByLabelText(SHARE_IN_PROGRESS_TEXT)).toBeInTheDocument();
   });
 
   it('should call the correct toggle function when clicked', async () => {
@@ -61,6 +61,6 @@ describe('the ToggleScreenShareButton component', () => {
     render(<ToggleScreenShareButton />);
     const button = screen.getByRole('button');
     expect(button).toBeDisabled();
-    expect(button.closest('[title]')).toHaveAttribute('title', SHARE_NOT_SUPPORTED_TEXT);
+    expect(screen.getByLabelText(SHARE_NOT_SUPPORTED_TEXT)).toBeInTheDocument();
   });
 });

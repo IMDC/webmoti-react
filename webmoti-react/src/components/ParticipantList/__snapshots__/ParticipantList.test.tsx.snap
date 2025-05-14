@@ -3,29 +3,29 @@
 exports[`the ParticipantList component should correctly render Participant components 1`] = `
 <div>
   <aside
-    class="makeStyles-container-1 makeStyles-transparentBackground-2"
+    class="ParticipantList-container ParticipantList-transparentBackground css-1yq3ij5"
   >
     <div
-      class="makeStyles-scrollContainer-3"
+      class="ParticipantList-scrollContainer"
     >
       <div
-        class="makeStyles-innerScrollContainer-4"
+        class="ParticipantList-innerScrollContainer"
       >
         <div
-          class="makeStyles-container-6 makeStyles-cursorPointer-16"
+          class="ParticipantInfo-container ParticipantInfo-cursorPointer css-12aqrgm"
           data-cy-participant="Student-View"
           data-hidden="false"
           data-selected="false"
           data-testid="participant-Student-View"
         >
           <div
-            class="makeStyles-infoContainer-8"
+            class="ParticipantInfo-infoContainer"
           >
             <div
-              class="makeStyles-outerContainer-19"
+              class="NetworkQualityLevel-outerContainer css-t5cwso"
             >
               <div
-                class="makeStyles-innerContainer-20"
+                class="NetworkQualityLevel-innerContainer"
               >
                 <div
                   style="height: 3px; background: rgba(255, 255, 255, 0.2);"
@@ -45,10 +45,10 @@ exports[`the ParticipantList component should correctly render Participant compo
               </div>
             </div>
             <div
-              class="makeStyles-infoRowBottom-13"
+              class="ParticipantInfo-infoRowBottom"
             >
               <span
-                class="makeStyles-identity-12"
+                class="ParticipantInfo-identity"
               >
                 <svg
                   data-testid="audio-mute-icon"
@@ -77,7 +77,7 @@ exports[`the ParticipantList component should correctly render Participant compo
                   </g>
                 </svg>
                 <span
-                  class="MuiTypography-root makeStyles-typography-14 MuiTypography-body1"
+                  class="MuiTypography-root MuiTypography-body1 ParticipantInfo-typography css-ahj2mt-MuiTypography-root"
                 >
                   Student-View
                 </span>
@@ -86,10 +86,10 @@ exports[`the ParticipantList component should correctly render Participant compo
             <div />
           </div>
           <div
-            class="makeStyles-innerContainer-7"
+            class="ParticipantInfo-innerContainer"
           >
             <div
-              class="makeStyles-avatarContainer-9"
+              class="ParticipantInfo-avatarContainer"
               data-testid="avatar-icon"
             >
               <svg
@@ -119,20 +119,20 @@ exports[`the ParticipantList component should correctly render Participant compo
           </div>
         </div>
         <div
-          class="makeStyles-container-6 makeStyles-cursorPointer-16"
+          class="ParticipantInfo-container ParticipantInfo-cursorPointer css-12aqrgm"
           data-cy-participant="Board-View"
           data-hidden="false"
           data-selected="false"
           data-testid="participant-Board-View"
         >
           <div
-            class="makeStyles-infoContainer-8"
+            class="ParticipantInfo-infoContainer"
           >
             <div
-              class="makeStyles-outerContainer-19"
+              class="NetworkQualityLevel-outerContainer css-t5cwso"
             >
               <div
-                class="makeStyles-innerContainer-20"
+                class="NetworkQualityLevel-innerContainer"
               >
                 <div
                   style="height: 3px; background: rgba(255, 255, 255, 0.2);"
@@ -152,10 +152,10 @@ exports[`the ParticipantList component should correctly render Participant compo
               </div>
             </div>
             <div
-              class="makeStyles-infoRowBottom-13"
+              class="ParticipantInfo-infoRowBottom"
             >
               <span
-                class="makeStyles-identity-12"
+                class="ParticipantInfo-identity"
               >
                 <svg
                   data-testid="audio-mute-icon"
@@ -184,7 +184,7 @@ exports[`the ParticipantList component should correctly render Participant compo
                   </g>
                 </svg>
                 <span
-                  class="MuiTypography-root makeStyles-typography-14 MuiTypography-body1"
+                  class="MuiTypography-root MuiTypography-body1 ParticipantInfo-typography css-ahj2mt-MuiTypography-root"
                 >
                   Board-View
                 </span>
@@ -193,10 +193,10 @@ exports[`the ParticipantList component should correctly render Participant compo
             <div />
           </div>
           <div
-            class="makeStyles-innerContainer-7"
+            class="ParticipantInfo-innerContainer"
           >
             <div
-              class="makeStyles-avatarContainer-9"
+              class="ParticipantInfo-avatarContainer"
               data-testid="avatar-icon"
             >
               <svg
@@ -226,20 +226,20 @@ exports[`the ParticipantList component should correctly render Participant compo
           </div>
         </div>
         <div
-          class="makeStyles-container-6 makeStyles-cursorPointer-16"
+          class="ParticipantInfo-container ParticipantInfo-cursorPointer css-12aqrgm"
           data-cy-participant="Student-View"
           data-hidden="false"
           data-selected="true"
           data-testid="participant-Student-View"
         >
           <div
-            class="makeStyles-infoContainer-8"
+            class="ParticipantInfo-infoContainer"
           >
             <div
-              class="makeStyles-outerContainer-19"
+              class="NetworkQualityLevel-outerContainer css-t5cwso"
             >
               <div
-                class="makeStyles-innerContainer-20"
+                class="NetworkQualityLevel-innerContainer"
               >
                 <div
                   style="height: 3px; background: rgba(255, 255, 255, 0.2);"
@@ -259,10 +259,10 @@ exports[`the ParticipantList component should correctly render Participant compo
               </div>
             </div>
             <div
-              class="makeStyles-infoRowBottom-13"
+              class="ParticipantInfo-infoRowBottom"
             >
               <span
-                class="makeStyles-identity-12"
+                class="ParticipantInfo-identity"
               >
                 <svg
                   data-testid="audio-mute-icon"
@@ -291,7 +291,7 @@ exports[`the ParticipantList component should correctly render Participant compo
                   </g>
                 </svg>
                 <span
-                  class="MuiTypography-root makeStyles-typography-14 MuiTypography-body1"
+                  class="MuiTypography-root MuiTypography-body1 ParticipantInfo-typography css-ahj2mt-MuiTypography-root"
                 >
                   Student-View
                 </span>
@@ -300,12 +300,13 @@ exports[`the ParticipantList component should correctly render Participant compo
             <div>
               <svg
                 aria-hidden="true"
-                class="MuiSvgIcon-root"
+                aria-label="Participant is pinned. Click to un-pin."
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                data-mui-internal-clone-element="true"
                 data-testid="pin-icon"
                 focusable="false"
                 height="26"
                 style="float: right; background: rgba(0, 0, 0, 0.5); padding: 0.1em; box-sizing: content-box;"
-                title="Participant is pinned. Click to un-pin."
                 viewBox="0 0 26 26"
                 width="26"
               >
@@ -319,10 +320,10 @@ exports[`the ParticipantList component should correctly render Participant compo
             </div>
           </div>
           <div
-            class="makeStyles-innerContainer-7"
+            class="ParticipantInfo-innerContainer"
           >
             <div
-              class="makeStyles-avatarContainer-9"
+              class="ParticipantInfo-avatarContainer"
               data-testid="avatar-icon"
             >
               <svg
@@ -353,17 +354,18 @@ exports[`the ParticipantList component should correctly render Participant compo
         </div>
       </div>
       <div
-        class="makeStyles-arrowContainer-5"
+        class="ParticipantList-arrowContainer"
       >
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+          data-testid="ArrowDownwardIcon"
           focusable="false"
           style="cursor: pointer; color: white;"
           viewBox="0 0 24 24"
         >
           <path
-            d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"
+            d="m20 12-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8z"
           />
         </svg>
       </div>

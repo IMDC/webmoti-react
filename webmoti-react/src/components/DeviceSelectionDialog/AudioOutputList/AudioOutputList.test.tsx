@@ -21,20 +21,20 @@ describe('the AudioOutputList component', () => {
   it('should display the name of the active output device if only one is available', () => {
     mockUseDevices.mockImplementation(() => ({ audioOutputDevices: [mockDevice] }));
     render(<AudioOutputList />);
-    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
     expect(screen.getByText('mock device')).toBeInTheDocument();
   });
 
   it('should display "System Default Audio Output" when no audio output devices are available', () => {
     mockUseDevices.mockImplementation(() => ({ audioOutputDevices: [] }));
     render(<AudioOutputList />);
-    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
     expect(screen.getByText('System Default Audio Output')).toBeInTheDocument();
   });
 
   it('should display a Select menu when multiple audio output devices are available', () => {
     mockUseDevices.mockImplementation(() => ({ audioOutputDevices: [mockDevice, mockDevice] }));
     render(<AudioOutputList />);
-    expect(screen.queryByRole('button')).toBeInTheDocument();
+    expect(screen.queryByRole('combobox')).toBeInTheDocument();
   });
 });

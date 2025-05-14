@@ -34,6 +34,10 @@ mockUseWebmotiVideoContext.mockImplementation(() => ({}));
 
 (checkSystemMsg as jest.Mock).mockImplementation(() => false);
 
+const mockMessage = {
+  attachedMedia: [],
+};
+
 describe('the ToggleChatButton component', () => {
   it('should be enabled when a conversation is present', () => {
     render(<ToggleChatButton />);
@@ -71,7 +75,7 @@ describe('the ToggleChatButton component', () => {
 
     render(<ToggleChatButton />);
     const indicator = screen.getByTestId('unread-indicator');
-    expect(indicator.className).toContain('hasUnreadMessages');
+    expect(indicator).toHaveStyle('opacity: 1');
   });
 
   it('should not show an indicator when there are no unread messages', () => {
@@ -84,7 +88,7 @@ describe('the ToggleChatButton component', () => {
 
     render(<ToggleChatButton />);
     const indicator = screen.getByTestId('unread-indicator');
-    expect(indicator.className).not.toContain('hasUnreadMessages');
+    expect(indicator).not.toHaveStyle('opacity: 1');
   });
 
   it(`should add the 'animate' class for ${ANIMATION_DURATION}ms when a new message is received when the chat window is closed`, () => {
@@ -96,20 +100,19 @@ describe('the ToggleChatButton component', () => {
     }));
 
     render(<ToggleChatButton />);
-    const indicatorRing = screen.getByTestId('chat-ring-animation');
-    expect(indicatorRing.className).not.toContain('animate');
+    expect(screen.queryByTestId('chat-ring-animation')).toBeNull();
 
     act(() => {
-      mockConversation.emit('messageAdded');
+      mockConversation.emit('messageAdded', mockMessage);
     });
 
-    expect(indicatorRing.className).toContain('animate');
+    expect(screen.getByTestId('chat-ring-animation')).toBeInTheDocument();
 
     act(() => {
       jest.advanceTimersByTime(ANIMATION_DURATION);
     });
 
-    expect(indicatorRing.className).not.toContain('animate');
+    expect(screen.queryByTestId('chat-ring-animation')).toBeNull();
   });
 
   it(`should not add the 'animate' class when a new message is received when the chat window is open`, () => {
@@ -120,13 +123,12 @@ describe('the ToggleChatButton component', () => {
     }));
 
     render(<ToggleChatButton />);
-    const indicatorRing = screen.getByTestId('chat-ring-animation');
-    expect(indicatorRing.className).not.toContain('animate');
+    expect(screen.queryByTestId('chat-ring-animation')).toBeNull();
 
     act(() => {
-      mockConversation.emit('messageAdded');
+      mockConversation.emit('messageAdded', mockMessage);
     });
 
-    expect(indicatorRing.className).not.toContain('animate');
+    expect(screen.queryByTestId('chat-ring-animation')).toBeNull();
   });
 });

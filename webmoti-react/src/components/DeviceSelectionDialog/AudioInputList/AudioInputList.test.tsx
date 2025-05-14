@@ -48,7 +48,7 @@ describe('the AudioInputList component', () => {
     mockUseDevices.mockImplementation(() => ({ audioInputDevices: [mockDevice1] }));
     render(<AudioInputList />);
 
-    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
     expect(screen.getByText('mock local audio track')).toBeInTheDocument();
   });
 
@@ -68,7 +68,7 @@ describe('the AudioInputList component', () => {
     mockUseDevices.mockImplementation(() => ({ audioInputDevices: [mockDevice1, mockDevice2] }));
 
     render(<AudioInputList />);
-    expect(screen.getByRole('button')).toBeInTheDocument();
+    expect(screen.getByRole('combobox')).toBeInTheDocument();
     expect(screen.queryByText('mock local audio track')).not.toBeInTheDocument();
   });
 
@@ -77,7 +77,7 @@ describe('the AudioInputList component', () => {
 
     const { user } = renderWithUser(<AudioInputList />);
 
-    const select = screen.getByRole('button');
+    const select = screen.getByRole('combobox');
     await user.click(select);
     await user.click(screen.getByText('Mic 2'));
 
@@ -88,7 +88,7 @@ describe('the AudioInputList component', () => {
     mockUseDevices.mockImplementation(() => ({ audioInputDevices: [mockDevice1, mockDevice2] }));
 
     const { user } = renderWithUser(<AudioInputList />);
-    const select = screen.getByRole('button');
+    const select = screen.getByRole('combobox');
     await user.click(select);
     await user.click(screen.getByText('Mic 2'));
 

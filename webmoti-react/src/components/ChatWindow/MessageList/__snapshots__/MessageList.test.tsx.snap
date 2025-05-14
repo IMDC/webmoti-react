@@ -3,17 +3,17 @@
 exports[`the messageList component should render correctly 1`] = `
 <div>
   <div
-    class="MessageListScrollContainer-outerContainer-3"
+    class="MessageListScrollContainer-outerContainer css-14tmjc3"
   >
     <div
-      class="MessageListScrollContainer-innerScrollContainer-4"
+      class="MessageListScrollContainer-innerScrollContainer"
       data-cy-message-list-inner-scroll="true"
     >
       <div
-        class="MessageListScrollContainer-messageListContainer-5"
+        class="MessageListScrollContainer-messageListContainer"
       >
         <div
-          class="makeStyles-messageInfoContainer-8"
+          class="MessageInfo-messageInfoContainer css-53juox"
         >
           <div>
             olivia (You)
@@ -22,9 +22,11 @@ exports[`the messageList component should render correctly 1`] = `
             9:48 pm
           </div>
         </div>
-        <div>
+        <div
+          class="css-1h2yuon"
+        >
           <div
-            class="makeStyles-messageContainer-9 makeStyles-isLocalParticipant-10"
+            class="TextMessage-messageContainer TextMessage-isLocalParticipant"
           >
             <div>
               This is a message
@@ -32,7 +34,7 @@ exports[`the messageList component should render correctly 1`] = `
           </div>
         </div>
         <div
-          class="makeStyles-messageInfoContainer-8"
+          class="MessageInfo-messageInfoContainer css-53juox"
         >
           <div>
             tim
@@ -41,18 +43,22 @@ exports[`the messageList component should render correctly 1`] = `
             9:48 pm
           </div>
         </div>
-        <div>
+        <div
+          class="css-1h2yuon"
+        >
           <div
-            class="makeStyles-messageContainer-9"
+            class="TextMessage-messageContainer"
           >
             <div>
               Hi Olivia!
             </div>
           </div>
         </div>
-        <div>
+        <div
+          class="css-1h2yuon"
+        >
           <div
-            class="makeStyles-messageContainer-9"
+            class="TextMessage-messageContainer"
           >
             <div>
               That is pretty rad double line message! How did you do that?
@@ -60,7 +66,7 @@ exports[`the messageList component should render correctly 1`] = `
           </div>
         </div>
         <div
-          class="makeStyles-messageInfoContainer-8"
+          class="MessageInfo-messageInfoContainer css-53juox"
         >
           <div>
             tim
@@ -69,9 +75,11 @@ exports[`the messageList component should render correctly 1`] = `
             9:49 pm
           </div>
         </div>
-        <div>
+        <div
+          class="css-1h2yuon"
+        >
           <div
-            class="makeStyles-messageContainer-9"
+            class="TextMessage-messageContainer"
           >
             <div>
               😉
@@ -79,7 +87,7 @@ exports[`the messageList component should render correctly 1`] = `
           </div>
         </div>
         <div
-          class="makeStyles-messageInfoContainer-8"
+          class="MessageInfo-messageInfoContainer css-53juox"
         >
           <div>
             olivia (You)
@@ -88,9 +96,11 @@ exports[`the messageList component should render correctly 1`] = `
             9:49 pm
           </div>
         </div>
-        <div>
+        <div
+          class="css-1h2yuon"
+        >
           <div
-            class="makeStyles-messageContainer-9 makeStyles-isLocalParticipant-10"
+            class="TextMessage-messageContainer TextMessage-isLocalParticipant"
           >
             <div>
               Magic
@@ -98,7 +108,7 @@ exports[`the messageList component should render correctly 1`] = `
           </div>
         </div>
         <div
-          class="makeStyles-messageInfoContainer-8"
+          class="MessageInfo-messageInfoContainer css-53juox"
         >
           <div>
             olivia (You)
@@ -107,9 +117,11 @@ exports[`the messageList component should render correctly 1`] = `
             9:50 pm
           </div>
         </div>
-        <div>
+        <div
+          class="css-1h2yuon"
+        >
           <div
-            class="makeStyles-messageContainer-9 makeStyles-isLocalParticipant-10"
+            class="TextMessage-messageContainer TextMessage-isLocalParticipant"
           >
             <div>
               lots of magic
@@ -117,7 +129,7 @@ exports[`the messageList component should render correctly 1`] = `
           </div>
         </div>
         <div
-          class="makeStyles-messageInfoContainer-8"
+          class="MessageInfo-messageInfoContainer css-53juox"
         >
           <div>
             tim
@@ -126,14 +138,16 @@ exports[`the messageList component should render correctly 1`] = `
             9:50 pm
           </div>
         </div>
-        <div>
+        <div
+          class="css-1h2yuon"
+        >
           <div
-            class="makeStyles-messageContainer-9"
+            class="TextMessage-messageContainer"
           >
             <div>
               look at this app: 
               <a
-                class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-11iau0r-MuiTypography-root-MuiLink-root"
                 href="http://github.com/twilio/twilio-video-app-react"
                 rel="noreferrer"
                 target="_blank"
@@ -145,7 +159,7 @@ exports[`the messageList component should render correctly 1`] = `
           </div>
         </div>
         <div
-          class="makeStyles-messageInfoContainer-8"
+          class="MessageInfo-messageInfoContainer css-53juox"
         >
           <div>
             tim
@@ -155,10 +169,10 @@ exports[`the messageList component should render correctly 1`] = `
           </div>
         </div>
         <div
-          class="makeStyles-messageContainer-12"
+          class="MediaMessage-messageContainer css-8lzb36"
         >
           <div
-            class="makeStyles-iconContainer-13"
+            class="MediaMessage-iconContainer"
           >
             <svg
               fill="none"
@@ -212,15 +226,15 @@ exports[`the messageList component should render correctly 1`] = `
             </svg>
           </div>
           <div
-            class="makeStyles-mediaInfo-14"
+            class="MediaMessage-mediaInfo"
           >
             <p
-              class="makeStyles-filename-15"
+              class="MediaMessage-filename"
             >
               test1.txt
             </p>
             <p
-              class="makeStyles-size-16"
+              class="MediaMessage-size"
             >
               120.56 KB
                - Click to open
@@ -228,33 +242,30 @@ exports[`the messageList component should render correctly 1`] = `
           </div>
         </div>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MessageListScrollContainer-button-6 MuiButton-containedPrimary"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MessageListScrollContainer-button css-sghohy-MuiButtonBase-root-MuiButton-root"
           data-cy-new-message-button="true"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-label"
+            class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeMedium css-1d6wzja-MuiButton-startIcon"
           >
-            <span
-              class="MuiButton-startIcon MuiButton-iconSizeMedium"
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="ArrowDownwardIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
             >
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root"
-                focusable="false"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"
-                />
-              </svg>
-            </span>
-            0
-             new message
+              <path
+                d="m20 12-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8z"
+              />
+            </svg>
           </span>
+          0
+           new message
           <span
-            class="MuiTouchRipple-root"
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
           />
         </button>
       </div>

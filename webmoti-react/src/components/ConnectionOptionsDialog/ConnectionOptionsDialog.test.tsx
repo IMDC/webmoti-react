@@ -31,8 +31,8 @@ describe('the ConnectionOptionsDialog component', () => {
     it('should dispatch settings changes', async () => {
       const { user } = renderWithUser(<ConnectionOptionsDialog open={true} onClose={() => {}} />);
 
-      const selectButton = screen.getByRole('button', { name: /dominant speaker priority/i });
-      await user.click(selectButton);
+      const selectBox = screen.getByRole('combobox', { name: /dominant speaker priority/i });
+      await user.click(selectBox);
 
       // select a different value than the default
       const newOption = screen.getByRole('option', { name: 'Low' });

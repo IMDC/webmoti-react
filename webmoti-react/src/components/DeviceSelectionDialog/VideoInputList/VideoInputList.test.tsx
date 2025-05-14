@@ -58,7 +58,7 @@ describe('the VideoInputList component', () => {
     it('should not display a Select menu and instead display the name of the local video track', () => {
       mockUseDevices.mockImplementation(() => ({ videoInputDevices: [mockDevice] }));
       render(<VideoInputList />);
-      expect(screen.queryByRole('button')).toBeNull();
+      expect(screen.queryByRole('combobox')).toBeNull();
       expect(screen.getByTestId('video-device-name').textContent).toBe('mock local video track');
     });
 
@@ -77,7 +77,7 @@ describe('the VideoInputList component', () => {
   it('should render a Select menu when there are multiple video input devices', () => {
     mockUseDevices.mockImplementation(() => ({ videoInputDevices: [mockDevice, mockDevice] }));
     render(<VideoInputList />);
-    expect(screen.getByRole('button')).toBeInTheDocument();
+    expect(screen.getByRole('combobox')).toBeInTheDocument();
     expect(screen.queryByTestId('video-device-name')).toBeNull();
   });
 
@@ -86,7 +86,7 @@ describe('the VideoInputList component', () => {
     const { user } = renderWithUser(<VideoInputList />);
     expect(window.localStorage.getItem(SELECTED_VIDEO_INPUT_KEY)).toBe(null);
 
-    await user.click(screen.getByRole('button'));
+    await user.click(screen.getByRole('combobox'));
     await user.click(screen.getByText(mockDevice2.label));
 
     expect(window.localStorage.getItem(SELECTED_VIDEO_INPUT_KEY)).toBe(mockDevice2.deviceId);
@@ -96,7 +96,7 @@ describe('the VideoInputList component', () => {
     mockUseDevices.mockImplementation(() => ({ videoInputDevices: [mockDevice, mockDevice2] }));
     const { user } = renderWithUser(<VideoInputList />);
 
-    await user.click(screen.getByRole('button'));
+    await user.click(screen.getByRole('combobox'));
     await user.click(screen.getByText(mockDevice2.label));
 
     expect(mockLocalTrack.restart).toHaveBeenCalledWith({
@@ -114,7 +114,7 @@ describe('the VideoInputList component', () => {
     }));
     const { user } = renderWithUser(<VideoInputList />);
 
-    await user.click(screen.getByRole('button'));
+    await user.click(screen.getByRole('combobox'));
     await user.click(screen.getByText(mockDevice2.label));
 
     expect(mockLocalTrack.restart).not.toHaveBeenCalled();
