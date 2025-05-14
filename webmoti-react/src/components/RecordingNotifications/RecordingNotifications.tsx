@@ -64,7 +64,11 @@ export default function RecordingNotifications() {
         message={
           <>
             You can view the recording in the{' '}
-            <Link target="_blank" rel="noopener" href="https://www.twilio.com/console/video/logs/recordings">
+            <Link
+              target="_blank"
+              rel="noopener"
+              href="https://www.twilio.com/console/video/logs/recordings"
+              underline="hover">
               Twilio Console
             </Link>
             . Recordings will be available once this room has ended.

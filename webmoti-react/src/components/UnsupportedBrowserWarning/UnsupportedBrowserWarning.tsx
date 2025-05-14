@@ -34,7 +34,7 @@ export default function UnsupportedBrowserWarning({ children }: { children: Reac
                   href="https://www.twilio.com/docs/video/javascript#supported-browsers"
                   target="_blank"
                   rel="noopener"
-                >
+                  underline="hover">
                   supported browsers
                 </Link>
                 .
@@ -44,7 +44,7 @@ export default function UnsupportedBrowserWarning({ children }: { children: Reac
                   href="https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts"
                   target="_blank"
                   rel="noopener"
-                >
+                  underline="hover">
                   secure context
                 </Link>{' '}
                 (e.g. https or localhost).

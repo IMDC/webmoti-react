@@ -43,7 +43,7 @@ const UserMenu: React.FC = () => {
   if (process.env.REACT_APP_SET_AUTH === 'passcode') {
     return (
       <div className={classes.userContainer} data-testid="user-menu">
-        <Link onClick={handleSignOut} className={classes.logoutLink}>
+        <Link onClick={handleSignOut} className={classes.logoutLink} underline="hover">
           Logout
         </Link>
       </div>
