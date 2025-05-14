@@ -100,7 +100,6 @@ const images = [
   },
 ];
 
-// const isDesktopChrome = /Chrome/.test(navigator.userAgent);
 let imageElements = new Map();
 
 const getImage = (index: number): Promise<HTMLImageElement> => {
@@ -155,8 +154,8 @@ export default function useBackgroundSettings(videoTrack: LocalVideoTrack | unde
       }
       removeProcessor();
       videoTrack.addProcessor(processor, {
-        inputFrameBufferType: 'video',
-        outputFrameBufferContextType: 'webgl2',
+        inputFrameBufferType: 'videoframe',
+        outputFrameBufferContextType: 'bitmaprenderer',
       });
     },
     [videoTrack, removeProcessor]
@@ -173,10 +172,6 @@ export default function useBackgroundSettings(videoTrack: LocalVideoTrack | unde
         blurProcessor = new GaussianBlurBackgroundProcessor({
           assetsPath: virtualBackgroundAssets,
           blurFilterRadius: 15,
-          // Disable debounce only on desktop Chrome as other browsers either
-          // do not support WebAssembly SIMD or they degrade performance.
-          // debounce: !isDesktopChrome,
-          // ! debounce was removed in new version of library
         });
         await blurProcessor.loadModel();
       }
@@ -184,10 +179,6 @@ export default function useBackgroundSettings(videoTrack: LocalVideoTrack | unde
         virtualBackgroundProcessor = new VirtualBackgroundProcessor({
           assetsPath: virtualBackgroundAssets,
           backgroundImage: await getImage(0),
-          // Disable debounce only on desktop Chrome as other browsers either
-          // do not support WebAssembly SIMD or they degrade performance.
-          // debounce: !isDesktopChrome,
-          // ! debounce was removed in new version of library
           fitType: ImageFit.Cover,
         });
         await virtualBackgroundProcessor.loadModel();
