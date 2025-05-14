@@ -1,5 +1,4 @@
 import { styled } from '@mui/material/styles';
-import { Theme } from '@mui/material/styles';
 import { BlurOn, FilterNone } from '@mui/icons-material';
 import clsx from 'clsx';
 
@@ -12,14 +11,10 @@ const classes = {
   thumbIconContainer: `${PREFIX}-thumbIconContainer`,
   thumbIcon: `${PREFIX}-thumbIcon`,
   thumbImage: `${PREFIX}-thumbImage`,
-  thumbOverlay: `${PREFIX}-thumbOverlay`
+  thumbOverlay: `${PREFIX}-thumbOverlay`,
 };
 
-const Root = styled('div')((
-  {
-    theme: Theme
-  }
-) => ({
+const Root = styled('div')(({ theme }) => ({
   [`&.${classes.thumbContainer}`]: {
     margin: '5px',
     width: 'calc(50% - 10px)',
@@ -99,7 +94,7 @@ const Root = styled('div')((
       background: 'rgba(95, 93, 128, 0.6)',
       color: 'white',
     },
-  }
+  },
 }));
 
 export type Thumbnail = 'none' | 'blur' | 'image';
@@ -119,7 +114,6 @@ export default function BackgroundThumbnail({
   index,
   description,
 }: BackgroundThumbnailProps) {
-
   const { backgroundSettings, setBackgroundSettings } = useVideoContext();
   const isImage = thumbnail === 'image';
   const thumbnailSelected = isImage

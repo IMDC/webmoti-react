@@ -2,16 +2,7 @@ import { useRef, useState } from 'react';
 
 import { styled } from '@mui/material/styles';
 
-import {
-  Button,
-  Divider,
-  Grid,
-  Popover,
-  Typography,
-  useMediaQuery,
-  useTheme,
-  Theme,
-} from '@mui/material';
+import { Button, Divider, Grid, Popover, Typography, useMediaQuery, useTheme } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SettingsIcon from '@mui/icons-material/Settings';
 
@@ -28,15 +19,11 @@ const PREFIX = 'ControlsMenu';
 
 const classes = {
   cameraControlsPopover: `${PREFIX}-cameraControlsPopover`,
-  controlsButton: `${PREFIX}-controlsButton`
+  controlsButton: `${PREFIX}-controlsButton`,
 };
 
 // TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
-const Root = styled('div')((
-  {
-    theme: Theme
-  }
-) => ({
+const Root = styled('div')(({ theme }) => ({
   [`& .${classes.cameraControlsPopover}`]: {
     padding: theme.spacing(2),
   },
@@ -49,11 +36,10 @@ const Root = styled('div')((
     [theme.breakpoints.down('md')]: {
       paddingLeft: 0,
     },
-  }
+  },
 }));
 
 export default function ControlsMenu() {
-
   const openBtnRef = useRef(null);
 
   const [cameraControlsAnchorEl, setCameraControlsAnchorEl] = useState<HTMLElement | null>(null);

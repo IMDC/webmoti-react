@@ -2,7 +2,7 @@ import React from 'react';
 
 import { styled } from '@mui/material/styles';
 
-import { IconButton, Typography, Theme, Snackbar as MUISnackbar, SnackbarCloseReason } from '@mui/material';
+import { IconButton, Typography, Snackbar as MUISnackbar, SnackbarCloseReason } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import clsx from 'clsx';
 
@@ -19,14 +19,10 @@ const classes = {
   headline: `${PREFIX}-headline`,
   error: `${PREFIX}-error`,
   warning: `${PREFIX}-warning`,
-  info: `${PREFIX}-info`
+  info: `${PREFIX}-info`,
 };
 
-const StyledMUISnackbar = styled(MUISnackbar)((
-  {
-    theme: Theme
-  }
-) => ({
+const StyledMUISnackbar = styled(MUISnackbar)(({ theme }) => ({
   [`& .${classes.container}`]: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -66,7 +62,7 @@ const StyledMUISnackbar = styled(MUISnackbar)((
 
   [`& .${classes.info}`]: {
     borderLeft: '4px solid #0263e0',
-  }
+  },
 }));
 
 interface SnackbarProps {
@@ -78,8 +74,6 @@ interface SnackbarProps {
 }
 
 export default function Snackbar({ headline, message, variant, open, handleClose }: SnackbarProps) {
-
-
   const handleOnClose = (_: React.SyntheticEvent<any> | Event, reason: SnackbarCloseReason) => {
     if (reason === 'clickaway') {
       return;

@@ -10,7 +10,6 @@ import {
   FormControlLabel,
   Switch,
   Tooltip,
-  Theme,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
@@ -35,14 +34,10 @@ const classes = {
   listSection: `${PREFIX}-listSection`,
   noiseCancellationContainer: `${PREFIX}-noiseCancellationContainer`,
   krispContainer: `${PREFIX}-krispContainer`,
-  krispInfoText: `${PREFIX}-krispInfoText`
+  krispInfoText: `${PREFIX}-krispInfoText`,
 };
 
-const StyledDialog = styled(Dialog)((
-  {
-    theme: Theme
-  }
-) => ({
+const StyledDialog = styled(Dialog)(({ theme }) => ({
   [`& .${classes.container}`]: {
     width: '600px',
     minHeight: '400px',
@@ -93,14 +88,13 @@ const StyledDialog = styled(Dialog)((
 
   [`& .${classes.krispInfoText}`]: {
     margin: '0 0 1.5em 0.5em',
-  }
+  },
 }));
 
 export default function DeviceSelectionDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { isAcquiringLocalTracks } = useVideoContext();
   const { isKrispEnabled, isKrispInstalled } = useAppState();
   const { toggleKrisp } = useKrispToggle();
-
 
   return (
     <StyledDialog open={open} onClose={onClose} classes={{ paper: classes.paper }}>

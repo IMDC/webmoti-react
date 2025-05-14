@@ -1,4 +1,4 @@
-import { Card, CardContent, Typography, Theme } from '@mui/material';
+import { Card, CardContent, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
 
@@ -9,14 +9,10 @@ const classes = {
   beforeMargin: `${PREFIX}-beforeMargin`,
   extraMargin: `${PREFIX}-extraMargin`,
   cardContent: `${PREFIX}-cardContent`,
-  shortcutText: `${PREFIX}-shortcutText`
+  shortcutText: `${PREFIX}-shortcutText`,
 };
 
-const StyledCard = styled(Card)((
-  {
-    theme: Theme
-  }
-) => ({
+const StyledCard = styled(Card)(({ theme }) => ({
   [`&.${classes.card}`]: {
     height: 20,
     backgroundColor: theme.palette.primary.dark,
@@ -39,7 +35,7 @@ const StyledCard = styled(Card)((
 
   [`& .${classes.shortcutText}`]: {
     letterSpacing: '0.1em',
-  }
+  },
 }));
 
 interface ShortcutIndicatorProps {
@@ -57,8 +53,6 @@ export default function ShortcutIndicator({
   isAltDown = false,
   isInTooltip = false,
 }: ShortcutIndicatorProps) {
-
-
   return (
     <StyledCard
       className={clsx(classes.card, {

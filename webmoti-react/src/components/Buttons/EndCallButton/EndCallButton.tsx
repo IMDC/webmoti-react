@@ -1,6 +1,6 @@
 import { Button, useMediaQuery } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useTheme, Theme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import clsx from 'clsx';
 import CallEndIcon from '@mui/icons-material/CallEnd';
 
@@ -10,14 +10,10 @@ import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 const PREFIX = 'EndCallButton';
 
 const classes = {
-  button: `${PREFIX}-button`
+  button: `${PREFIX}-button`,
 };
 
-const StyledButton = styled(Button)((
-  {
-    theme: Theme
-  }
-) => ({
+const StyledButton = styled(Button)(({ theme }) => ({
   [`&.${classes.button}`]: {
     background: theme.brand,
     color: 'white',
@@ -27,11 +23,10 @@ const StyledButton = styled(Button)((
     paddingLeft: 5,
     paddingRight: 5,
     minWidth: 0,
-  }
+  },
 }));
 
 export default function EndCallButton(props: { className?: string }) {
-
   const { room } = useVideoContext();
   const { conversation } = useChatContext();
 

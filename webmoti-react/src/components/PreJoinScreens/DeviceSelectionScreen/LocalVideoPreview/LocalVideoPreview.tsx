@@ -1,4 +1,4 @@
-import { Typography,Theme } from '@mui/material';
+import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { LocalVideoTrack } from 'twilio-video';
 
@@ -14,14 +14,10 @@ const classes = {
   innerContainer: `${PREFIX}-innerContainer`,
   identityContainer: `${PREFIX}-identityContainer`,
   identity: `${PREFIX}-identity`,
-  avatarContainer: `${PREFIX}-avatarContainer`
+  avatarContainer: `${PREFIX}-avatarContainer`,
 };
 
-const Root = styled('div')((
-  {
-    theme: Theme
-  }
-) => ({
+const Root = styled('div')(({ theme }) => ({
   [`&.${classes.container}`]: {
     position: 'relative',
     height: 0,
@@ -69,11 +65,10 @@ const Root = styled('div')((
         transform: 'scale(0.7)',
       },
     },
-  }
+  },
 }));
 
 export default function LocalVideoPreview({ identity }: { identity: string }) {
-
   const { localTracks } = useVideoContext();
 
   const videoTrack = localTracks.find(

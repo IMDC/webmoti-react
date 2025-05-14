@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 
 import { styled } from '@mui/material/styles';
 
-import { useMediaQuery, useTheme,Theme } from '@mui/material';
+import { useMediaQuery, useTheme } from '@mui/material';
 import clsx from 'clsx';
 import { Room as IRoom, Participant } from 'twilio-video';
 
@@ -23,14 +23,10 @@ const PREFIX = 'Room';
 
 const classes = {
   container: `${PREFIX}-container`,
-  rightDrawerOpen: `${PREFIX}-rightDrawerOpen`
+  rightDrawerOpen: `${PREFIX}-rightDrawerOpen`,
 };
 
-const Root = styled('div')((
-  {
-    theme: Theme
-  }
-) => {
+const Root = styled('div')(({ theme }) => {
   const totalMobileSidebarHeight = `${
     theme.sidebarMobileHeight + theme.sidebarMobilePadding * 2 + theme.participantBorderWidth
   }px`;
@@ -93,7 +89,6 @@ export function useSetSpeakerViewOnScreenShare(
 }
 
 export default function Room() {
-
   const { isChatWindowOpen } = useChatContext();
   const { isBackgroundSelectionOpen, room } = useVideoContext();
   const { isGalleryViewActive, setIsGalleryViewActive } = useAppState();

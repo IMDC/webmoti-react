@@ -5,7 +5,6 @@ import { styled } from '@mui/material/styles';
 
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { Button } from '@mui/material';
-import { WithStyles } from '@mui/styles';
 import { Message } from '@twilio/conversations';
 import clsx from 'clsx';
 import throttle from 'lodash.throttle';
@@ -17,7 +16,7 @@ const classes = {
   innerScrollContainer: `${PREFIX}-innerScrollContainer`,
   messageListContainer: `${PREFIX}-messageListContainer`,
   button: `${PREFIX}-button`,
-  showButton: `${PREFIX}-showButton`
+  showButton: `${PREFIX}-showButton`,
 };
 
 const Root = styled('div')({
@@ -54,7 +53,7 @@ const Root = styled('div')({
   },
 });
 
-interface MessageListScrollContainerProps extends WithStyles<typeof styles> {
+interface MessageListScrollContainerProps {
   messages: Message[];
   children?: ReactNode;
 }
@@ -150,8 +149,6 @@ export class MessageListScrollContainer extends React.Component<
   }
 
   render() {
-    const { } = this.props;
-
     return (
       <Root className={classes.outerContainer}>
         <div className={classes.innerScrollContainer} ref={this.chatThreadRef} data-cy-message-list-inner-scroll>
@@ -175,4 +172,4 @@ export class MessageListScrollContainer extends React.Component<
   }
 }
 
-export default (MessageListScrollContainer);
+export default MessageListScrollContainer;

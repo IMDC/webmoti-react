@@ -2,7 +2,7 @@ import React from 'react';
 
 import { styled } from '@mui/material/styles';
 
-import { Typography, useMediaQuery, Theme, useTheme } from '@mui/material';
+import { Typography, useMediaQuery, useTheme } from '@mui/material';
 
 import { useLocation } from 'react-router-dom';
 
@@ -22,14 +22,10 @@ const classes = {
   webmotiLogo: `${PREFIX}-webmotiLogo`,
   content: `${PREFIX}-content`,
   title: `${PREFIX}-title`,
-  subtitle: `${PREFIX}-subtitle`
+  subtitle: `${PREFIX}-subtitle`,
 };
 
-const Root = styled('div')((
-  {
-    theme: Theme
-  }
-) => ({
+const Root = styled('div')(({ theme }) => ({
   [`&.${classes.background}`]: {
     display: 'flex',
     alignItems: 'center',
@@ -135,7 +131,7 @@ const Root = styled('div')((
       fontSize: '0.8rem',
       margin: '0.25em 0 0.5em',
     },
-  }
+  },
 }));
 
 interface IntroContainerProps {
@@ -143,7 +139,6 @@ interface IntroContainerProps {
 }
 
 const IntroContainer = (props: IntroContainerProps) => {
-
   const { user } = useAppState();
   const location = useLocation();
 

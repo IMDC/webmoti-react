@@ -2,7 +2,7 @@ import { CSSProperties } from 'react';
 
 import { styled } from '@mui/material/styles';
 
-import { useMediaQuery, Theme } from '@mui/material';
+import { useMediaQuery } from '@mui/material';
 import clsx from 'clsx';
 
 import {} from '@mui/material/styles';
@@ -24,14 +24,10 @@ const PREFIX = 'MobileGalleryView';
 const classes = {
   participantContainer: `${PREFIX}-participantContainer`,
   isPaginationActive: `${PREFIX}-isPaginationActive`,
-  swiperSlide: `${PREFIX}-swiperSlide`
+  swiperSlide: `${PREFIX}-swiperSlide`,
 };
 
-const Root = styled('div')((
-  {
-    theme: Theme
-  }
-) => ({
+const Root = styled('div')(({ theme }) => ({
   [`&.${classes.participantContainer}`]: {
     background: theme.galleryViewBackgroundColor,
     position: 'absolute',
@@ -65,11 +61,10 @@ const Root = styled('div')((
     flexWrap: 'wrap',
     alignSelf: 'center',
     alignContent: 'flex-start',
-  }
+  },
 }));
 
 export function MobileGalleryView() {
-
   const isMobileLandscape = useMediaQuery('screen and (orientation: landscape)');
   const { room } = useVideoContext();
   const { mobileGalleryViewParticipants } = useParticipantContext();

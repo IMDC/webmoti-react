@@ -2,7 +2,7 @@ import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 
 import { styled } from '@mui/material/styles';
 
-import { Backdrop, Button, CircularProgress, Fade, Grid, Modal, TextField, Theme, Typography } from '@mui/material';
+import { Backdrop, Button, CircularProgress, Fade, Grid, Modal, TextField, Typography } from '@mui/material';
 
 import { HTTPS_SERVER_URL } from '../../constants';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
@@ -11,14 +11,10 @@ const PREFIX = 'SetScheduleModal';
 
 const classes = {
   modal: `${PREFIX}-modal`,
-  paper: `${PREFIX}-paper`
+  paper: `${PREFIX}-paper`,
 };
 
-const StyledModal = styled(Modal)((
-  {
-    theme: Theme
-  }
-) => ({
+const StyledModal = styled(Modal)(({ theme }) => ({
   [`&.${classes.modal}`]: {
     display: 'flex',
     alignItems: 'center',
@@ -30,7 +26,7 @@ const StyledModal = styled(Modal)((
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
-  }
+  },
 }));
 
 interface SetScheduleModalProps {
@@ -39,8 +35,6 @@ interface SetScheduleModalProps {
 }
 
 export default function SetScheduleModal({ open, onClose }: SetScheduleModalProps) {
-
-
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [file, setFile] = useState<File | null>(null);
@@ -141,7 +135,8 @@ export default function SetScheduleModal({ open, onClose }: SetScheduleModalProp
               onChange={(e) => setStartTime(e.target.value)}
               InputLabelProps={{ shrink: true }}
               fullWidth
-              style={{ marginBottom: '20px' }} />
+              style={{ marginBottom: '20px' }}
+            />
 
             <TextField
               variant="standard"
@@ -151,7 +146,8 @@ export default function SetScheduleModal({ open, onClose }: SetScheduleModalProp
               onChange={(e) => setEndTime(e.target.value)}
               InputLabelProps={{ shrink: true }}
               fullWidth
-              style={{ marginBottom: '20px' }} />
+              style={{ marginBottom: '20px' }}
+            />
 
             <input accept="*/*" style={{ display: 'none' }} id="upload-file" type="file" onChange={handleFileChange} />
 

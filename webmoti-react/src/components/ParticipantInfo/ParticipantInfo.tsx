@@ -2,7 +2,7 @@ import React from 'react';
 
 import { styled } from '@mui/material/styles';
 
-import { Theme, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import clsx from 'clsx';
 import { LocalAudioTrack, LocalVideoTrack, Participant, RemoteAudioTrack, RemoteVideoTrack } from 'twilio-video';
 
@@ -34,14 +34,10 @@ const classes = {
   hideParticipant: `${PREFIX}-hideParticipant`,
   cursorPointer: `${PREFIX}-cursorPointer`,
   galleryView: `${PREFIX}-galleryView`,
-  dominantSpeaker: `${PREFIX}-dominantSpeaker`
+  dominantSpeaker: `${PREFIX}-dominantSpeaker`,
 };
 
-const Root = styled('div')((
-  {
-    theme: Theme
-  }
-) => ({
+const Root = styled('div')(({ theme }) => ({
   [`&.${classes.container}`]: {
     isolation: 'isolate',
     position: 'relative',
@@ -180,7 +176,7 @@ const Root = styled('div')((
 
   [`&.${classes.dominantSpeaker}`]: {
     border: `solid ${borderWidth}px #7BEAA5`,
-  }
+  },
 }));
 
 const borderWidth = 2;
@@ -227,8 +223,6 @@ export default function ParticipantInfo({
     (participant.identity !== WEBMOTI_CAMERA_2 && isVideoSwitchedOff) ||
     (participant.identity === WEBMOTI_CAMERA_1 && isCameraOneOff) ||
     (participant.identity === WEBMOTI_CAMERA_2 && isCameraTwoOff);
-
-
 
   return (
     <Root

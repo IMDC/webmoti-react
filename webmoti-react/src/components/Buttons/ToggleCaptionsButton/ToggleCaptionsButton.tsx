@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { styled } from '@mui/material/styles';
 
 import ClosedCaptionIcon from '@mui/icons-material/ClosedCaption';
-import { IconButton, Theme } from '@mui/material';
+import { IconButton } from '@mui/material';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import useWebSocket from 'react-use-websocket';
 
@@ -16,15 +16,11 @@ import Snackbar from '../../Snackbar/Snackbar';
 const PREFIX = 'ToggleCaptionsButton';
 
 const classes = {
-  iconButton: `${PREFIX}-iconButton`
+  iconButton: `${PREFIX}-iconButton`,
 };
 
 // TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
-const Root = styled('div')((
-  {
-    theme: Theme
-  }
-) => ({
+const Root = styled('div')(({ theme }) => ({
   [`& .${classes.iconButton}`]: {
     padding: 10,
     marginRight: 10,
@@ -32,7 +28,7 @@ const Root = styled('div')((
     [theme.breakpoints.down('md')]: {
       marginRight: 0,
     },
-  }
+  },
 }));
 
 interface AudioToggleDetail {
@@ -43,7 +39,6 @@ interface AudioToggleEvent extends CustomEvent<AudioToggleDetail> {}
 export default function ToggleCaptionsButton() {
   const { room } = useVideoContext();
   const [isAudioEnabled] = useLocalAudioToggle();
-
 
   const [snackbarError, setSnackbarError] = useState('');
 

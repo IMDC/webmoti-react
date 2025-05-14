@@ -17,7 +17,6 @@ import {
   TableHead,
   TableRow,
   Typography,
-  Theme,
 } from '@mui/material';
 
 import { HTTPS_SERVER_URL } from '../../constants';
@@ -27,14 +26,10 @@ const PREFIX = 'ViewScheduleModal';
 
 const classes = {
   modal: `${PREFIX}-modal`,
-  paper: `${PREFIX}-paper`
+  paper: `${PREFIX}-paper`,
 };
 
-const StyledModal = styled(Modal)((
-  {
-    theme: Theme
-  }
-) => ({
+const StyledModal = styled(Modal)(({ theme }) => ({
   [`&.${classes.modal}`]: {
     display: 'flex',
     alignItems: 'center',
@@ -46,7 +41,7 @@ const StyledModal = styled(Modal)((
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
-  }
+  },
 }));
 
 interface ViewScheduleModalProps {
@@ -60,8 +55,6 @@ interface Schedule {
 }
 
 export default function ViewScheduleModal({ open, onClose }: ViewScheduleModalProps) {
-
-
   const [schedule, setSchedule] = useState<Schedule | null>(null);
 
   const { room } = useVideoContext();

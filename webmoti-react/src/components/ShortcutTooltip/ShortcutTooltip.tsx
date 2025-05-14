@@ -1,30 +1,23 @@
 import { ReactElement } from 'react';
 
 import { styled } from '@mui/material/styles';
-
-import { Fade, Tooltip, Theme } from '@mui/material';
+import { Fade, Tooltip } from '@mui/material';
 
 import ShortcutIndicator from '../ShortcutIndicator/ShortcutIndicator';
 
 const PREFIX = 'ShortcutTooltip';
 
 const classes = {
-  tooltip: `${PREFIX}-tooltip`
+  tooltip: `${PREFIX}-tooltip`,
 };
 
-const StyledLightTooltip = styled(LightTooltip)((
-  {
-    theme: Theme
-  }
-) => ({
+const StyledLightTooltip = styled(Tooltip)(({ theme }) => ({
   [`& .${classes.tooltip}`]: {
     backgroundColor: theme.palette.common.white,
     color: 'rgba(0, 0, 0, 0.87)',
     boxShadow: theme.shadows[1],
-  }
+  },
 }));
-
-const LightTooltip = Tooltip;
 
 interface ShortcutTooltipProps {
   children: ReactElement;

@@ -18,7 +18,6 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Theme } from '@mui/material/styles';
 
 import useRoomState from '../../hooks/useRoomState/useRoomState';
 import { useAppState } from '../../state';
@@ -31,14 +30,10 @@ const classes = {
   button: `${PREFIX}-button`,
   paper: `${PREFIX}-paper`,
   formControl: `${PREFIX}-formControl`,
-  label: `${PREFIX}-label`
+  label: `${PREFIX}-label`,
 };
 
-const StyledDialog = styled(Dialog)((
-  {
-    theme: Theme
-  }
-) => ({
+const StyledDialog = styled(Dialog)(({ theme }) => ({
   [`& .${classes.container}`]: {
     width: '600px',
     minHeight: '400px',
@@ -70,13 +65,12 @@ const StyledDialog = styled(Dialog)((
 
   [`& .${classes.label}`]: {
     width: '133%', // Labels have scale(0.75) applied to them, so this effectively makes the width 100%
-  }
+  },
 }));
 
 const withDefault = (val?: string) => (typeof val === 'undefined' ? 'default' : val);
 
 export default function ConnectionOptionsDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
-
   const { settings, dispatchSetting } = useAppState();
   const roomState = useRoomState();
   const isDisabled = roomState !== 'disconnected';
@@ -118,7 +112,8 @@ export default function ConnectionOptionsDialog({ open, onClose }: { open: boole
                 label={inputLabels.dominantSpeakerPriority}
                 labelId={inputLabels.dominantSpeakerPriority}
                 value={withDefault(settings.dominantSpeakerPriority)}
-                onChange={handleChange}>
+                onChange={handleChange}
+              >
                 <MenuItem value="low">Low</MenuItem>
                 <MenuItem value="standard">Standard</MenuItem>
                 <MenuItem value="high">High</MenuItem>
@@ -135,7 +130,8 @@ export default function ConnectionOptionsDialog({ open, onClose }: { open: boole
                 name={inputLabels.trackSwitchOffMode}
                 label={inputLabels.trackSwitchOffMode}
                 value={withDefault(settings.trackSwitchOffMode)}
-                onChange={handleChange}>
+                onChange={handleChange}
+              >
                 <MenuItem value="predicted">Predicted</MenuItem>
                 <MenuItem value="detected">Detected</MenuItem>
                 <MenuItem value="disabled">Disabled</MenuItem>
@@ -152,7 +148,8 @@ export default function ConnectionOptionsDialog({ open, onClose }: { open: boole
                 name={inputLabels.bandwidthProfileMode}
                 label={inputLabels.bandwidthProfileMode}
                 value={withDefault(settings.bandwidthProfileMode)}
-                onChange={handleChange}>
+                onChange={handleChange}
+              >
                 <MenuItem value="grid">Grid</MenuItem>
                 <MenuItem value="collaboration">Collaboration</MenuItem>
                 <MenuItem value="presentation">Presentation</MenuItem>
@@ -170,7 +167,8 @@ export default function ConnectionOptionsDialog({ open, onClose }: { open: boole
                 name={inputLabels.clientTrackSwitchOffControl}
                 label={inputLabels.clientTrackSwitchOffControl}
                 value={withDefault(settings.clientTrackSwitchOffControl)}
-                onChange={handleChange}>
+                onChange={handleChange}
+              >
                 <MenuItem value="auto">Auto</MenuItem>
                 <MenuItem value="manual">Manual</MenuItem>
                 <MenuItem value="default">Default</MenuItem>
@@ -186,7 +184,8 @@ export default function ConnectionOptionsDialog({ open, onClose }: { open: boole
                 name={inputLabels.contentPreferencesMode}
                 label={inputLabels.contentPreferencesMode}
                 value={withDefault(settings.contentPreferencesMode)}
-                onChange={handleChange}>
+                onChange={handleChange}
+              >
                 <MenuItem value="auto">Auto</MenuItem>
                 <MenuItem value="manual">Manual</MenuItem>
                 <MenuItem value="default">Default</MenuItem>
@@ -203,7 +202,8 @@ export default function ConnectionOptionsDialog({ open, onClose }: { open: boole
                 placeholder="Leave blank for no limit"
                 name={inputLabels.maxAudioBitrate}
                 value={withDefault(settings.maxAudioBitrate)}
-                onChange={handleNumberChange} />
+                onChange={handleNumberChange}
+              />
             </FormControl>
           </Grid>
         </Grid>

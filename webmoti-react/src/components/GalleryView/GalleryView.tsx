@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 
 import { Fireworks } from '@fireworks-js/react';
 import type { FireworksHandlers } from '@fireworks-js/react';
-import { IconButton, useTheme, Theme, useMediaQuery, Pagination } from '@mui/material';
+import { IconButton, useTheme, useMediaQuery, Pagination } from '@mui/material';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -29,14 +29,10 @@ const classes = {
   buttonContainerRight: `${PREFIX}-buttonContainerRight`,
   pagination: `${PREFIX}-pagination`,
   paginationButton: `${PREFIX}-paginationButton`,
-  paginationContainer: `${PREFIX}-paginationContainer`
+  paginationContainer: `${PREFIX}-paginationContainer`,
 };
 
-const Root = styled('div')((
-  {
-    theme: Theme
-  }
-) => ({
+const Root = styled('div')(({ theme }) => ({
   [`&.${classes.container}`]: {
     background: theme.galleryViewBackgroundColor,
     position: 'relative',
@@ -100,13 +96,12 @@ const Root = styled('div')((
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-  }
+  },
 }));
 
 const CONTAINER_GUTTER = '50px';
 
 export function GalleryView() {
-
   const { maxGalleryViewParticipants } = useAppState();
   const { room } = useVideoContext();
   const { galleryViewParticipants } = useParticipantsContext();
@@ -161,7 +156,8 @@ export function GalleryView() {
             data-testid="pagination-prev-button"
             className={classes.paginationButton}
             onClick={() => setCurrentPage((page) => page - 1)}
-            size="large">
+            size="large"
+          >
             <ArrowBackIcon />
           </IconButton>
         )}
@@ -172,7 +168,8 @@ export function GalleryView() {
             data-testid="pagination-next-button"
             className={classes.paginationButton}
             onClick={() => setCurrentPage((page) => page + 1)}
-            size="large">
+            size="large"
+          >
             <ArrowForwardIcon />
           </IconButton>
         )}

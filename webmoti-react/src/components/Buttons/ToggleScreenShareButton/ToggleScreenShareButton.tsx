@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles';
 
-import { Button, Tooltip, Theme } from '@mui/material';
+import { Button, Tooltip } from '@mui/material';
 import ScreenShareIcon from '../../../icons/ScreenShareIcon';
 
 import useScreenShareParticipant from '../../../hooks/useScreenShareParticipant/useScreenShareParticipant';
@@ -9,14 +9,10 @@ import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 const PREFIX = 'SCREEN_SHARE_TEXT';
 
 const classes = {
-  button: `${PREFIX}-button`
+  button: `${PREFIX}-button`,
 };
 
-const StyledTooltip = styled(Tooltip)((
-  {
-    theme: Theme
-  }
-) => ({
+const StyledTooltip = styled(Tooltip)(({ theme }) => ({
   [`& .${classes.button}`]: {
     '&[disabled]': {
       color: '#bbb',
@@ -24,7 +20,7 @@ const StyledTooltip = styled(Tooltip)((
         fill: '#bbb',
       },
     },
-  }
+  },
 }));
 
 export const SCREEN_SHARE_TEXT = 'Share Screen';
@@ -33,7 +29,6 @@ export const SHARE_IN_PROGRESS_TEXT = 'Cannot share screen when another user is 
 export const SHARE_NOT_SUPPORTED_TEXT = 'Screen sharing is not supported with this browser';
 
 export default function ToggleScreenShareButton(props: { disabled?: boolean }) {
-
   const screenShareParticipant = useScreenShareParticipant();
   const { toggleScreenShare } = useVideoContext();
   const disableScreenShareButton = Boolean(screenShareParticipant);

@@ -20,7 +20,7 @@ const PREFIX = 'MessageList';
 
 const classes = {
   ttsMessageWrapper: `${PREFIX}-ttsMessageWrapper`,
-  sendButton: `${PREFIX}-sendButton`
+  sendButton: `${PREFIX}-sendButton`,
 };
 
 const StyledMessageListScrollContainer = styled(MessageListScrollContainer)({
@@ -67,7 +67,7 @@ const showChatMessages = (messages: Message[], localParticipant: LocalParticipan
   });
 };
 
-const showTTSMessages = (conversation: Conversation | null, messages: TTSMessage[], classes: any) => {
+const showTTSMessages = (conversation: Conversation | null, messages: TTSMessage[], styleClasses: any) => {
   return messages.map((message, idx) => {
     const time = getFormattedTime(message)!;
     const previousTime = getFormattedTime(messages[idx - 1]);
@@ -78,10 +78,10 @@ const showTTSMessages = (conversation: Conversation | null, messages: TTSMessage
       <React.Fragment key={idx}>
         {shouldDisplayMessageInfo && <MessageInfo isLocalParticipant dateCreated={time} />}
         {/* need to use arrow function here because messages uses "this" property */}
-        <div className={classes.ttsMessageWrapper}>
+        <div className={styleClasses.ttsMessageWrapper}>
           <TextMessage body={message.text!} onClick={() => message.play()} isLocalParticipant isTTSMsg />
           <Button
-            className={classes.sendButton}
+            className={styleClasses.sendButton}
             color="primary"
             variant="contained"
             disabled={message.audioBlob === null}
@@ -103,12 +103,11 @@ export default function MessageList({ messages, ttsMessages = [], isTTSModeOn = 
   const { room } = useVideoContext();
   const { conversation } = useChatContext();
 
-
   const localParticipant = room!.localParticipant;
 
   return (
     <StyledMessageListScrollContainer messages={messages}>
-      {isTTSModeOn ? showTTSMessages(conversation, ttsMessages,  : showChatMessages(messages, localParticipant)}
+      {isTTSModeOn ? showTTSMessages(conversation, ttsMessages, classes) : showChatMessages(messages, localParticipant)}
     </StyledMessageListScrollContainer>
   );
 }

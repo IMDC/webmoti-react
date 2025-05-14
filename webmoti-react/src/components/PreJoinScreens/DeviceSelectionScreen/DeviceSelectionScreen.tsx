@@ -8,7 +8,6 @@ import {
   CircularProgress,
   Divider,
   FormControlLabel,
-  Theme,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
@@ -34,15 +33,11 @@ const classes = {
   joinButtons: `${PREFIX}-joinButtons`,
   mobileButtonBar: `${PREFIX}-mobileButtonBar`,
   mobileButton: `${PREFIX}-mobileButton`,
-  toolTipContainer: `${PREFIX}-toolTipContainer`
+  toolTipContainer: `${PREFIX}-toolTipContainer`,
 };
 
 // TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
-const Root = styled('div')((
-  {
-    theme: Theme
-  }
-) => ({
+const Root = styled('div')(({ theme }) => ({
   [`& .${classes.gutterBottom}`]: {
     marginBottom: '1em',
   },
@@ -100,7 +95,7 @@ const Root = styled('div')((
     '& svg': {
       marginLeft: '0.3em',
     },
-  }
+  },
 }));
 
 interface DeviceSelectionScreenProps {
@@ -110,7 +105,6 @@ interface DeviceSelectionScreenProps {
 }
 
 export default function DeviceSelectionScreen({ name, roomName, setStep }: DeviceSelectionScreenProps) {
-
   const { getToken, isFetching, isKrispEnabled, isKrispInstalled } = useAppState();
   const { connect: chatConnect } = useChatContext();
   const { connect: videoConnect, isAcquiringLocalTracks, isConnecting } = useVideoContext();
@@ -227,7 +221,7 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
                   </Button>
                 ) : (
                   // placeholder that keeps join button on the right
-                  (<span style={{ flexGrow: 1 }} />)
+                  <span style={{ flexGrow: 1 }} />
                 )}
                 <Button
                   variant="contained"

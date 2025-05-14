@@ -1,4 +1,4 @@
-import { Grid, Hidden, Typography, Theme } from '@mui/material';
+import { Grid, Hidden, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import ControlsMenu from './ControlsMenu/ControlsMenu';
@@ -18,14 +18,10 @@ const PREFIX = 'MenuBar';
 
 const classes = {
   container: `${PREFIX}-container`,
-  hideMobile: `${PREFIX}-hideMobile`
+  hideMobile: `${PREFIX}-hideMobile`,
 };
 
-const Root = styled('footer')((
-  {
-    theme: Theme
-  }
-) => ({
+const Root = styled('footer')(({ theme }) => ({
   [`&.${classes.container}`]: {
     backgroundColor: theme.palette.background.default,
     bottom: 0,
@@ -47,12 +43,10 @@ const Root = styled('footer')((
     [theme.breakpoints.down('lg')]: {
       display: 'none',
     },
-  }
+  },
 }));
 
 export default function MenuBar() {
-
-
   const { room } = useVideoContext();
   // const participants = useParticipants();
   const roomState = useRoomState();

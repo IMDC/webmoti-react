@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { styled } from '@mui/material/styles';
-import { useTheme, Theme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import { Button, Box, Chip, CircularProgress, Grid, Tooltip, useMediaQuery } from '@mui/material';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
@@ -26,14 +26,10 @@ const classes = {
   handQueue: `${PREFIX}-handQueue`,
   centerIcon: `${PREFIX}-centerIcon`,
   queueSpeaker: `${PREFIX}-queueSpeaker`,
-  progress: `${PREFIX}-progress`
+  progress: `${PREFIX}-progress`,
 };
 
-const Root = styled('div')((
-  {
-    theme: Theme
-  }
-) => ({
+const Root = styled('div')(({ theme }) => ({
   [`& .${classes.handQueueBanner}`]: {
     position: 'fixed',
     zIndex: 8,
@@ -67,14 +63,12 @@ const Root = styled('div')((
     left: '50%',
     marginTop: -12,
     marginLeft: -12,
-  }
+  },
 }));
 
 const maxQueueDisplay = 5;
 
 export default function RaiseHandButton() {
-
-
   const { room } = useVideoContext();
   const { conversation } = useChatContext();
 

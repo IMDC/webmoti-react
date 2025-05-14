@@ -8,7 +8,6 @@ import {
   Select,
   MenuItem,
   IconButton,
-  Theme,
   TextareaAutosize,
   SelectChangeEvent,
 } from '@mui/material';
@@ -40,14 +39,10 @@ const classes = {
   isTextareaFocused: `${PREFIX}-isTextareaFocused`,
   voiceSelect: `${PREFIX}-voiceSelect`,
   menuItem: `${PREFIX}-menuItem`,
-  previewButton: `${PREFIX}-previewButton`
+  previewButton: `${PREFIX}-previewButton`,
 };
 
-const Root = styled('div')((
-  {
-    theme: Theme
-  }
-) => ({
+const Root = styled('div')(({ theme }) => ({
   [`&.${classes.chatInputContainer}`]: {
     borderTop: '1px solid #e4e7e9',
     borderBottom: '1px solid #e4e7e9',
@@ -124,7 +119,7 @@ const Root = styled('div')((
 
   [`& .${classes.previewButton}`]: {
     marginLeft: '1em',
-  }
+  },
 }));
 
 interface ChatInputProps {
@@ -158,7 +153,6 @@ export default function ChatInput({
   addTTSMsg,
   isTTSModeOn = false,
 }: ChatInputProps) {
-
   const [messageBody, setMessageBody] = useState('');
   const [isSendingFile, setIsSendingFile] = useState(false);
   const [fileSendError, setFileSendError] = useState<string | null>(null);

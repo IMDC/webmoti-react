@@ -3,7 +3,7 @@ import { ChangeEvent, useState, FormEvent } from 'react';
 import { styled } from '@mui/material/styles';
 
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import { Button, Grid, InputLabel, Theme, TextField, Typography } from '@mui/material';
+import { Button, Grid, InputLabel, TextField, Typography } from '@mui/material';
 import { useLocation, useHistory } from 'react-router-dom';
 
 import { ReactComponent as GoogleLogo } from './google-logo.svg';
@@ -17,14 +17,10 @@ const classes = {
   errorMessage: `${PREFIX}-errorMessage`,
   gutterBottom: `${PREFIX}-gutterBottom`,
   passcodeContainer: `${PREFIX}-passcodeContainer`,
-  submitButton: `${PREFIX}-submitButton`
+  submitButton: `${PREFIX}-submitButton`,
 };
 
-const StyledIntroContainer = styled(IntroContainer)((
-  {
-    theme: Theme
-  }
-) => ({
+const StyledIntroContainer = styled(IntroContainer)(({ theme }) => ({
   [`& .${classes.googleButton}`]: {
     background: 'white',
     color: 'rgb(0, 94, 166)',
@@ -65,11 +61,10 @@ const StyledIntroContainer = styled(IntroContainer)((
     [theme.breakpoints.down('md')]: {
       width: '100%',
     },
-  }
+  },
 }));
 
 export default function LoginPage() {
-
   const { signIn, user, isAuthReady } = useAppState();
   const history = useHistory();
   const location = useLocation<{ from: Location }>();

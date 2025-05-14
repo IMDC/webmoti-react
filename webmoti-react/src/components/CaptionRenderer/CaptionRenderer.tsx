@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { styled } from '@mui/material/styles';
 
-import { Typography, Theme } from '@mui/material';
+import { Typography } from '@mui/material';
 import useWebSocket from 'react-use-websocket';
 
 import { Caption } from './CaptionTypes';
@@ -15,14 +15,10 @@ const PREFIX = 'CaptionRenderer';
 
 const classes = {
   captionContainer: `${PREFIX}-captionContainer`,
-  caption: `${PREFIX}-caption`
+  caption: `${PREFIX}-caption`,
 };
 
-const Root = styled('div')((
-  {
-    theme: Theme
-  }
-) => ({
+const Root = styled('div')(({ theme }) => ({
   [`&.${classes.captionContainer}`]: {
     position: 'fixed',
     left: '20%',
@@ -40,7 +36,7 @@ const Root = styled('div')((
     background: 'rgba(0, 0, 0, 0.8)',
     padding: '0.2em',
     display: 'inline-block',
-  }
+  },
 }));
 
 interface CaptionMap {
@@ -48,7 +44,6 @@ interface CaptionMap {
 }
 
 export function CaptionRenderer() {
-
   const [captions, setCaptions] = useState<CaptionMap>({});
 
   const { displayCaptions } = useAppState();

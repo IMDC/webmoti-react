@@ -1,6 +1,5 @@
 import { Drawer } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { Theme } from '@mui/material/styles';
 
 import BackgroundSelectionHeader from './BackgroundSelectionHeader/BackgroundSelectionHeader';
 import BackgroundThumbnail from './BackgroundThumbnail/BackgroundThumbnail';
@@ -11,14 +10,10 @@ const PREFIX = 'BackgroundSelectionDialog';
 
 const classes = {
   drawer: `${PREFIX}-drawer`,
-  thumbnailContainer: `${PREFIX}-thumbnailContainer`
+  thumbnailContainer: `${PREFIX}-thumbnailContainer`,
 };
 
-const StyledDrawer = styled(Drawer)((
-  {
-    theme: Theme
-  }
-) => ({
+const StyledDrawer = styled(Drawer)(({ theme }) => ({
   [`& .${classes.drawer}`]: {
     display: 'flex',
     width: theme.rightDrawerWidth,
@@ -30,11 +25,10 @@ const StyledDrawer = styled(Drawer)((
     flexWrap: 'wrap',
     padding: '5px',
     overflowY: 'auto',
-  }
+  },
 }));
 
 function BackgroundSelectionDialog() {
-
   const { isBackgroundSelectionOpen, setIsBackgroundSelectionOpen } = useVideoContext();
 
   const images = backgroundConfig.images;

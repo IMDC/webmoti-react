@@ -1,4 +1,4 @@
-import { Grid, Typography, useMediaQuery, useTheme, Theme } from '@mui/material';
+import { Grid, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
@@ -14,14 +14,10 @@ const classes = {
   container: `${PREFIX}-container`,
   endCallButton: `${PREFIX}-endCallButton`,
   settingsButton: `${PREFIX}-settingsButton`,
-  row: `${PREFIX}-row`
+  row: `${PREFIX}-row`,
 };
 
-const StyledGrid = styled(Grid)((
-  {
-    theme: Theme
-  }
-) => ({
+const StyledGrid = styled(Grid)(({ theme }) => ({
   [`&.${classes.container}`]: {
     background: 'white',
     paddingLeft: '1em',
@@ -52,11 +48,10 @@ const StyledGrid = styled(Grid)((
   [`& .${classes.row}`]: {
     display: 'flex',
     alignItems: 'center',
-  }
+  },
 }));
 
 export default function MobileTopMenuBar() {
-
   const { room } = useVideoContext();
 
   const theme = useTheme();

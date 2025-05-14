@@ -2,7 +2,7 @@ import { ChangeEvent, FormEvent } from 'react';
 
 import { styled } from '@mui/material/styles';
 
-import { Typography, TextField, Grid, Button, InputLabel, Theme } from '@mui/material';
+import { Typography, TextField, Grid, Button, InputLabel } from '@mui/material';
 
 import { useAppState } from '../../../state';
 
@@ -14,14 +14,10 @@ const classes = {
   textFieldContainer: `${PREFIX}-textFieldContainer`,
   continueButton: `${PREFIX}-continueButton`,
   checkboxContainer: `${PREFIX}-checkboxContainer`,
-  errorText: `${PREFIX}-errorText`
+  errorText: `${PREFIX}-errorText`,
 };
 
-const Root = styled('main')((
-  {
-    theme: Theme
-  }
-) => ({
+const Root = styled('main')(({ theme }) => ({
   [`& .${classes.gutterBottom}`]: {
     marginBottom: '1em',
   },
@@ -55,7 +51,7 @@ const Root = styled('main')((
   [`& .${classes.errorText}`]: {
     color: theme.palette.secondary.main,
     fontWeight: 'bold',
-  }
+  },
 }));
 
 interface RoomNameScreenProps {
@@ -67,7 +63,6 @@ interface RoomNameScreenProps {
 }
 
 export default function RoomNameScreen({ name, roomName, setName, setRoomName, handleSubmit }: RoomNameScreenProps) {
-
   const { user } = useAppState();
 
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {

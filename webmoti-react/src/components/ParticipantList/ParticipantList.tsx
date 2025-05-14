@@ -4,7 +4,6 @@ import { styled } from '@mui/material/styles';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import clsx from 'clsx';
-import { Theme } from '@mui/material';
 
 import { WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../../constants';
 import useMainParticipant from '../../hooks/useMainParticipant/useMainParticipant';
@@ -21,14 +20,10 @@ const classes = {
   transparentBackground: `${PREFIX}-transparentBackground`,
   scrollContainer: `${PREFIX}-scrollContainer`,
   innerScrollContainer: `${PREFIX}-innerScrollContainer`,
-  arrowContainer: `${PREFIX}-arrowContainer`
+  arrowContainer: `${PREFIX}-arrowContainer`,
 };
 
-const Root = styled('aside')((
-  {
-    theme: Theme
-  }
-) => ({
+const Root = styled('aside')(({ theme }) => ({
   [`&.${classes.container}`]: {
     overflowY: 'auto',
     background: 'rgb(79, 83, 85)',
@@ -70,11 +65,10 @@ const Root = styled('aside')((
     borderRadius: '50%',
     // allow space under the arrow for scrolling to it when list is large
     marginBottom: `${theme.footerHeight}px`,
-  }
+  },
 }));
 
 export default function ParticipantList() {
-
   const { room } = useVideoContext();
   const localParticipant = room!.localParticipant;
   const { speakerViewParticipants } = useParticipantsContext();
