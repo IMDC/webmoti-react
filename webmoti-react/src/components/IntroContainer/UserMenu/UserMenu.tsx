@@ -14,7 +14,7 @@ const PREFIX = 'UserMenu';
 const classes = {
   userContainer: `${PREFIX}-userContainer`,
   userButton: `${PREFIX}-userButton`,
-  logoutLink: `${PREFIX}-logoutLink`
+  logoutLink: `${PREFIX}-logoutLink`,
 };
 
 const Root = styled('div')({
@@ -37,7 +37,6 @@ const Root = styled('div')({
 });
 
 const UserMenu: React.FC = () => {
-
   const { user, signOut } = useAppState();
   const { localTracks } = useVideoContext();
 
@@ -61,7 +60,7 @@ const UserMenu: React.FC = () => {
 
   if (process.env.REACT_APP_SET_AUTH === 'firebase') {
     return (
-      <div className={classes.userContainer} data-testid="user-menu">
+      <Root className={classes.userContainer} data-testid="user-menu">
         <UserAvatar user={user} />
         <Button onClick={() => setMenuOpen((isOpen) => !isOpen)} ref={anchorRef} className={classes.userButton}>
           {user!.displayName}
@@ -84,7 +83,7 @@ const UserMenu: React.FC = () => {
             <Typography variant="body1">Logout</Typography>
           </MenuItem>
         </Menu>
-      </div>
+      </Root>
     );
   }
 

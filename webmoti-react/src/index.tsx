@@ -38,7 +38,6 @@ const VideoApp = () => {
 
 export const ReactApp = () => (
   <StyledEngineProvider injectFirst>
-    (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <UnsupportedBrowserWarning>
@@ -60,7 +59,6 @@ export const ReactApp = () => (
         </Router>
       </UnsupportedBrowserWarning>
     </ThemeProvider>
-    )
   </StyledEngineProvider>
 );
 
