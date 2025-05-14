@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   fullWidth: {
     gridArea: '1 / 1 / 2 / 3',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       gridArea: '1 / 1 / 3 / 3',
     },
   },
@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '0.1em 0.3em 0.1em 0',
     fontSize: '1.2rem',
     height: '28px',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       bottom: 'auto',
       right: 0,
       top: 0,

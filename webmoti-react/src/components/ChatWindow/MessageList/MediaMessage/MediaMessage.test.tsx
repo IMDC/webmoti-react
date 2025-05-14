@@ -4,7 +4,7 @@ import { renderWithUser } from '../../../../utils/testUtils';
 import { Media } from '@twilio/conversations';
 import MediaMessage, { formatFileSize } from './MediaMessage';
 
-jest.mock('@material-ui/core/styles/makeStyles', () => () => () => ({}));
+jest.mock('@mui/material/styles/makeStyles', () => () => () => ({}));
 
 describe('the formatFileSize function', () => {
   [

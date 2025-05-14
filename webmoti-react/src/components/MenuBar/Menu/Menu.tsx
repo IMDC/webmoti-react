@@ -52,7 +52,7 @@ const ScreenShareBanner = styled(Grid)(({ theme }: { theme: Theme }) => ({
   position: 'fixed',
   zIndex: 8,
   bottom: `${theme.footerHeight}px`,
-  [theme.breakpoints.down('md')]: {
+  [theme.breakpoints.down('lg')]: {
     bottom: `${theme.mobileFooterHeight}px`,
   },
   left: 0,
@@ -85,7 +85,7 @@ interface MenuProps {
 }
 
 export default function Menu({ buttonClassName }: MenuProps) {
-  const isMobileBreakpoint = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
+  const isMobileBreakpoint = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
   const roomState = useRoomState();
   const screenShareParticipant = useScreenShareParticipant();
   const { setIsChatWindowOpen } = useChatContext();

@@ -16,7 +16,7 @@ jest.mock('../../hooks/useParticipants/useParticipants');
 jest.mock('../../hooks/useChatContext/useChatContext');
 jest.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 
-jest.mock('@material-ui/core/useMediaQuery', () => jest.fn(() => false));
+jest.mock('@mui/material/useMediaQuery', () => jest.fn(() => false));
 
 jest.mock('../../hooks/useDevices/useDevices');
 

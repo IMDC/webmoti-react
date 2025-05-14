@@ -90,7 +90,7 @@ export default function ViewScheduleModal({ open, onClose }: ViewScheduleModalPr
             </Grid>
 
             <Grid item>
-              <IconButton onClick={getSchedule}>
+              <IconButton onClick={getSchedule} size="large">
                 <RefreshIcon />
               </IconButton>
             </Grid>

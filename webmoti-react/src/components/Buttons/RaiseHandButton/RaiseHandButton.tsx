@@ -81,7 +81,7 @@ export default function RaiseHandButton() {
   const [wasShortcutUsed, setWasShortcutUsed] = useState(false);
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   // avoid double touch events
   const lastTouch = useRef<number | null>(null);

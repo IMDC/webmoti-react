@@ -8,7 +8,7 @@ import { useAppState } from '../../../../state';
 
 jest.mock('../../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext', () => () => ({}));
 
-jest.mock('@material-ui/core/useMediaQuery');
+jest.mock('@mui/material/useMediaQuery');
 const mockUseMediaQuery = useMediaQuery as jest.Mock<boolean>;
 
 jest.mock('../../../../state');

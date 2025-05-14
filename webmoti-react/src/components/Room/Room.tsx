@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => {
       display: 'grid',
       gridTemplateColumns: `1fr ${theme.sidebarWidth}px`,
       gridTemplateRows: '100%',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         gridTemplateColumns: `100%`,
         gridTemplateRows: `calc(100% - ${totalMobileSidebarHeight}) ${totalMobileSidebarHeight}`,
       },
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => {
     rightDrawerOpen: {
       gridTemplateColumns: `1fr ${theme.sidebarWidth}px ${theme.rightDrawerWidth}px`,
       // this fixes chat window going down too far
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('lg')]: {
         height: '95%',
       },
     },
@@ -86,7 +86,7 @@ export default function Room() {
   const { isBackgroundSelectionOpen, room } = useVideoContext();
   const { isGalleryViewActive, setIsGalleryViewActive } = useAppState();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const screenShareParticipant = useScreenShareParticipant();
 
   // Here we switch to speaker view when a participant starts sharing their screen, but

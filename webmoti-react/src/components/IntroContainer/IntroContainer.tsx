@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'hidden',
     position: 'relative',
     margin: 'auto',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       display: 'block',
       height: 'auto',
       width: 'calc(100% - 40px)',
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundImage: Swoosh,
     backgroundSize: 'cover',
     width: '296px',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       width: '100%',
       height: '100px',
       backgroundPositionY: '140px',
@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       position: 'relative',
       width: '90%',
       flexDirection: 'row',
@@ -87,7 +87,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     padding: '3em 4em',
     flex: 1,
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       padding: '2em',
     },
   },
@@ -95,7 +95,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: 'white',
     margin: '1em 0 0',
     fontWeight: 'bold',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       margin: 0,
       fontSize: '1.1rem',
     },
@@ -104,7 +104,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: 'lightgray',
     margin: '0.5em 0 1em',
     fontSize: '0.9rem',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       fontSize: '0.8rem',
       margin: '0.25em 0 0.5em',
     },
@@ -121,7 +121,7 @@ const IntroContainer = (props: IntroContainerProps) => {
   const location = useLocation();
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <div className={classes.background}>

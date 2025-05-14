@@ -26,7 +26,7 @@ export default function EndCallButton(props: { className?: string }) {
   const { conversation } = useChatContext();
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const endCall = () => {
     room!.disconnect();

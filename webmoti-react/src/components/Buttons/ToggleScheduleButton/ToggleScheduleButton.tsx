@@ -19,8 +19,7 @@ export default function ToggleScheduleButton() {
   return (
     <>
       <ViewScheduleModal open={openScheduleModal} onClose={handleCloseScheduleModal} />
-
-      <IconButton onClick={handleOpenScheduleModal}>
+      <IconButton onClick={handleOpenScheduleModal} size="large">
         <CalendarTodayIcon />
       </IconButton>
     </>

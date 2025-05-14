@@ -81,7 +81,7 @@ export default function ToggleChatButton() {
   const [shouldAnimate, setShouldAnimate] = useState(false);
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const toggleChatWindow = () => {
     setIsChatWindowOpen(!isChatWindowOpen);

@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 0,
     paddingLeft: 15,
 
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       paddingLeft: 0,
     },
   },
@@ -61,7 +61,7 @@ export default function ControlsMenu() {
   });
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <>

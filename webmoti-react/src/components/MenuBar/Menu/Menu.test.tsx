@@ -13,7 +13,7 @@ import { useMediaQuery } from '@mui/material';
 import { useAppState } from '../../../state';
 
 jest.mock('../../../hooks/useFlipCameraToggle/useFlipCameraToggle');
-jest.mock('@material-ui/core/useMediaQuery');
+jest.mock('@mui/material/useMediaQuery');
 jest.mock('../../../state');
 jest.mock('../../../hooks/useVideoContext/useVideoContext', () => () => ({
   localTracks: [],

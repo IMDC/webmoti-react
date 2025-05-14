@@ -39,14 +39,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   localPreviewContainer: {
     paddingRight: '2em',
     marginBottom: '2em',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       padding: '0 2.5em',
     },
   },
   joinButtons: {
     display: 'flex',
     justifyContent: 'space-between',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       flexDirection: 'column-reverse',
       width: '100%',
       '& button': {
@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   mobileButtonBar: {
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       display: 'flex',
       justifyContent: 'space-between',
       margin: '1.5em 0 1em',
@@ -119,7 +119,6 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
       <Typography variant="h5" className={classes.gutterBottom}>
         Join {roomName}
       </Typography>
-
       <Grid container justifyContent="center">
         <Grid item md={7} sm={12} xs={12}>
           <div className={classes.localPreviewContainer}>
@@ -136,7 +135,7 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
         <Grid item md={5} sm={12} xs={12}>
           <Grid container direction="column" justifyContent="space-between" style={{ alignItems: 'normal' }}>
             <div>
-              <Hidden smDown>
+              <Hidden mdDown>
                 <ToggleAudioButton className={classes.deviceButton} disabled={disableButtons} />
                 <ToggleVideoButton className={classes.deviceButton} disabled={disableButtons} />
               </Hidden>
@@ -189,7 +188,7 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
 
         <Grid item md={12} sm={12} xs={12}>
           <Grid container direction="row" alignItems="center" style={{ marginTop: '1em' }}>
-            <Hidden smDown>
+            <Hidden mdDown>
               <Grid item md={7} sm={12} xs={12}>
                 <SettingsMenu mobileButtonClass={classes.mobileButton} />
               </Grid>
@@ -203,7 +202,7 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
                   </Button>
                 ) : (
                   // placeholder that keeps join button on the right
-                  <span style={{ flexGrow: 1 }} />
+                  (<span style={{ flexGrow: 1 }} />)
                 )}
                 <Button
                   variant="contained"

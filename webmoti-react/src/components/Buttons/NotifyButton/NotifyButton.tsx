@@ -23,7 +23,7 @@ export default function NotifyButton() {
   const name = room?.localParticipant?.identity || 'Participant';
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   useEffect(() => {
     const handleMessageAdded = (message: Message) => {

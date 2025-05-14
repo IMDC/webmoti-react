@@ -16,7 +16,7 @@ jest.mock('swiper', () => ({
 jest.mock('../../hooks/useVideoContext/useVideoContext');
 jest.mock('../../hooks/useParticipantsContext/useParticipantsContext');
 // jest.mock('../../state');
-jest.mock('@material-ui/core/useMediaQuery');
+jest.mock('@mui/material/useMediaQuery');
 
 const mockUseMediaQuery = useMediaQuery as jest.Mock;
 const mockUseVideoContext = useVideoContext as jest.Mock;

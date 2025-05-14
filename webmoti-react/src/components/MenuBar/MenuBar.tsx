@@ -25,14 +25,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     padding: '0 1.43em',
     zIndex: 10,
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       height: `${theme.mobileFooterHeight}px`,
       padding: 0,
     },
   },
   hideMobile: {
     display: 'initial',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       display: 'none',
     },
   },
@@ -50,7 +50,7 @@ export default function MenuBar() {
   return (
     <footer className={classes.container}>
       <Grid container justifyContent="space-around" alignItems="center">
-        <Hidden mdDown>
+        <Hidden lgDown>
           <Grid style={{ flex: 1 }}>
             <Typography variant="body1">
               {/* only show room name in dev */}
@@ -67,7 +67,7 @@ export default function MenuBar() {
             <ToggleAudioButton disabled={isReconnecting} />
             <ToggleVideoButton disabled={isReconnecting} />
 
-            <Hidden mdDown>
+            <Hidden lgDown>
               <ToggleCaptionsButton />
             </Hidden>
 
@@ -76,7 +76,7 @@ export default function MenuBar() {
 
             <AudioMixer />
 
-            <Hidden mdDown>
+            <Hidden lgDown>
               {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && (
                 <span style={{ marginLeft: '10px' }}>
                   <ToggleChatButton />
@@ -90,7 +90,7 @@ export default function MenuBar() {
           </Grid>
         </Grid>
 
-        <Hidden mdDown>
+        <Hidden lgDown>
           <Grid style={{ flex: 1 }}>
             <Grid container justifyContent="flex-end">
               <EndCallButton />

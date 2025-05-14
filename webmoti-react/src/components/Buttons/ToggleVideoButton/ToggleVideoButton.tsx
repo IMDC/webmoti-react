@@ -15,7 +15,7 @@ export default function ToggleVideoButton(props: { disabled?: boolean; className
   const { hasVideoInputDevices } = useDevices();
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   useSetupHotkeys('alt+v', () => {
     toggleVideo();

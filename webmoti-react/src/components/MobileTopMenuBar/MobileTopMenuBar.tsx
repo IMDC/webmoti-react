@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: '1em',
     display: 'none',
     height: `${theme.mobileTopBarHeight}px`,
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       display: 'flex',
     },
   },
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   settingsButton: {
     display: 'none',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       display: 'initial',
       height: '28px',
       minWidth: '28px',
@@ -44,7 +44,7 @@ export default function MobileTopMenuBar() {
   const { room } = useVideoContext();
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <Grid container alignItems="center" justifyContent="space-between" className={classes.container}>

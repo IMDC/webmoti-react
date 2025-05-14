@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column',
     borderLeft: '1px solid #E4E7E9',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       position: 'fixed',
       top: 0,
       left: 0,

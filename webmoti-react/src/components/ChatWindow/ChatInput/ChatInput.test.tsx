@@ -7,7 +7,7 @@ import { setImmediate } from 'timers';
 import { useAppState } from '../../../state';
 import { TwilioError } from 'twilio-video';
 
-jest.mock('@material-ui/core/useMediaQuery');
+jest.mock('@mui/material/useMediaQuery');
 jest.mock('../../../state');
 
 const mockUseAppState = useAppState as jest.Mock<any>;

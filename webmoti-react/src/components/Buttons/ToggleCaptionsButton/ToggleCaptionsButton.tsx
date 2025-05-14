@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 10,
     marginRight: 10,
 
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginRight: 0,
     },
   },
@@ -157,7 +157,7 @@ export default function ToggleCaptionsButton() {
           setSnackbarError('');
         }}
       />
-      <IconButton onClick={toggleCaptions} className={classes.iconButton}>
+      <IconButton onClick={toggleCaptions} className={classes.iconButton} size="large">
         <ClosedCaptionIcon color={displayCaptions ? 'primary' : 'inherit'} />
       </IconButton>
     </>

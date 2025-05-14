@@ -101,7 +101,7 @@ export function GalleryView() {
   const participantHeight = `${Math.floor(participantVideoWidth * GALLERY_VIEW_ASPECT_RATIO)}px`;
 
   const theme = useTheme();
-  const isMdBreakpoint = useMediaQuery(theme.breakpoints.down('md'));
+  const isMdBreakpoint = useMediaQuery(theme.breakpoints.down('lg'));
 
   const fireworksRef = useRef<FireworksHandlers>(null);
 
@@ -137,7 +137,7 @@ export function GalleryView() {
             data-testid="pagination-prev-button"
             className={classes.paginationButton}
             onClick={() => setCurrentPage((page) => page - 1)}
-          >
+            size="large">
             <ArrowBackIcon />
           </IconButton>
         )}
@@ -148,7 +148,7 @@ export function GalleryView() {
             data-testid="pagination-next-button"
             className={classes.paginationButton}
             onClick={() => setCurrentPage((page) => page + 1)}
-          >
+            size="large">
             <ArrowForwardIcon />
           </IconButton>
         )}
@@ -169,7 +169,6 @@ export function GalleryView() {
           />
         )}
       </div>
-
       <Fireworks
         ref={fireworksRef}
         options={{ opacity: 0.5 }}
@@ -183,7 +182,6 @@ export function GalleryView() {
           background: theme.galleryViewBackgroundColor,
         }}
       />
-
       <div className={classes.participantContainer} ref={containerRef} data-testid="participant-container">
         {paginatedParticipants.map((participant) => (
           <div

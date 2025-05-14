@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& div:not(:last-child)': {
       marginRight: '1em',
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       margin: '1.5em 0 2em',
     },
   },
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
   },
   continueButton: {
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       width: '100%',
     },
   },

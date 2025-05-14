@@ -10,7 +10,7 @@ import { useAppState } from '../../../../state';
 
 export default function SettingsMenu({ mobileButtonClass }: { mobileButtonClass?: string }) {
   const { roomType } = useAppState();
-  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
   const [menuOpen, setMenuOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
   const [deviceSettingsOpen, setDeviceSettingsOpen] = useState(false);
