@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { Tooltip, Typography, Theme } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { Tooltip, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { keyframes } from '@emotion/react';
 import clsx from 'clsx';
 import { LocalAudioTrack, LocalVideoTrack, Participant, RemoteAudioTrack, RemoteVideoTrack } from 'twilio-video';
 
@@ -17,99 +18,99 @@ import AvatarIcon from '../../icons/AvatarIcon';
 import AudioLevelIndicator from '../AudioLevelIndicator/AudioLevelIndicator';
 import NetworkQualityLevel from '../NetworkQualityLevel/NetworkQualityLevel';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  container: {
-    position: 'relative',
-    display: 'flex',
-    alignItems: 'center',
-  },
-  identity: {
-    background: 'rgba(0, 0, 0, 0.5)',
-    color: 'white',
-    padding: '0.1em 0.3em 0.1em 0',
-    display: 'inline-flex',
-    '& svg': {
-      marginLeft: '0.3em',
-    },
-    marginRight: '0.4em',
-    alignItems: 'center',
-  },
-  infoContainer: {
-    pointerEvents: 'none',
-    position: 'absolute',
-    zIndex: 2,
-    height: '100%',
-    width: '100%',
-  },
-  reconnectingContainer: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    background: 'rgba(40, 42, 43, 0.75)',
-    zIndex: 1,
-  },
-  fullWidth: {
+const Container = styled('div')(({ theme }) => ({
+  position: 'relative',
+  display: 'flex',
+  alignItems: 'center',
+
+  [`&.fullWidth`]: {
     gridArea: '1 / 1 / 2 / 3',
     [theme.breakpoints.down('md')]: {
       gridArea: '1 / 1 / 3 / 3',
     },
   },
-  avatarContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    background: 'black',
-    position: 'absolute',
-    top: 0,
+}));
+
+const InfoContainer = styled('div')({
+  pointerEvents: 'none',
+  position: 'absolute',
+  zIndex: 2,
+  height: '100%',
+  width: '100%',
+});
+
+const Identity = styled('div')({
+  background: 'rgba(0, 0, 0, 0.5)',
+  color: 'white',
+  padding: '0.1em 0.3em 0.1em 0',
+  display: 'inline-flex',
+  alignItems: 'center',
+  marginRight: '0.4em',
+  '& svg': {
+    marginLeft: '0.3em',
+  },
+});
+
+const ReconnectingOverlay = styled('div')({
+  position: 'absolute',
+  top: 0,
+  right: 0,
+  bottom: 0,
+  left: 0,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  background: 'rgba(40, 42, 43, 0.75)',
+  zIndex: 1,
+});
+
+const AvatarContainer = styled('div')({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  background: 'black',
+  position: 'absolute',
+  top: 0,
+  right: 0,
+  bottom: 0,
+  left: 0,
+  zIndex: 1,
+  '& svg': {
+    transform: 'scale(2)',
+  },
+});
+
+const RecordingIndicator = styled('div')(({ theme }) => ({
+  position: 'absolute',
+  bottom: 0,
+  display: 'flex',
+  alignItems: 'center',
+  background: 'rgba(0, 0, 0, 0.5)',
+  color: 'white',
+  padding: '0.1em 0.3em 0.1em 0',
+  fontSize: '1.2rem',
+  height: '28px',
+  [theme.breakpoints.down('md')]: {
+    bottom: 'auto',
     right: 0,
-    bottom: 0,
-    left: 0,
-    zIndex: 1,
-    '& svg': {
-      transform: 'scale(2)',
-    },
-  },
-  recordingIndicator: {
-    position: 'absolute',
-    bottom: 0,
-    display: 'flex',
-    alignItems: 'center',
-    background: 'rgba(0, 0, 0, 0.5)',
-    color: 'white',
-    padding: '0.1em 0.3em 0.1em 0',
-    fontSize: '1.2rem',
-    height: '28px',
-    [theme.breakpoints.down('md')]: {
-      bottom: 'auto',
-      right: 0,
-      top: 0,
-    },
-  },
-  circle: {
-    height: '12px',
-    width: '12px',
-    background: 'red',
-    borderRadius: '100%',
-    margin: '0 0.6em',
-    animation: `1.25s $pulsate ease-out infinite`,
-  },
-  '@keyframes pulsate': {
-    '0%': {
-      background: `#A90000`,
-    },
-    '50%': {
-      background: '#f00',
-    },
-    '100%': {
-      background: '#A90000',
-    },
+    top: 0,
   },
 }));
+
+const pulsate = keyframes({
+  '0%': { background: '#A90000' },
+  '50%': { background: '#f00' },
+  '100%': { background: '#A90000' },
+});
+
+const Circle = styled('div')({
+  height: '12px',
+  width: '12px',
+  background: 'red',
+  borderRadius: '100%',
+  margin: '0 0.6em',
+  animation: `${pulsate} 1.25s ease-out infinite`,
+});
 
 interface MainParticipantInfoProps {
   participant: Participant;
@@ -117,7 +118,6 @@ interface MainParticipantInfoProps {
 }
 
 export default function MainParticipantInfo({ participant, children }: MainParticipantInfoProps) {
-  const classes = useStyles();
   const { room } = useVideoContext();
   const localParticipant = room!.localParticipant;
   const isLocal = localParticipant === participant;
@@ -144,53 +144,55 @@ export default function MainParticipantInfo({ participant, children }: MainParti
   const isRecording = useIsRecording();
 
   return (
-    <div
+    <Container
       data-cy-main-participant
       data-cy-participant={participant.identity}
       data-testid={`main-participant-${participant.identity}`}
-      className={clsx(classes.container, {
-        [classes.fullWidth]: !isRemoteParticipantScreenSharing,
-      })}
+      className={clsx({ fullWidth: !isRemoteParticipantScreenSharing })}
     >
-      <div className={classes.infoContainer}>
+      <InfoContainer>
         <div style={{ display: 'flex' }}>
-          <div className={classes.identity}>
+          <Identity>
             <AudioLevelIndicator audioTrack={audioTrack} />
             <Typography variant="body1" color="inherit" data-testid="participant-identity">
               {participant.identity}
               {isLocal && ' (You)'}
               {screenSharePublication && ' - Screen'}
             </Typography>
-          </div>
+          </Identity>
           <NetworkQualityLevel participant={participant} />
         </div>
+
         {isRecording && (
           <Tooltip
             title="All participants' audio and video is currently being recorded. Visit the app settings to stop recording."
             placement="top"
           >
-            <div className={classes.recordingIndicator}>
-              <div className={classes.circle}></div>
+            <RecordingIndicator>
+              <Circle />
               <Typography variant="body1" color="inherit" data-cy-recording-indicator data-testid="recording-indicator">
                 Recording
               </Typography>
-            </div>
+            </RecordingIndicator>
           </Tooltip>
         )}
-      </div>
+      </InfoContainer>
+
       {(!isVideoEnabled || isVideoSwitchedOff) && (
-        <div className={classes.avatarContainer} data-testid="avatar-icon">
+        <AvatarContainer data-testid="avatar-icon">
           <AvatarIcon />
-        </div>
+        </AvatarContainer>
       )}
+
       {isParticipantReconnecting && (
-        <div className={classes.reconnectingContainer} data-testid="reconnecting-overlay">
-          <Typography variant="body1" style={{ color: 'white' }}>
+        <ReconnectingOverlay data-testid="reconnecting-overlay">
+          <Typography variant="body1" sx={{ color: 'white' }}>
             Reconnecting...
           </Typography>
-        </div>
+        </ReconnectingOverlay>
       )}
+
       {children}
-    </div>
+    </Container>
   );
 }

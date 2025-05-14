@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom';
 
 import { CssBaseline } from '@mui/material';
-import { ThemeProvider, Theme, StyledEngineProvider } from '@mui/material/styles';
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 
 import { Redirect, Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import App from './App';
@@ -17,13 +17,6 @@ import AppStateProvider, { useAppState } from './state';
 import theme from './theme';
 import './types';
 import useConnectionOptions from './utils/useConnectionOptions/useConnectionOptions';
-
-
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
-
 
 const VideoApp = () => {
   const { error, setError } = useAppState();
@@ -45,7 +38,8 @@ const VideoApp = () => {
 
 export const ReactApp = () => (
   <StyledEngineProvider injectFirst>
-    (<ThemeProvider theme={theme}>
+    (
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <UnsupportedBrowserWarning>
         <Router>
@@ -65,7 +59,8 @@ export const ReactApp = () => (
           </AppStateProvider>
         </Router>
       </UnsupportedBrowserWarning>
-    </ThemeProvider>)
+    </ThemeProvider>
+    )
   </StyledEngineProvider>
 );
 

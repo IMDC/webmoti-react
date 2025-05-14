@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
+import { keyframes } from '@emotion/react';
 import { Button, useMediaQuery, useTheme } from '@mui/material';
 import { Message } from '@twilio/conversations';
-import clsx from 'clsx';
 
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
@@ -12,68 +12,55 @@ import { checkSystemMsg, checkTTSAudioMsg } from '../../../utils';
 
 export const ANIMATION_DURATION = 700;
 
-const useStyles = makeStyles({
-  iconContainer: {
-    position: 'relative',
-    display: 'flex',
-  },
-  circle: {
-    width: '10px',
-    height: '10px',
-    backgroundColor: '#027AC5',
-    borderRadius: '50%',
-    position: 'absolute',
-    top: '-3px',
-    left: '13px',
-    opacity: 0,
-    transition: `opacity ${ANIMATION_DURATION * 0.5}ms ease-in`,
-  },
-  hasUnreadMessages: {
-    opacity: 1,
-  },
-  ring: {
-    border: '3px solid #027AC5',
-    borderRadius: '30px',
-    height: '14px',
-    width: '14px',
-    position: 'absolute',
-    left: '11px',
-    top: '-5px',
-    opacity: 0,
-  },
-  animateRing: {
-    animation: `$expand ${ANIMATION_DURATION}ms ease-out`,
-    animationIterationCount: 1,
-  },
-  '@keyframes expand': {
-    '0%': {
-      transform: 'scale(0.1, 0.1)',
-      opacity: 0,
-    },
-    '50%': {
-      opacity: 1,
-    },
-    '100%': {
-      transform: 'scale(1.4, 1.4)',
-      opacity: 0,
-    },
-  },
-  btn: {
-    paddingLeft: 15,
-    paddingRight: 15,
-    minWidth: 0,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  iconSpacing: {
-    marginRight: 8,
-  },
+const expand = keyframes({
+  '0%': { transform: 'scale(0.1, 0.1)', opacity: 0 },
+  '50%': { opacity: 1 },
+  '100%': { transform: 'scale(1.4, 1.4)', opacity: 0 },
+});
+
+const IconContainer = styled('div')({
+  position: 'relative',
+  display: 'flex',
+});
+
+const Circle = styled('div')(({ theme }) => ({
+  width: '10px',
+  height: '10px',
+  backgroundColor: '#027AC5',
+  borderRadius: '50%',
+  position: 'absolute',
+  top: '-3px',
+  left: '13px',
+  opacity: 0,
+  transition: `opacity ${ANIMATION_DURATION * 0.5}ms ease-in`,
+}));
+
+const Ring = styled('div')({
+  border: '3px solid #027AC5',
+  borderRadius: '30px',
+  height: '14px',
+  width: '14px',
+  position: 'absolute',
+  left: '11px',
+  top: '-5px',
+  opacity: 0,
+});
+
+const AnimatedRing = styled(Ring)({
+  animation: `${expand} ${ANIMATION_DURATION}ms ease-out`,
+  animationIterationCount: 1,
+});
+
+const StyledButton = styled(Button)({
+  paddingLeft: 15,
+  paddingRight: 15,
+  minWidth: 0,
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
 });
 
 export default function ToggleChatButton() {
-  const classes = useStyles();
-
   const { isChatWindowOpen, setIsChatWindowOpen, conversation, hasUnreadMessages } = useChatContext();
 
   const { setIsBackgroundSelectionOpen } = useVideoContext();
@@ -125,30 +112,27 @@ export default function ToggleChatButton() {
   }, [conversation, isChatWindowOpen]);
 
   const icon = (
-    <div
-      className={clsx(classes.iconContainer, {
-        [classes.iconSpacing]: !isMobile,
-      })}
-    >
+    <IconContainer sx={{ mr: isMobile ? 0 : 1 }}>
       <ChatIcon />
-      <div className={clsx(classes.ring, { [classes.animateRing]: shouldAnimate })} data-testid="chat-ring-animation" />
-      <div
-        className={clsx(classes.circle, { [classes.hasUnreadMessages]: hasUnreadMessages })}
+      {shouldAnimate && <AnimatedRing data-testid="chat-ring-animation" />}
+      <Circle
+        sx={{
+          opacity: hasUnreadMessages ? 1 : 0,
+        }}
         data-testid="unread-indicator"
       />
-    </div>
+    </IconContainer>
   );
 
   return (
-    <Button
+    <StyledButton
       data-cy-chat-button
       data-testid="toggle-chat-button"
       onClick={toggleChatWindow}
       disabled={!conversation}
       variant="outlined"
-      className={classes.btn}
     >
       {isMobile ? icon : <>{icon} Chat</>}
-    </Button>
+    </StyledButton>
   );
 }
