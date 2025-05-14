@@ -16,6 +16,7 @@
     "@twilio/video-processors": "^3.0.0",
     "@twilio/video-room-monitor": "^1.0.1",
     "@types/testing-library__jest-dom": "^5.14.9",
+    "clsx": "^2.1.1",
     "concurrently": "^8.2.2",
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
