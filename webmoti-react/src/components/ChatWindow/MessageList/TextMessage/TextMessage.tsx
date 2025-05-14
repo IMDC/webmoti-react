@@ -1,10 +1,18 @@
 import { Link } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
 import LinkifyIt from 'linkify-it';
 
-const useStyles = makeStyles({
-  messageContainer: {
+const PREFIX = 'TextMessage';
+
+const classes = {
+  messageContainer: `${PREFIX}-messageContainer`,
+  isLocalParticipant: `${PREFIX}-isLocalParticipant`,
+  isTTSMsg: `${PREFIX}-isTTSMsg`
+};
+
+const Root = styled('div')({
+  [`& .${classes.messageContainer}`]: {
     borderRadius: '16px',
     display: 'inline-flex',
     alignItems: 'center',
@@ -15,10 +23,10 @@ const useStyles = makeStyles({
     hyphens: 'auto',
     whiteSpace: 'pre-wrap',
   },
-  isLocalParticipant: {
+  [`& .${classes.isLocalParticipant}`]: {
     backgroundColor: '#CCE4FF',
   },
-  isTTSMsg: {
+  [`& .${classes.isTTSMsg}`]: {
     backgroundColor: '#5A639C',
     color: '#FFFFFF',
     cursor: 'pointer',
@@ -62,10 +70,10 @@ function addLinks(text: string) {
 }
 
 export default function TextMessage({ body, isLocalParticipant, onClick, isTTSMsg = false }: TextMessageProps) {
-  const classes = useStyles();
+
 
   return (
-    <div>
+    <Root>
       <div
         className={clsx(classes.messageContainer, {
           [classes.isLocalParticipant]: isLocalParticipant && !isTTSMsg,
@@ -75,6 +83,6 @@ export default function TextMessage({ body, isLocalParticipant, onClick, isTTSMs
       >
         <div>{addLinks(body)}</div>
       </div>
-    </div>
+    </Root>
   );
 }

@@ -10,7 +10,7 @@ import {
   FormControlLabel,
   Theme,
 } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 
 import LocalVideoPreview from './LocalVideoPreview/LocalVideoPreview';
 import SettingsMenu from './SettingsMenu/SettingsMenu';
@@ -24,26 +24,48 @@ import ToggleAudioButton from '../../Buttons/ToggleAudioButton/ToggleAudioButton
 import ToggleVideoButton from '../../Buttons/ToggleVideoButton/ToggleVideoButton';
 import { Steps } from '../PreJoinScreens';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  gutterBottom: {
+const PREFIX = 'DeviceSelectionScreen';
+
+const classes = {
+  gutterBottom: `${PREFIX}-gutterBottom`,
+  marginTop: `${PREFIX}-marginTop`,
+  deviceButton: `${PREFIX}-deviceButton`,
+  localPreviewContainer: `${PREFIX}-localPreviewContainer`,
+  joinButtons: `${PREFIX}-joinButtons`,
+  mobileButtonBar: `${PREFIX}-mobileButtonBar`,
+  mobileButton: `${PREFIX}-mobileButton`,
+  toolTipContainer: `${PREFIX}-toolTipContainer`
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')((
+  {
+    theme: Theme
+  }
+) => ({
+  [`& .${classes.gutterBottom}`]: {
     marginBottom: '1em',
   },
-  marginTop: {
+
+  [`& .${classes.marginTop}`]: {
     marginTop: '1em',
   },
-  deviceButton: {
+
+  [`& .${classes.deviceButton}`]: {
     width: '100%',
     border: '2px solid #aaa',
     margin: '1em 0',
   },
-  localPreviewContainer: {
+
+  [`& .${classes.localPreviewContainer}`]: {
     paddingRight: '2em',
     marginBottom: '2em',
     [theme.breakpoints.down('md')]: {
       padding: '0 2.5em',
     },
   },
-  joinButtons: {
+
+  [`& .${classes.joinButtons}`]: {
     display: 'flex',
     justifyContent: 'space-between',
     [theme.breakpoints.down('md')]: {
@@ -54,18 +76,21 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
-  mobileButtonBar: {
+
+  [`& .${classes.mobileButtonBar}`]: {
     [theme.breakpoints.down('md')]: {
       display: 'flex',
       justifyContent: 'space-between',
       margin: '1.5em 0 1em',
     },
   },
-  mobileButton: {
+
+  [`& .${classes.mobileButton}`]: {
     padding: '0.8em 0',
     margin: 0,
   },
-  toolTipContainer: {
+
+  [`& .${classes.toolTipContainer}`]: {
     display: 'flex',
     alignItems: 'center',
     '& div': {
@@ -75,7 +100,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& svg': {
       marginLeft: '0.3em',
     },
-  },
+  }
 }));
 
 interface DeviceSelectionScreenProps {
@@ -85,7 +110,7 @@ interface DeviceSelectionScreenProps {
 }
 
 export default function DeviceSelectionScreen({ name, roomName, setStep }: DeviceSelectionScreenProps) {
-  const classes = useStyles();
+
   const { getToken, isFetching, isKrispEnabled, isKrispInstalled } = useAppState();
   const { connect: chatConnect } = useChatContext();
   const { connect: videoConnect, isAcquiringLocalTracks, isConnecting } = useVideoContext();
@@ -115,7 +140,7 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
   }
 
   return (
-    <>
+    <Root>
       <Typography variant="h5" className={classes.gutterBottom}>
         Join {roomName}
       </Typography>
@@ -218,6 +243,6 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
           </Grid>
         </Grid>
       </Grid>
-    </>
+    </Root>
   );
 }

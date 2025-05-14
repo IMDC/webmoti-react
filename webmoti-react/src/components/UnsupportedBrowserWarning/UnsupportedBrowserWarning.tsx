@@ -1,27 +1,36 @@
 import React from 'react';
 
+import { styled } from '@mui/material/styles';
+
 import { Container, Link, Typography, Paper, Grid } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 import Video from 'twilio-video';
 
-const useStyles = makeStyles({
-  container: {
+const PREFIX = 'UnsupportedBrowserWarning';
+
+const classes = {
+  container: `${PREFIX}-container`,
+  paper: `${PREFIX}-paper`,
+  heading: `${PREFIX}-heading`
+};
+
+const StyledContainer = styled(Container)({
+  [`& .${classes.container}`]: {
     marginTop: '2.5em',
   },
-  paper: {
+  [`& .${classes.paper}`]: {
     padding: '1em',
   },
-  heading: {
+  [`& .${classes.heading}`]: {
     marginBottom: '0.4em',
   },
 });
 
 export default function UnsupportedBrowserWarning({ children }: { children: React.ReactElement }) {
-  const classes = useStyles();
+
 
   if (!Video.isSupported) {
     return (
-      <Container>
+      <StyledContainer>
         <Grid container justifyContent="center" className={classes.container}>
           <Grid item xs={12} sm={6}>
             <Paper className={classes.paper}>
@@ -52,7 +61,7 @@ export default function UnsupportedBrowserWarning({ children }: { children: Reac
             </Paper>
           </Grid>
         </Grid>
-      </Container>
+      </StyledContainer>
     );
   }
 

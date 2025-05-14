@@ -1,7 +1,8 @@
 import { useState } from 'react';
 
+import { styled } from '@mui/material/styles';
+
 import { FormControl, MenuItem, Typography, Select } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 import { LocalVideoTrack } from 'twilio-video';
 
 import { DEFAULT_VIDEO_CONSTRAINTS, SELECTED_VIDEO_INPUT_KEY } from '../../../constants';
@@ -10,8 +11,14 @@ import useMediaStreamTrack from '../../../hooks/useMediaStreamTrack/useMediaStre
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import VideoTrack from '../../VideoTrack/VideoTrack';
 
-const useStyles = makeStyles({
-  preview: {
+const PREFIX = 'VideoInputList';
+
+const classes = {
+  preview: `${PREFIX}-preview`
+};
+
+const Root = styled('div')({
+  [`& .${classes.preview}`]: {
     width: '300px',
     maxHeight: '200px',
     margin: '0.5em auto',
@@ -22,7 +29,7 @@ const useStyles = makeStyles({
 });
 
 export default function VideoInputList() {
-  const classes = useStyles();
+
   const { videoInputDevices } = useDevices();
   const { localTracks } = useVideoContext();
 
@@ -45,7 +52,7 @@ export default function VideoInputList() {
   }
 
   return (
-    <div>
+    <Root>
       {localVideoTrack && (
         <div className={classes.preview}>
           <VideoTrack isLocal track={localVideoTrack} />
@@ -78,6 +85,6 @@ export default function VideoInputList() {
           </Typography>
         </>
       )}
-    </div>
+    </Root>
   );
 }

@@ -1,13 +1,20 @@
 import { Tooltip } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
 import { Participant } from 'twilio-video';
 
 import useParticipantIsReconnecting from '../../../hooks/useParticipantIsReconnecting/useParticipantIsReconnecting';
 
 
-const useStyles = makeStyles({
-  indicator: {
+const PREFIX = 'ParticipantConnectionIndicator';
+
+const classes = {
+  indicator: `${PREFIX}-indicator`,
+  isReconnecting: `${PREFIX}-isReconnecting`
+};
+
+const StyledTooltip = styled(Tooltip)({
+  [`& .${classes.indicator}`]: {
     width: '10px',
     height: '10px',
     borderRadius: '100%',
@@ -15,20 +22,20 @@ const useStyles = makeStyles({
     display: 'inline-block',
     marginRight: '3px',
   },
-  isReconnecting: {
+  [`& .${classes.isReconnecting}`]: {
     background: '#ffb100',
   },
 });
 
 export default function ParticipantConnectionIndicator({ participant }: { participant: Participant }) {
   const isReconnecting = useParticipantIsReconnecting(participant);
-  const classes = useStyles();
+
   return (
-    <Tooltip title={isReconnecting ? 'Participant is reconnecting' : 'Participant is connected'}>
+    <StyledTooltip title={isReconnecting ? 'Participant is reconnecting' : 'Participant is connected'}>
       <span
         className={clsx(classes.indicator, { [classes.isReconnecting]: isReconnecting })}
         data-testid="connection-indicator"
       ></span>
-    </Tooltip>
+    </StyledTooltip>
   );
 }

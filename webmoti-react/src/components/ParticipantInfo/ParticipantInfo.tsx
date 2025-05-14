@@ -1,7 +1,8 @@
 import React from 'react';
 
+import { styled } from '@mui/material/styles';
+
 import { Theme, Typography } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 import clsx from 'clsx';
 import { LocalAudioTrack, LocalVideoTrack, Participant, RemoteAudioTrack, RemoteVideoTrack } from 'twilio-video';
 
@@ -18,10 +19,30 @@ import useTrack from '../../hooks/useTrack/useTrack';
 import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import { useAppState } from '../../state';
 
-const borderWidth = 2;
+const PREFIX = 'ParticipantInfo';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  container: {
+const classes = {
+  container: `${PREFIX}-container`,
+  innerContainer: `${PREFIX}-innerContainer`,
+  infoContainer: `${PREFIX}-infoContainer`,
+  avatarContainer: `${PREFIX}-avatarContainer`,
+  reconnectingContainer: `${PREFIX}-reconnectingContainer`,
+  screenShareIconContainer: `${PREFIX}-screenShareIconContainer`,
+  identity: `${PREFIX}-identity`,
+  infoRowBottom: `${PREFIX}-infoRowBottom`,
+  typography: `${PREFIX}-typography`,
+  hideParticipant: `${PREFIX}-hideParticipant`,
+  cursorPointer: `${PREFIX}-cursorPointer`,
+  galleryView: `${PREFIX}-galleryView`,
+  dominantSpeaker: `${PREFIX}-dominantSpeaker`
+};
+
+const Root = styled('div')((
+  {
+    theme: Theme
+  }
+) => ({
+  [`&.${classes.container}`]: {
     isolation: 'isolate',
     position: 'relative',
     display: 'flex',
@@ -45,14 +66,16 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingTop: `${theme.sidebarMobileHeight - 2}px`,
     },
   },
-  innerContainer: {
+
+  [`& .${classes.innerContainer}`]: {
     position: 'absolute',
     top: 0,
     left: 0,
     width: '100%',
     height: '100%',
   },
-  infoContainer: {
+
+  [`& .${classes.infoContainer}`]: {
     // allow clicks to pass through to video track
     pointerEvents: 'none',
     position: 'absolute',
@@ -65,7 +88,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: 'transparent',
     top: 0,
   },
-  avatarContainer: {
+
+  [`& .${classes.avatarContainer}`]: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -82,7 +106,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
-  reconnectingContainer: {
+
+  [`& .${classes.reconnectingContainer}`]: {
     position: 'absolute',
     top: 0,
     right: 0,
@@ -94,7 +119,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: 'rgba(40, 42, 43, 0.75)',
     zIndex: 1,
   },
-  screenShareIconContainer: {
+
+  [`& .${classes.screenShareIconContainer}`]: {
     background: 'rgba(0, 0, 0, 0.5)',
     padding: '0.18em 0.3em',
     marginRight: '0.3em',
@@ -103,7 +129,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       fill: 'white',
     },
   },
-  identity: {
+
+  [`& .${classes.identity}`]: {
     background: 'rgba(0, 0, 0, 0.5)',
     color: 'white',
     padding: '0.18em 0.3em 0.18em 0',
@@ -111,26 +138,31 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
-  infoRowBottom: {
+
+  [`& .${classes.infoRowBottom}`]: {
     display: 'flex',
     justifyContent: 'space-between',
     position: 'absolute',
     bottom: 0,
     left: 0,
   },
-  typography: {
+
+  [`& .${classes.typography}`]: {
     color: 'white',
     [theme.breakpoints.down('md')]: {
       fontSize: '0.75rem',
     },
   },
-  hideParticipant: {
+
+  [`&.${classes.hideParticipant}`]: {
     display: 'none',
   },
-  cursorPointer: {
+
+  [`&.${classes.cursorPointer}`]: {
     cursor: 'pointer',
   },
-  galleryView: {
+
+  [`&.${classes.galleryView}`]: {
     border: `${theme.participantBorderWidth}px solid ${theme.galleryViewBackgroundColor}`,
     borderRadius: '8px',
     [theme.breakpoints.down('md')]: {
@@ -145,10 +177,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
-  dominantSpeaker: {
+
+  [`&.${classes.dominantSpeaker}`]: {
     border: `solid ${borderWidth}px #7BEAA5`,
-  },
+  }
 }));
+
+const borderWidth = 2;
 
 interface ParticipantInfoProps {
   participant: Participant;
@@ -193,10 +228,10 @@ export default function ParticipantInfo({
     (participant.identity === WEBMOTI_CAMERA_1 && isCameraOneOff) ||
     (participant.identity === WEBMOTI_CAMERA_2 && isCameraTwoOff);
 
-  const classes = useStyles();
+
 
   return (
-    <div
+    <Root
       className={clsx(classes.container, {
         [classes.hideParticipant]: hideParticipant,
         [classes.cursorPointer]: Boolean(onClick),
@@ -242,6 +277,6 @@ export default function ParticipantInfo({
         )}
         {children}
       </div>
-    </div>
+    </Root>
   );
 }

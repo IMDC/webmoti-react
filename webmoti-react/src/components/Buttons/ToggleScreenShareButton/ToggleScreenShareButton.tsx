@@ -1,4 +1,4 @@
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 
 import { Button, Tooltip, Theme } from '@mui/material';
 import ScreenShareIcon from '../../../icons/ScreenShareIcon';
@@ -6,24 +6,34 @@ import ScreenShareIcon from '../../../icons/ScreenShareIcon';
 import useScreenShareParticipant from '../../../hooks/useScreenShareParticipant/useScreenShareParticipant';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 
-export const SCREEN_SHARE_TEXT = 'Share Screen';
-export const STOP_SCREEN_SHARE_TEXT = 'Stop Sharing Screen';
-export const SHARE_IN_PROGRESS_TEXT = 'Cannot share screen when another user is sharing';
-export const SHARE_NOT_SUPPORTED_TEXT = 'Screen sharing is not supported with this browser';
+const PREFIX = 'SCREEN_SHARE_TEXT';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  button: {
+const classes = {
+  button: `${PREFIX}-button`
+};
+
+const StyledTooltip = styled(Tooltip)((
+  {
+    theme: Theme
+  }
+) => ({
+  [`& .${classes.button}`]: {
     '&[disabled]': {
       color: '#bbb',
       '& svg *': {
         fill: '#bbb',
       },
     },
-  },
+  }
 }));
 
+export const SCREEN_SHARE_TEXT = 'Share Screen';
+export const STOP_SCREEN_SHARE_TEXT = 'Stop Sharing Screen';
+export const SHARE_IN_PROGRESS_TEXT = 'Cannot share screen when another user is sharing';
+export const SHARE_NOT_SUPPORTED_TEXT = 'Screen sharing is not supported with this browser';
+
 export default function ToggleScreenShareButton(props: { disabled?: boolean }) {
-  const classes = useStyles();
+
   const screenShareParticipant = useScreenShareParticipant();
   const { toggleScreenShare } = useVideoContext();
   const disableScreenShareButton = Boolean(screenShareParticipant);
@@ -41,7 +51,7 @@ export default function ToggleScreenShareButton(props: { disabled?: boolean }) {
   }
 
   return (
-    <Tooltip
+    <StyledTooltip
       title={tooltipMessage}
       placement="top"
       PopperProps={{ disablePortal: true }}
@@ -60,6 +70,6 @@ export default function ToggleScreenShareButton(props: { disabled?: boolean }) {
           {SCREEN_SHARE_TEXT}
         </Button>
       </span>
-    </Tooltip>
+    </StyledTooltip>
   );
 }

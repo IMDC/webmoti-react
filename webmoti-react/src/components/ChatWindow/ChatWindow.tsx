@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import { Theme } from '@mui/material';
 import clsx from 'clsx';
 
@@ -10,8 +10,19 @@ import MessageList from './MessageList/MessageList';
 import TTSMessage from './TTSMessage';
 import useChatContext from '../../hooks/useChatContext/useChatContext';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  chatWindowContainer: {
+const PREFIX = 'ChatWindow';
+
+const classes = {
+  chatWindowContainer: `${PREFIX}-chatWindowContainer`,
+  hide: `${PREFIX}-hide`
+};
+
+const Root = styled('aside')((
+  {
+    theme: Theme
+  }
+) => ({
+  [`&.${classes.chatWindowContainer}`]: {
     background: '#FFFFFF',
     zIndex: 20,
     display: 'flex',
@@ -26,9 +37,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       zIndex: 100,
     },
   },
-  hide: {
+
+  [`&.${classes.hide}`]: {
     display: 'none',
-  },
+  }
 }));
 
 // In this component, we are toggling the visibility of the ChatWindow with CSS instead of
@@ -36,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 // not unmounted while a file upload is in progress.
 
 export default function ChatWindow() {
-  const classes = useStyles();
+
   const { isChatWindowOpen, messages, conversation } = useChatContext();
 
   const [isTTSModeOn, setIsTTSModeOn] = useState(false);
@@ -52,7 +64,7 @@ export default function ChatWindow() {
   };
 
   return (
-    <aside className={clsx(classes.chatWindowContainer, { [classes.hide]: !isChatWindowOpen })}>
+    <Root className={clsx(classes.chatWindowContainer, { [classes.hide]: !isChatWindowOpen })}>
       <ChatWindowHeader isTTSModeOn={isTTSModeOn} />
       <MessageList messages={messages} ttsMessages={ttsMessages} isTTSModeOn={isTTSModeOn} />
       <ChatInput
@@ -62,6 +74,6 @@ export default function ChatWindow() {
         toggleTTSMode={toggleTTSMode}
         addTTSMsg={addTTSMsg}
       />
-    </aside>
+    </Root>
   );
 }

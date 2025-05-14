@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 
+import { styled } from '@mui/material/styles';
+
 import { Typography, Theme } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 import useWebSocket from 'react-use-websocket';
 
 import { Caption } from './CaptionTypes';
@@ -10,8 +11,19 @@ import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../state';
 import Snackbar from '../Snackbar/Snackbar';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  captionContainer: {
+const PREFIX = 'CaptionRenderer';
+
+const classes = {
+  captionContainer: `${PREFIX}-captionContainer`,
+  caption: `${PREFIX}-caption`
+};
+
+const Root = styled('div')((
+  {
+    theme: Theme
+  }
+) => ({
+  [`&.${classes.captionContainer}`]: {
     position: 'fixed',
     left: '20%',
     right: '15%',
@@ -22,12 +34,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column-reverse',
   },
-  caption: {
+
+  [`& .${classes.caption}`]: {
     color: 'white',
     background: 'rgba(0, 0, 0, 0.8)',
     padding: '0.2em',
     display: 'inline-block',
-  },
+  }
 }));
 
 interface CaptionMap {
@@ -35,7 +48,7 @@ interface CaptionMap {
 }
 
 export function CaptionRenderer() {
-  const classes = useStyles();
+
   const [captions, setCaptions] = useState<CaptionMap>({});
 
   const { displayCaptions } = useAppState();
@@ -112,7 +125,7 @@ export function CaptionRenderer() {
   if (!displayCaptions) return null;
 
   return (
-    <div className={classes.captionContainer}>
+    <Root className={classes.captionContainer}>
       <Snackbar
         variant="error"
         headline="Captions Error"
@@ -122,7 +135,6 @@ export function CaptionRenderer() {
           setError(false);
         }}
       />
-
       {Object.entries(captions).map(([captionIdentity, captionsArray]) => (
         <div key={captionIdentity}>
           <Typography variant="h6" className={classes.caption}>
@@ -135,6 +147,6 @@ export function CaptionRenderer() {
           ))}
         </div>
       ))}
-    </div>
+    </Root>
   );
 }

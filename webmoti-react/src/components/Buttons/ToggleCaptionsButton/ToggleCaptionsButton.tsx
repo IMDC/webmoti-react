@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { styled } from '@mui/material/styles';
+
 import ClosedCaptionIcon from '@mui/icons-material/ClosedCaption';
 import { IconButton, Theme } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import useWebSocket from 'react-use-websocket';
 
@@ -12,26 +13,37 @@ import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../../state';
 import Snackbar from '../../Snackbar/Snackbar';
 
-interface AudioToggleDetail {
-  enabled: boolean;
-}
-interface AudioToggleEvent extends CustomEvent<AudioToggleDetail> {}
+const PREFIX = 'ToggleCaptionsButton';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  iconButton: {
+const classes = {
+  iconButton: `${PREFIX}-iconButton`
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')((
+  {
+    theme: Theme
+  }
+) => ({
+  [`& .${classes.iconButton}`]: {
     padding: 10,
     marginRight: 10,
 
     [theme.breakpoints.down('md')]: {
       marginRight: 0,
     },
-  },
+  }
 }));
+
+interface AudioToggleDetail {
+  enabled: boolean;
+}
+interface AudioToggleEvent extends CustomEvent<AudioToggleDetail> {}
 
 export default function ToggleCaptionsButton() {
   const { room } = useVideoContext();
   const [isAudioEnabled] = useLocalAudioToggle();
-  const classes = useStyles();
+
 
   const [snackbarError, setSnackbarError] = useState('');
 
@@ -147,7 +159,7 @@ export default function ToggleCaptionsButton() {
   };
 
   return (
-    <>
+    <Root>
       <Snackbar
         variant="error"
         headline="Captions Error"
@@ -160,6 +172,6 @@ export default function ToggleCaptionsButton() {
       <IconButton onClick={toggleCaptions} className={classes.iconButton} size="large">
         <ClosedCaptionIcon color={displayCaptions ? 'primary' : 'inherit'} />
       </IconButton>
-    </>
+    </Root>
   );
 }

@@ -1,7 +1,8 @@
 import React from 'react';
 
+import { styled } from '@mui/material/styles';
+
 import { Typography, useMediaQuery, Theme, useTheme } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 
 import { useLocation } from 'react-router-dom';
 
@@ -10,19 +11,39 @@ import UserMenu from './UserMenu/UserMenu';
 import VideoLogo from './VideoLogo';
 import { useAppState } from '../../state';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  background: {
+const PREFIX = 'IntroContainer';
+
+const classes = {
+  background: `${PREFIX}-background`,
+  container: `${PREFIX}-container`,
+  innerContainer: `${PREFIX}-innerContainer`,
+  swooshContainer: `${PREFIX}-swooshContainer`,
+  logoContainer: `${PREFIX}-logoContainer`,
+  webmotiLogo: `${PREFIX}-webmotiLogo`,
+  content: `${PREFIX}-content`,
+  title: `${PREFIX}-title`,
+  subtitle: `${PREFIX}-subtitle`
+};
+
+const Root = styled('div')((
+  {
+    theme: Theme
+  }
+) => ({
+  [`&.${classes.background}`]: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     background: 'rgb(40, 42, 43)',
     height: '100%',
   },
-  container: {
+
+  [`& .${classes.container}`]: {
     position: 'relative',
     flex: '1',
   },
-  innerContainer: {
+
+  [`& .${classes.innerContainer}`]: {
     display: 'flex',
     width: '888px',
     height: '379px',
@@ -39,7 +60,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       maxWidth: '400px',
     },
   },
-  swooshContainer: {
+
+  [`& .${classes.swooshContainer}`]: {
     position: 'relative',
     display: 'flex',
     alignItems: 'center',
@@ -53,7 +75,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundPositionY: '140px',
     },
   },
-  logoContainer: {
+
+  [`& .${classes.logoContainer}`]: {
     position: 'absolute',
     top: 0,
     bottom: 0,
@@ -75,14 +98,16 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
-  webmotiLogo: {
+
+  [`& .${classes.webmotiLogo}`]: {
     position: 'absolute',
     top: 0,
     left: 0,
     margin: '20px',
     opacity: '0.8',
   },
-  content: {
+
+  [`& .${classes.content}`]: {
     background: 'white',
     width: '100%',
     padding: '3em 4em',
@@ -91,7 +116,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: '2em',
     },
   },
-  title: {
+
+  [`& .${classes.title}`]: {
     color: 'white',
     margin: '1em 0 0',
     fontWeight: 'bold',
@@ -100,7 +126,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontSize: '1.1rem',
     },
   },
-  subtitle: {
+
+  [`& .${classes.subtitle}`]: {
     color: 'lightgray',
     margin: '0.5em 0 1em',
     fontSize: '0.9rem',
@@ -108,7 +135,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontSize: '0.8rem',
       margin: '0.25em 0 0.5em',
     },
-  },
+  }
 }));
 
 interface IntroContainerProps {
@@ -116,7 +143,7 @@ interface IntroContainerProps {
 }
 
 const IntroContainer = (props: IntroContainerProps) => {
-  const classes = useStyles();
+
   const { user } = useAppState();
   const location = useLocation();
 
@@ -124,7 +151,7 @@ const IntroContainer = (props: IntroContainerProps) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
-    <div className={classes.background}>
+    <Root className={classes.background}>
       <img src="/favicon.svg" alt="Logo" className={classes.webmotiLogo} />
       {user && location.pathname !== '/login' && <UserMenu />}
       <div className={classes.container}>
@@ -146,7 +173,7 @@ const IntroContainer = (props: IntroContainerProps) => {
           <div className={classes.content}>{props.children}</div>
         </div>
       </div>
-    </div>
+    </Root>
   );
 };
 

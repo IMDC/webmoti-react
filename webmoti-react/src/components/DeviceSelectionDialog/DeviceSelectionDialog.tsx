@@ -12,7 +12,7 @@ import {
   Tooltip,
   Theme,
 } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 
 import AudioInputList from './AudioInputList/AudioInputList';
 import AudioOutputList from './AudioOutputList/AudioOutputList';
@@ -25,8 +25,25 @@ import KrispLogo from '../../icons/KrispLogo';
 import SmallCheckIcon from '../../icons/SmallCheckIcon';
 import { useAppState } from '../../state';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  container: {
+const PREFIX = 'DeviceSelectionDialog';
+
+const classes = {
+  container: `${PREFIX}-container`,
+  button: `${PREFIX}-button`,
+  paper: `${PREFIX}-paper`,
+  headline: `${PREFIX}-headline`,
+  listSection: `${PREFIX}-listSection`,
+  noiseCancellationContainer: `${PREFIX}-noiseCancellationContainer`,
+  krispContainer: `${PREFIX}-krispContainer`,
+  krispInfoText: `${PREFIX}-krispInfoText`
+};
+
+const StyledDialog = styled(Dialog)((
+  {
+    theme: Theme
+  }
+) => ({
+  [`& .${classes.container}`]: {
     width: '600px',
     minHeight: '400px',
     [theme.breakpoints.down('sm')]: {
@@ -36,29 +53,35 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: 'calc(100% - 35px)',
     },
   },
-  button: {
+
+  [`& .${classes.button}`]: {
     float: 'right',
   },
-  paper: {
+
+  [`& .${classes.paper}`]: {
     [theme.breakpoints.down('sm')]: {
       margin: '16px',
     },
   },
-  headline: {
+
+  [`& .${classes.headline}`]: {
     marginBottom: '1.3em',
     fontSize: '1.1rem',
   },
-  listSection: {
+
+  [`& .${classes.listSection}`]: {
     margin: '2em 0 0.8em',
     '&:first-child': {
       margin: '1em 0 2em 0',
     },
   },
-  noiseCancellationContainer: {
+
+  [`& .${classes.noiseCancellationContainer}`]: {
     display: 'flex',
     justifyContent: 'space-between',
   },
-  krispContainer: {
+
+  [`& .${classes.krispContainer}`]: {
     display: 'flex',
     alignItems: 'center',
     '& svg': {
@@ -67,19 +90,20 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
-  krispInfoText: {
+
+  [`& .${classes.krispInfoText}`]: {
     margin: '0 0 1.5em 0.5em',
-  },
+  }
 }));
 
 export default function DeviceSelectionDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { isAcquiringLocalTracks } = useVideoContext();
   const { isKrispEnabled, isKrispInstalled } = useAppState();
   const { toggleKrisp } = useKrispToggle();
-  const classes = useStyles();
+
 
   return (
-    <Dialog open={open} onClose={onClose} classes={{ paper: classes.paper }}>
+    <StyledDialog open={open} onClose={onClose} classes={{ paper: classes.paper }}>
       <DialogTitle>Audio and Video Settings</DialogTitle>
       <Divider />
       <DialogContent className={classes.container}>
@@ -153,6 +177,6 @@ export default function DeviceSelectionDialog({ open, onClose }: { open: boolean
           Done
         </Button>
       </DialogActions>
-    </Dialog>
+    </StyledDialog>
   );
 }

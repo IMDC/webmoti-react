@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import {
   Button,
   CircularProgress,
@@ -26,13 +26,35 @@ import { isMobile } from '../../../utils';
 import Snackbar from '../../Snackbar/Snackbar';
 import TTSMessage from '../TTSMessage';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  chatInputContainer: {
+const PREFIX = 'ChatInput';
+
+const classes = {
+  chatInputContainer: `${PREFIX}-chatInputContainer`,
+  textArea: `${PREFIX}-textArea`,
+  button: `${PREFIX}-button`,
+  buttonContainer: `${PREFIX}-buttonContainer`,
+  fileButtonContainer: `${PREFIX}-fileButtonContainer`,
+  chatButtonContainer: `${PREFIX}-chatButtonContainer`,
+  fileButtonLoadingSpinner: `${PREFIX}-fileButtonLoadingSpinner`,
+  textAreaContainer: `${PREFIX}-textAreaContainer`,
+  isTextareaFocused: `${PREFIX}-isTextareaFocused`,
+  voiceSelect: `${PREFIX}-voiceSelect`,
+  menuItem: `${PREFIX}-menuItem`,
+  previewButton: `${PREFIX}-previewButton`
+};
+
+const Root = styled('div')((
+  {
+    theme: Theme
+  }
+) => ({
+  [`&.${classes.chatInputContainer}`]: {
     borderTop: '1px solid #e4e7e9',
     borderBottom: '1px solid #e4e7e9',
     padding: '1em 1.2em 1em',
   },
-  textArea: {
+
+  [`& .${classes.textArea}`]: {
     width: '100%',
     border: '0',
     resize: 'none',
@@ -40,7 +62,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: 'Inter',
     outline: 'none',
   },
-  button: {
+
+  [`& .${classes.button}`]: {
     padding: '0.56em',
     minWidth: 'auto',
     '&:disabled': {
@@ -50,49 +73,58 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
-  buttonContainer: {
+
+  [`& .${classes.buttonContainer}`]: {
     margin: '1em 0 0 1em',
     display: 'flex',
     justifyContent: 'space-between',
     width: '100%',
   },
-  fileButtonContainer: {
+
+  [`& .${classes.fileButtonContainer}`]: {
     position: 'relative',
     marginRight: '1em',
   },
-  chatButtonContainer: {
+
+  [`& .${classes.chatButtonContainer}`]: {
     display: 'flex',
   },
-  fileButtonLoadingSpinner: {
+
+  [`& .${classes.fileButtonLoadingSpinner}`]: {
     position: 'absolute',
     top: '50%',
     left: '50%',
     marginTop: -12,
     marginLeft: -12,
   },
-  textAreaContainer: {
+
+  [`& .${classes.textAreaContainer}`]: {
     display: 'flex',
     marginTop: '0.4em',
     padding: '0.48em 0.7em',
     border: '2px solid transparent',
   },
-  isTextareaFocused: {
+
+  [`& .${classes.isTextareaFocused}`]: {
     borderColor: theme.palette.primary.main,
     borderRadius: '4px',
   },
-  voiceSelect: {
+
+  [`& .${classes.voiceSelect}`]: {
     marginRight: '1em',
     minWidth: '120px',
   },
-  menuItem: {
+
+  [`& .${classes.menuItem}`]: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
   },
-  previewButton: {
+
+  [`& .${classes.previewButton}`]: {
     marginLeft: '1em',
-  },
+  }
 }));
 
 interface ChatInputProps {
@@ -126,7 +158,7 @@ export default function ChatInput({
   addTTSMsg,
   isTTSModeOn = false,
 }: ChatInputProps) {
-  const classes = useStyles();
+
   const [messageBody, setMessageBody] = useState('');
   const [isSendingFile, setIsSendingFile] = useState(false);
   const [fileSendError, setFileSendError] = useState<string | null>(null);
@@ -225,7 +257,7 @@ export default function ChatInput({
   };
 
   return (
-    <div className={classes.chatInputContainer}>
+    <Root className={classes.chatInputContainer}>
       <Snackbar
         open={Boolean(fileSendError)}
         headline="Error"
@@ -259,7 +291,6 @@ export default function ChatInput({
           onBlur={() => setIsTextareaFocused(false)}
         />
       </div>
-
       <Grid container alignItems="flex-end" justifyContent="flex-end" wrap="nowrap">
         {/* Since the file input element is invisible, we can hardcode an empty string as its value.
         This allows users to upload the same file multiple times. */}
@@ -363,6 +394,6 @@ export default function ChatInput({
           )}
         </div>
       </Grid>
-    </div>
+    </Root>
   );
 }

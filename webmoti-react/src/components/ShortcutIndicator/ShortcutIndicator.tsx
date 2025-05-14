@@ -1,27 +1,45 @@
 import { Card, CardContent, Typography, Theme } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  card: {
+const PREFIX = 'ShortcutIndicator';
+
+const classes = {
+  card: `${PREFIX}-card`,
+  beforeMargin: `${PREFIX}-beforeMargin`,
+  extraMargin: `${PREFIX}-extraMargin`,
+  cardContent: `${PREFIX}-cardContent`,
+  shortcutText: `${PREFIX}-shortcutText`
+};
+
+const StyledCard = styled(Card)((
+  {
+    theme: Theme
+  }
+) => ({
+  [`&.${classes.card}`]: {
     height: 20,
     backgroundColor: theme.palette.primary.dark,
     color: theme.palette.primary.contrastText,
   },
-  beforeMargin: {
+
+  [`&.${classes.beforeMargin}`]: {
     marginLeft: 5,
   },
-  extraMargin: {
+
+  [`&.${classes.extraMargin}`]: {
     margin: '4px',
   },
-  cardContent: {
+
+  [`& .${classes.cardContent}`]: {
     padding: '0 8px',
     display: 'flex',
     alignItems: 'center',
   },
-  shortcutText: {
+
+  [`& .${classes.shortcutText}`]: {
     letterSpacing: '0.1em',
-  },
+  }
 }));
 
 interface ShortcutIndicatorProps {
@@ -39,10 +57,10 @@ export default function ShortcutIndicator({
   isAltDown = false,
   isInTooltip = false,
 }: ShortcutIndicatorProps) {
-  const classes = useStyles();
+
 
   return (
-    <Card
+    <StyledCard
       className={clsx(classes.card, {
         [classes.beforeMargin]: !isInTooltip,
         [classes.extraMargin]: isInTooltip,
@@ -57,6 +75,6 @@ export default function ShortcutIndicator({
           {shortcut}
         </Typography>
       </CardContent>
-    </Card>
+    </StyledCard>
   );
 }

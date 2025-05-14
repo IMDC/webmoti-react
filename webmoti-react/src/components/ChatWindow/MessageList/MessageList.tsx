@@ -1,7 +1,8 @@
 import React from 'react';
 
+import { styled } from '@mui/material/styles';
+
 import { Button } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 import { Conversation, Message } from '@twilio/conversations';
 import { LocalParticipant } from 'twilio-video';
 
@@ -15,24 +16,31 @@ import SendMessageIcon from '../../../icons/SendMessageIcon';
 import { sendSystemAudioMsg } from '../../../utils';
 import TTSMessage from '../TTSMessage';
 
-interface MessageListProps {
-  messages: Message[];
-  ttsMessages?: TTSMessage[];
-  isTTSModeOn?: boolean;
-}
+const PREFIX = 'MessageList';
 
-const useStyles = makeStyles({
-  ttsMessageWrapper: {
+const classes = {
+  ttsMessageWrapper: `${PREFIX}-ttsMessageWrapper`,
+  sendButton: `${PREFIX}-sendButton`
+};
+
+const StyledMessageListScrollContainer = styled(MessageListScrollContainer)({
+  [`& .${classes.ttsMessageWrapper}`]: {
     display: 'flex',
     alignItems: 'center',
     marginBottom: '0.3em',
   },
-  sendButton: {
+  [`& .${classes.sendButton}`]: {
     marginLeft: '0.5em',
     padding: '0.3em',
     minWidth: 'auto',
   },
 });
+
+interface MessageListProps {
+  messages: Message[];
+  ttsMessages?: TTSMessage[];
+  isTTSModeOn?: boolean;
+}
 
 const getFormattedTime = (message?: Message | TTSMessage) =>
   message?.dateCreated?.toLocaleTimeString('en-us', { hour: 'numeric', minute: 'numeric' }).toLowerCase();
@@ -94,13 +102,13 @@ const showTTSMessages = (conversation: Conversation | null, messages: TTSMessage
 export default function MessageList({ messages, ttsMessages = [], isTTSModeOn = false }: MessageListProps) {
   const { room } = useVideoContext();
   const { conversation } = useChatContext();
-  const classes = useStyles();
+
 
   const localParticipant = room!.localParticipant;
 
   return (
-    <MessageListScrollContainer messages={messages}>
-      {isTTSModeOn ? showTTSMessages(conversation, ttsMessages, classes) : showChatMessages(messages, localParticipant)}
-    </MessageListScrollContainer>
+    <StyledMessageListScrollContainer messages={messages}>
+      {isTTSModeOn ? showTTSMessages(conversation, ttsMessages,  : showChatMessages(messages, localParticipant)}
+    </StyledMessageListScrollContainer>
   );
 }

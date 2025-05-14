@@ -1,15 +1,24 @@
 import React, { useState, useRef, useCallback } from 'react';
 
+import { styled } from '@mui/material/styles';
+
 import { Typography, Button, MenuItem, Link, Menu } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { makeStyles } from '@mui/styles';
 
 import UserAvatar from './UserAvatar/UserAvatar';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../../state';
 
-const useStyles = makeStyles({
-  userContainer: {
+const PREFIX = 'UserMenu';
+
+const classes = {
+  userContainer: `${PREFIX}-userContainer`,
+  userButton: `${PREFIX}-userButton`,
+  logoutLink: `${PREFIX}-logoutLink`
+};
+
+const Root = styled('div')({
+  [`&.${classes.userContainer}`]: {
     position: 'absolute',
     top: 0,
     right: 0,
@@ -17,10 +26,10 @@ const useStyles = makeStyles({
     display: 'flex',
     alignItems: 'center',
   },
-  userButton: {
+  [`& .${classes.userButton}`]: {
     color: 'white',
   },
-  logoutLink: {
+  [`& .${classes.logoutLink}`]: {
     color: 'white',
     cursor: 'pointer',
     padding: '10px 20px',
@@ -28,7 +37,7 @@ const useStyles = makeStyles({
 });
 
 const UserMenu: React.FC = () => {
-  const classes = useStyles();
+
   const { user, signOut } = useAppState();
   const { localTracks } = useVideoContext();
 
@@ -42,11 +51,11 @@ const UserMenu: React.FC = () => {
 
   if (process.env.REACT_APP_SET_AUTH === 'passcode') {
     return (
-      <div className={classes.userContainer} data-testid="user-menu">
+      <Root className={classes.userContainer} data-testid="user-menu">
         <Link onClick={handleSignOut} className={classes.logoutLink} underline="hover">
           Logout
         </Link>
-      </div>
+      </Root>
     );
   }
 

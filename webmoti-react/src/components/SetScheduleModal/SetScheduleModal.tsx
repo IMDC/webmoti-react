@@ -1,23 +1,36 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 
+import { styled } from '@mui/material/styles';
+
 import { Backdrop, Button, CircularProgress, Fade, Grid, Modal, TextField, Theme, Typography } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 
 import { HTTPS_SERVER_URL } from '../../constants';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  modal: {
+const PREFIX = 'SetScheduleModal';
+
+const classes = {
+  modal: `${PREFIX}-modal`,
+  paper: `${PREFIX}-paper`
+};
+
+const StyledModal = styled(Modal)((
+  {
+    theme: Theme
+  }
+) => ({
+  [`&.${classes.modal}`]: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  paper: {
+
+  [`& .${classes.paper}`]: {
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
-  },
+  }
 }));
 
 interface SetScheduleModalProps {
@@ -26,7 +39,7 @@ interface SetScheduleModalProps {
 }
 
 export default function SetScheduleModal({ open, onClose }: SetScheduleModalProps) {
-  const classes = useStyles();
+
 
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
@@ -106,7 +119,7 @@ export default function SetScheduleModal({ open, onClose }: SetScheduleModalProp
   }, [open]);
 
   return (
-    <Modal
+    <StyledModal
       open={open}
       onClose={onClose}
       className={classes.modal}
@@ -173,6 +186,6 @@ export default function SetScheduleModal({ open, onClose }: SetScheduleModalProp
           </form>
         </div>
       </Fade>
-    </Modal>
+    </StyledModal>
   );
 }

@@ -1,10 +1,17 @@
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import { Participant } from 'twilio-video';
 
 import useParticipantNetworkQualityLevel from '../../hooks/useParticipantNetworkQualityLevel/useParticipantNetworkQualityLevel';
 
-const useStyles = makeStyles({
-  outerContainer: {
+const PREFIX = 'NetworkQualityLevel';
+
+const classes = {
+  outerContainer: `${PREFIX}-outerContainer`,
+  innerContainer: `${PREFIX}-innerContainer`
+};
+
+const Root = styled('div')({
+  [`&.${classes.outerContainer}`]: {
     width: '2em',
     height: '2em',
     padding: '0.9em',
@@ -13,7 +20,7 @@ const useStyles = makeStyles({
     justifyContent: 'center',
     background: 'rgba(0, 0, 0, 0.5)',
   },
-  innerContainer: {
+  [`& .${classes.innerContainer}`]: {
     display: 'flex',
     alignItems: 'flex-end',
     '& div': {
@@ -30,13 +37,13 @@ const STEP = 3;
 const BARS_ARRAY = [0, 1, 2, 3, 4];
 
 export default function NetworkQualityLevel({ participant }: { participant: Participant }) {
-  const classes = useStyles();
+
   const networkQualityLevel = useParticipantNetworkQualityLevel(participant);
 
   if (networkQualityLevel === null) return null;
 
   return (
-    <div className={classes.outerContainer}>
+    <Root className={classes.outerContainer}>
       <div className={classes.innerContainer}>
         {BARS_ARRAY.map(level => (
           <div
@@ -48,6 +55,6 @@ export default function NetworkQualityLevel({ participant }: { participant: Part
           />
         ))}
       </div>
-    </div>
+    </Root>
   );
 }

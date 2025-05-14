@@ -1,30 +1,42 @@
 /* istanbul ignore file */
 import React, { ReactNode } from 'react';
 
+import { styled } from '@mui/material/styles';
+
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { Button } from '@mui/material';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { WithStyles } from '@mui/styles';
 import { Message } from '@twilio/conversations';
 import clsx from 'clsx';
 import throttle from 'lodash.throttle';
 
-const styles = createStyles({
-  outerContainer: {
+const PREFIX = 'MessageListScrollContainer';
+
+const classes = {
+  outerContainer: `${PREFIX}-outerContainer`,
+  innerScrollContainer: `${PREFIX}-innerScrollContainer`,
+  messageListContainer: `${PREFIX}-messageListContainer`,
+  button: `${PREFIX}-button`,
+  showButton: `${PREFIX}-showButton`
+};
+
+const Root = styled('div')({
+  [`&.${classes.outerContainer}`]: {
     minHeight: 0,
     flex: 1,
     position: 'relative',
   },
-  innerScrollContainer: {
+  [`& .${classes.innerScrollContainer}`]: {
     height: '100%',
     overflowY: 'auto',
     padding: '0 1.2em 0',
   },
-  messageListContainer: {
+  [`& .${classes.messageListContainer}`]: {
     overflowY: 'auto',
     flex: '1',
     paddingBottom: '1em',
   },
-  button: {
+  [`& .${classes.button}`]: {
     position: 'absolute',
     bottom: '14px',
     right: '2em',
@@ -35,7 +47,7 @@ const styles = createStyles({
     boxShadow: '0px 4px 16px rgba(18, 28, 45, 0.2)',
     transition: 'all 0.5s ease',
   },
-  showButton: {
+  [`& .${classes.showButton}`]: {
     visibility: 'visible',
     opacity: 1,
     bottom: '24px',
@@ -138,10 +150,10 @@ export class MessageListScrollContainer extends React.Component<
   }
 
   render() {
-    const { classes } = this.props;
+    const { } = this.props;
 
     return (
-      <div className={classes.outerContainer}>
+      <Root className={classes.outerContainer}>
         <div className={classes.innerScrollContainer} ref={this.chatThreadRef} data-cy-message-list-inner-scroll>
           <div className={classes.messageListContainer}>
             {this.props.children}
@@ -158,9 +170,9 @@ export class MessageListScrollContainer extends React.Component<
             </Button>
           </div>
         </div>
-      </div>
+      </Root>
     );
   }
 }
 
-export default withStyles(styles)(MessageListScrollContainer);
+export default (MessageListScrollContainer);

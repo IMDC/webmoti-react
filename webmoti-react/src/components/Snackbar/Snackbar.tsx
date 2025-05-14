@@ -1,7 +1,8 @@
 import React from 'react';
 
+import { styled } from '@mui/material/styles';
+
 import { IconButton, Typography, Theme, Snackbar as MUISnackbar, SnackbarCloseReason } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 import CloseIcon from '@mui/icons-material/Close';
 import clsx from 'clsx';
 
@@ -9,16 +10,24 @@ import ErrorIcon from '../../icons/ErrorIcon';
 import InfoIcon from '../../icons/InfoIcon';
 import WarningIcon from '../../icons/WarningIcon';
 
-interface SnackbarProps {
-  headline: string;
-  message: string | React.ReactNode;
-  variant?: 'error' | 'warning' | 'info';
-  open: boolean;
-  handleClose?: () => void;
-}
+const PREFIX = 'Snackbar';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  container: {
+const classes = {
+  container: `${PREFIX}-container`,
+  contentContainer: `${PREFIX}-contentContainer`,
+  iconContainer: `${PREFIX}-iconContainer`,
+  headline: `${PREFIX}-headline`,
+  error: `${PREFIX}-error`,
+  warning: `${PREFIX}-warning`,
+  info: `${PREFIX}-info`
+};
+
+const StyledMUISnackbar = styled(MUISnackbar)((
+  {
+    theme: Theme
+  }
+) => ({
+  [`& .${classes.container}`]: {
     display: 'flex',
     justifyContent: 'space-between',
     width: '400px',
@@ -31,31 +40,45 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '100%',
     },
   },
-  contentContainer: {
+
+  [`& .${classes.contentContainer}`]: {
     display: 'flex',
     lineHeight: 1.8,
   },
-  iconContainer: {
+
+  [`& .${classes.iconContainer}`]: {
     display: 'flex',
     padding: '0 1.3em 0 0.3em',
     transform: 'translateY(3px)',
   },
-  headline: {
+
+  [`& .${classes.headline}`]: {
     fontWeight: 'bold',
   },
-  error: {
+
+  [`& .${classes.error}`]: {
     borderLeft: '4px solid #D61F1F',
   },
-  warning: {
+
+  [`& .${classes.warning}`]: {
     borderLeft: '4px solid #E46216',
   },
-  info: {
+
+  [`& .${classes.info}`]: {
     borderLeft: '4px solid #0263e0',
-  },
+  }
 }));
 
+interface SnackbarProps {
+  headline: string;
+  message: string | React.ReactNode;
+  variant?: 'error' | 'warning' | 'info';
+  open: boolean;
+  handleClose?: () => void;
+}
+
 export default function Snackbar({ headline, message, variant, open, handleClose }: SnackbarProps) {
-  const classes = useStyles();
+
 
   const handleOnClose = (_: React.SyntheticEvent<any> | Event, reason: SnackbarCloseReason) => {
     if (reason === 'clickaway') {
@@ -66,7 +89,7 @@ export default function Snackbar({ headline, message, variant, open, handleClose
   };
 
   return (
-    <MUISnackbar
+    <StyledMUISnackbar
       data-testid="mui-snackbar"
       anchorOrigin={{
         vertical: 'top',
@@ -107,6 +130,6 @@ export default function Snackbar({ headline, message, variant, open, handleClose
           )}
         </div>
       </div>
-    </MUISnackbar>
+    </StyledMUISnackbar>
   );
 }

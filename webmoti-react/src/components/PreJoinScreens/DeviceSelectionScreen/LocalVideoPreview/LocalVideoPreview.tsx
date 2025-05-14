@@ -1,5 +1,5 @@
 import { Typography,Theme } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import { LocalVideoTrack } from 'twilio-video';
 
 import useVideoContext from '../../../../hooks/useVideoContext/useVideoContext';
@@ -7,27 +7,44 @@ import AvatarIcon from '../../../../icons/AvatarIcon';
 import LocalAudioLevelIndicator from '../../../LocalAudioLevelIndicator/LocalAudioLevelIndicator';
 import VideoTrack from '../../../VideoTrack/VideoTrack';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  container: {
+const PREFIX = 'LocalVideoPreview';
+
+const classes = {
+  container: `${PREFIX}-container`,
+  innerContainer: `${PREFIX}-innerContainer`,
+  identityContainer: `${PREFIX}-identityContainer`,
+  identity: `${PREFIX}-identity`,
+  avatarContainer: `${PREFIX}-avatarContainer`
+};
+
+const Root = styled('div')((
+  {
+    theme: Theme
+  }
+) => ({
+  [`&.${classes.container}`]: {
     position: 'relative',
     height: 0,
     overflow: 'hidden',
     paddingTop: `${(9 / 16) * 100}%`,
     background: 'black',
   },
-  innerContainer: {
+
+  [`& .${classes.innerContainer}`]: {
     position: 'absolute',
     top: 0,
     left: 0,
     width: '100%',
     height: '100%',
   },
-  identityContainer: {
+
+  [`& .${classes.identityContainer}`]: {
     position: 'absolute',
     bottom: 0,
     zIndex: 1,
   },
-  identity: {
+
+  [`& .${classes.identity}`]: {
     background: 'rgba(0, 0, 0, 0.5)',
     color: 'white',
     padding: '0.18em 0.3em',
@@ -35,7 +52,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
-  avatarContainer: {
+
+  [`& .${classes.avatarContainer}`]: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -51,11 +69,11 @@ const useStyles = makeStyles((theme: Theme) => ({
         transform: 'scale(0.7)',
       },
     },
-  },
+  }
 }));
 
 export default function LocalVideoPreview({ identity }: { identity: string }) {
-  const classes = useStyles();
+
   const { localTracks } = useVideoContext();
 
   const videoTrack = localTracks.find(
@@ -63,7 +81,7 @@ export default function LocalVideoPreview({ identity }: { identity: string }) {
   ) as LocalVideoTrack;
 
   return (
-    <div className={classes.container}>
+    <Root className={classes.container}>
       <div className={classes.innerContainer}>
         {videoTrack ? (
           <VideoTrack track={videoTrack} isLocal />
@@ -73,7 +91,6 @@ export default function LocalVideoPreview({ identity }: { identity: string }) {
           </div>
         )}
       </div>
-
       <div className={classes.identityContainer}>
         <span className={classes.identity}>
           <LocalAudioLevelIndicator />
@@ -82,6 +99,6 @@ export default function LocalVideoPreview({ identity }: { identity: string }) {
           </Typography>
         </span>
       </div>
-    </div>
+    </Root>
   );
 }

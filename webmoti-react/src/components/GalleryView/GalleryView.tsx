@@ -1,9 +1,10 @@
 import { useEffect, useRef } from 'react';
 
+import { styled } from '@mui/material/styles';
+
 import { Fireworks } from '@fireworks-js/react';
 import type { FireworksHandlers } from '@fireworks-js/react';
 import { IconButton, useTheme, Theme, useMediaQuery, Pagination } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -18,15 +19,31 @@ import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../state';
 import Participant from '../Participant/Participant';
 
-const CONTAINER_GUTTER = '50px';
+const PREFIX = 'GalleryView';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  container: {
+const classes = {
+  container: `${PREFIX}-container`,
+  participantContainer: `${PREFIX}-participantContainer`,
+  buttonContainer: `${PREFIX}-buttonContainer`,
+  buttonContainerLeft: `${PREFIX}-buttonContainerLeft`,
+  buttonContainerRight: `${PREFIX}-buttonContainerRight`,
+  pagination: `${PREFIX}-pagination`,
+  paginationButton: `${PREFIX}-paginationButton`,
+  paginationContainer: `${PREFIX}-paginationContainer`
+};
+
+const Root = styled('div')((
+  {
+    theme: Theme
+  }
+) => ({
+  [`&.${classes.container}`]: {
     background: theme.galleryViewBackgroundColor,
     position: 'relative',
     gridArea: '1 / 1 / 2 / 3',
   },
-  participantContainer: {
+
+  [`& .${classes.participantContainer}`]: {
     position: 'absolute',
     display: 'flex',
     top: CONTAINER_GUTTER,
@@ -38,7 +55,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexWrap: 'wrap',
     justifyContent: 'center',
   },
-  buttonContainer: {
+
+  [`& .${classes.buttonContainer}`]: {
     position: 'absolute',
     top: 0,
     bottom: 0,
@@ -47,20 +65,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
   },
 
-  buttonContainerLeft: {
+  [`& .${classes.buttonContainerLeft}`]: {
     right: `calc(100% - ${CONTAINER_GUTTER})`,
     left: 0,
   },
-  buttonContainerRight: {
+
+  [`& .${classes.buttonContainerRight}`]: {
     right: 0,
     left: `calc(100% - ${CONTAINER_GUTTER})`,
   },
-  pagination: {
+
+  [`& .${classes.pagination}`]: {
     '& .MuiPaginationItem-root': {
       color: 'white',
     },
   },
-  paginationButton: {
+
+  [`& .${classes.paginationButton}`]: {
     color: 'black',
     background: 'rgba(255, 255, 255, 0.8)',
     width: '40px',
@@ -69,7 +90,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       background: 'rgba(255, 255, 255)',
     },
   },
-  paginationContainer: {
+
+  [`& .${classes.paginationContainer}`]: {
     position: 'absolute',
     top: `calc(100% - ${CONTAINER_GUTTER})`,
     right: 0,
@@ -78,11 +100,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-  },
+  }
 }));
 
+const CONTAINER_GUTTER = '50px';
+
 export function GalleryView() {
-  const classes = useStyles();
+
   const { maxGalleryViewParticipants } = useAppState();
   const { room } = useVideoContext();
   const { galleryViewParticipants } = useParticipantsContext();
@@ -130,7 +154,7 @@ export function GalleryView() {
   }, []);
 
   return (
-    <div className={classes.container}>
+    <Root className={classes.container}>
       <div className={clsx(classes.buttonContainer, classes.buttonContainerLeft)}>
         {!(currentPage === 1) && (
           <IconButton
@@ -196,6 +220,6 @@ export function GalleryView() {
           </div>
         ))}
       </div>
-    </div>
+    </Root>
   );
 }

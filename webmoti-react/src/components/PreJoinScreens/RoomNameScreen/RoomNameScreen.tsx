@@ -1,15 +1,32 @@
 import { ChangeEvent, FormEvent } from 'react';
 
+import { styled } from '@mui/material/styles';
+
 import { Typography, TextField, Grid, Button, InputLabel, Theme } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 
 import { useAppState } from '../../../state';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  gutterBottom: {
+const PREFIX = 'RoomNameScreen';
+
+const classes = {
+  gutterBottom: `${PREFIX}-gutterBottom`,
+  inputContainer: `${PREFIX}-inputContainer`,
+  textFieldContainer: `${PREFIX}-textFieldContainer`,
+  continueButton: `${PREFIX}-continueButton`,
+  checkboxContainer: `${PREFIX}-checkboxContainer`,
+  errorText: `${PREFIX}-errorText`
+};
+
+const Root = styled('main')((
+  {
+    theme: Theme
+  }
+) => ({
+  [`& .${classes.gutterBottom}`]: {
     marginBottom: '1em',
   },
-  inputContainer: {
+
+  [`& .${classes.inputContainer}`]: {
     display: 'flex',
     justifyContent: 'space-between',
     margin: '1.5em 0 3.5em',
@@ -20,21 +37,25 @@ const useStyles = makeStyles((theme: Theme) => ({
       margin: '1.5em 0 2em',
     },
   },
-  textFieldContainer: {
+
+  [`& .${classes.textFieldContainer}`]: {
     width: '100%',
   },
-  continueButton: {
+
+  [`& .${classes.continueButton}`]: {
     [theme.breakpoints.down('md')]: {
       width: '100%',
     },
   },
-  checkboxContainer: {
+
+  [`& .${classes.checkboxContainer}`]: {
     margin: '1.5em 0',
   },
-  errorText: {
+
+  [`& .${classes.errorText}`]: {
     color: theme.palette.secondary.main,
     fontWeight: 'bold',
-  },
+  }
 }));
 
 interface RoomNameScreenProps {
@@ -46,7 +67,7 @@ interface RoomNameScreenProps {
 }
 
 export default function RoomNameScreen({ name, roomName, setName, setRoomName, handleSubmit }: RoomNameScreenProps) {
-  const classes = useStyles();
+
   const { user } = useAppState();
 
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -60,7 +81,7 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
   const hasUsername = !window.location.search.includes('customIdentity=true') && user?.displayName;
 
   return (
-    <main>
+    <Root>
       <Typography variant="h5" className={classes.gutterBottom}>
         Join Classroom
       </Typography>
@@ -114,6 +135,6 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
           </Button>
         </Grid>
       </form>
-    </main>
+    </Root>
   );
 }

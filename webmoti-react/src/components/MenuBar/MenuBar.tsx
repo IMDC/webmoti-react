@@ -1,5 +1,5 @@
 import { Grid, Hidden, Typography, Theme } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 
 import ControlsMenu from './ControlsMenu/ControlsMenu';
 import Menu from './Menu/Menu';
@@ -14,8 +14,19 @@ import ToggleCaptionsButton from '../Buttons/ToggleCaptionsButton/ToggleCaptions
 import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  container: {
+const PREFIX = 'MenuBar';
+
+const classes = {
+  container: `${PREFIX}-container`,
+  hideMobile: `${PREFIX}-hideMobile`
+};
+
+const Root = styled('footer')((
+  {
+    theme: Theme
+  }
+) => ({
+  [`&.${classes.container}`]: {
     backgroundColor: theme.palette.background.default,
     bottom: 0,
     left: 0,
@@ -30,16 +41,17 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: 0,
     },
   },
-  hideMobile: {
+
+  [`& .${classes.hideMobile}`]: {
     display: 'initial',
     [theme.breakpoints.down('lg')]: {
       display: 'none',
     },
-  },
+  }
 }));
 
 export default function MenuBar() {
-  const classes = useStyles();
+
 
   const { room } = useVideoContext();
   // const participants = useParticipants();
@@ -48,7 +60,7 @@ export default function MenuBar() {
   const isReconnecting = roomState === 'reconnecting';
 
   return (
-    <footer className={classes.container}>
+    <Root className={classes.container}>
       <Grid container justifyContent="space-around" alignItems="center">
         <Hidden lgDown>
           <Grid style={{ flex: 1 }}>
@@ -98,6 +110,6 @@ export default function MenuBar() {
           </Grid>
         </Hidden>
       </Grid>
-    </footer>
+    </Root>
   );
 }

@@ -1,5 +1,5 @@
 import { Button, useMediaQuery } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import { useTheme, Theme } from '@mui/material/styles';
 import clsx from 'clsx';
 import CallEndIcon from '@mui/icons-material/CallEnd';
@@ -7,8 +7,18 @@ import CallEndIcon from '@mui/icons-material/CallEnd';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  button: {
+const PREFIX = 'EndCallButton';
+
+const classes = {
+  button: `${PREFIX}-button`
+};
+
+const StyledButton = styled(Button)((
+  {
+    theme: Theme
+  }
+) => ({
+  [`&.${classes.button}`]: {
     background: theme.brand,
     color: 'white',
     '&:hover': {
@@ -17,11 +27,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: 5,
     paddingRight: 5,
     minWidth: 0,
-  },
+  }
 }));
 
 export default function EndCallButton(props: { className?: string }) {
-  const classes = useStyles();
+
   const { room } = useVideoContext();
   const { conversation } = useChatContext();
 
@@ -35,8 +45,8 @@ export default function EndCallButton(props: { className?: string }) {
   };
 
   return (
-    <Button onClick={endCall} className={clsx(classes.button, props.className)} data-cy-disconnect>
+    <StyledButton onClick={endCall} className={clsx(classes.button, props.className)} data-cy-disconnect>
       {isMobile ? <CallEndIcon /> : 'Disconnect'}
-    </Button>
+    </StyledButton>
   );
 }

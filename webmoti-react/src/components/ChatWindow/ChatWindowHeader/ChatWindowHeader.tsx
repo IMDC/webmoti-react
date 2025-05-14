@@ -1,10 +1,18 @@
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import CloseIcon from '../../../icons/CloseIcon';
 
-const useStyles = makeStyles(() => ({
-  container: {
+const PREFIX = 'ChatWindowHeader';
+
+const classes = {
+  container: `${PREFIX}-container`,
+  text: `${PREFIX}-text`,
+  closeChatWindow: `${PREFIX}-closeChatWindow`
+};
+
+const Root = styled('div')(() => ({
+  [`&.${classes.container}`]: {
     height: '56px',
     background: '#F4F4F6',
     borderBottom: '1px solid #E4E7E9',
@@ -13,16 +21,18 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     padding: '0 1em',
   },
-  text: {
+
+  [`& .${classes.text}`]: {
     fontWeight: 'bold',
   },
-  closeChatWindow: {
+
+  [`& .${classes.closeChatWindow}`]: {
     cursor: 'pointer',
     display: 'flex',
     background: 'transparent',
     border: '0',
     padding: '0.4em',
-  },
+  }
 }));
 
 interface ChatWindowHeaderProps {
@@ -30,11 +40,11 @@ interface ChatWindowHeaderProps {
 }
 
 export default function ChatWindowHeader({ isTTSModeOn = false }: ChatWindowHeaderProps) {
-  const classes = useStyles();
+
   const { setIsChatWindowOpen } = useChatContext();
 
   return (
-    <div className={classes.container}>
+    <Root className={classes.container}>
       <div className={classes.text}>{isTTSModeOn ? 'Question Text to Speech' : 'Chat'}</div>
       <button
         className={classes.closeChatWindow}
@@ -43,6 +53,6 @@ export default function ChatWindowHeader({ isTTSModeOn = false }: ChatWindowHead
       >
         <CloseIcon />
       </button>
-    </div>
+    </Root>
   );
 }

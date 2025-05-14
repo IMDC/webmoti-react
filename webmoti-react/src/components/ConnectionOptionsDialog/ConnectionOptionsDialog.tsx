@@ -1,5 +1,7 @@
 import React, { useCallback } from 'react';
 
+import { styled } from '@mui/material/styles';
+
 import {
   Button,
   Dialog,
@@ -17,14 +19,27 @@ import {
   Typography,
 } from '@mui/material';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 
 import useRoomState from '../../hooks/useRoomState/useRoomState';
 import { useAppState } from '../../state';
 import { inputLabels, Settings } from '../../state/settings/settingsReducer';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  container: {
+const PREFIX = 'ConnectionOptionsDialog';
+
+const classes = {
+  container: `${PREFIX}-container`,
+  button: `${PREFIX}-button`,
+  paper: `${PREFIX}-paper`,
+  formControl: `${PREFIX}-formControl`,
+  label: `${PREFIX}-label`
+};
+
+const StyledDialog = styled(Dialog)((
+  {
+    theme: Theme
+  }
+) => ({
+  [`& .${classes.container}`]: {
     width: '600px',
     minHeight: '400px',
     [theme.breakpoints.down('sm')]: {
@@ -34,30 +49,34 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: 'calc(100% - 35px)',
     },
   },
-  button: {
+
+  [`& .${classes.button}`]: {
     float: 'right',
   },
-  paper: {
+
+  [`& .${classes.paper}`]: {
     [theme.breakpoints.down('sm')]: {
       margin: '16px',
     },
   },
-  formControl: {
+
+  [`& .${classes.formControl}`]: {
     display: 'block',
     margin: '1.5em 0',
     '&:first-child': {
       margin: '0 0 1.5em 0',
     },
   },
-  label: {
+
+  [`& .${classes.label}`]: {
     width: '133%', // Labels have scale(0.75) applied to them, so this effectively makes the width 100%
-  },
+  }
 }));
 
 const withDefault = (val?: string) => (typeof val === 'undefined' ? 'default' : val);
 
 export default function ConnectionOptionsDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const classes = useStyles();
+
   const { settings, dispatchSetting } = useAppState();
   const roomState = useRoomState();
   const isDisabled = roomState !== 'disconnected';
@@ -77,7 +96,7 @@ export default function ConnectionOptionsDialog({ open, onClose }: { open: boole
   );
 
   return (
-    <Dialog open={open} onClose={onClose} classes={{ paper: classes.paper }}>
+    <StyledDialog open={open} onClose={onClose} classes={{ paper: classes.paper }}>
       <DialogTitle>Connection Settings</DialogTitle>
       <Divider />
       <DialogContent className={classes.container}>
@@ -195,6 +214,6 @@ export default function ConnectionOptionsDialog({ open, onClose }: { open: boole
           Done
         </Button>
       </DialogActions>
-    </Dialog>
+    </StyledDialog>
   );
 }

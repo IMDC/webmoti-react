@@ -1,7 +1,8 @@
 import { CSSProperties } from 'react';
 
+import { styled } from '@mui/material/styles';
+
 import { useMediaQuery, Theme } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 import clsx from 'clsx';
 
 import {} from '@mui/material/styles';
@@ -18,8 +19,20 @@ import 'swiper/css/pagination';
 
 import Participant from '../Participant/Participant';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  participantContainer: {
+const PREFIX = 'MobileGalleryView';
+
+const classes = {
+  participantContainer: `${PREFIX}-participantContainer`,
+  isPaginationActive: `${PREFIX}-isPaginationActive`,
+  swiperSlide: `${PREFIX}-swiperSlide`
+};
+
+const Root = styled('div')((
+  {
+    theme: Theme
+  }
+) => ({
+  [`&.${classes.participantContainer}`]: {
     background: theme.galleryViewBackgroundColor,
     position: 'absolute',
     top: 0,
@@ -38,23 +51,25 @@ const useStyles = makeStyles((theme: Theme) => ({
       bottom: '5px',
     },
   },
-  isPaginationActive: {
+
+  [`&.${classes.isPaginationActive}`]: {
     '& .swiper-slide': {
       // To leave room for the pagination indicators:
       height: 'calc(100% - 21px)',
       paddingBottom: '21px',
     },
   },
-  swiperSlide: {
+
+  [`& .${classes.swiperSlide}`]: {
     display: 'flex',
     flexWrap: 'wrap',
     alignSelf: 'center',
     alignContent: 'flex-start',
-  },
+  }
 }));
 
 export function MobileGalleryView() {
-  const classes = useStyles();
+
   const isMobileLandscape = useMediaQuery('screen and (orientation: landscape)');
   const { room } = useVideoContext();
   const { mobileGalleryViewParticipants } = useParticipantContext();
@@ -96,7 +111,7 @@ export function MobileGalleryView() {
   };
 
   return (
-    <div className={clsx(classes.participantContainer, { [classes.isPaginationActive]: remoteParticipantCount > 5 })}>
+    <Root className={clsx(classes.participantContainer, { [classes.isPaginationActive]: remoteParticipantCount > 5 })}>
       <Swiper pagination={true} modules={[Pagination]} className="mySwiper">
         {pages.map((page, i) => (
           <SwiperSlide key={i} className={classes.swiperSlide}>
@@ -117,6 +132,6 @@ export function MobileGalleryView() {
           </SwiperSlide>
         ))}
       </Swiper>
-    </div>
+    </Root>
   );
 }

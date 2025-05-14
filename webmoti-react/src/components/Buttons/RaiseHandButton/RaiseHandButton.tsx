@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import { useTheme, Theme } from '@mui/material/styles';
 import { Button, Box, Chip, CircularProgress, Grid, Tooltip, useMediaQuery } from '@mui/material';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
@@ -19,10 +19,22 @@ import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWeb
 import { checkSystemMsg, isWebmotiVideo, sendSystemMsg } from '../../../utils';
 import ShortcutIndicator from '../../ShortcutIndicator/ShortcutIndicator';
 
-const maxQueueDisplay = 5;
+const PREFIX = 'RaiseHandButton';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  handQueueBanner: {
+const classes = {
+  handQueueBanner: `${PREFIX}-handQueueBanner`,
+  handQueue: `${PREFIX}-handQueue`,
+  centerIcon: `${PREFIX}-centerIcon`,
+  queueSpeaker: `${PREFIX}-queueSpeaker`,
+  progress: `${PREFIX}-progress`
+};
+
+const Root = styled('div')((
+  {
+    theme: Theme
+  }
+) => ({
+  [`& .${classes.handQueueBanner}`]: {
     position: 'fixed',
     zIndex: 8,
     bottom: `${theme.footerHeight}px`,
@@ -30,32 +42,38 @@ const useStyles = makeStyles((theme: Theme) => ({
     right: 0,
     height: '104px',
   },
-  handQueue: {
+
+  [`& .${classes.handQueue}`]: {
     background: 'white',
     borderRadius: '16px',
     padding: theme.spacing(2),
     boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9)',
   },
-  centerIcon: {
+
+  [`& .${classes.centerIcon}`]: {
     marginRight: '5px',
     verticalAlign: 'middle',
   },
-  queueSpeaker: {
+
+  [`& .${classes.queueSpeaker}`]: {
     backgroundColor: theme.palette.primary.main,
     color: '#fff',
     fontWeight: 'bold',
   },
-  progress: {
+
+  [`& .${classes.progress}`]: {
     position: 'absolute',
     top: '50%',
     left: '50%',
     marginTop: -12,
     marginLeft: -12,
-  },
+  }
 }));
 
+const maxQueueDisplay = 5;
+
 export default function RaiseHandButton() {
-  const classes = useStyles();
+
 
   const { room } = useVideoContext();
   const { conversation } = useChatContext();
@@ -266,7 +284,7 @@ export default function RaiseHandButton() {
   }, [conversation]);
 
   return (
-    <div>
+    <Root>
       {/* hand queue */}
       {handQueue.length > 0 && (
         <Grid container justifyContent="center" alignItems="center" className={classes.handQueueBanner}>
@@ -304,7 +322,6 @@ export default function RaiseHandButton() {
           </Box>
         </Grid>
       )}
-
       {/* main raise hand button */}
       <Tooltip title={isHandRaised ? 'Release to lower hand' : 'Click & hold to raise hand'}>
         <span>
@@ -334,6 +351,6 @@ export default function RaiseHandButton() {
           </Button>
         </span>
       </Tooltip>
-    </div>
+    </Root>
   );
 }

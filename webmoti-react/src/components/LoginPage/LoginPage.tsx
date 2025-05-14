@@ -1,16 +1,31 @@
 import { ChangeEvent, useState, FormEvent } from 'react';
 
+import { styled } from '@mui/material/styles';
+
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { Button, Grid, InputLabel, Theme, TextField, Typography } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 import { useLocation, useHistory } from 'react-router-dom';
 
 import { ReactComponent as GoogleLogo } from './google-logo.svg';
 import { useAppState } from '../../state';
 import IntroContainer from '../IntroContainer/IntroContainer';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  googleButton: {
+const PREFIX = 'LoginPage';
+
+const classes = {
+  googleButton: `${PREFIX}-googleButton`,
+  errorMessage: `${PREFIX}-errorMessage`,
+  gutterBottom: `${PREFIX}-gutterBottom`,
+  passcodeContainer: `${PREFIX}-passcodeContainer`,
+  submitButton: `${PREFIX}-submitButton`
+};
+
+const StyledIntroContainer = styled(IntroContainer)((
+  {
+    theme: Theme
+  }
+) => ({
+  [`& .${classes.googleButton}`]: {
     background: 'white',
     color: 'rgb(0, 94, 166)',
     borderRadius: '4px',
@@ -27,7 +42,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       boxShadow: 'none',
     },
   },
-  errorMessage: {
+
+  [`& .${classes.errorMessage}`]: {
     color: 'red',
     display: 'flex',
     alignItems: 'center',
@@ -36,21 +52,24 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: '0.4em',
     },
   },
-  gutterBottom: {
+
+  [`& .${classes.gutterBottom}`]: {
     marginBottom: '1em',
   },
-  passcodeContainer: {
+
+  [`& .${classes.passcodeContainer}`]: {
     minHeight: '120px',
   },
-  submitButton: {
+
+  [`& .${classes.submitButton}`]: {
     [theme.breakpoints.down('md')]: {
       width: '100%',
     },
-  },
+  }
 }));
 
 export default function LoginPage() {
-  const classes = useStyles();
+
   const { signIn, user, isAuthReady } = useAppState();
   const history = useHistory();
   const location = useLocation<{ from: Location }>();
@@ -82,7 +101,7 @@ export default function LoginPage() {
   }
 
   return (
-    <IntroContainer>
+    <StyledIntroContainer>
       {process.env.REACT_APP_SET_AUTH === 'firebase' && (
         <>
           <Typography variant="h5" className={classes.gutterBottom}>
@@ -94,7 +113,6 @@ export default function LoginPage() {
           </Button>
         </>
       )}
-
       {process.env.REACT_APP_SET_AUTH === 'passcode' && (
         <>
           <Typography variant="h5" className={classes.gutterBottom}>
@@ -137,6 +155,6 @@ export default function LoginPage() {
           </form>
         </>
       )}
-    </IntroContainer>
+    </StyledIntroContainer>
   );
 }

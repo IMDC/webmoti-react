@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
+import { styled } from '@mui/material/styles';
+
 import RefreshIcon from '@mui/icons-material/Refresh';
 import {
   Backdrop,
@@ -17,23 +19,34 @@ import {
   Typography,
   Theme,
 } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 
 import { HTTPS_SERVER_URL } from '../../constants';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  modal: {
+const PREFIX = 'ViewScheduleModal';
+
+const classes = {
+  modal: `${PREFIX}-modal`,
+  paper: `${PREFIX}-paper`
+};
+
+const StyledModal = styled(Modal)((
+  {
+    theme: Theme
+  }
+) => ({
+  [`&.${classes.modal}`]: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  paper: {
+
+  [`& .${classes.paper}`]: {
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
-  },
+  }
 }));
 
 interface ViewScheduleModalProps {
@@ -47,7 +60,7 @@ interface Schedule {
 }
 
 export default function ViewScheduleModal({ open, onClose }: ViewScheduleModalProps) {
-  const classes = useStyles();
+
 
   const [schedule, setSchedule] = useState<Schedule | null>(null);
 
@@ -72,7 +85,7 @@ export default function ViewScheduleModal({ open, onClose }: ViewScheduleModalPr
   }, [open, getSchedule]);
 
   return (
-    <Modal
+    <StyledModal
       open={open}
       onClose={onClose}
       className={classes.modal}
@@ -127,6 +140,6 @@ export default function ViewScheduleModal({ open, onClose }: ViewScheduleModalPr
           )}
         </div>
       </Fade>
-    </Modal>
+    </StyledModal>
   );
 }

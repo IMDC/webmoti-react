@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import clsx from 'clsx';
@@ -14,8 +14,22 @@ import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import Participant from '../Participant/Participant';
 import useSelectedParticipant from '../VideoProvider/useSelectedParticipant/useSelectedParticipant';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  container: {
+const PREFIX = 'ParticipantList';
+
+const classes = {
+  container: `${PREFIX}-container`,
+  transparentBackground: `${PREFIX}-transparentBackground`,
+  scrollContainer: `${PREFIX}-scrollContainer`,
+  innerScrollContainer: `${PREFIX}-innerScrollContainer`,
+  arrowContainer: `${PREFIX}-arrowContainer`
+};
+
+const Root = styled('aside')((
+  {
+    theme: Theme
+  }
+) => ({
+  [`&.${classes.container}`]: {
     overflowY: 'auto',
     background: 'rgb(79, 83, 85)',
     gridArea: '1 / 2 / 1 / 3',
@@ -27,16 +41,19 @@ const useStyles = makeStyles((theme: Theme) => ({
       display: 'flex',
     },
   },
-  transparentBackground: {
+
+  [`&.${classes.transparentBackground}`]: {
     background: 'transparent',
   },
-  scrollContainer: {
+
+  [`& .${classes.scrollContainer}`]: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     width: '100%',
   },
-  innerScrollContainer: {
+
+  [`& .${classes.innerScrollContainer}`]: {
     width: `calc(${theme.sidebarWidth}px - 3em)`,
     padding: '1.5em 0',
     [theme.breakpoints.down('md')]: {
@@ -45,18 +62,19 @@ const useStyles = makeStyles((theme: Theme) => ({
       display: 'flex',
     },
   },
-  arrowContainer: {
+
+  [`& .${classes.arrowContainer}`]: {
     display: 'flex',
     justifyContent: 'center',
     backgroundColor: 'black',
     borderRadius: '50%',
     // allow space under the arrow for scrolling to it when list is large
     marginBottom: `${theme.footerHeight}px`,
-  },
+  }
 }));
 
 export default function ParticipantList() {
-  const classes = useStyles();
+
   const { room } = useVideoContext();
   const localParticipant = room!.localParticipant;
   const { speakerViewParticipants } = useParticipantsContext();
@@ -81,7 +99,7 @@ export default function ParticipantList() {
         : [WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2];
 
   return (
-    <aside
+    <Root
       className={clsx(classes.container, {
         [classes.transparentBackground]: !isRemoteParticipantScreenSharing,
       })}
@@ -115,6 +133,6 @@ export default function ParticipantList() {
           <ArrowIcon onClick={() => setShowAll(!showAll)} style={{ cursor: 'pointer', color: 'white' }} />
         </div>
       </div>
-    </aside>
+    </Root>
   );
 }

@@ -1,5 +1,7 @@
 import { useRef, useState } from 'react';
 
+import { styled } from '@mui/material/styles';
+
 import {
   Button,
   Divider,
@@ -10,7 +12,6 @@ import {
   useTheme,
   Theme,
 } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SettingsIcon from '@mui/icons-material/Settings';
 
@@ -23,11 +24,24 @@ import ToggleCameraButton from '../../Buttons/ToggleCameraButton/ToggleCameraBut
 import ToggleCameraButton2 from '../../Buttons/ToggleCameraButton2/ToggleCameraButton2';
 import ShortcutTooltip from '../../ShortcutTooltip/ShortcutTooltip';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  cameraControlsPopover: {
+const PREFIX = 'ControlsMenu';
+
+const classes = {
+  cameraControlsPopover: `${PREFIX}-cameraControlsPopover`,
+  controlsButton: `${PREFIX}-controlsButton`
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')((
+  {
+    theme: Theme
+  }
+) => ({
+  [`& .${classes.cameraControlsPopover}`]: {
     padding: theme.spacing(2),
   },
-  controlsButton: {
+
+  [`& .${classes.controlsButton}`]: {
     paddingRight: 0,
     minWidth: 0,
     paddingLeft: 15,
@@ -35,11 +49,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('md')]: {
       paddingLeft: 0,
     },
-  },
+  }
 }));
 
 export default function ControlsMenu() {
-  const classes = useStyles();
+
   const openBtnRef = useRef(null);
 
   const [cameraControlsAnchorEl, setCameraControlsAnchorEl] = useState<HTMLElement | null>(null);
@@ -64,13 +78,12 @@ export default function ControlsMenu() {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
-    <>
+    <Root>
       <ShortcutTooltip shortcut="C" isAltDown>
         <Button ref={openBtnRef} onClick={handleCameraControlsClick} className={classes.controlsButton}>
           {isMobile ? <SettingsIcon /> : 'Controls'} <ExpandMoreIcon />
         </Button>
       </ShortcutTooltip>
-
       <Popover
         open={Boolean(cameraControlsAnchorEl)}
         anchorEl={cameraControlsAnchorEl}
@@ -147,6 +160,6 @@ export default function ControlsMenu() {
           </Grid>
         </div>
       </Popover>
-    </>
+    </Root>
   );
 }

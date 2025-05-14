@@ -1,5 +1,5 @@
 import { Grid, Typography, useMediaQuery, useTheme, Theme } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import EndCallButton from '../Buttons/EndCallButton/EndCallButton';
@@ -8,8 +8,21 @@ import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ControlsMenu from '../MenuBar/ControlsMenu/ControlsMenu';
 import Menu from '../MenuBar/Menu/Menu';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  container: {
+const PREFIX = 'MobileTopMenuBar';
+
+const classes = {
+  container: `${PREFIX}-container`,
+  endCallButton: `${PREFIX}-endCallButton`,
+  settingsButton: `${PREFIX}-settingsButton`,
+  row: `${PREFIX}-row`
+};
+
+const StyledGrid = styled(Grid)((
+  {
+    theme: Theme
+  }
+) => ({
+  [`&.${classes.container}`]: {
     background: 'white',
     paddingLeft: '1em',
     display: 'none',
@@ -18,12 +31,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       display: 'flex',
     },
   },
-  endCallButton: {
+
+  [`& .${classes.endCallButton}`]: {
     height: '28px',
     fontSize: '0.85rem',
     padding: '0 0.6em',
   },
-  settingsButton: {
+
+  [`& .${classes.settingsButton}`]: {
     display: 'none',
     [theme.breakpoints.down('lg')]: {
       display: 'initial',
@@ -33,21 +48,22 @@ const useStyles = makeStyles((theme: Theme) => ({
       margin: '0 1em',
     },
   },
-  row: {
+
+  [`& .${classes.row}`]: {
     display: 'flex',
     alignItems: 'center',
-  },
+  }
 }));
 
 export default function MobileTopMenuBar() {
-  const classes = useStyles();
+
   const { room } = useVideoContext();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
-    <Grid container alignItems="center" justifyContent="space-between" className={classes.container}>
+    <StyledGrid container alignItems="center" justifyContent="space-between" className={classes.container}>
       <div className={classes.row}>
         <Typography variant="subtitle1" component="span">
           {/* only show room name in dev */}
@@ -60,11 +76,10 @@ export default function MobileTopMenuBar() {
 
         {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />}
       </div>
-
       <div>
         <EndCallButton className={classes.endCallButton} />
         <Menu buttonClassName={classes.settingsButton} />
       </div>
-    </Grid>
+    </StyledGrid>
   );
 }

@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 
+import { styled } from '@mui/material/styles';
+
 import { useMediaQuery, useTheme,Theme } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 import clsx from 'clsx';
 import { Room as IRoom, Participant } from 'twilio-video';
 
@@ -18,12 +19,23 @@ import { MobileGalleryView } from '../MobileGalleryView/MobileGalleryView';
 import { ParticipantAudioTracks } from '../ParticipantAudioTracks/ParticipantAudioTracks';
 import ParticipantList from '../ParticipantList/ParticipantList';
 
-const useStyles = makeStyles((theme: Theme) => {
+const PREFIX = 'Room';
+
+const classes = {
+  container: `${PREFIX}-container`,
+  rightDrawerOpen: `${PREFIX}-rightDrawerOpen`
+};
+
+const Root = styled('div')((
+  {
+    theme: Theme
+  }
+) => {
   const totalMobileSidebarHeight = `${
     theme.sidebarMobileHeight + theme.sidebarMobilePadding * 2 + theme.participantBorderWidth
   }px`;
   return {
-    container: {
+    [`&.${classes.container}`]: {
       position: 'relative',
       height: '100%',
       display: 'grid',
@@ -34,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) => {
         gridTemplateRows: `calc(100% - ${totalMobileSidebarHeight}) ${totalMobileSidebarHeight}`,
       },
     },
-    rightDrawerOpen: {
+    [`&.${classes.rightDrawerOpen}`]: {
       gridTemplateColumns: `1fr ${theme.sidebarWidth}px ${theme.rightDrawerWidth}px`,
       // this fixes chat window going down too far
       [theme.breakpoints.down('lg')]: {
@@ -81,7 +93,7 @@ export function useSetSpeakerViewOnScreenShare(
 }
 
 export default function Room() {
-  const classes = useStyles();
+
   const { isChatWindowOpen } = useChatContext();
   const { isBackgroundSelectionOpen, room } = useVideoContext();
   const { isGalleryViewActive, setIsGalleryViewActive } = useAppState();
@@ -94,7 +106,7 @@ export default function Room() {
   useSetSpeakerViewOnScreenShare(screenShareParticipant, room, setIsGalleryViewActive, isGalleryViewActive);
 
   return (
-    <div
+    <Root
       data-testid="room-container"
       className={clsx(classes.container, {
         [classes.rightDrawerOpen]: isChatWindowOpen || isBackgroundSelectionOpen,
@@ -106,7 +118,6 @@ export default function Room() {
         unnecessarily unmounted/mounted as the user switches between Gallery View and speaker View.
       */}
       <ParticipantAudioTracks />
-
       {isGalleryViewActive ? (
         isMobile ? (
           <MobileGalleryView data-testid="mobile-gallery-view" />
@@ -119,10 +130,9 @@ export default function Room() {
           <ParticipantList data-testid="participant-list" />
         </>
       )}
-
       <ChatWindow />
       <BackgroundSelectionDialog />
       <CaptionRenderer />
-    </div>
+    </Root>
   );
 }

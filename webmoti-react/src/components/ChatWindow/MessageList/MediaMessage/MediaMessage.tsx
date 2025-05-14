@@ -1,9 +1,19 @@
 import FileDownloadIcon from '../../../../icons/FileDownloadIcon';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import { Media } from '@twilio/conversations';
 
-const useStyles = makeStyles({
-  messageContainer: {
+const PREFIX = 'MediaMessage';
+
+const classes = {
+  messageContainer: `${PREFIX}-messageContainer`,
+  iconContainer: `${PREFIX}-iconContainer`,
+  mediaInfo: `${PREFIX}-mediaInfo`,
+  filename: `${PREFIX}-filename`,
+  size: `${PREFIX}-size`
+};
+
+const Root = styled('div')({
+  [`&.${classes.messageContainer}`]: {
     display: 'flex',
     padding: '0.9em 1.5em',
     margin: '0.6em 0',
@@ -11,11 +21,11 @@ const useStyles = makeStyles({
     borderRadius: '4px',
     cursor: 'pointer',
   },
-  iconContainer: {
+  [`& .${classes.iconContainer}`]: {
     display: 'flex',
     alignItems: 'center',
   },
-  mediaInfo: {
+  [`& .${classes.mediaInfo}`]: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -26,12 +36,12 @@ const useStyles = makeStyles({
       fontSize: '12px',
     },
   },
-  filename: {
+  [`& .${classes.filename}`]: {
     fontWeight: 700,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
   },
-  size: {
+  [`& .${classes.size}`]: {
     fontWeight: 400,
   },
 });
@@ -47,7 +57,7 @@ export function formatFileSize(bytes: number, suffixIndex = 0): string {
 }
 
 export default function FileMessage({ media }: MediaMessageProps) {
-  const classes = useStyles();
+
 
   const handleClick = () => {
     media.getContentTemporaryUrl().then(url => {
@@ -65,7 +75,7 @@ export default function FileMessage({ media }: MediaMessageProps) {
   };
 
   return (
-    <div className={classes.messageContainer} onClick={handleClick}>
+    <Root className={classes.messageContainer} onClick={handleClick}>
       <div className={classes.iconContainer}>
         <FileDownloadIcon />
       </div>
@@ -73,6 +83,6 @@ export default function FileMessage({ media }: MediaMessageProps) {
         <p className={classes.filename}>{media.filename}</p>
         <p className={classes.size}>{formatFileSize(media.size)} - Click to open</p>
       </div>
-    </div>
+    </Root>
   );
 }
