@@ -13,7 +13,6 @@
     "@twilio-labs/plugin-rtc": "^0.9.0",
     "@twilio/conversations": "^2.5.0",
     "@twilio/video-processors": "^3.0.0",
-    "@twilio/video-room-monitor": "^1.0.1",
     "@types/testing-library__jest-dom": "^5.14.9",
     "clsx": "^2.1.1",
     "concurrently": "^8.2.2",

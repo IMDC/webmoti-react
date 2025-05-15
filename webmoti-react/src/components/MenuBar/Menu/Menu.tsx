@@ -6,7 +6,7 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import CalendarViewDayIcon from '@mui/icons-material/CalendarViewDay';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import SearchIcon from '@mui/icons-material/Search';
+// import SearchIcon from '@mui/icons-material/Search';
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import {
   Button,
@@ -20,7 +20,7 @@ import {
   Theme,
 } from '@mui/material';
 import { isSupported } from '@twilio/video-processors';
-import { VideoRoomMonitor } from '@twilio/video-room-monitor';
+// import { VideoRoomMonitor } from '@twilio/video-room-monitor';
 
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useFlipCameraToggle from '../../../hooks/useFlipCameraToggle/useFlipCameraToggle';
@@ -153,14 +153,14 @@ export default function Menu({ buttonClassName }: MenuProps) {
           },
         ]
       : []),
-    {
-      icon: <SearchIcon style={{ fill: '#707578', width: '0.9em' }} />,
-      label: 'Room Monitor',
-      onClick: () => {
-        VideoRoomMonitor.toggleMonitor();
-        setMenuOpen(false);
-      },
-    },
+    // {
+    //   icon: <SearchIcon style={{ fill: '#707578', width: '0.9em' }} />,
+    //   label: 'Room Monitor',
+    //   onClick: () => {
+    //     VideoRoomMonitor.toggleMonitor();
+    //     setMenuOpen(false);
+    //   },
+    // },
     {
       icon: <CalendarTodayIcon style={{ fill: '#707578', width: '0.9em' }} />,
       label: 'Set Schedule',
