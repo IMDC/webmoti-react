@@ -1,5 +1,7 @@
 import React from 'react';
-import { renderHook } from '@testing-library/react-hooks';
+
+import { renderHook } from '@testing-library/react';
+
 import useGalleryViewLayout, { layoutIsTooSmall } from './useGalleryViewLayout';
 
 class MockResizeObserver {
@@ -45,7 +47,7 @@ describe('the useGalleryViewLayout hook', () => {
     { participants: 9, expectedWidth: 417 },
   ];
 
-  testInputs.forEach(test => {
+  testInputs.forEach((test) => {
     it(`should return a participantVideoWidth of ${test.expectedWidth} when rendering ${test.participants} participant(s)`, () => {
       const { result } = renderHook(() => useGalleryViewLayout(test.participants));
       expect(result.current.participantVideoWidth).toBe(test.expectedWidth);

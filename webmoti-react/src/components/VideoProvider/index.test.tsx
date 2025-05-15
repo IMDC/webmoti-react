@@ -1,14 +1,17 @@
 import { EventEmitter } from 'events';
+
 import React from 'react';
-import { renderHook } from '@testing-library/react-hooks';
+
+import { renderHook } from '@testing-library/react';
 import { Room, TwilioError } from 'twilio-video';
+
 import { VideoProvider } from './index';
 import { useAppState } from '../../state';
+import useHandleRoomDisconnection from './useHandleRoomDisconnection/useHandleRoomDisconnection';
+import useHandleTrackPublicationFailed from './useHandleTrackPublicationFailed/useHandleTrackPublicationFailed';
 import useLocalTracks from './useLocalTracks/useLocalTracks';
 import useRestartAudioTrackOnDeviceChange from './useRestartAudioTrackOnDeviceChange/useRestartAudioTrackOnDeviceChange';
 import useRoom from './useRoom/useRoom';
-import useHandleRoomDisconnection from './useHandleRoomDisconnection/useHandleRoomDisconnection';
-import useHandleTrackPublicationFailed from './useHandleTrackPublicationFailed/useHandleTrackPublicationFailed';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 
 const mockRoom = new EventEmitter() as Room;

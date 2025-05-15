@@ -1,6 +1,8 @@
-import { renderHook, act } from '@testing-library/react-hooks';
-import useScreenShareToggle from './useScreenShareToggle';
 import { EventEmitter } from 'events';
+
+import { renderHook, act } from '@testing-library/react';
+
+import useScreenShareToggle from './useScreenShareToggle';
 import { ErrorCallback } from '../../../types';
 
 const mockLocalParticipant = new EventEmitter() as any;

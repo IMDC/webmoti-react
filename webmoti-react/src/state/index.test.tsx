@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
 
 import AppStateProvider, { useAppState } from './index';
 import useFirebaseAuth from './useFirebaseAuth/useFirebaseAuth';
@@ -91,7 +91,7 @@ describe('the useAppState hook', () => {
       mockUsePasscodeAuth.mockImplementation(() => {
         return {
           getToken: () =>
-            new Promise(resolve => {
+            new Promise((resolve) => {
               // Using fake timers so we can control when the promise resolves
               setTimeout(() => resolve({ text: () => 'mockVideoToken' }), 10);
             }),

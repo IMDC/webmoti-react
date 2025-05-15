@@ -1,4 +1,5 @@
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
+
 import { getDeviceInfo } from '../../utils';
 import useDevices from './useDevices';
 

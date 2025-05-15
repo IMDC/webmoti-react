@@ -1,5 +1,6 @@
-import { act, renderHook } from '@testing-library/react-hooks';
 import EventEmitter from 'events';
+
+import { act, renderHook } from '@testing-library/react';
 
 import useHandleTrackPublicationFailed from './useHandleTrackPublicationFailed';
 

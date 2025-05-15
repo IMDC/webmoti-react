@@ -3,7 +3,7 @@ import { setImmediate } from 'timers';
 
 import React from 'react';
 
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
 
 import { ChatProvider } from './index';
 import useChatContext from '../../hooks/useChatContext/useChatContext';

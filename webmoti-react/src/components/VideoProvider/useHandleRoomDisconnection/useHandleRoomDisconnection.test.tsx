@@ -1,6 +1,8 @@
-import { act, renderHook } from '@testing-library/react-hooks';
-import { Room } from 'twilio-video';
 import EventEmitter from 'events';
+
+import { act, renderHook } from '@testing-library/react';
+import { Room } from 'twilio-video';
+
 import useHandleRoomDisconnection from './useHandleRoomDisconnection';
 
 const mockOnError = jest.fn();

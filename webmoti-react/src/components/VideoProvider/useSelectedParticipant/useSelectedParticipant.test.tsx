@@ -1,6 +1,8 @@
-import { act, renderHook } from '@testing-library/react-hooks';
 import { EventEmitter } from 'events';
+
+import { act, renderHook } from '@testing-library/react';
 import { Room } from 'twilio-video';
+
 import useSelectedParticipant, { SelectedParticipantProvider } from './useSelectedParticipant';
 import { useAppState } from '../../../state';
 

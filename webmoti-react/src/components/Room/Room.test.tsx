@@ -1,8 +1,6 @@
 import React from 'react';
 
-import { render, screen } from '@testing-library/react';
-import { renderHook, act } from '@testing-library/react-hooks';
-import '@testing-library/jest-dom';
+import { render, screen, renderHook, act } from '@testing-library/react';
 
 import useChatContext from '../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';

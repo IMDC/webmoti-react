@@ -1,5 +1,6 @@
+import { renderHook } from '@testing-library/react';
+
 import useChatContext from './useChatContext';
-import { renderHook } from '@testing-library/react-hooks';
 
 describe('the useChatContext hook', () => {
   it('should throw an error if used outside of the ChatProvider', () => {

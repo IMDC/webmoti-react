@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
 import Video from 'twilio-video';
 
 import useLocalTracks from './useLocalTracks';

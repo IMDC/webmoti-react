@@ -1,5 +1,5 @@
 import useFirebaseAuth from './useFirebaseAuth';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { setImmediate } from 'timers';
 
 const mockUser = { getIdToken: () => Promise.resolve('idToken') };

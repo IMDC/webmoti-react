@@ -1,7 +1,8 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
+
+import useFlipCameraToggle from './useFlipCameraToggle';
 import { DEFAULT_VIDEO_CONSTRAINTS } from '../../constants';
 import useDevices from '../useDevices/useDevices';
-import useFlipCameraToggle from './useFlipCameraToggle';
 import useVideoContext from '../useVideoContext/useVideoContext';
 
 jest.mock('../useMediaStreamTrack/useMediaStreamTrack');

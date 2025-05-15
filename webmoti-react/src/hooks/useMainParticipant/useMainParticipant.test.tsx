@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import useMainParticipant from './useMainParticipant';
 import useSelectedParticipant from '../../components/VideoProvider/useSelectedParticipant/useSelectedParticipant';
 import useVideoContext from '../useVideoContext/useVideoContext';

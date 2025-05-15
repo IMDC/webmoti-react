@@ -1,5 +1,5 @@
 import useVideoContext from './useVideoContext';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 describe('the useVideoContext hook', () => {
   it('should throw an error if used outside of the VideoProvider', () => {

@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
 import EventEmitter from 'events';
 import useParticipants from './useParticipants';
 import useVideoContext from '../useVideoContext/useVideoContext';

@@ -1,7 +1,8 @@
-import { act, renderHook } from '@testing-library/react-hooks';
-import { mockRoom } from '../../../__mocks__/twilio-video';
-import useRoom from './useRoom';
+import { act, renderHook } from '@testing-library/react';
 import Video, { LocalTrack } from 'twilio-video';
+
+import useRoom from './useRoom';
+import { mockRoom } from '../../../__mocks__/twilio-video';
 import * as utils from '../../../utils';
 
 const mockVideoConnect = Video.connect as jest.Mock<any>;

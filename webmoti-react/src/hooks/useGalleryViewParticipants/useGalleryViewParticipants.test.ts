@@ -1,5 +1,7 @@
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
+
 import EventEmitter from 'events';
+
 import { useAppState } from '../../state';
 import useDominantSpeaker from '../useDominantSpeaker/useDominantSpeaker';
 import useGalleryViewParticipants from './useGalleryViewParticipants';
