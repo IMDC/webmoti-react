@@ -1,6 +1,13 @@
 import 'isomorphic-fetch';
 import '@testing-library/jest-dom';
 
+import { TextEncoder } from 'util';
+
+// fixes error with react-router-dom
+if (!global.TextEncoder) {
+  global.TextEncoder = TextEncoder;
+}
+
 // Mocks the Fullscreen API. This is needed for ToggleFullScreenButton.test.tsx.
 Object.defineProperty(document, 'fullscreenEnabled', { value: true, writable: true });
 
