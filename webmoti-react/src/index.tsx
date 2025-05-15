@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 
-import { Redirect, Route, BrowserRouter as Router, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import App from './App';
 import { ChatProvider } from './components/ChatProvider';
 import ErrorDialog from './components/ErrorDialog/ErrorDialog';
@@ -43,18 +43,26 @@ export const ReactApp = () => (
       <UnsupportedBrowserWarning>
         <Router>
           <AppStateProvider>
-            <Switch>
-              <PrivateRoute exact path="/">
-                <VideoApp />
-              </PrivateRoute>
-              <PrivateRoute path="/room/:URLRoomName">
-                <VideoApp />
-              </PrivateRoute>
-              <Route path="/login">
-                <LoginPage />
-              </Route>
-              <Redirect to="/" />
-            </Switch>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <PrivateRoute>
+                    <VideoApp />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/room/:URLRoomName"
+                element={
+                  <PrivateRoute>
+                    <VideoApp />
+                  </PrivateRoute>
+                }
+              />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
           </AppStateProvider>
         </Router>
       </UnsupportedBrowserWarning>

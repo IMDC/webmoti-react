@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const endpoint = process.env.REACT_APP_TOKEN_ENDPOINT || '/token';
 
@@ -33,7 +33,7 @@ export function fetchToken(
 
 export function verifyPasscode(passcode: string) {
   return fetchToken('temp-name', 'temp-room', passcode, false /* create_room */, false /* create_conversation */).then(
-    async res => {
+    async (res) => {
       const jsonResponse = await res.json();
       if (res.status === 401) {
         return { isValid: false, error: jsonResponse.error?.message };
@@ -58,7 +58,7 @@ export function getErrorMessage(message: string) {
 }
 
 export default function usePasscodeAuth() {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [user, setUser] = useState<{ displayName: undefined; photoURL: undefined; passcode: string } | null>(null);
   const [isAuthReady, setIsAuthReady] = useState(false);
@@ -66,7 +66,7 @@ export default function usePasscodeAuth() {
   const getToken = useCallback(
     (name: string, room: string) => {
       return fetchToken(name, room, user!.passcode)
-        .then(async res => {
+        .then(async (res) => {
           if (res.ok) {
             return res;
           }
@@ -74,7 +74,7 @@ export default function usePasscodeAuth() {
           const errorMessage = getErrorMessage(json.error?.message || res.statusText);
           throw Error(errorMessage);
         })
-        .then(res => res.json());
+        .then((res) => res.json());
     },
     [user]
   );
@@ -87,7 +87,7 @@ export default function usePasscodeAuth() {
         },
         body: JSON.stringify({ room_sid, rules, passcode: user?.passcode }),
         method: 'POST',
-      }).then(async res => {
+      }).then(async (res) => {
         const jsonResponse = await res.json();
 
         if (!res.ok) {
@@ -108,21 +108,21 @@ export default function usePasscodeAuth() {
 
     if (passcode) {
       verifyPasscode(passcode)
-        .then(verification => {
+        .then((verification) => {
           if (verification?.isValid) {
             setUser({ passcode } as any);
             window.sessionStorage.setItem('passcode', passcode);
-            history.replace(window.location.pathname);
+            navigate(window.location.pathname, { replace: true });
           }
         })
         .then(() => setIsAuthReady(true));
     } else {
       setIsAuthReady(true);
     }
-  }, [history]);
+  }, [navigate]);
 
   const signIn = useCallback((passcode: string) => {
-    return verifyPasscode(passcode).then(verification => {
+    return verifyPasscode(passcode).then((verification) => {
       if (verification?.isValid) {
         setUser({ passcode } as any);
         window.sessionStorage.setItem('passcode', passcode);

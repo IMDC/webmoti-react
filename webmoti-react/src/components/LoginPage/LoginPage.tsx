@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { Button, Grid, InputLabel, TextField, Typography } from '@mui/material';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ReactComponent as GoogleLogo } from './google-logo.svg';
 import { useAppState } from '../../state';
@@ -66,18 +66,20 @@ const StyledIntroContainer = styled(IntroContainer)(({ theme }) => ({
 
 export default function LoginPage() {
   const { signIn, user, isAuthReady } = useAppState();
-  const history = useHistory();
-  const location = useLocation<{ from: Location }>();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [passcode, setPasscode] = useState('');
   const [authError, setAuthError] = useState<Error | null>(null);
 
   const isAuthEnabled = Boolean(process.env.REACT_APP_SET_AUTH);
 
+  const from = (location.state as { from?: Location })?.from || { pathname: '/' };
+
   const login = () => {
     setAuthError(null);
     signIn?.(passcode)
       .then(() => {
-        history.replace(location?.state?.from || { pathname: '/' });
+        navigate(from, { replace: true });
       })
       .catch((err) => setAuthError(err));
   };
@@ -88,7 +90,8 @@ export default function LoginPage() {
   };
 
   if (user || !isAuthEnabled) {
-    history.replace('/');
+    navigate('/', { replace: true });
+    return null;
   }
 
   if (!isAuthReady) {
