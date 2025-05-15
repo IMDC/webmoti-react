@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useEffect, useRef, useState } from 'react';
+import { createContext, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 
 import { Client } from '@twilio/conversations';
 import { Conversation, Message } from '@twilio/conversations/';
@@ -17,7 +17,11 @@ type ChatContextType = {
 
 export const ChatContext = createContext<ChatContextType>(null!);
 
-export const ChatProvider: React.FC = ({ children }) => {
+interface ChatProviderProps {
+  children: ReactNode;
+}
+
+export const ChatProvider = ({ children }: ChatProviderProps) => {
   const { room, onError } = useVideoContext();
   const isChatWindowOpenRef = useRef(false);
   const [isChatWindowOpen, setIsChatWindowOpen] = useState(false);

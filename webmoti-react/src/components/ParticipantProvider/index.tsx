@@ -1,4 +1,4 @@
-import React, { createContext } from 'react';
+import React, { createContext, ReactNode } from 'react';
 import { RemoteParticipant } from 'twilio-video';
 import useGalleryViewParticipants from '../../hooks/useGalleryViewParticipants/useGalleryViewParticipants';
 import useSpeakerViewParticipants from '../../hooks/useSpeakerViewParticipants/useSpeakerViewParticipants';
@@ -18,7 +18,11 @@ export interface IParticipantContext {
 
 export const ParticipantContext = createContext<IParticipantContext>(null!);
 
-export const ParticipantProvider: React.FC = ({ children }) => {
+interface ParticipantProviderProps {
+  children: ReactNode;
+}
+
+export const ParticipantProvider = ({ children }: ParticipantProviderProps) => {
   const mobileGalleryViewParticipants = useGalleryViewParticipants(true);
   const galleryViewParticipants = useGalleryViewParticipants();
   const speakerViewParticipants = useSpeakerViewParticipants();
