@@ -1,154 +1,85 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`the NetworkQualityLevel component should render correctly for level 0 1`] = `
-<div
-  className="NetworkQualityLevel-outerContainer css-t5cwso"
->
+<div>
   <div
-    className="NetworkQualityLevel-innerContainer"
+    class="NetworkQualityLevel-outerContainer css-t5cwso"
   >
     <div
-      style={
-        {
-          "background": "rgba(255, 255, 255, 0.2)",
-          "height": "3px",
-        }
-      }
-    />
-    <div
-      style={
-        {
-          "background": "rgba(255, 255, 255, 0.2)",
-          "height": "6px",
-        }
-      }
-    />
-    <div
-      style={
-        {
-          "background": "rgba(255, 255, 255, 0.2)",
-          "height": "9px",
-        }
-      }
-    />
-    <div
-      style={
-        {
-          "background": "rgba(255, 255, 255, 0.2)",
-          "height": "12px",
-        }
-      }
-    />
-    <div
-      style={
-        {
-          "background": "rgba(255, 255, 255, 0.2)",
-          "height": "15px",
-        }
-      }
-    />
+      class="NetworkQualityLevel-innerContainer"
+    >
+      <div
+        style="height: 3px; background: rgba(255, 255, 255, 0.2);"
+      />
+      <div
+        style="height: 6px; background: rgba(255, 255, 255, 0.2);"
+      />
+      <div
+        style="height: 9px; background: rgba(255, 255, 255, 0.2);"
+      />
+      <div
+        style="height: 12px; background: rgba(255, 255, 255, 0.2);"
+      />
+      <div
+        style="height: 15px; background: rgba(255, 255, 255, 0.2);"
+      />
+    </div>
   </div>
 </div>
 `;
 
 exports[`the NetworkQualityLevel component should render correctly for level 3 1`] = `
-<div
-  className="NetworkQualityLevel-outerContainer css-t5cwso"
->
+<div>
   <div
-    className="NetworkQualityLevel-innerContainer"
+    class="NetworkQualityLevel-outerContainer css-t5cwso"
   >
     <div
-      style={
-        {
-          "background": "white",
-          "height": "3px",
-        }
-      }
-    />
-    <div
-      style={
-        {
-          "background": "white",
-          "height": "6px",
-        }
-      }
-    />
-    <div
-      style={
-        {
-          "background": "white",
-          "height": "9px",
-        }
-      }
-    />
-    <div
-      style={
-        {
-          "background": "rgba(255, 255, 255, 0.2)",
-          "height": "12px",
-        }
-      }
-    />
-    <div
-      style={
-        {
-          "background": "rgba(255, 255, 255, 0.2)",
-          "height": "15px",
-        }
-      }
-    />
+      class="NetworkQualityLevel-innerContainer"
+    >
+      <div
+        style="height: 3px; background: white;"
+      />
+      <div
+        style="height: 6px; background: white;"
+      />
+      <div
+        style="height: 9px; background: white;"
+      />
+      <div
+        style="height: 12px; background: rgba(255, 255, 255, 0.2);"
+      />
+      <div
+        style="height: 15px; background: rgba(255, 255, 255, 0.2);"
+      />
+    </div>
   </div>
 </div>
 `;
 
 exports[`the NetworkQualityLevel component should render correctly for level 5 1`] = `
-<div
-  className="NetworkQualityLevel-outerContainer css-t5cwso"
->
+<div>
   <div
-    className="NetworkQualityLevel-innerContainer"
+    class="NetworkQualityLevel-outerContainer css-t5cwso"
   >
     <div
-      style={
-        {
-          "background": "white",
-          "height": "3px",
-        }
-      }
-    />
-    <div
-      style={
-        {
-          "background": "white",
-          "height": "6px",
-        }
-      }
-    />
-    <div
-      style={
-        {
-          "background": "white",
-          "height": "9px",
-        }
-      }
-    />
-    <div
-      style={
-        {
-          "background": "white",
-          "height": "12px",
-        }
-      }
-    />
-    <div
-      style={
-        {
-          "background": "white",
-          "height": "15px",
-        }
-      }
-    />
+      class="NetworkQualityLevel-innerContainer"
+    >
+      <div
+        style="height: 3px; background: white;"
+      />
+      <div
+        style="height: 6px; background: white;"
+      />
+      <div
+        style="height: 9px; background: white;"
+      />
+      <div
+        style="height: 12px; background: white;"
+      />
+      <div
+        style="height: 15px; background: white;"
+      />
+    </div>
   </div>
 </div>
 `;

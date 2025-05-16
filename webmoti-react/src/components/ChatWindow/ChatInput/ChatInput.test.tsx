@@ -3,7 +3,6 @@ import userEvent from '@testing-library/user-event';
 
 import ChatInput from '../ChatInput/ChatInput';
 import * as utils from '../../../utils';
-import { setImmediate } from 'timers';
 import { useAppState } from '../../../state';
 import { TwilioError } from 'twilio-video';
 
@@ -131,11 +130,11 @@ describe('the ChatInput component', () => {
     await userEvent.click(textarea);
     expect(textarea.parentElement?.className).toMatch('isTextareaFocused');
 
-    textarea.blur();
+    fireEvent.blur(textarea);
     expect(textarea.parentElement?.className).not.toContain('isTextareaFocused');
   });
 
-  it('should disable the file input button and display a loading spinner while sending a file', (done) => {
+  it('should disable the file input button and display a loading spinner while sending a file', async () => {
     render(<ChatInput conversation={{ sendMessage: mockHandleSendMessage } as any} isChatWindowOpen={true} />);
 
     const attachButton = screen.getByTestId('attach-file-button');
@@ -150,10 +149,9 @@ describe('the ChatInput component', () => {
     expect(screen.getByTestId('file-upload-spinner')).toBeInTheDocument();
     expect(attachButton).toBeDisabled();
 
-    setImmediate(() => {
+    await waitFor(() => {
       expect(screen.queryByTestId('file-upload-spinner')).toBeNull();
       expect(attachButton).toBeEnabled();
-      done();
     });
   });
 

@@ -1,11 +1,10 @@
-import { act, renderHook } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import Video from 'twilio-video';
 
 import useLocalTracks from './useLocalTracks';
 import { SELECTED_AUDIO_INPUT_KEY, SELECTED_VIDEO_INPUT_KEY, DEFAULT_VIDEO_CONSTRAINTS } from '../../../constants';
 import { useAppState } from '../../../state';
 import { getDeviceInfo, isPermissionDenied } from '../../../utils';
-
 
 jest.mock('../../../state');
 jest.mock('../../../utils');
@@ -223,23 +222,25 @@ describe('the useLocalTracks hook', () => {
 
     it('should set isAcquiringLocalTracks to true while acquiring tracks', async () => {
       jest.useFakeTimers();
-      const { result, waitForNextUpdate } = renderHook(useLocalTracks);
+      const { result } = renderHook(useLocalTracks);
 
       expect(result.current.isAcquiringLocalTracks).toBe(false);
 
       await act(async () => {
         result.current.getAudioAndVideoTracks();
-        await waitForNextUpdate();
       });
 
-      expect(result.current.isAcquiringLocalTracks).toBe(true);
+      await waitFor(() => {
+        expect(result.current.isAcquiringLocalTracks).toBe(true);
+      });
 
       await act(async () => {
         jest.runAllTimers();
-        await waitForNextUpdate();
       });
 
-      expect(result.current.isAcquiringLocalTracks).toBe(false);
+      await waitFor(() => {
+        expect(result.current.isAcquiringLocalTracks).toBe(false);
+      });
       jest.useRealTimers();
     });
 
@@ -255,22 +256,24 @@ describe('the useLocalTracks hook', () => {
 
     it('should ignore calls to getAudioAndVideoTracks while isAcquiringLocalTracks is true', async () => {
       jest.useFakeTimers();
-      const { result, waitForNextUpdate } = renderHook(useLocalTracks);
+      const { result } = renderHook(useLocalTracks);
 
       await act(async () => {
         result.current.getAudioAndVideoTracks(); // This call is not ignored
-        await waitForNextUpdate();
       });
 
-      expect(result.current.isAcquiringLocalTracks).toBe(true);
+      await waitFor(async () => {
+        expect(result.current.isAcquiringLocalTracks).toBe(true);
+      });
       result.current.getAudioAndVideoTracks(); // This call is ignored
 
       await act(async () => {
         jest.runAllTimers();
-        await waitForNextUpdate();
       });
 
-      expect(Video.createLocalTracks).toHaveBeenCalledTimes(1);
+      await waitFor(() => {
+        expect(Video.createLocalTracks).toHaveBeenCalledTimes(1);
+      });
       jest.useRealTimers();
     });
 
@@ -286,24 +289,25 @@ describe('the useLocalTracks hook', () => {
 
     it('should return an error when there is an error creating a track', async () => {
       (Video.createLocalTracks as jest.Mock<any>).mockImplementationOnce(() => Promise.reject('testError'));
-      const { result, waitForNextUpdate } = renderHook(useLocalTracks);
+      const { result } = renderHook(useLocalTracks);
 
-      act(() => {
-        expect(result.current.getAudioAndVideoTracks()).rejects.toBe('testError');
+      await act(async () => {
+        await expect(result.current.getAudioAndVideoTracks()).rejects.toBe('testError');
       });
-
-      await waitForNextUpdate();
     });
   });
 
   describe('the removeLocalVideoTrack function', () => {
     it('should call videoTrack.stop() and remove the videoTrack from state', async () => {
-      const { result, waitForValueToChange } = renderHook(useLocalTracks);
+      const { result } = renderHook(useLocalTracks);
 
       // First, get tracks
       await act(async () => {
         result.current.getAudioAndVideoTracks();
-        await waitForValueToChange(() => result.current.localTracks.length);
+      });
+
+      await waitFor(() => {
+        expect(result.current.localTracks.length).toBeGreaterThan(0);
       });
 
       const initialVideoTrack = result.current.localTracks.find((track) => track.kind === 'video');
@@ -321,12 +325,15 @@ describe('the useLocalTracks hook', () => {
 
   describe('the removeLocalAudioTrack function', () => {
     it('should call audioTrack.stop() and remove the audioTrack from state', async () => {
-      const { result, waitForValueToChange } = renderHook(useLocalTracks);
+      const { result } = renderHook(useLocalTracks);
 
       // First, get tracks
       await act(async () => {
         result.current.getAudioAndVideoTracks();
-        await waitForValueToChange(() => result.current.localTracks.length);
+      });
+
+      await waitFor(() => {
+        expect(result.current.localTracks.length).toBeGreaterThan(0);
       });
 
       const initialAudioTrack = result.current.localTracks.find((track) => track.kind === 'audio');
@@ -344,49 +351,52 @@ describe('the useLocalTracks hook', () => {
 
   describe('the getLocalVideoTrack function', () => {
     it('should create a local video track', async () => {
-      const { result, waitForNextUpdate } = renderHook(useLocalTracks);
+      const { result } = renderHook(useLocalTracks);
 
       await act(async () => {
         result.current.getLocalVideoTrack();
-        await waitForNextUpdate();
       });
 
-      expect(Video.createLocalVideoTrack).toHaveBeenCalledWith({
-        ...(DEFAULT_VIDEO_CONSTRAINTS as {}),
-        name: 'camera-123456',
+      await waitFor(() => {
+        expect(Video.createLocalVideoTrack).toHaveBeenCalledWith({
+          ...(DEFAULT_VIDEO_CONSTRAINTS as {}),
+          name: 'camera-123456',
+        });
       });
     });
 
     it('should not specify a device ID when the device ID stored in local storage does not exist', async () => {
-      const { result, waitForNextUpdate } = renderHook(useLocalTracks);
+      const { result } = renderHook(useLocalTracks);
 
       window.localStorage.setItem(SELECTED_VIDEO_INPUT_KEY, 'device-id-does-not-exist');
 
       await act(async () => {
         result.current.getLocalVideoTrack();
-        await waitForNextUpdate();
       });
 
-      expect(Video.createLocalVideoTrack).toHaveBeenCalledWith({
-        ...(DEFAULT_VIDEO_CONSTRAINTS as {}),
-        name: 'camera-123456',
+      await waitFor(() => {
+        expect(Video.createLocalVideoTrack).toHaveBeenCalledWith({
+          ...(DEFAULT_VIDEO_CONSTRAINTS as {}),
+          name: 'camera-123456',
+        });
       });
     });
 
     it('should specify a device ID when one is stored in local storage and the device exists', async () => {
-      const { result, waitForNextUpdate } = renderHook(useLocalTracks);
+      const { result } = renderHook(useLocalTracks);
 
       window.localStorage.setItem(SELECTED_VIDEO_INPUT_KEY, 'mockVideoDeviceId');
 
       await act(async () => {
         result.current.getLocalVideoTrack();
-        await waitForNextUpdate();
       });
 
-      expect(Video.createLocalVideoTrack).toHaveBeenCalledWith({
-        ...(DEFAULT_VIDEO_CONSTRAINTS as {}),
-        name: 'camera-123456',
-        deviceId: { exact: 'mockVideoDeviceId' },
+      await waitFor(() => {
+        expect(Video.createLocalVideoTrack).toHaveBeenCalledWith({
+          ...(DEFAULT_VIDEO_CONSTRAINTS as {}),
+          name: 'camera-123456',
+          deviceId: { exact: 'mockVideoDeviceId' },
+        });
       });
     });
   });
