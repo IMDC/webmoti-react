@@ -1,21 +1,28 @@
 import React from 'react';
-import { act, renderHook } from '@testing-library/react';
-import { createBrowserHistory } from 'history';
-import { Router } from 'react-router-dom';
+import { act, renderHook, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import usePasscodeAuth, { getPasscode, verifyPasscode } from './usePasscodeAuth';
 
 // @ts-ignore
 delete window.location;
 
-// @ts-ignore
 window.location = {
+  // @ts-ignore
   search: '',
 };
 
-const customHistory = { ...createBrowserHistory(), replace: jest.fn() };
+const navigate = jest.fn();
+
+jest.mock('react-router-dom', () => {
+  const actual = jest.requireActual('react-router-dom');
+  return {
+    ...actual,
+    useNavigate: () => navigate,
+  };
+});
 
 const wrapper = (props: React.PropsWithChildren<unknown>) => (
-  <Router history={customHistory as any}>{props.children}</Router>
+  <MemoryRouter initialEntries={['/test-pathname']}>{props.children}</MemoryRouter>
 );
 
 describe('the usePasscodeAuth hook', () => {
@@ -27,9 +34,10 @@ describe('the usePasscodeAuth hook', () => {
         Promise.resolve({ ok: true, json: () => Promise.resolve({ token: 'mockVideoToken' }) })
       );
       window.sessionStorage.setItem('passcode', '123123');
-      const { result, waitForNextUpdate } = renderHook(usePasscodeAuth, { wrapper });
-      await waitForNextUpdate();
-      expect(result.current).toMatchObject({ isAuthReady: true, user: { passcode: '123123' } });
+      const { result } = renderHook(usePasscodeAuth, { wrapper });
+      await waitFor(() => {
+        expect(result.current).toMatchObject({ isAuthReady: true, user: { passcode: '123123' } });
+      });
     });
 
     it('should remove the query parameter from the URL when the passcode is valid', async () => {
@@ -37,17 +45,18 @@ describe('the usePasscodeAuth hook', () => {
       window.fetch = jest.fn(() =>
         Promise.resolve({ ok: true, json: () => Promise.resolve({ token: 'mockVideoToken' }) })
       );
-      // @ts-ignore
       window.location = {
+        // @ts-ignore
         search: '?passcode=000000',
         origin: 'http://test-origin',
         pathname: '/test-pathname',
       };
       Object.defineProperty(window.history, 'replaceState', { value: jest.fn() });
       window.sessionStorage.setItem('passcode', '123123');
-      const { waitForNextUpdate } = renderHook(usePasscodeAuth, { wrapper });
-      await waitForNextUpdate();
-      expect(customHistory.replace).toHaveBeenLastCalledWith('/test-pathname');
+      renderHook(usePasscodeAuth, { wrapper });
+      await waitFor(() => {
+        expect(navigate).toHaveBeenLastCalledWith('/test-pathname', { replace: true });
+      });
     });
 
     it('should not return a user when the app code is invalid', async () => {
@@ -57,9 +66,10 @@ describe('the usePasscodeAuth hook', () => {
       );
       window.location.search = '';
       window.sessionStorage.setItem('passcode', '123123');
-      const { result, waitForNextUpdate } = renderHook(usePasscodeAuth, { wrapper });
-      await waitForNextUpdate();
-      expect(result.current).toMatchObject({ isAuthReady: true, user: null });
+      const { result } = renderHook(usePasscodeAuth, { wrapper });
+      await waitFor(() => {
+        expect(result.current).toMatchObject({ isAuthReady: true, user: null });
+      });
     });
 
     it('should not return a user when there is no passcode', () => {
@@ -75,9 +85,14 @@ describe('the usePasscodeAuth hook', () => {
         Promise.resolve({ ok: true, json: () => Promise.resolve({ token: 'mockVideoToken' }) })
       );
       window.sessionStorage.setItem('passcode', '123123');
-      const { result, waitForNextUpdate } = renderHook(usePasscodeAuth, { wrapper });
-      await waitForNextUpdate();
-      await act(() => result.current.signOut());
+      const { result } = renderHook(usePasscodeAuth, { wrapper });
+      await waitFor(() => {
+        expect(result.current.isAuthReady).toBe(true);
+      });
+
+      await act(async () => {
+        await result.current.signOut();
+      });
       expect(window.sessionStorage.getItem('passcode')).toBe(null);
       expect(result.current.user).toBe(null);
     });
@@ -99,8 +114,10 @@ describe('the usePasscodeAuth hook', () => {
       window.fetch = jest.fn(() =>
         Promise.resolve({ status: 401, json: () => Promise.resolve({ error: { message: 'passcode incorrect' } }) })
       );
-      const { result, waitForNextUpdate } = renderHook(usePasscodeAuth, { wrapper });
-      await waitForNextUpdate();
+      const { result } = renderHook(usePasscodeAuth, { wrapper });
+      await waitFor(() => {
+        expect(result.current.isAuthReady).toBe(true);
+      });
       result.current.signIn('123456').catch((err) => {
         expect(err.message).toBe('Passcode is incorrect');
       });
@@ -111,8 +128,13 @@ describe('the usePasscodeAuth hook', () => {
       window.fetch = jest.fn(() =>
         Promise.resolve({ status: 401, json: () => Promise.resolve({ error: { message: 'passcode expired' } }) })
       );
-      const { result, waitForNextUpdate } = renderHook(usePasscodeAuth, { wrapper });
-      await waitForNextUpdate();
+      const { result } = renderHook(usePasscodeAuth, { wrapper });
+
+      // await waitForNextUpdate();
+
+      await waitFor(() => {
+        expect(result.current.isAuthReady).toBe(true);
+      });
       result.current.signIn('123456').catch((err) => {
         expect(err.message).toBe('Passcode has expired');
       });
@@ -126,8 +148,10 @@ describe('the usePasscodeAuth hook', () => {
         Promise.resolve({ ok: true, json: () => Promise.resolve({ token: 'mockVideoToken' }) })
       );
       window.sessionStorage.setItem('passcode', '123123');
-      const { result, waitForNextUpdate } = renderHook(usePasscodeAuth, { wrapper });
-      await waitForNextUpdate();
+      const { result } = renderHook(usePasscodeAuth, { wrapper });
+      await waitFor(() => {
+        expect(result.current.isAuthReady).toBe(true);
+      });
 
       await act(async () => {
         result.current.getToken('test-name', 'test-room');
@@ -148,8 +172,10 @@ describe('the usePasscodeAuth hook', () => {
         Promise.resolve({ ok: true, json: () => Promise.resolve({ token: 'mockVideoToken' }) })
       );
       window.sessionStorage.setItem('passcode', '123123');
-      const { result, waitForNextUpdate } = renderHook(usePasscodeAuth, { wrapper });
-      await waitForNextUpdate();
+      const { result } = renderHook(usePasscodeAuth, { wrapper });
+      await waitFor(() => {
+        expect(result.current.isAuthReady).toBe(true);
+      });
 
       await act(async () => {
         result.current.getToken('test-name', 'test-room');
@@ -171,8 +197,10 @@ describe('the usePasscodeAuth hook', () => {
         Promise.resolve({ ok: true, json: () => Promise.resolve({ token: 'mockVideoToken' }) })
       );
       window.sessionStorage.setItem('passcode', '123123');
-      const { result, waitForNextUpdate } = renderHook(usePasscodeAuth, { wrapper });
-      await waitForNextUpdate();
+      const { result } = renderHook(usePasscodeAuth, { wrapper });
+      await waitFor(() => {
+        expect(result.current.isAuthReady).toBe(true);
+      });
 
       let token = '';
       await act(async () => {
@@ -188,8 +216,10 @@ describe('the usePasscodeAuth hook', () => {
         Promise.resolve({ ok: true, json: () => Promise.resolve({ token: 'mockVideoToken' }) })
       );
       window.sessionStorage.setItem('passcode', '123123');
-      const { result, waitForNextUpdate } = renderHook(usePasscodeAuth, { wrapper });
-      await waitForNextUpdate();
+      const { result } = renderHook(usePasscodeAuth, { wrapper });
+      await waitFor(() => {
+        expect(result.current.isAuthReady).toBe(true);
+      });
       // @ts-ignore
       window.fetch = jest.fn(() =>
         // Return an error when the user tries to join a room

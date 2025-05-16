@@ -1,7 +1,6 @@
 import React from 'react';
 
-import { render } from '@testing-library/react';
-import { act } from 'react-dom/test-utils';
+import { render, act } from '@testing-library/react';
 import { useParams } from 'react-router-dom';
 
 // import DeviceSelectionScreen from './DeviceSelectionScreen/DeviceSelectionScreen';

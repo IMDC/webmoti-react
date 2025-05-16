@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter, Route, Switch } from 'react-router-dom';
+import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
 import { useAppState } from '../../state';
 
@@ -19,14 +19,17 @@ describe('PrivateRoute', () => {
 
       render(
         <MemoryRouter initialEntries={['/']}>
-          <Switch>
-            <PrivateRoute exact path="/">
-              <h1>test</h1>
-            </PrivateRoute>
-            <Route path="/login">
-              <h1>login</h1>
-            </Route>
-          </Switch>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <PrivateRoute>
+                  <h1>test</h1>
+                </PrivateRoute>
+              }
+            />
+            <Route path="/login" element={<h1>login</h1>} />
+          </Routes>
         </MemoryRouter>
       );
 
@@ -39,7 +42,16 @@ describe('PrivateRoute', () => {
 
       render(
         <MemoryRouter initialEntries={['/']}>
-          <PrivateRoute exact path="/" component={MockComponent} />
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <PrivateRoute>
+                  <MockComponent />
+                </PrivateRoute>
+              }
+            />
+          </Routes>
         </MemoryRouter>
       );
 
@@ -51,7 +63,16 @@ describe('PrivateRoute', () => {
 
       const { container } = render(
         <MemoryRouter initialEntries={['/']}>
-          <PrivateRoute exact path="/" component={MockComponent} />
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <PrivateRoute>
+                  <MockComponent />
+                </PrivateRoute>
+              }
+            />
+          </Routes>
         </MemoryRouter>
       );
 
@@ -66,7 +87,16 @@ describe('PrivateRoute', () => {
 
       render(
         <MemoryRouter initialEntries={['/']}>
-          <PrivateRoute exact path="/" component={MockComponent} />
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <PrivateRoute>
+                  <MockComponent />
+                </PrivateRoute>
+              }
+            />
+          </Routes>
         </MemoryRouter>
       );
 

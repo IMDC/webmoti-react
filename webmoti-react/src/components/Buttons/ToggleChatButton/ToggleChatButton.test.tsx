@@ -1,7 +1,6 @@
 import { EventEmitter } from 'events';
 
-import { act } from 'react-dom/test-utils';
-import { screen, render } from '@testing-library/react';
+import { screen, render, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import ToggleChatButton, { ANIMATION_DURATION } from './ToggleChatButton';

@@ -1,7 +1,5 @@
-import { setImmediate } from 'timers';
-
 import { act, fireEvent, render, waitFor } from '@testing-library/react';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import LoginPage from './LoginPage';
 import { useAppState } from '../../state';
@@ -9,7 +7,7 @@ import { useAppState } from '../../state';
 jest.mock('react-router-dom', () => {
   return {
     useLocation: jest.fn(),
-    useHistory: jest.fn(),
+    useNavigate: jest.fn(),
   };
 });
 jest.mock('../../state');
@@ -17,10 +15,10 @@ jest.mock('./google-logo.svg', () => ({ ReactComponent: () => null }));
 
 const mockUseAppState = useAppState as jest.Mock<any>;
 const mockUseLocation = useLocation as jest.Mock<any>;
-const mockUseHistory = useHistory as jest.Mock<any>;
+const mockUseNavigate = useNavigate as jest.Mock<any>;
 
-const mockReplace = jest.fn();
-mockUseHistory.mockImplementation(() => ({ replace: mockReplace }));
+const mockNavigate = jest.fn();
+mockUseNavigate.mockImplementation(() => mockNavigate);
 mockUseLocation.mockImplementation(() => ({ pathname: '/login' }));
 
 describe('the LoginPage component', () => {
@@ -31,37 +29,35 @@ describe('the LoginPage component', () => {
       process.env.REACT_APP_SET_AUTH = 'firebase';
       mockUseAppState.mockImplementation(() => ({ user: {}, signIn: () => Promise.resolve(), isAuthReady: true }));
       render(<LoginPage />);
-      expect(mockReplace).toHaveBeenCalledWith('/');
+      expect(mockNavigate).toHaveBeenCalledWith('/', { replace: true });
     });
 
     it('should render the login page when there is no user', () => {
       process.env.REACT_APP_SET_AUTH = 'firebase';
       mockUseAppState.mockImplementation(() => ({ user: null, signIn: () => Promise.resolve(), isAuthReady: true }));
       const { getByText } = render(<LoginPage />);
-      expect(mockReplace).not.toHaveBeenCalled();
+      expect(mockNavigate).not.toHaveBeenCalled();
       expect(getByText('Sign in with Google')).toBeTruthy();
     });
 
-    it('should redirect the user to "/" after signIn when there is no previous location', (done) => {
+    it('should redirect the user to "/" after signIn when there is no previous location', async () => {
       process.env.REACT_APP_SET_AUTH = 'firebase';
       mockUseAppState.mockImplementation(() => ({ user: null, signIn: () => Promise.resolve(), isAuthReady: true }));
       const { getByText } = render(<LoginPage />);
       getByText('Sign in with Google').click();
-      setImmediate(() => {
-        expect(mockReplace).toHaveBeenCalledWith({ pathname: '/' });
-        done();
+      await waitFor(() => {
+        expect(mockNavigate).toHaveBeenCalledWith('/', { replace: true });
       });
     });
 
-    it('should redirect the user to their previous location after signIn', (done) => {
+    it('should redirect the user to their previous location after signIn', async () => {
       process.env.REACT_APP_SET_AUTH = 'firebase';
       mockUseLocation.mockImplementation(() => ({ state: { from: { pathname: '/room/test' } } }));
       mockUseAppState.mockImplementation(() => ({ user: null, signIn: () => Promise.resolve(), isAuthReady: true }));
       const { getByText } = render(<LoginPage />);
       getByText('Sign in with Google').click();
-      setImmediate(() => {
-        expect(mockReplace).toHaveBeenCalledWith({ pathname: '/room/test' });
-        done();
+      await waitFor(() => {
+        expect(mockNavigate).toHaveBeenCalledWith('/room/test', { replace: true });
       });
     });
 
@@ -69,13 +65,13 @@ describe('the LoginPage component', () => {
       process.env.REACT_APP_SET_AUTH = 'firebase';
       mockUseAppState.mockImplementation(() => ({ user: null, signIn: () => Promise.resolve(), isAuthReady: false }));
       const { container } = render(<LoginPage />);
-      expect(mockReplace).not.toHaveBeenCalled();
+      expect(mockNavigate).not.toHaveBeenCalled();
       expect(container.children[0]).toBe(undefined);
     });
   });
 
   describe('with passcode auth enabled', () => {
-    it('should call sign in with the supplied passcode', (done) => {
+    it('should call sign in with the supplied passcode', async () => {
       const mockSignin = jest.fn(() => Promise.resolve());
       process.env.REACT_APP_SET_AUTH = 'passcode';
       mockUseAppState.mockImplementation(() => ({ user: null, signIn: mockSignin, isAuthReady: true }));
@@ -88,9 +84,8 @@ describe('the LoginPage component', () => {
         fireEvent.submit(getByText('Submit'));
       });
 
-      setImmediate(() => {
+      await waitFor(() => {
         expect(mockSignin).toHaveBeenCalledWith('1234');
-        done();
       });
     });
 
@@ -117,6 +112,6 @@ describe('the LoginPage component', () => {
     delete process.env.REACT_APP_SET_AUTH;
     mockUseAppState.mockImplementation(() => ({ user: null, signIn: () => Promise.resolve(), isAuthReady: true }));
     render(<LoginPage />);
-    expect(mockReplace).toHaveBeenCalledWith('/');
+    expect(mockNavigate).toHaveBeenCalledWith('/', { replace: true });
   });
 });

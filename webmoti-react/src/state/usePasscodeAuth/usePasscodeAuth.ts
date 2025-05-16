@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { RecordingRules } from '../../types';
+
 const endpoint = process.env.REACT_APP_TOKEN_ENDPOINT || '/token';
 
 export function getPasscode() {
@@ -80,7 +82,7 @@ export default function usePasscodeAuth() {
   );
 
   const updateRecordingRules = useCallback(
-    async (room_sid, rules) => {
+    async (room_sid: string, rules: RecordingRules) => {
       return fetch('/recordingrules', {
         headers: {
           'Content-Type': 'application/json',

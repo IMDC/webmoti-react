@@ -73,7 +73,7 @@ export default function LoginPage() {
 
   const isAuthEnabled = Boolean(process.env.REACT_APP_SET_AUTH);
 
-  const from = (location.state as { from?: Location })?.from || { pathname: '/' };
+  const from = (location.state as { from?: Location })?.from?.pathname || '/';
 
   const login = () => {
     setAuthError(null);
