@@ -2,7 +2,6 @@ import { ConnectOptions } from 'twilio-video';
 
 import { isMobile, removeUndefineds } from '..';
 import { useAppState } from '../../state';
-import { TWILIO_ENVIRONMENT } from '../../clientEnv';
 
 export default function useConnectionOptions() {
   const { settings } = useAppState();
@@ -36,19 +35,11 @@ export default function useConnectionOptions() {
     // preferredVideoCodecs: [{ codec: 'VP8', simulcast: true }],
 
     // video: { height: 1920, frameRate: 24, width: 1080 },
-
-    //@ts-ignore - Internal use only. This property is not exposed in type definitions.
-    environment: TWILIO_ENVIRONMENT,
   };
 
   // For mobile browsers, limit the maximum incoming video bitrate to 2.5 Mbps.
   if (isMobile && connectionOptions?.bandwidthProfile?.video) {
     connectionOptions!.bandwidthProfile!.video!.maxSubscriptionBitrate = 2500000;
-  }
-
-  if (TWILIO_ENVIRONMENT === 'dev') {
-    //@ts-ignore - Internal use only. This property is not exposed in type definitions.
-    connectionOptions!.wsServer = 'wss://us2.vss.dev.twilio.com/signaling';
   }
 
   // Here we remove any 'undefined' values. The twilio-video SDK will only use defaults

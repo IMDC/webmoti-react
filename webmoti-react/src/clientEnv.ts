@@ -13,7 +13,6 @@ export const DISABLE_TWILIO_CONVERSATIONS = import.meta.env.VITE_DISABLE_TWILIO_
 
 export const TOKEN_ENDPOINT = import.meta.env.VITE_TOKEN_ENDPOINT;
 
-export const TWILIO_ENVIRONMENT = import.meta.env.VITE_TWILIO_ENVIRONMENT;
 export const ROOM_TYPE = import.meta.env.VITE_ROOM_TYPE;
 
 export const GIT_TAG = import.meta.env.VITE_GIT_TAG;

@@ -8,13 +8,11 @@ const {
   TWILIO_API_KEY_SID,
   TWILIO_API_KEY_SECRET,
   TWILIO_CONVERSATIONS_SERVICE_SID,
-  REACT_APP_TWILIO_ENVIRONMENT,
   REACT_APP_ROOM_TYPE,
 } = process.env;
 
 const twilioClient = Twilio(TWILIO_API_KEY_SID, TWILIO_API_KEY_SECRET, {
   accountSid: TWILIO_ACCOUNT_SID,
-  region: REACT_APP_TWILIO_ENVIRONMENT === 'prod' ? undefined : REACT_APP_TWILIO_ENVIRONMENT,
 });
 
 const context: ServerlessContext = {
@@ -32,10 +30,7 @@ export function createExpressHandler(serverlessFunction: ServerlessFunction) {
     serverlessFunction(context, req.body, (_, serverlessResponse) => {
       const { statusCode, headers, body } = serverlessResponse;
 
-      res
-        .status(statusCode)
-        .set(headers)
-        .json(body);
+      res.status(statusCode).set(headers).json(body);
     });
   };
 }
