@@ -17,5 +17,9 @@ export default defineConfig({
   server: {
     open: true,
     port: 3000,
+    proxy: {
+      '/token': 'http://localhost:8081',
+      '/recordingrules': 'http://localhost:8081',
+    },
   },
 });

@@ -99,9 +99,9 @@
     "cypress:open": "cypress open",
     "cypress:run": "cypress run --browser chrome",
     "cypress:ci": "cross-env CYPRESS_baseUrl=http://localhost:8081 start-server-and-test server http://localhost:8081 cypress:run",
-    "deploy": "cross-env REACT_APP_SET_AUTH=firebase REACT_APP_ROOM_TYPE=group npm run build && twilio rtc:apps:video:deploy --authentication=firebase --app-directory ./build --override --room-type=group",
-    "deploy-go": "cross-env REACT_APP_SET_AUTH=firebase REACT_APP_ROOM_TYPE=go npm run build && twilio rtc:apps:video:deploy --authentication=firebase --app-directory ./build --override --room-type=go",
-    "deploy-debug": "cross-env REACT_APP_SET_AUTH=firebase REACT_APP_ROOM_TYPE=group npm run build && twilio rtc:apps:video:deploy --authentication=firebase --app-directory ./build --override --room-type=group -l debug",
+    "deploy": "cross-env VITE_SET_AUTH=firebase VITE_ROOM_TYPE=group npm run build && twilio rtc:apps:video:deploy --authentication=firebase --app-directory ./build --override --room-type=group",
+    "deploy-go": "cross-env VITE_SET_AUTH=firebase VITE_ROOM_TYPE=go npm run build && twilio rtc:apps:video:deploy --authentication=firebase --app-directory ./build --override --room-type=go",
+    "deploy-debug": "cross-env VITE_SET_AUTH=firebase VITE_ROOM_TYPE=group npm run build && twilio rtc:apps:video:deploy --authentication=firebase --app-directory ./build --override --room-type=group -l debug",
     "view": "twilio rtc:apps:video:view",
     "delete": "twilio rtc:apps:video:delete",
     "prepare": "cd .. && husky twilio-video-app-react/.husky"
@@ -117,6 +117,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "proxy": "http://localhost:8081/"
+  }
 }
