@@ -22,6 +22,7 @@ import { useAppState } from '../../../state';
 import ToggleAudioButton from '../../Buttons/ToggleAudioButton/ToggleAudioButton';
 import ToggleVideoButton from '../../Buttons/ToggleVideoButton/ToggleVideoButton';
 import { Steps } from '../PreJoinScreens';
+import { DISABLE_TWILIO_CONVERSATIONS, SET_AUTH } from '../../../clientEnv';
 
 const PREFIX = 'DeviceSelectionScreen';
 
@@ -114,7 +115,7 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
   const handleJoin = () => {
     getToken(name, roomName).then(({ token }) => {
       videoConnect(token);
-      process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
+      DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
     });
   };
 
@@ -215,7 +216,7 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
 
             <Grid item md={5} sm={12} xs={12}>
               <div className={classes.joinButtons}>
-                {process.env.REACT_APP_SET_AUTH === 'passcode' ? (
+                {SET_AUTH === 'passcode' ? (
                   <Button variant="outlined" color="primary" onClick={() => setStep(Steps.roomNameStep)}>
                     Cancel
                   </Button>

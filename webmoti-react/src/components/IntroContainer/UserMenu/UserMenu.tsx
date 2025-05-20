@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback } from 'react';
 
 import { styled } from '@mui/material/styles';
 
@@ -8,6 +8,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import UserAvatar from './UserAvatar/UserAvatar';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../../state';
+import { SET_AUTH } from '../../../clientEnv';
 
 const PREFIX = 'UserMenu';
 
@@ -48,7 +49,7 @@ const UserMenu = () => {
     signOut?.();
   }, [localTracks, signOut]);
 
-  if (process.env.REACT_APP_SET_AUTH === 'passcode') {
+  if (SET_AUTH === 'passcode') {
     return (
       <Root className={classes.userContainer} data-testid="user-menu">
         <Link onClick={handleSignOut} className={classes.logoutLink} underline="hover">
@@ -58,7 +59,7 @@ const UserMenu = () => {
     );
   }
 
-  if (process.env.REACT_APP_SET_AUTH === 'firebase') {
+  if (SET_AUTH === 'firebase') {
     return (
       <Root className={classes.userContainer} data-testid="user-menu">
         <UserAvatar user={user} />

@@ -13,6 +13,7 @@ import ToggleAudioButton from '../Buttons/ToggleAudioButton/ToggleAudioButton';
 import ToggleCaptionsButton from '../Buttons/ToggleCaptionsButton/ToggleCaptionsButton';
 import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
+import { DISABLE_TWILIO_CONVERSATIONS } from '../../clientEnv';
 
 const PREFIX = 'MenuBar';
 
@@ -83,7 +84,7 @@ export default function MenuBar() {
             <AudioMixer />
 
             <Hidden lgDown>
-              {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && (
+              {DISABLE_TWILIO_CONVERSATIONS !== 'true' && (
                 <span style={{ marginLeft: '10px' }}>
                   <ToggleChatButton />
                 </span>

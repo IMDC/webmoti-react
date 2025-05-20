@@ -1,3 +1,5 @@
+import { API_DOMAIN } from "./clientEnv";
+
 export const BACKGROUND_FILTER_VIDEO_CONSTRAINTS: MediaStreamConstraints['video'] = {
   width: 640,
   height: 480,
@@ -26,13 +28,13 @@ export const WEBMOTI_CAMERA_1 = 'Student-View';
 export const WEBMOTI_CAMERA_2 = 'Board-View';
 
 // uncomment for testing (and comment other)
-// const API_DOMAIN = '127.0.0.1:8080/api'
-// export const HTTPS_SERVER_URL = `http://${API_DOMAIN}`
-// export const WS_SERVER_URL = `ws://${API_DOMAIN}/ws`;
+// const API_DOMAIN_ = '127.0.0.1:8080/api'
+// export const HTTPS_SERVER_URL = `http://${API_DOMAIN_}`
+// export const WS_SERVER_URL = `ws://${API_DOMAIN_}/ws`;
 
-const API_DOMAIN = process.env.REACT_APP_API_DOMAIN;
-export const HTTPS_SERVER_URL = `https://${API_DOMAIN}`;
-export const WS_SERVER_URL = `wss://${API_DOMAIN}/ws`;
+const API_DOMAIN_ = API_DOMAIN;
+export const HTTPS_SERVER_URL = `https://${API_DOMAIN_}`;
+export const WS_SERVER_URL = `wss://${API_DOMAIN_}/ws`;
 
 export const enum MsgTypes {
   Hand = 'HAND',

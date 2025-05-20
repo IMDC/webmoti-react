@@ -2,6 +2,7 @@ import { Button, CircularProgress } from '@mui/material';
 import { RemoteParticipant, RemoteTrack, RemoteTrackPublication, Room, RoomEvent, Track } from 'livekit-client';
 import { useState } from 'react';
 import { HTTPS_SERVER_URL } from '../../../constants';
+import { LIVEKIT_URL } from '../../../clientEnv';
 
 const room = new Room({
   adaptiveStream: false,
@@ -16,8 +17,6 @@ const room = new Room({
 });
 
 let token: string;
-
-const livekitUrl = process.env.REACT_APP_LIVEKIT_URL;
 
 export default function LivekitConnectButton() {
   const [isConnected, setIsConnected] = useState(false);
@@ -77,7 +76,7 @@ export default function LivekitConnectButton() {
   }
 
   async function connect() {
-    if (!livekitUrl) {
+    if (!LIVEKIT_URL) {
       alert('Livekit URL not set');
       return;
     }
@@ -99,7 +98,7 @@ export default function LivekitConnectButton() {
           .on(RoomEvent.TrackUnsubscribed, handleTrackUnsubscribed);
 
         console.log('Connecting to room...');
-        await room.connect(livekitUrl, token);
+        await room.connect(LIVEKIT_URL, token);
         setIsConnected(true);
         console.log('Connected to LiveKit room!');
       } else {

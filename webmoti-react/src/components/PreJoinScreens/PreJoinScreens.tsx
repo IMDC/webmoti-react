@@ -8,6 +8,7 @@ import RoomNameScreen from './RoomNameScreen/RoomNameScreen';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../state';
 import IntroContainer from '../IntroContainer/IntroContainer';
+import { SET_AUTH } from '../../clientEnv';
 
 export enum Steps {
   roomNameStep,
@@ -21,7 +22,7 @@ export default function PreJoinScreens() {
   const { URLRoomName } = useParams<{ URLRoomName?: string }>();
 
   // don't show room name step with firebase auth since identity is already set based on google account
-  const initialStep = process.env.REACT_APP_SET_AUTH === 'passcode' ? Steps.roomNameStep : Steps.deviceSelectionStep;
+  const initialStep = SET_AUTH === 'passcode' ? Steps.roomNameStep : Steps.deviceSelectionStep;
   const [step, setStep] = useState(initialStep);
 
   const [name, setName] = useState<string>(user?.displayName || '');

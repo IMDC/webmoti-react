@@ -9,6 +9,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import GoogleLogo from './google-logo.svg';
 import { useAppState } from '../../state';
 import IntroContainer from '../IntroContainer/IntroContainer';
+import { SET_AUTH } from '../../clientEnv';
 
 const PREFIX = 'LoginPage';
 
@@ -71,7 +72,7 @@ export default function LoginPage() {
   const [passcode, setPasscode] = useState('');
   const [authError, setAuthError] = useState<Error | null>(null);
 
-  const isAuthEnabled = Boolean(process.env.REACT_APP_SET_AUTH);
+  const isAuthEnabled = Boolean(SET_AUTH);
 
   const from = (location.state as { from?: Location })?.from?.pathname || '/';
 
@@ -100,7 +101,7 @@ export default function LoginPage() {
 
   return (
     <StyledIntroContainer>
-      {process.env.REACT_APP_SET_AUTH === 'firebase' && (
+      {SET_AUTH === 'firebase' && (
         <>
           <Typography variant="h5" className={classes.gutterBottom}>
             Sign in to join the classroom
@@ -111,7 +112,7 @@ export default function LoginPage() {
           </Button>
         </>
       )}
-      {process.env.REACT_APP_SET_AUTH === 'passcode' && (
+      {SET_AUTH === 'passcode' && (
         <>
           <Typography variant="h5" className={classes.gutterBottom}>
             Enter passcode to join a room

@@ -5,6 +5,7 @@ import Video from 'twilio-video';
 
 import packageJSON from '../../../package.json';
 import { useAppState } from '../../state';
+import { GIT_COMMIT, GIT_TAG } from '../../clientEnv';
 
 interface AboutDialogProps {
   open: boolean;
@@ -21,8 +22,8 @@ function AboutDialog({ open, onClose }: PropsWithChildren<AboutDialogProps>) {
         <DialogContentText>Browser supported: {String(Video.isSupported)}</DialogContentText>
         <DialogContentText>SDK Version: {Video.version}</DialogContentText>
         <DialogContentText>App Version: {packageJSON.version}</DialogContentText>
-        <DialogContentText>Deployed Tag: {process.env.REACT_APP_GIT_TAG || 'N/A'}</DialogContentText>
-        <DialogContentText>Deployed Commit Hash: {process.env.REACT_APP_GIT_COMMIT || 'N/A'}</DialogContentText>
+        <DialogContentText>Deployed Tag: {GIT_TAG || 'N/A'}</DialogContentText>
+        <DialogContentText>Deployed Commit Hash: {GIT_COMMIT || 'N/A'}</DialogContentText>
         {roomType && <DialogContentText>Room Type: {roomType}</DialogContentText>}
       </DialogContent>
       <Divider />
