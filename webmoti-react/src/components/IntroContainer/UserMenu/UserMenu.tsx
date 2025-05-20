@@ -36,7 +36,7 @@ const Root = styled('div')({
   },
 });
 
-const UserMenu: React.FC = () => {
+const UserMenu = () => {
   const { user, signOut } = useAppState();
   const { localTracks } = useVideoContext();
 

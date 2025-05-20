@@ -19,10 +19,10 @@ export default function useRoom(localTracks: LocalTrack[], onError: Callback, op
   }, [options]);
 
   const connect = useCallback(
-    token => {
+    (token: string) => {
       setIsConnecting(true);
       return Video.connect(token, { ...optionsRef.current, tracks: localTracks }).then(
-        newRoom => {
+        (newRoom) => {
           setRoom(newRoom);
           // VideoRoomMonitor.registerVideoRoom(newRoom);
           const disconnect = () => newRoom.disconnect();
@@ -44,7 +44,7 @@ export default function useRoom(localTracks: LocalTrack[], onError: Callback, op
           // @ts-ignore
           window.twilioRoom = newRoom;
 
-          newRoom.localParticipant.videoTracks.forEach(publication =>
+          newRoom.localParticipant.videoTracks.forEach((publication) =>
             // All video tracks are published with 'low' priority because the video track
             // that is displayed in the 'MainParticipant' component will have it's priority
             // set to 'high' via track.setPriority()
@@ -61,7 +61,7 @@ export default function useRoom(localTracks: LocalTrack[], onError: Callback, op
             window.addEventListener('pagehide', disconnect);
           }
         },
-        error => {
+        (error) => {
           onError(error);
           setIsConnecting(false);
         }

@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 import { renderHook } from '@testing-library/react';
 import { Room, TwilioError } from 'twilio-video';
@@ -47,7 +47,7 @@ mockUseAppState.mockImplementation(() => ({ isGalleryViewActive: false }));
 
 describe('the VideoProvider component', () => {
   it('should correctly return the Video Context object', () => {
-    const wrapper: React.FC = ({ children }) => (
+    const wrapper = ({ children }: { children: ReactNode }) => (
       <VideoProvider onError={() => {}} options={{ dominantSpeaker: true }}>
         {children}
       </VideoProvider>
@@ -90,7 +90,7 @@ describe('the VideoProvider component', () => {
 
   it('should call the onError function when there is an error', () => {
     const mockOnError = jest.fn();
-    const wrapper: React.FC = ({ children }) => (
+    const wrapper = ({ children }: { children: ReactNode }) => (
       <VideoProvider onError={mockOnError} options={{ dominantSpeaker: true }}>
         {children}
       </VideoProvider>

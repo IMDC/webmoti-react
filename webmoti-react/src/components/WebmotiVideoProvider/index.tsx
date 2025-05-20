@@ -65,7 +65,7 @@ interface WebmotiVideoProviderProps {
   children: ReactNode;
 }
 
-export const WebmotiVideoProvider: React.FC<WebmotiVideoProviderProps> = ({ children }) => {
+export const WebmotiVideoProvider = ({ children }: WebmotiVideoProviderProps) => {
   const [isCameraOneOff, setIsCameraOneOff] = useState(false);
   const [isCameraTwoOff, setIsCameraTwoOff] = useState(false);
   const [rotation, setRotation] = useState(0);

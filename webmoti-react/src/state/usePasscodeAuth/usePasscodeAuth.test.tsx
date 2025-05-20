@@ -3,13 +3,12 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import usePasscodeAuth, { getPasscode, verifyPasscode } from './usePasscodeAuth';
 
-// @ts-ignore
-delete window.location;
-
-window.location = {
-  // @ts-ignore
-  search: '',
-};
+Object.defineProperty(window, 'location', {
+  value: {
+    ...window.location,
+    search: '',
+  },
+});
 
 const navigate = jest.fn();
 
@@ -45,12 +44,14 @@ describe('the usePasscodeAuth hook', () => {
       window.fetch = jest.fn(() =>
         Promise.resolve({ ok: true, json: () => Promise.resolve({ token: 'mockVideoToken' }) })
       );
-      window.location = {
-        // @ts-ignore
-        search: '?passcode=000000',
-        origin: 'http://test-origin',
-        pathname: '/test-pathname',
-      };
+      Object.defineProperty(window, 'location', {
+        value: {
+          ...window.location,
+          search: '?passcode=000000',
+          origin: 'http://test-origin',
+          pathname: '/test-pathname',
+        },
+      });
       Object.defineProperty(window.history, 'replaceState', { value: jest.fn() });
       window.sessionStorage.setItem('passcode', '123123');
       renderHook(usePasscodeAuth, { wrapper });
