@@ -1,5 +1,5 @@
-import React from 'react';
-import { act, renderHook } from '@testing-library/react';
+import { ReactNode } from 'react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 
 import AppStateProvider, { useAppState } from './index';
 import useFirebaseAuth from './useFirebaseAuth/useFirebaseAuth';
@@ -21,7 +21,7 @@ window.fetch = jest.fn(() =>
   })
 );
 
-const wrapper: React.FC = ({ children }) => <AppStateProvider>{children}</AppStateProvider>;
+const wrapper = ({ children }: { children: ReactNode }) => <AppStateProvider>{children}</AppStateProvider>;
 
 describe('the useAppState hook', () => {
   beforeEach(jest.clearAllMocks);
@@ -34,8 +34,7 @@ describe('the useAppState hook', () => {
   });
 
   it('should throw an error if used outside of AppStateProvider', () => {
-    const { result } = renderHook(useAppState);
-    expect(result.error?.message).toEqual('useAppState must be used within the AppStateProvider');
+    expect(() => renderHook(useAppState)).toThrow('useAppState must be used within the AppStateProvider');
   });
 
   it('should get a token using the REACT_APP_TOKEN_ENDPOINT environment variable when avaiable', async () => {
@@ -100,16 +99,21 @@ describe('the useAppState hook', () => {
 
       jest.useFakeTimers();
 
-      const { result, waitForNextUpdate } = renderHook(useAppState, { wrapper });
+      const { result } = renderHook(useAppState, { wrapper });
 
       expect(result.current.isFetching).toEqual(false);
 
       await act(async () => {
         result.current.getToken('test', 'test');
-        await waitForNextUpdate();
+      });
+
+      await waitFor(() => {
         expect(result.current.isFetching).toEqual(true);
-        jest.runOnlyPendingTimers();
-        await waitForNextUpdate();
+      });
+
+      jest.runOnlyPendingTimers();
+
+      await waitFor(() => {
         expect(result.current.isFetching).toEqual(false);
       });
     });
@@ -127,16 +131,21 @@ describe('the useAppState hook', () => {
 
       jest.useFakeTimers();
 
-      const { result, waitForNextUpdate } = renderHook(useAppState, { wrapper });
+      const { result } = renderHook(useAppState, { wrapper });
 
       expect(result.current.isFetching).toEqual(false);
 
       await act(async () => {
         result.current.getToken('test', 'test').catch(() => {});
-        await waitForNextUpdate();
+      });
+
+      await waitFor(() => {
         expect(result.current.isFetching).toEqual(true);
-        jest.runOnlyPendingTimers();
-        await waitForNextUpdate();
+      });
+
+      jest.runOnlyPendingTimers();
+
+      await waitFor(() => {
         expect(result.current.isFetching).toEqual(false);
       });
     });

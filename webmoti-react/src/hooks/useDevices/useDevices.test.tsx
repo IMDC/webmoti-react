@@ -1,9 +1,19 @@
-import { act, renderHook } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 
 import { getDeviceInfo } from '../../utils';
 import useDevices from './useDevices';
 
-jest.mock('../../utils', () => ({ getDeviceInfo: jest.fn(() => Promise.resolve()) }));
+jest.mock('../../utils', () => ({
+  getDeviceInfo: jest.fn(() =>
+    Promise.resolve({
+      audioInputDevices: [],
+      videoInputDevices: [],
+      audioOutputDevices: [],
+      hasAudioInputDevices: true,
+      hasVideoInputDevices: true,
+    })
+  ),
+}));
 
 let mockAddEventListener = jest.fn();
 let mockRemoveEventListener = jest.fn();
@@ -18,7 +28,7 @@ describe('the useDevices hook', () => {
   afterEach(jest.clearAllMocks);
 
   it('should return the correct default values', async () => {
-    const { result, waitForNextUpdate } = renderHook(useDevices);
+    const { result } = renderHook(useDevices);
     expect(result.current).toEqual({
       audioInputDevices: [],
       audioOutputDevices: [],
@@ -27,11 +37,13 @@ describe('the useDevices hook', () => {
       videoInputDevices: [],
     });
 
-    await waitForNextUpdate();
+    await waitFor(() => {
+      expect(result.current.hasAudioInputDevices).toBe(true);
+    });
   });
 
   it('should respond to "devicechange" events', async () => {
-    const { waitForNextUpdate } = renderHook(useDevices);
+    renderHook(useDevices);
     expect(getDeviceInfo).toHaveBeenCalledTimes(1);
 
     expect(mockAddEventListener).toHaveBeenCalledWith('devicechange', expect.any(Function));
@@ -39,13 +51,16 @@ describe('the useDevices hook', () => {
       mockAddEventListener.mock.calls[0][1]();
     });
 
-    await waitForNextUpdate();
-    expect(getDeviceInfo).toHaveBeenCalledTimes(2);
+    await waitFor(() => {
+      expect(getDeviceInfo).toHaveBeenCalledTimes(2);
+    });
   });
 
   it('should remove "devicechange" listener on component unmount', async () => {
-    const { waitForNextUpdate, unmount } = renderHook(useDevices);
-    await waitForNextUpdate();
+    const { unmount, result } = renderHook(useDevices);
+    await waitFor(() => {
+      expect(result.current.hasAudioInputDevices).toBe(true);
+    });
     unmount();
     expect(mockRemoveEventListener).toHaveBeenCalledWith('devicechange', expect.any(Function));
   });

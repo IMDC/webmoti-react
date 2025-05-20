@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 
-import { renderHook, act } from '@testing-library/react';
+import { renderHook, act, waitFor } from '@testing-library/react';
 
 import useScreenShareToggle from './useScreenShareToggle';
 import { ErrorCallback } from '../../../types';
@@ -42,12 +42,13 @@ describe('the useScreenShareToggle hook', () => {
 
   describe('toggle function', () => {
     it('should call localParticipant.publishTrack with the correct arguments when isSharing is false', async () => {
-      const { result, waitForNextUpdate } = renderHook(() => useScreenShareToggle(mockRoom, mockOnError));
+      const { result } = renderHook(() => useScreenShareToggle(mockRoom, mockOnError));
       result.current[1]();
-      await waitForNextUpdate();
-      expect(navigator.mediaDevices.getDisplayMedia).toHaveBeenCalled();
-      expect(mockLocalParticipant.publishTrack).toHaveBeenCalledWith(mockTrack, { name: 'screen', priority: 'low' });
-      expect(result.current[0]).toEqual(true);
+      await waitFor(() => {
+        expect(navigator.mediaDevices.getDisplayMedia).toHaveBeenCalled();
+        expect(mockLocalParticipant.publishTrack).toHaveBeenCalledWith(mockTrack, { name: 'screen', priority: 'low' });
+        expect(result.current[0]).toEqual(true);
+      });
     });
 
     it('should not toggle screen sharing when there is no room', async () => {
@@ -59,11 +60,13 @@ describe('the useScreenShareToggle hook', () => {
 
     it('should correctly stop screen sharing when isSharing is true', async () => {
       const localParticipantSpy = jest.spyOn(mockLocalParticipant, 'emit');
-      const { result, waitForNextUpdate } = renderHook(() => useScreenShareToggle(mockRoom, mockOnError));
+      const { result } = renderHook(() => useScreenShareToggle(mockRoom, mockOnError));
       expect(mockTrack.onended).toBeUndefined();
       result.current[1]();
-      await waitForNextUpdate();
-      expect(result.current[0]).toEqual(true);
+      await waitFor(() => {
+        expect(result.current[0]).toEqual(true);
+      });
+
       act(() => {
         result.current[1]();
       });
@@ -76,11 +79,13 @@ describe('the useScreenShareToggle hook', () => {
     describe('onended function', () => {
       it('should correctly stop screen sharing when called', async () => {
         const localParticipantSpy = jest.spyOn(mockLocalParticipant, 'emit');
-        const { result, waitForNextUpdate } = renderHook(() => useScreenShareToggle(mockRoom, mockOnError));
+        const { result } = renderHook(() => useScreenShareToggle(mockRoom, mockOnError));
         expect(mockTrack.onended).toBeUndefined();
         result.current[1]();
-        await waitForNextUpdate();
-        expect(mockTrack.onended).toEqual(expect.any(Function));
+        await waitFor(() => {
+          expect(mockTrack.onended).toEqual(expect.any(Function));
+        });
+
         act(() => {
           mockTrack.onended();
         });

@@ -1,9 +1,10 @@
-import { act, renderHook } from '@testing-library/react';
+import { EventEmitter } from 'events';
+
+import { act, renderHook, waitFor } from '@testing-library/react';
+import { LocalParticipant } from 'twilio-video';
+
 import useLocalVideoToggle from './useLocalVideoToggle';
 import useVideoContext from '../useVideoContext/useVideoContext';
-import { EventEmitter } from 'events';
-import { LocalParticipant } from 'twilio-video';
-import { setImmediate } from 'timers';
 
 jest.mock('../useVideoContext/useVideoContext');
 const mockUseVideoContext = useVideoContext as jest.Mock<any>;
@@ -84,12 +85,13 @@ describe('the useLocalVideoToggle hook', () => {
         room: {},
       }));
 
-      const { result, waitForNextUpdate } = renderHook(useLocalVideoToggle);
+      const { result } = renderHook(useLocalVideoToggle);
       act(() => {
         result.current[1]();
       });
-      await waitForNextUpdate();
-      expect(mockGetLocalVideoTrack).toHaveBeenCalled();
+      await waitFor(() => {
+        expect(mockGetLocalVideoTrack).toHaveBeenCalled();
+      });
     });
 
     it('should call mockLocalParticipant.publishTrack when a localVideoTrack does not exist and localParticipant does exist', async () => {
@@ -104,14 +106,12 @@ describe('the useLocalVideoToggle hook', () => {
         room: { localParticipant: mockLocalParticipant },
       }));
 
-      const { result, waitForNextUpdate } = renderHook(useLocalVideoToggle);
+      const { result } = renderHook(useLocalVideoToggle);
       act(() => {
         result.current[1]();
       });
-      await waitForNextUpdate();
-      setImmediate(() => {
+      await waitFor(() => {
         expect(mockLocalParticipant.publishTrack).toHaveBeenCalledWith('mockTrack', { priority: 'low' });
-        return Promise.resolve();
       });
     });
 
@@ -127,13 +127,14 @@ describe('the useLocalVideoToggle hook', () => {
         room: { localParticipant: mockLocalParticipant },
       }));
 
-      const { result, waitForNextUpdate } = renderHook(useLocalVideoToggle);
+      const { result } = renderHook(useLocalVideoToggle);
       act(() => {
         result.current[1]();
       });
       result.current[1](); // Should be ignored because isPublishing is true
-      expect(mockGetLocalVideoTrack).toHaveBeenCalledTimes(1);
-      await waitForNextUpdate();
+      await waitFor(() => {
+        expect(mockGetLocalVideoTrack).toHaveBeenCalledTimes(1);
+      });
     });
 
     it('should call onError when publishTrack throws an error', async () => {
@@ -150,12 +151,13 @@ describe('the useLocalVideoToggle hook', () => {
         onError: mockOnError,
       }));
 
-      const { result, waitForNextUpdate } = renderHook(useLocalVideoToggle);
+      const { result } = renderHook(useLocalVideoToggle);
       act(() => {
         result.current[1]();
       });
-      await waitForNextUpdate();
-      expect(mockOnError).toHaveBeenCalledWith('mockError');
+      await waitFor(() => {
+        expect(mockOnError).toHaveBeenCalledWith('mockError');
+      });
     });
   });
 });

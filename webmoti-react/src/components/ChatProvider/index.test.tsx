@@ -3,7 +3,7 @@ import { setImmediate } from 'timers';
 
 import React from 'react';
 
-import { act, renderHook } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 
 import { ChatProvider } from './index';
 import useChatContext from '../../hooks/useChatContext/useChatContext';
@@ -26,7 +26,7 @@ const mockUseVideoContext = useVideoContext as jest.Mock<any>;
 const mockOnError = jest.fn();
 
 const mockRoom = { sid: 'mockRoomSid' };
-const wrapper: React.FC = ({ children }) => <ChatProvider>{children}</ChatProvider>;
+const wrapper = ({ children }: { children: React.ReactNode }) => <ChatProvider>{children}</ChatProvider>;
 
 describe('the ChatProvider component', () => {
   beforeEach(() => {
@@ -37,7 +37,7 @@ describe('the ChatProvider component', () => {
   it('should return a Conversation after connect has been called and after a room exists', async () => {
     // Setup mock as if user is not connected to a room
     mockUseVideoContext.mockImplementation(() => ({ onError: mockOnError }));
-    const { result, rerender, waitForNextUpdate } = renderHook(useChatContext, { wrapper });
+    const { result, rerender } = renderHook(useChatContext, { wrapper });
 
     act(() => {
       result.current.connect('mockToken');
@@ -51,40 +51,48 @@ describe('the ChatProvider component', () => {
 
     // Rerender hook now that there is a room
     rerender();
-    await waitForNextUpdate();
 
-    expect(mockConversationsClient.getConversationByUniqueName).toHaveBeenCalledWith('mockRoomSid');
-    expect(result.current.conversation).toBe(mockConversation);
+    await waitFor(() => {
+      expect(mockConversationsClient.getConversationByUniqueName).toHaveBeenCalledWith('mockRoomSid');
+      expect(result.current.conversation).toBe(mockConversation);
+    });
   });
 
   it('should load all messages after obtaining a conversation', async () => {
-    const { result, waitForNextUpdate } = renderHook(useChatContext, { wrapper });
+    const { result } = renderHook(useChatContext, { wrapper });
     act(() => {
       result.current.connect('mockToken');
       mockConversationsClient.emit('stateChanged', 'initialized');
     });
-    await waitForNextUpdate();
 
-    expect(result.current.messages).toEqual([mockMessage]);
+    await waitFor(() => {
+      expect(result.current.messages).toEqual([mockMessage]);
+    });
   });
 
   it('should add new messages to the "messages" array', async () => {
-    const { result, waitForNextUpdate } = renderHook(useChatContext, { wrapper });
+    const { result } = renderHook(useChatContext, { wrapper });
     act(() => {
       result.current.connect('mockToken');
       mockConversationsClient.emit('stateChanged', 'initialized');
     });
-    await waitForNextUpdate();
+
+    // wait for initial setup (first message loaded)
+    await waitFor(() => {
+      expect(result.current.messages).toEqual([mockMessage]);
+    });
 
     act(() => {
       mockConversation.emit('messageAdded', mockMessage);
     });
 
-    expect(result.current.messages).toEqual([mockMessage, mockMessage]);
+    await waitFor(() => {
+      expect(result.current.messages).toEqual([mockMessage, mockMessage]);
+    });
   });
 
   it('should set hasUnreadMessages to true when initial messages are loaded while the chat window is closed', async () => {
-    const { result, waitForNextUpdate } = renderHook(useChatContext, { wrapper });
+    const { result } = renderHook(useChatContext, { wrapper });
 
     expect(result.current.hasUnreadMessages).toBe(false);
 
@@ -92,13 +100,14 @@ describe('the ChatProvider component', () => {
       result.current.connect('mockToken');
       mockConversationsClient.emit('stateChanged', 'initialized');
     });
-    await waitForNextUpdate();
 
-    expect(result.current.hasUnreadMessages).toBe(true);
+    await waitFor(() => {
+      expect(result.current.hasUnreadMessages).toBe(true);
+    });
   });
 
   it('should not set hasUnreadMessages to true when initial messages are loaded while the chat window is open', async () => {
-    const { result, waitForNextUpdate } = renderHook(useChatContext, { wrapper });
+    const { result } = renderHook(useChatContext, { wrapper });
 
     // Open chat window before connecting
     act(() => {
@@ -109,22 +118,24 @@ describe('the ChatProvider component', () => {
       result.current.connect('mockToken');
       mockConversationsClient.emit('stateChanged', 'initialized');
     });
-    await waitForNextUpdate();
 
-    expect(result.current.hasUnreadMessages).toBe(false);
+    await waitFor(() => {
+      expect(result.current.hasUnreadMessages).toBe(false);
+    });
   });
 
   it('should set hasUnreadMessages to true when a message is received while then chat window is closed', async () => {
     // Setup mock so that no messages are loaded after a conversation is obtained.
     mockConversation.getMessages.mockImplementationOnce(() => Promise.resolve({ items: [] }));
-    const { result, waitForNextUpdate } = renderHook(useChatContext, { wrapper });
+    const { result } = renderHook(useChatContext, { wrapper });
     act(() => {
       result.current.connect('mockToken');
       mockConversationsClient.emit('stateChanged', 'initialized');
     });
-    await waitForNextUpdate();
 
-    expect(result.current.hasUnreadMessages).toBe(false);
+    await waitFor(() => {
+      expect(result.current.hasUnreadMessages).toBe(false);
+    });
 
     act(() => {
       mockConversation.emit('messageAdded', mockMessage);
@@ -136,14 +147,15 @@ describe('the ChatProvider component', () => {
   it('should not set hasUnreadMessages to true when a message is received while then chat window is open', async () => {
     // Setup mock so that no messages are loaded after a conversation is obtained.
     mockConversation.getMessages.mockImplementationOnce(() => Promise.resolve({ items: [] }));
-    const { result, waitForNextUpdate } = renderHook(useChatContext, { wrapper });
+    const { result } = renderHook(useChatContext, { wrapper });
     act(() => {
       result.current.connect('mockToken');
       mockConversationsClient.emit('stateChanged', 'initialized');
     });
-    await waitForNextUpdate();
 
-    expect(result.current.hasUnreadMessages).toBe(false);
+    await waitFor(() => {
+      expect(result.current.hasUnreadMessages).toBe(false);
+    });
 
     // Open chat window and receive message
     act(() => {
@@ -155,14 +167,15 @@ describe('the ChatProvider component', () => {
   });
 
   it('should set hasUnreadMessages to false when the chat window is opened', async () => {
-    const { result, waitForNextUpdate } = renderHook(useChatContext, { wrapper });
+    const { result } = renderHook(useChatContext, { wrapper });
     act(() => {
       result.current.connect('mockToken');
       mockConversationsClient.emit('stateChanged', 'initialized');
     });
-    await waitForNextUpdate();
 
-    expect(result.current.hasUnreadMessages).toBe(true);
+    await waitFor(() => {
+      expect(result.current.hasUnreadMessages).toBe(true);
+    });
 
     act(() => {
       result.current.setIsChatWindowOpen(true);

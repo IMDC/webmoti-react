@@ -1,5 +1,5 @@
 import useFirebaseAuth from './useFirebaseAuth';
-import { renderHook } from '@testing-library/react';
+import { renderHook, waitFor } from '@testing-library/react';
 import { setImmediate } from 'timers';
 
 const mockUser = { getIdToken: () => Promise.resolve('idToken') };
@@ -39,37 +39,49 @@ describe('the useFirebaseAuth hook', () => {
   afterEach(jest.clearAllMocks);
 
   it('should set isAuthReady to true and set a user on load', async () => {
-    const { result, waitForNextUpdate } = renderHook(() => useFirebaseAuth());
+    const { result } = renderHook(() => useFirebaseAuth());
     expect(result.current.isAuthReady).toBe(false);
     expect(result.current.user).toBe(null);
-    await waitForNextUpdate();
-    expect(result.current.isAuthReady).toBe(true);
-    expect(result.current.user).toBe('mockUser');
+
+    await waitFor(() => {
+      expect(result.current.isAuthReady).toBe(true);
+      expect(result.current.user).toBe('mockUser');
+    });
   });
 
   it('should set user to null on signOut', async () => {
-    const { result, waitForNextUpdate } = renderHook(() => useFirebaseAuth());
-    await waitForNextUpdate();
+    const { result } = renderHook(() => useFirebaseAuth());
+    await waitFor(() => {
+      expect(result.current.isAuthReady).toBe(true);
+    });
     result.current.signOut();
-    await waitForNextUpdate();
-    expect(result.current.isAuthReady).toBe(true);
-    expect(result.current.user).toBe(null);
+    await waitFor(() => {
+      expect(result.current.isAuthReady).toBe(true);
+      expect(result.current.user).toBe(null);
+    });
   });
 
   it('should set a new user on signIn', async () => {
-    const { result, waitForNextUpdate } = renderHook(() => useFirebaseAuth());
-    await waitForNextUpdate();
+    const { result } = renderHook(() => useFirebaseAuth());
+    await waitFor(() => {
+      expect(result.current.isAuthReady).toBe(true);
+    });
     result.current.signIn();
-    await waitForNextUpdate();
-    expect(result.current.user).toBe(mockUser);
+    await waitFor(() => {
+      expect(result.current.user).toBe(mockUser);
+    });
   });
 
   it('should include the users idToken in request to the video token server', async () => {
     process.env.REACT_APP_TOKEN_ENDPOINT = 'http://test-endpoint.com/token';
-    const { result, waitForNextUpdate } = renderHook(() => useFirebaseAuth());
-    await waitForNextUpdate();
+    const { result } = renderHook(() => useFirebaseAuth());
+    await waitFor(() => {
+      expect(result.current.isAuthReady).toBe(true);
+    });
     result.current.signIn();
-    await waitForNextUpdate();
+    await waitFor(() => {
+      expect(result.current.user).toBe(mockUser);
+    });
     await result.current.getToken('testuser', 'testroom');
 
     const headers = new Headers({
