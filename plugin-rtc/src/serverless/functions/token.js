@@ -67,11 +67,11 @@ module.exports.handler = async (context, event, callback) => {
 
     try {
       // See if a room already exists
-      room = await client.video.rooms(room_name).fetch();
+      room = await client.video.v1.rooms(room_name).fetch();
     } catch (e) {
       try {
         // If room doesn't exist, create it
-        room = await client.video.rooms.create({ uniqueName: room_name, type: ROOM_TYPE });
+        room = await client.video.v1.rooms.create({ uniqueName: room_name, type: ROOM_TYPE });
       } catch (e) {
         console.error('Error creating room:');
         console.error(e);
@@ -87,7 +87,7 @@ module.exports.handler = async (context, event, callback) => {
     }
 
     if (create_conversation) {
-      const conversationsClient = client.conversations.services(CONVERSATIONS_SERVICE_SID);
+      const conversationsClient = client.conversations.v1.services(CONVERSATIONS_SERVICE_SID);
 
       try {
         // See if conversation already exists
