@@ -3,20 +3,13 @@ import { useCallback, useEffect, useState } from 'react';
 import { initializeApp, getApps } from 'firebase/app';
 import { getAuth, User, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { RecordingRules } from '../../types';
-import {
-  DISABLE_TWILIO_CONVERSATIONS,
-  FIREBASE_API_KEY,
-  FIREBASE_AUTH_DOMAIN,
-  FIREBASE_MESSAGING_SENDER_ID,
-  FIREBASE_STORAGE_BUCKET,
-  TOKEN_ENDPOINT,
-} from '../../clientEnv';
+import { clientEnv } from '../../clientEnv';
 
 const firebaseConfig = {
-  apiKey: FIREBASE_API_KEY,
-  authDomain: FIREBASE_AUTH_DOMAIN,
-  storageBucket: FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
+  apiKey: clientEnv.FIREBASE_API_KEY,
+  authDomain: clientEnv.FIREBASE_AUTH_DOMAIN,
+  storageBucket: clientEnv.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: clientEnv.FIREBASE_MESSAGING_SENDER_ID,
 };
 
 const getUrlTokenParam = () => {
@@ -63,7 +56,7 @@ export default function useFirebaseAuth() {
       headers.set('Authorization', `Bearer ${idToken}`);
       headers.set('content-type', 'application/json');
 
-      const endpoint = TOKEN_ENDPOINT || '/token';
+      const endpoint = clientEnv.TOKEN_ENDPOINT || '/token';
 
       const response = await fetch(endpoint, {
         method: 'POST',
@@ -71,7 +64,7 @@ export default function useFirebaseAuth() {
         body: JSON.stringify({
           user_identity,
           room_name,
-          create_conversation: DISABLE_TWILIO_CONVERSATIONS !== 'true',
+          create_conversation: clientEnv.DISABLE_TWILIO_CONVERSATIONS !== 'true',
         }),
       });
 

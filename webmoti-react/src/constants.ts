@@ -1,4 +1,4 @@
-import { API_DOMAIN } from "./clientEnv";
+import { clientEnv } from "./clientEnv";
 
 export const BACKGROUND_FILTER_VIDEO_CONSTRAINTS: MediaStreamConstraints['video'] = {
   width: 640,
@@ -32,7 +32,7 @@ export const WEBMOTI_CAMERA_2 = 'Board-View';
 // export const HTTPS_SERVER_URL = `http://${API_DOMAIN_}`
 // export const WS_SERVER_URL = `ws://${API_DOMAIN_}/ws`;
 
-const API_DOMAIN_ = API_DOMAIN;
+const API_DOMAIN_ = clientEnv.API_DOMAIN;
 export const HTTPS_SERVER_URL = `https://${API_DOMAIN_}`;
 export const WS_SERVER_URL = `wss://${API_DOMAIN_}/ws`;
 

@@ -8,7 +8,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import UserAvatar from './UserAvatar/UserAvatar';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../../state';
-import { SET_AUTH } from '../../../clientEnv';
+import { clientEnv } from '../../../clientEnv';
 
 const PREFIX = 'UserMenu';
 
@@ -49,7 +49,7 @@ const UserMenu = () => {
     signOut?.();
   }, [localTracks, signOut]);
 
-  if (SET_AUTH === 'passcode') {
+  if (clientEnv.SET_AUTH === 'passcode') {
     return (
       <Root className={classes.userContainer} data-testid="user-menu">
         <Link onClick={handleSignOut} className={classes.logoutLink} underline="hover">
@@ -59,7 +59,7 @@ const UserMenu = () => {
     );
   }
 
-  if (SET_AUTH === 'firebase') {
+  if (clientEnv.SET_AUTH === 'firebase') {
     return (
       <Root className={classes.userContainer} data-testid="user-menu">
         <UserAvatar user={user} />

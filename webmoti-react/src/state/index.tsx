@@ -9,7 +9,7 @@ import useFirebaseAuth, { RaspberryPiUser } from './useFirebaseAuth/useFirebaseA
 import usePasscodeAuth from './usePasscodeAuth/usePasscodeAuth';
 import { useLocalStorageState } from '../hooks/useLocalStorageState/useLocalStorageState';
 import { RecordingRules, RoomType } from '../types';
-import { DISABLE_TWILIO_CONVERSATIONS, SET_AUTH, TOKEN_ENDPOINT } from '../clientEnv';
+import { clientEnv } from '../clientEnv';
 
 type PasscodeUser = { displayName: undefined; photoURL: undefined; passcode?: string };
 
@@ -88,12 +88,12 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
     setDisplayCaptions,
   } as StateContextType;
 
-  if (SET_AUTH === 'firebase') {
+  if (clientEnv.SET_AUTH === 'firebase') {
     contextValue = {
       ...contextValue,
       ...useFirebaseAuth(), // eslint-disable-line react-hooks/rules-of-hooks
     };
-  } else if (SET_AUTH === 'passcode') {
+  } else if (clientEnv.SET_AUTH === 'passcode') {
     contextValue = {
       ...contextValue,
       ...usePasscodeAuth(), // eslint-disable-line react-hooks/rules-of-hooks
@@ -102,7 +102,7 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
     contextValue = {
       ...contextValue,
       getToken: async (user_identity, room_name) => {
-        const endpoint = TOKEN_ENDPOINT || '/token';
+        const endpoint = clientEnv.TOKEN_ENDPOINT || '/token';
 
         return fetch(endpoint, {
           method: 'POST',
@@ -112,7 +112,7 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
           body: JSON.stringify({
             user_identity,
             room_name,
-            create_conversation: DISABLE_TWILIO_CONVERSATIONS !== 'true',
+            create_conversation: clientEnv.DISABLE_TWILIO_CONVERSATIONS !== 'true',
           }),
         })
           .then((res) => res.json())
@@ -126,7 +126,7 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
       },
 
       updateRecordingRules: async (room_sid, rules) => {
-        const endpoint = TOKEN_ENDPOINT || '/recordingrules';
+        const endpoint = clientEnv.TOKEN_ENDPOINT || '/recordingrules';
 
         return fetch(endpoint, {
           headers: {

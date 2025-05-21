@@ -7,7 +7,7 @@ import ToggleCaptionsButton from '../Buttons/ToggleCaptionsButton/ToggleCaptions
 import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ControlsMenu from '../MenuBar/ControlsMenu/ControlsMenu';
 import Menu from '../MenuBar/Menu/Menu';
-import { DISABLE_TWILIO_CONVERSATIONS } from '../../clientEnv';
+import { clientEnv } from '../../clientEnv';
 
 const PREFIX = 'MobileTopMenuBar';
 
@@ -70,7 +70,7 @@ export default function MobileTopMenuBar() {
 
         <ToggleCaptionsButton />
 
-        {DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />}
+        {clientEnv.DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />}
       </div>
       <div>
         <EndCallButton className={classes.endCallButton} />
