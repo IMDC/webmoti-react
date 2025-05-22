@@ -140,7 +140,12 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
         Join {roomName}
       </Typography>
       <Grid container justifyContent="center">
-        <Grid item md={7} sm={12} xs={12}>
+        <Grid
+          size={{
+            md: 7,
+            sm: 12,
+            xs: 12
+          }}>
           <div className={classes.localPreviewContainer}>
             <LocalVideoPreview identity={name} />
           </div>
@@ -152,7 +157,12 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
             </Hidden>
           </div>
         </Grid>
-        <Grid item md={5} sm={12} xs={12}>
+        <Grid
+          size={{
+            md: 5,
+            sm: 12,
+            xs: 12
+          }}>
           <Grid container direction="column" justifyContent="space-between" style={{ alignItems: 'normal' }}>
             <div>
               <Hidden mdDown>
@@ -163,7 +173,12 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
           </Grid>
         </Grid>
 
-        <Grid item md={12} sm={12} xs={12}>
+        <Grid
+          size={{
+            md: 12,
+            sm: 12,
+            xs: 12
+          }}>
           {isKrispInstalled && (
             <Grid
               container
@@ -206,15 +221,30 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
           <Divider />
         </Grid>
 
-        <Grid item md={12} sm={12} xs={12}>
+        <Grid
+          size={{
+            md: 12,
+            sm: 12,
+            xs: 12
+          }}>
           <Grid container direction="row" alignItems="center" style={{ marginTop: '1em' }}>
             <Hidden mdDown>
-              <Grid item md={7} sm={12} xs={12}>
+              <Grid
+                size={{
+                  md: 7,
+                  sm: 12,
+                  xs: 12
+                }}>
                 <SettingsMenu mobileButtonClass={classes.mobileButton} />
               </Grid>
             </Hidden>
 
-            <Grid item md={5} sm={12} xs={12}>
+            <Grid
+              size={{
+                md: 5,
+                sm: 12,
+                xs: 12
+              }}>
               <div className={classes.joinButtons}>
                 {clientEnv.SET_AUTH() === 'passcode' ? (
                   <Button variant="outlined" color="primary" onClick={() => setStep(Steps.roomNameStep)}>
@@ -222,7 +252,7 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
                   </Button>
                 ) : (
                   // placeholder that keeps join button on the right
-                  <span style={{ flexGrow: 1 }} />
+                  (<span style={{ flexGrow: 1 }} />)
                 )}
                 <Button
                   variant="contained"

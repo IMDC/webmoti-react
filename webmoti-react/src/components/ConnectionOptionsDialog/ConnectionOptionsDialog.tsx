@@ -95,13 +95,17 @@ export default function ConnectionOptionsDialog({ open, onClose }: { open: boole
       <Divider />
       <DialogContent className={classes.container}>
         <Grid container spacing={2}>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Typography hidden={!isDisabled} variant="body2">
               These settings cannot be changed when connected to a room.
             </Typography>
           </Grid>
 
-          <Grid item sm={6} xs={12}>
+          <Grid
+            size={{
+              sm: 6,
+              xs: 12
+            }}>
             <FormControl variant="standard" className={classes.formControl}>
               <InputLabel id={inputLabels.dominantSpeakerPriority}>Dominant Speaker Priority:</InputLabel>
               <Select
@@ -157,7 +161,11 @@ export default function ConnectionOptionsDialog({ open, onClose }: { open: boole
               </Select>
             </FormControl>
           </Grid>
-          <Grid item sm={6} xs={12}>
+          <Grid
+            size={{
+              sm: 6,
+              xs: 12
+            }}>
             <FormControl variant="standard" className={classes.formControl}>
               <InputLabel id={inputLabels.clientTrackSwitchOffControl}>Client Track Switch Off Control:</InputLabel>
               <Select

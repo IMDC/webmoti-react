@@ -69,7 +69,7 @@ export default function MenuBar() {
           </Grid>
         </Hidden>
 
-        <Grid item>
+        <Grid>
           <Grid container justifyContent="center" alignItems="center">
             <ToggleAudioButton disabled={isReconnecting} />
             <ToggleVideoButton disabled={isReconnecting} />

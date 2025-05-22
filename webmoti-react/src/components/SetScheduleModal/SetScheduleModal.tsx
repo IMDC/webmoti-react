@@ -156,7 +156,7 @@ export default function SetScheduleModal({ open, onClose }: SetScheduleModalProp
             <input accept="*/*" style={{ display: 'none' }} id="upload-file" type="file" onChange={handleFileChange} />
 
             <Grid container style={{ marginBottom: '20px' }} alignItems="center">
-              <Grid item>
+              <Grid>
                 <label htmlFor="upload-file">
                   <Button variant="contained" component="span">
                     Upload File
@@ -164,7 +164,7 @@ export default function SetScheduleModal({ open, onClose }: SetScheduleModalProp
                 </label>
               </Grid>
 
-              <Grid item>
+              <Grid>
                 {file && (
                   <Typography variant="body2" style={{ marginLeft: '10px' }}>
                     {file.name}

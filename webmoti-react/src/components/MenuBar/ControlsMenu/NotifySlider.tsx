@@ -13,15 +13,13 @@ export default function NotifySlider() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item>
+      <Grid>
         <VolumeDownIcon />
       </Grid>
-
-      <Grid item xs>
+      <Grid size="grow">
         <Slider value={volume} onChange={handleVolumeSliderChange} />
       </Grid>
-
-      <Grid item>
+      <Grid>
         <VolumeUpIcon />
       </Grid>
     </Grid>

@@ -85,50 +85,50 @@ export default function ControlsMenu() {
       >
         <div className={classes.cameraControlsPopover}>
           <Grid container justifyContent="center" alignItems="center" direction="column">
-            <Grid item>
+            <Grid>
               <Typography variant="overline" style={{ fontWeight: 'bold' }}>
                 Audio Controls
               </Typography>
             </Grid>
-            <Grid item>
+            <Grid>
               <MuteClassroomButton />
             </Grid>
 
-            <Grid item style={{ width: '100%', marginTop: '5px' }}>
+            <Grid style={{ width: '100%', marginTop: '5px' }}>
               <Divider />
             </Grid>
-            <Grid item>
+            <Grid>
               <Typography variant="overline" style={{ fontWeight: 'bold' }}>
                 Video Controls
               </Typography>
             </Grid>
             <Grid container spacing={2} justifyContent="center" alignItems="center" style={{ marginBottom: '10px' }}>
-              <Grid item>
+              <Grid>
                 <ToggleCameraButton />
               </Grid>
-              <Grid item>
+              <Grid>
                 <ToggleCameraButton2 />
               </Grid>
             </Grid>
-            <Grid item style={{ marginBottom: '10px' }}>
+            <Grid style={{ marginBottom: '10px' }}>
               <ChangeZoomButton />
             </Grid>
             {/* <Grid item style={{ marginBottom: '10px' }}>
               <BoardQualityButton />
             </Grid> */}
 
-            <Grid item style={{ width: '100%', marginBottom: '10px' }}>
+            <Grid style={{ width: '100%', marginBottom: '10px' }}>
               <Divider />
             </Grid>
-            <Grid item>
+            <Grid>
               <Typography variant="overline" style={{ fontWeight: 'bold' }}>
                 Sound Alert Controls
               </Typography>
             </Grid>
-            <Grid item style={{ width: '100%', marginBottom: '10px' }}>
+            <Grid style={{ width: '100%', marginBottom: '10px' }}>
               <NotifySlider />
             </Grid>
-            <Grid item xs style={{ marginBottom: '10px' }}>
+            <Grid style={{ marginBottom: '10px' }} size="grow">
               <NotifyDropdown />
             </Grid>
 

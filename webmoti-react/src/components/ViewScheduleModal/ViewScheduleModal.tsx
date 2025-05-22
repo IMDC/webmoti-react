@@ -89,13 +89,13 @@ export default function ViewScheduleModal({ open, onClose }: ViewScheduleModalPr
       <Fade in={open}>
         <div className={classes.paper}>
           <Grid container justifyContent="center" alignItems="center">
-            <Grid item>
+            <Grid>
               <Typography variant="h6" component="span">
                 Class Schedule
               </Typography>
             </Grid>
 
-            <Grid item>
+            <Grid>
               <IconButton onClick={getSchedule} size="large">
                 <RefreshIcon />
               </IconButton>

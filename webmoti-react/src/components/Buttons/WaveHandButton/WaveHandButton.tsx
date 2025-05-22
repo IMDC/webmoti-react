@@ -35,7 +35,7 @@ export default function WaveHandButton() {
 
   return (
     <Grid container spacing={2} justifyContent="center" alignItems="center">
-      <Grid item>
+      <Grid>
         <ShortcutTooltip shortcut="3" isCtrlDown>
           <span>
             <Button onClick={wave} disabled={isLoading1} variant="contained">
@@ -46,8 +46,7 @@ export default function WaveHandButton() {
           </span>
         </ShortcutTooltip>
       </Grid>
-
-      <Grid item>
+      <Grid>
         <ShortcutTooltip shortcut="4" isCtrlDown>
           <span>
             <Button onClick={wave2} disabled={isLoading2} variant="contained">

@@ -32,7 +32,11 @@ export default function UnsupportedBrowserWarning({ children }: { children: Reac
     return (
       <StyledContainer>
         <Grid container justifyContent="center" className={classes.container}>
-          <Grid item xs={12} sm={6}>
+          <Grid
+            size={{
+              xs: 12,
+              sm: 6
+            }}>
             <Paper className={classes.paper}>
               <Typography variant="h4" className={classes.heading}>
                 Browser or context not supported
