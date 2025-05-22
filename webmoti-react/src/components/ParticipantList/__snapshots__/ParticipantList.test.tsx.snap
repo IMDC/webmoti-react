@@ -77,7 +77,7 @@ exports[`the ParticipantList component should correctly render Participant compo
                   </g>
                 </svg>
                 <span
-                  class="MuiTypography-root MuiTypography-body1 ParticipantInfo-typography css-1edfpdg-MuiTypography-root"
+                  class="MuiTypography-root MuiTypography-body1 ParticipantInfo-typography css-rizt0-MuiTypography-root"
                 >
                   Student-View
                 </span>
@@ -184,7 +184,7 @@ exports[`the ParticipantList component should correctly render Participant compo
                   </g>
                 </svg>
                 <span
-                  class="MuiTypography-root MuiTypography-body1 ParticipantInfo-typography css-1edfpdg-MuiTypography-root"
+                  class="MuiTypography-root MuiTypography-body1 ParticipantInfo-typography css-rizt0-MuiTypography-root"
                 >
                   Board-View
                 </span>
@@ -291,7 +291,7 @@ exports[`the ParticipantList component should correctly render Participant compo
                   </g>
                 </svg>
                 <span
-                  class="MuiTypography-root MuiTypography-body1 ParticipantInfo-typography css-1edfpdg-MuiTypography-root"
+                  class="MuiTypography-root MuiTypography-body1 ParticipantInfo-typography css-rizt0-MuiTypography-root"
                 >
                   Student-View
                 </span>
@@ -301,7 +301,7 @@ exports[`the ParticipantList component should correctly render Participant compo
               <svg
                 aria-hidden="true"
                 aria-label="Participant is pinned. Click to un-pin."
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-20bmp1-MuiSvgIcon-root"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
                 data-mui-internal-clone-element="true"
                 data-testid="pin-icon"
                 focusable="false"
@@ -358,7 +358,7 @@ exports[`the ParticipantList component should correctly render Participant compo
       >
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-20bmp1-MuiSvgIcon-root"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
           data-testid="ArrowDownwardIcon"
           focusable="false"
           style="cursor: pointer; color: white;"

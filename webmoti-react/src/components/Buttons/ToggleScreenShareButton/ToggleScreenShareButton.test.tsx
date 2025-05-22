@@ -19,13 +19,6 @@ const mockUseVideoContext = useVideoContext as jest.Mock<any>;
 const mockToggleScreenShare = jest.fn();
 mockUseVideoContext.mockImplementation(() => ({ toggleScreenShare: mockToggleScreenShare }));
 
-Object.defineProperty(navigator, 'mediaDevices', {
-  value: {
-    getDisplayMedia: () => {},
-  },
-  configurable: true,
-});
-
 describe('the ToggleScreenShareButton component', () => {
   it('should render correctly when screenSharing is allowed', () => {
     render(<ToggleScreenShareButton />);
@@ -56,11 +49,21 @@ describe('the ToggleScreenShareButton component', () => {
   });
 
   it('should render the screenshare button with the correct messaging if screensharing is not supported', () => {
-    Object.defineProperty(navigator, 'mediaDevices', { value: { getDisplayMedia: undefined } });
+    Object.defineProperty(navigator.mediaDevices, 'getDisplayMedia', {
+      configurable: true,
+      writable: true,
+      value: undefined,
+    });
 
     render(<ToggleScreenShareButton />);
     const button = screen.getByRole('button');
     expect(button).toBeDisabled();
     expect(screen.getByLabelText(SHARE_NOT_SUPPORTED_TEXT)).toBeInTheDocument();
+
+    Object.defineProperty(navigator.mediaDevices, 'getDisplayMedia', {
+      configurable: true,
+      writable: true,
+      value: jest.fn(),
+    });
   });
 });

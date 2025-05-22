@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Button, Menu as MenuContainer, Typography, useMediaQuery, Theme, MenuItem } from '@mui/material';
+import { Button, Menu as MenuContainer, Typography, useMediaQuery, MenuItem, useTheme } from '@mui/material';
 import MoreIcon from '@mui/icons-material/MoreVert';
 
 import AboutDialog from '../../../AboutDialog/AboutDialog';
@@ -10,7 +10,8 @@ import { useAppState } from '../../../../state';
 
 export default function SettingsMenu({ mobileButtonClass }: { mobileButtonClass?: string }) {
   const { roomType } = useAppState();
-  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [menuOpen, setMenuOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
   const [deviceSettingsOpen, setDeviceSettingsOpen] = useState(false);

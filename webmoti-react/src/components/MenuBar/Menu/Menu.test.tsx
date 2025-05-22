@@ -46,20 +46,6 @@ const mockToggleChatWindow = jest.fn();
 const mockSetIsGalleryViewActive = jest.fn();
 
 beforeAll(() => {
-  Object.defineProperty(global.navigator, 'mediaDevices', {
-    writable: true,
-    value: {
-      addEventListener: jest.fn(),
-      getUserMedia: jest.fn(),
-      enumerateDevices: jest.fn().mockResolvedValue([
-        { kind: 'audioinput', deviceId: 'audio-1', label: 'Mic' },
-        { kind: 'videoinput', deviceId: 'video-1', label: 'Camera' },
-        { kind: 'audiooutput', deviceId: 'output-1', label: 'Speaker' },
-      ]),
-      removeEventListener: jest.fn(),
-    },
-  });
-
   mockUseFlipCameraToggle.mockImplementation(() => ({
     flipCameraDisabled: false,
     flipCameraSupported: false,

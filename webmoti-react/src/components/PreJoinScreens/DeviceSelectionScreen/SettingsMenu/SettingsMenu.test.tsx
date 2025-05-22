@@ -25,16 +25,6 @@ mockUseVideoContext.mockImplementation(() => ({
   setBackgroundSettings: jest.fn(),
 }));
 
-const mockMediaDevices = {
-  addEventListener: jest.fn(),
-  removeEventListener: jest.fn(),
-  enumerateDevices: jest.fn().mockResolvedValue([]),
-};
-Object.defineProperty(global.navigator, 'mediaDevices', {
-  value: mockMediaDevices,
-  writable: true,
-});
-
 describe('the SettingsMenu component', () => {
   beforeEach(() => {
     jest.clearAllMocks();

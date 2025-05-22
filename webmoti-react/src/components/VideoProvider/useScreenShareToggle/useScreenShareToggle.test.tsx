@@ -17,17 +17,25 @@ const mockOnError: ErrorCallback = () => {};
 
 const mockTrack: any = { stop: jest.fn() };
 
-const mockMediaDevices = {
-  value: {
-    getDisplayMedia: jest.fn(() =>
+beforeAll(() => {
+  Object.defineProperty(navigator.mediaDevices, 'getDisplayMedia', {
+    configurable: true,
+    writable: true,
+    value: jest.fn(() =>
       Promise.resolve({
-        getTracks: jest.fn(() => [mockTrack]),
+        getTracks: () => [mockTrack],
       })
     ),
-  } as any,
-};
+  });
+});
 
-Object.defineProperty(navigator, 'mediaDevices', mockMediaDevices);
+afterAll(() => {
+  Object.defineProperty(navigator.mediaDevices, 'getDisplayMedia', {
+    configurable: true,
+    writable: true,
+    value: jest.fn(),
+  });
+});
 
 describe('the useScreenShareToggle hook', () => {
   beforeEach(() => {

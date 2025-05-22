@@ -22,7 +22,11 @@ describe('the DeviceSelectionScreen component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (clientEnv.DISABLE_TWILIO_CONVERSATIONS as jest.Mock).mockReturnValue('false');
-    mockUseAppState.mockImplementation(() => ({ getToken: mockGetToken, isFetching: false }));
+    mockUseAppState.mockImplementation(() => ({
+      getToken: mockGetToken,
+      isFetching: false,
+      settings: { dominantSpeakerPriority: 'standard' },
+    }));
     mockUseVideoContext.mockImplementation(() => ({
       connect: mockConnect,
       isAcquiringLocalTracks: false,

@@ -50,17 +50,6 @@ mockUseWebmotiVideoContext.mockImplementation(() => ({
 }));
 
 describe('the MenuBar component', () => {
-  beforeAll(() => {
-    Object.defineProperty(navigator, 'mediaDevices', {
-      writable: true,
-      value: {
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
-        enumerateDevices: jest.fn().mockResolvedValue([]),
-      },
-    });
-  });
-
   beforeEach(() => {
     //@ts-ignore
     utils.isMobile = false;
