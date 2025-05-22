@@ -4,13 +4,6 @@ import { MemoryRouter } from 'react-router-dom';
 import usePasscodeAuth, { getPasscode, verifyPasscode } from './usePasscodeAuth';
 import { clientEnv } from '../../clientEnv';
 
-Object.defineProperty(window, 'location', {
-  value: {
-    ...window.location,
-    search: '',
-  },
-});
-
 const navigate = jest.fn();
 
 jest.mock('react-router-dom', () => {
@@ -27,7 +20,11 @@ const wrapper = (props: React.PropsWithChildren<unknown>) => (
 
 describe('the usePasscodeAuth hook', () => {
   describe('on first render', () => {
-    beforeEach(() => window.sessionStorage.clear());
+    beforeEach(() => {
+      navigate.mockClear();
+      window.sessionStorage.clear();
+    });
+
     it('should return a user when the passcode is valid', async () => {
       // @ts-ignore
       window.fetch = jest.fn(() =>
@@ -45,20 +42,26 @@ describe('the usePasscodeAuth hook', () => {
       window.fetch = jest.fn(() =>
         Promise.resolve({ ok: true, json: () => Promise.resolve({ token: 'mockVideoToken' }) })
       );
-      Object.defineProperty(window, 'location', {
-        value: {
-          ...window.location,
-          search: '?passcode=000000',
-          origin: 'http://test-origin',
-          pathname: '/test-pathname',
-        },
-      });
+
+      const originalLocation = window.location;
+      // override window.location
+      delete (window as any).location;
+      (window as any).location = {
+        ...originalLocation,
+        search: '?passcode=000000',
+        origin: 'http://test-origin',
+        pathname: '/test-pathname',
+      };
+
       Object.defineProperty(window.history, 'replaceState', { value: jest.fn() });
       window.sessionStorage.setItem('passcode', '123123');
       renderHook(usePasscodeAuth, { wrapper });
       await waitFor(() => {
         expect(navigate).toHaveBeenLastCalledWith('/test-pathname', { replace: true });
       });
+
+      // restore window.location
+      (window as any).location = originalLocation;
     });
 
     it('should not return a user when the app code is invalid', async () => {
@@ -236,7 +239,10 @@ describe('the usePasscodeAuth hook', () => {
 });
 
 describe('the getPasscode function', () => {
-  beforeEach(() => window.sessionStorage.clear());
+  beforeEach(() => {
+    navigate.mockClear();
+    window.sessionStorage.clear();
+  });
 
   it('should return the passcode from session storage', () => {
     window.location.search = '';
