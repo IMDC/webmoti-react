@@ -254,7 +254,13 @@ export default function Menu({ buttonClassName }: MenuProps) {
           ) : (
             <MenuItem key={index} onClick={item.onClick} disabled={item.disabled}>
               {item.tooltip ? (
-                <Tooltip title={item.tooltip} placement="top" PopperProps={{ disablePortal: true }}>
+                <Tooltip
+                  title={item.tooltip}
+                  placement="top"
+                  slotProps={{
+                    popper: { disablePortal: true },
+                  }}
+                >
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <IconContainer>{item.icon}</IconContainer>
                     <Typography variant="body1">{item.label}</Typography>

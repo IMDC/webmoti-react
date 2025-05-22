@@ -22,7 +22,7 @@ import { useAppState } from '../../../state';
 import ToggleAudioButton from '../../Buttons/ToggleAudioButton/ToggleAudioButton';
 import ToggleVideoButton from '../../Buttons/ToggleVideoButton/ToggleVideoButton';
 import { Steps } from '../PreJoinScreens';
-import {clientEnv } from '../../../clientEnv';
+import { clientEnv } from '../../../clientEnv';
 
 const PREFIX = 'DeviceSelectionScreen';
 

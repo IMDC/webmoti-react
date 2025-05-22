@@ -133,9 +133,11 @@ export default function SetScheduleModal({ open, onClose }: SetScheduleModalProp
               type="time"
               value={startTime}
               onChange={(e) => setStartTime(e.target.value)}
-              InputLabelProps={{ shrink: true }}
               fullWidth
               style={{ marginBottom: '20px' }}
+              slotProps={{
+                inputLabel: { shrink: true }
+              }}
             />
 
             <TextField
@@ -144,9 +146,11 @@ export default function SetScheduleModal({ open, onClose }: SetScheduleModalProp
               type="time"
               value={endTime}
               onChange={(e) => setEndTime(e.target.value)}
-              InputLabelProps={{ shrink: true }}
               fullWidth
               style={{ marginBottom: '20px' }}
+              slotProps={{
+                inputLabel: { shrink: true }
+              }}
             />
 
             <input accept="*/*" style={{ display: 'none' }} id="upload-file" type="file" onChange={handleFileChange} />
