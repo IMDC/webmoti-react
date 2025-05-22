@@ -59,7 +59,7 @@ export default function MenuBar() {
 
   return (
     <Root className={classes.container}>
-      <Grid container justifyContent="space-around" alignItems="center">
+      <Grid container justifyContent="space-around" alignItems="center" sx={{ width: '100%' }}>
         {isLgUp && (
           <Grid style={{ flex: 1 }}>
             <Typography variant="body1">
