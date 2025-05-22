@@ -32,7 +32,7 @@ export const WEBMOTI_CAMERA_2 = 'Board-View';
 // export const HTTPS_SERVER_URL = `http://${API_DOMAIN_}`
 // export const WS_SERVER_URL = `ws://${API_DOMAIN_}/ws`;
 
-const API_DOMAIN_ = clientEnv.API_DOMAIN;
+const API_DOMAIN_ = clientEnv.API_DOMAIN();
 export const HTTPS_SERVER_URL = `https://${API_DOMAIN_}`;
 export const WS_SERVER_URL = `wss://${API_DOMAIN_}/ws`;
 

@@ -84,7 +84,7 @@ export default function MenuBar() {
             <AudioMixer />
 
             <Hidden lgDown>
-              {clientEnv.DISABLE_TWILIO_CONVERSATIONS !== 'true' && (
+              {clientEnv.DISABLE_TWILIO_CONVERSATIONS() !== 'true' && (
                 <span style={{ marginLeft: '10px' }}>
                   <ToggleChatButton />
                 </span>

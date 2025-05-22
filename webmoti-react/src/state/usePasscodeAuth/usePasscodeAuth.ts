@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { RecordingRules } from '../../types';
 import { clientEnv } from '../../clientEnv';
 
-const endpoint = clientEnv.TOKEN_ENDPOINT || '/token';
+const endpoint = clientEnv.TOKEN_ENDPOINT() || '/token';
 
 export function getPasscode() {
   const match = window.location.search.match(/passcode=(.*)&?/);
@@ -17,7 +17,7 @@ export function fetchToken(
   room: string,
   passcode: string,
   create_room = true,
-  create_conversation = clientEnv.DISABLE_TWILIO_CONVERSATIONS !== 'true'
+  create_conversation = clientEnv.DISABLE_TWILIO_CONVERSATIONS() !== 'true'
 ) {
   return fetch(endpoint, {
     method: 'POST',

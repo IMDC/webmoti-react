@@ -76,7 +76,7 @@ export default function LivekitConnectButton() {
   }
 
   async function connect() {
-    if (!clientEnv.LIVEKIT_URL) {
+    if (!clientEnv.LIVEKIT_URL()) {
       alert('Livekit URL not set');
       return;
     }
@@ -98,7 +98,7 @@ export default function LivekitConnectButton() {
           .on(RoomEvent.TrackUnsubscribed, handleTrackUnsubscribed);
 
         console.log('Connecting to room...');
-        await room.connect(clientEnv.LIVEKIT_URL, token);
+        await room.connect(clientEnv.LIVEKIT_URL()!, token);
         setIsConnected(true);
         console.log('Connected to LiveKit room!');
       } else {

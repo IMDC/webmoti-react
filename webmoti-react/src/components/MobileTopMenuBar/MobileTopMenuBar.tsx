@@ -70,7 +70,7 @@ export default function MobileTopMenuBar() {
 
         <ToggleCaptionsButton />
 
-        {clientEnv.DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />}
+        {clientEnv.DISABLE_TWILIO_CONVERSATIONS() !== 'true' && <ToggleChatButton />}
       </div>
       <div>
         <EndCallButton className={classes.endCallButton} />

@@ -22,8 +22,8 @@ function AboutDialog({ open, onClose }: PropsWithChildren<AboutDialogProps>) {
         <DialogContentText>Browser supported: {String(Video.isSupported)}</DialogContentText>
         <DialogContentText>SDK Version: {Video.version}</DialogContentText>
         <DialogContentText>App Version: {packageJSON.version}</DialogContentText>
-        <DialogContentText>Deployed Tag: {clientEnv.GIT_TAG || 'N/A'}</DialogContentText>
-        <DialogContentText>Deployed Commit Hash: {clientEnv.GIT_COMMIT || 'N/A'}</DialogContentText>
+        <DialogContentText>Deployed Tag: {clientEnv.GIT_TAG() || 'N/A'}</DialogContentText>
+        <DialogContentText>Deployed Commit Hash: {clientEnv.GIT_COMMIT() || 'N/A'}</DialogContentText>
         {roomType && <DialogContentText>Room Type: {roomType}</DialogContentText>}
       </DialogContent>
       <Divider />

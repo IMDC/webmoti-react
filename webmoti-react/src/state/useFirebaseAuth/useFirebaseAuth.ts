@@ -6,10 +6,10 @@ import { RecordingRules } from '../../types';
 import { clientEnv } from '../../clientEnv';
 
 const firebaseConfig = {
-  apiKey: clientEnv.FIREBASE_API_KEY,
-  authDomain: clientEnv.FIREBASE_AUTH_DOMAIN,
-  storageBucket: clientEnv.FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: clientEnv.FIREBASE_MESSAGING_SENDER_ID,
+  apiKey: clientEnv.FIREBASE_API_KEY(),
+  authDomain: clientEnv.FIREBASE_AUTH_DOMAIN(),
+  storageBucket: clientEnv.FIREBASE_STORAGE_BUCKET(),
+  messagingSenderId: clientEnv.FIREBASE_MESSAGING_SENDER_ID(),
 };
 
 const getUrlTokenParam = () => {
@@ -56,7 +56,7 @@ export default function useFirebaseAuth() {
       headers.set('Authorization', `Bearer ${idToken}`);
       headers.set('content-type', 'application/json');
 
-      const endpoint = clientEnv.TOKEN_ENDPOINT || '/token';
+      const endpoint = clientEnv.TOKEN_ENDPOINT() || '/token';
 
       const response = await fetch(endpoint, {
         method: 'POST',
@@ -64,7 +64,7 @@ export default function useFirebaseAuth() {
         body: JSON.stringify({
           user_identity,
           room_name,
-          create_conversation: clientEnv.DISABLE_TWILIO_CONVERSATIONS !== 'true',
+          create_conversation: clientEnv.DISABLE_TWILIO_CONVERSATIONS() !== 'true',
         }),
       });
 

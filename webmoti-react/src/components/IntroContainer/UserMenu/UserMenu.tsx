@@ -49,7 +49,7 @@ const UserMenu = () => {
     signOut?.();
   }, [localTracks, signOut]);
 
-  if (clientEnv.SET_AUTH === 'passcode') {
+  if (clientEnv.SET_AUTH() === 'passcode') {
     return (
       <Root className={classes.userContainer} data-testid="user-menu">
         <Link onClick={handleSignOut} className={classes.logoutLink} underline="hover">
@@ -59,7 +59,7 @@ const UserMenu = () => {
     );
   }
 
-  if (clientEnv.SET_AUTH === 'firebase') {
+  if (clientEnv.SET_AUTH() === 'firebase') {
     return (
       <Root className={classes.userContainer} data-testid="user-menu">
         <UserAvatar user={user} />

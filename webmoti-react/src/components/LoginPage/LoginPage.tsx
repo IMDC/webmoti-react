@@ -72,7 +72,7 @@ export default function LoginPage() {
   const [passcode, setPasscode] = useState('');
   const [authError, setAuthError] = useState<Error | null>(null);
 
-  const isAuthEnabled = Boolean(clientEnv.SET_AUTH);
+  const isAuthEnabled = Boolean(clientEnv.SET_AUTH());
 
   const from = (location.state as { from?: Location })?.from?.pathname || '/';
 
@@ -101,7 +101,7 @@ export default function LoginPage() {
 
   return (
     <StyledIntroContainer>
-      {clientEnv.SET_AUTH === 'firebase' && (
+      {clientEnv.SET_AUTH() === 'firebase' && (
         <>
           <Typography variant="h5" className={classes.gutterBottom}>
             Sign in to join the classroom
@@ -112,7 +112,7 @@ export default function LoginPage() {
           </Button>
         </>
       )}
-      {clientEnv.SET_AUTH === 'passcode' && (
+      {clientEnv.SET_AUTH() === 'passcode' && (
         <>
           <Typography variant="h5" className={classes.gutterBottom}>
             Enter passcode to join a room
