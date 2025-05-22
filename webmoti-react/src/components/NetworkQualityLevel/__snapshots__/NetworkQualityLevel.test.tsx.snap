@@ -3,7 +3,7 @@
 exports[`the NetworkQualityLevel component should render correctly for level 0 1`] = `
 <div>
   <div
-    class="NetworkQualityLevel-outerContainer css-t5cwso"
+    class="NetworkQualityLevel-outerContainer css-121vjg"
   >
     <div
       class="NetworkQualityLevel-innerContainer"
@@ -31,7 +31,7 @@ exports[`the NetworkQualityLevel component should render correctly for level 0 1
 exports[`the NetworkQualityLevel component should render correctly for level 3 1`] = `
 <div>
   <div
-    class="NetworkQualityLevel-outerContainer css-t5cwso"
+    class="NetworkQualityLevel-outerContainer css-121vjg"
   >
     <div
       class="NetworkQualityLevel-innerContainer"
@@ -59,7 +59,7 @@ exports[`the NetworkQualityLevel component should render correctly for level 3 1
 exports[`the NetworkQualityLevel component should render correctly for level 5 1`] = `
 <div>
   <div
-    class="NetworkQualityLevel-outerContainer css-t5cwso"
+    class="NetworkQualityLevel-outerContainer css-121vjg"
   >
     <div
       class="NetworkQualityLevel-innerContainer"

@@ -3,7 +3,7 @@
 exports[`the messageList component should render correctly 1`] = `
 <div>
   <div
-    class="MessageListScrollContainer-outerContainer css-14tmjc3"
+    class="MessageListScrollContainer-outerContainer css-2uu4p1"
   >
     <div
       class="MessageListScrollContainer-innerScrollContainer"
@@ -23,7 +23,7 @@ exports[`the messageList component should render correctly 1`] = `
           </div>
         </div>
         <div
-          class="css-1h2yuon"
+          class="css-wwj534"
         >
           <div
             class="TextMessage-messageContainer TextMessage-isLocalParticipant"
@@ -44,7 +44,7 @@ exports[`the messageList component should render correctly 1`] = `
           </div>
         </div>
         <div
-          class="css-1h2yuon"
+          class="css-wwj534"
         >
           <div
             class="TextMessage-messageContainer"
@@ -55,7 +55,7 @@ exports[`the messageList component should render correctly 1`] = `
           </div>
         </div>
         <div
-          class="css-1h2yuon"
+          class="css-wwj534"
         >
           <div
             class="TextMessage-messageContainer"
@@ -76,7 +76,7 @@ exports[`the messageList component should render correctly 1`] = `
           </div>
         </div>
         <div
-          class="css-1h2yuon"
+          class="css-wwj534"
         >
           <div
             class="TextMessage-messageContainer"
@@ -97,7 +97,7 @@ exports[`the messageList component should render correctly 1`] = `
           </div>
         </div>
         <div
-          class="css-1h2yuon"
+          class="css-wwj534"
         >
           <div
             class="TextMessage-messageContainer TextMessage-isLocalParticipant"
@@ -118,7 +118,7 @@ exports[`the messageList component should render correctly 1`] = `
           </div>
         </div>
         <div
-          class="css-1h2yuon"
+          class="css-wwj534"
         >
           <div
             class="TextMessage-messageContainer TextMessage-isLocalParticipant"
@@ -139,7 +139,7 @@ exports[`the messageList component should render correctly 1`] = `
           </div>
         </div>
         <div
-          class="css-1h2yuon"
+          class="css-wwj534"
         >
           <div
             class="TextMessage-messageContainer"
@@ -147,7 +147,7 @@ exports[`the messageList component should render correctly 1`] = `
             <div>
               look at this app: 
               <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-11iau0r-MuiTypography-root-MuiLink-root"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-1seph5p-MuiTypography-root-MuiLink-root"
                 href="http://github.com/twilio/twilio-video-app-react"
                 rel="noreferrer"
                 target="_blank"
@@ -169,7 +169,7 @@ exports[`the messageList component should render correctly 1`] = `
           </div>
         </div>
         <div
-          class="MediaMessage-messageContainer css-8lzb36"
+          class="MediaMessage-messageContainer css-1l2t1g2"
         >
           <div
             class="MediaMessage-iconContainer"
@@ -242,17 +242,17 @@ exports[`the messageList component should render correctly 1`] = `
           </div>
         </div>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MessageListScrollContainer-button css-sghohy-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MessageListScrollContainer-button css-176z40r-MuiButtonBase-root-MuiButton-root"
           data-cy-new-message-button="true"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeMedium css-1d6wzja-MuiButton-startIcon"
+            class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeMedium css-1jsm74t-MuiButton-startIcon"
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-20bmp1-MuiSvgIcon-root"
               data-testid="ArrowDownwardIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -264,9 +264,6 @@ exports[`the messageList component should render correctly 1`] = `
           </span>
           0
            new message
-          <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-          />
         </button>
       </div>
     </div>

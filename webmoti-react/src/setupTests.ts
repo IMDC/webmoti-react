@@ -8,6 +8,13 @@ if (!global.TextEncoder) {
   global.TextEncoder = TextEncoder;
 }
 
+// mock getScrollbarSize to prevent JSDOM crash in MUI Modal tests.
+// MUI uses document.documentElement.clientWidth, which JSDOM doesn't support.
+jest.mock('@mui/utils/getScrollbarSize', () => ({
+  __esModule: true,
+  default: () => 0,
+}));
+
 // mock env
 jest.mock('./clientEnv', () => ({
   clientEnv: {
