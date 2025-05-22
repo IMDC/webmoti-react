@@ -1,7 +1,9 @@
 import { ReactNode } from 'react';
+
 import { act, renderHook, waitFor } from '@testing-library/react';
 
 import AppStateProvider, { useAppState } from './index';
+import { clientEnv } from '../clientEnv';
 import useFirebaseAuth from './useFirebaseAuth/useFirebaseAuth';
 import usePasscodeAuth from './usePasscodeAuth/usePasscodeAuth';
 
@@ -25,7 +27,10 @@ const wrapper = ({ children }: { children: ReactNode }) => <AppStateProvider>{ch
 
 describe('the useAppState hook', () => {
   beforeEach(jest.clearAllMocks);
-  beforeEach(() => (process.env = {} as any));
+  beforeEach(() => {
+    (clientEnv.SET_AUTH as jest.Mock).mockReturnValue(undefined);
+    (clientEnv.TOKEN_ENDPOINT as jest.Mock).mockReturnValue(undefined);
+  });
 
   it('should set an error', () => {
     const { result } = renderHook(useAppState, { wrapper });
@@ -38,7 +43,7 @@ describe('the useAppState hook', () => {
   });
 
   it('should get a token using the REACT_APP_TOKEN_ENDPOINT environment variable when avaiable', async () => {
-    process.env.REACT_APP_TOKEN_ENDPOINT = 'http://test.com/api/token';
+    (clientEnv.TOKEN_ENDPOINT as jest.Mock).mockReturnValue('http://test.com/api/token');
 
     const { result } = renderHook(useAppState, { wrapper });
 
@@ -58,7 +63,8 @@ describe('the useAppState hook', () => {
 
   describe('with auth disabled', () => {
     it('should not use any auth hooks', async () => {
-      delete process.env.REACT_APP_SET_AUTH;
+      (clientEnv.SET_AUTH as jest.Mock).mockReturnValue(undefined);
+
       renderHook(useAppState, { wrapper });
       expect(useFirebaseAuth).not.toHaveBeenCalled();
       expect(usePasscodeAuth).not.toHaveBeenCalled();
@@ -67,7 +73,8 @@ describe('the useAppState hook', () => {
 
   describe('with firebase auth enabled', () => {
     it('should use the useFirebaseAuth hook', async () => {
-      process.env.REACT_APP_SET_AUTH = 'firebase';
+      (clientEnv.SET_AUTH as jest.Mock).mockReturnValue('firebase');
+
       const { result } = renderHook(useAppState, { wrapper });
       expect(useFirebaseAuth).toHaveBeenCalled();
       expect(result.current.user).toBe('firebaseUser');
@@ -76,7 +83,8 @@ describe('the useAppState hook', () => {
 
   describe('with passcode auth enabled', () => {
     it('should use the usePasscodeAuth hook', async () => {
-      process.env.REACT_APP_SET_AUTH = 'passcode';
+      (clientEnv.SET_AUTH as jest.Mock).mockReturnValue('passcode');
+
       const { result } = renderHook(useAppState, { wrapper });
       expect(usePasscodeAuth).toHaveBeenCalled();
       expect(result.current.user).toBe('passcodeUser');
@@ -86,7 +94,8 @@ describe('the useAppState hook', () => {
   describe('the getToken function', () => {
     it('should set isFetching to true after getToken is called, and false after getToken succeeds', async () => {
       // Using passcode auth because it's easier to mock the getToken function
-      process.env.REACT_APP_SET_AUTH = 'passcode';
+      (clientEnv.SET_AUTH as jest.Mock).mockReturnValue('passcode');
+
       mockUsePasscodeAuth.mockImplementation(() => {
         return {
           getToken: () =>
@@ -119,7 +128,8 @@ describe('the useAppState hook', () => {
     });
 
     it('should set isFetching to true after getToken is called, and false after getToken fails', async () => {
-      process.env.REACT_APP_SET_AUTH = 'passcode';
+      (clientEnv.SET_AUTH as jest.Mock).mockReturnValue('passcode');
+
       mockUsePasscodeAuth.mockImplementation(() => {
         return {
           getToken: () =>

@@ -2,6 +2,7 @@ import React from 'react';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import usePasscodeAuth, { getPasscode, verifyPasscode } from './usePasscodeAuth';
+import { clientEnv } from '../../clientEnv';
 
 Object.defineProperty(window, 'location', {
   value: {
@@ -166,7 +167,7 @@ describe('the usePasscodeAuth hook', () => {
     });
 
     it('should call the API with the correct parameters when REACT_APP_DISABLE_TWILIO_CONVERSATIONS is true', async () => {
-      process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS = 'true';
+      (clientEnv.DISABLE_TWILIO_CONVERSATIONS as jest.Mock).mockReturnValue('true');
 
       // @ts-ignore
       window.fetch = jest.fn(() =>
@@ -189,7 +190,7 @@ describe('the usePasscodeAuth hook', () => {
       });
 
       // reset the environment variable
-      delete process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS;
+      (clientEnv.DISABLE_TWILIO_CONVERSATIONS as jest.Mock).mockReturnValue(undefined);
     });
 
     it('should return a token', async () => {

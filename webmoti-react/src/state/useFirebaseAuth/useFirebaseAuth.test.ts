@@ -1,6 +1,7 @@
 import useFirebaseAuth from './useFirebaseAuth';
 import { renderHook, waitFor } from '@testing-library/react';
 import { setImmediate } from 'timers';
+import { clientEnv } from '../../clientEnv';
 
 const mockUser = { getIdToken: () => Promise.resolve('idToken') };
 
@@ -73,7 +74,8 @@ describe('the useFirebaseAuth hook', () => {
   });
 
   it('should include the users idToken in request to the video token server', async () => {
-    process.env.REACT_APP_TOKEN_ENDPOINT = 'http://test-endpoint.com/token';
+    (clientEnv.TOKEN_ENDPOINT as jest.Mock).mockReturnValue('http://test-endpoint.com/token');
+
     const { result } = renderHook(() => useFirebaseAuth());
     await waitFor(() => {
       expect(result.current.isAuthReady).toBe(true);

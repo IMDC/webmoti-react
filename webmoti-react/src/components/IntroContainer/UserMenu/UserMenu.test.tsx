@@ -3,6 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import UserMenu from './UserMenu';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../../state';
+import { clientEnv } from '../../../clientEnv';
 
 jest.mock('../../../state');
 jest.mock('../../../hooks/useVideoContext/useVideoContext');
@@ -25,7 +26,7 @@ describe('the UserMenu component', () => {
 
   describe('when logged in with firebase', () => {
     beforeAll(() => {
-      process.env.REACT_APP_SET_AUTH = 'firebase';
+      (clientEnv.SET_AUTH as jest.Mock).mockReturnValue('firebase');
     });
 
     it('should open the menu when clicked', () => {
@@ -49,7 +50,7 @@ describe('the UserMenu component', () => {
 
   describe('when logged in with passcode auth', () => {
     beforeAll(() => {
-      process.env.REACT_APP_SET_AUTH = 'passcode';
+      (clientEnv.SET_AUTH as jest.Mock).mockReturnValue('passcode');
     });
 
     it('should stop all tracks and sign out when logout link is clicked', () => {

@@ -3,6 +3,7 @@ import '@testing-library/jest-dom';
 import DeviceSelectionScreen from './DeviceSelectionScreen';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../../state';
+import { clientEnv } from '../../../clientEnv';
 
 jest.mock('../../../hooks/useChatContext/useChatContext', () => () => ({ connect: mockChatConnect }));
 jest.mock('../../../hooks/useVideoContext/useVideoContext');
@@ -20,7 +21,7 @@ jest.mock('../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext', () => 
 describe('the DeviceSelectionScreen component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS = 'false';
+    (clientEnv.DISABLE_TWILIO_CONVERSATIONS as jest.Mock).mockReturnValue('false');
     mockUseAppState.mockImplementation(() => ({ getToken: mockGetToken, isFetching: false }));
     mockUseVideoContext.mockImplementation(() => ({
       connect: mockConnect,
@@ -108,7 +109,7 @@ describe('the DeviceSelectionScreen component', () => {
   });
 
   it('should only connect to video if chat is disabled', async () => {
-    process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS = 'true';
+    (clientEnv.DISABLE_TWILIO_CONVERSATIONS as jest.Mock).mockReturnValue('true');
     render(<DeviceSelectionScreen name="test name" roomName="test room name" setStep={() => {}} />);
     fireEvent.click(screen.getByRole('button', { name: /join now/i }));
 

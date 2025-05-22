@@ -1,7 +1,7 @@
-import React from 'react';
 import AboutDialog from './AboutDialog';
 import { render } from '@testing-library/react';
 import { useAppState } from '../../state';
+import { clientEnv } from '../../clientEnv';
 
 jest.mock('twilio-video', () => ({ version: '1.2', isSupported: true }));
 jest.mock('../../state');
@@ -22,8 +22,8 @@ describe('the AboutDialog component', () => {
   });
 
   it('should display the package.json version', () => {
-    process.env.REACT_APP_VERSION = '1.3';
     const { getByText } = render(<AboutDialog open={true} onClose={() => {}} />);
+    // this is mocked at the top of the file
     expect(getByText('App Version: 1.3')).toBeTruthy();
   });
 
@@ -40,8 +40,8 @@ describe('the AboutDialog component', () => {
 
   describe('when running locally', () => {
     beforeEach(() => {
-      // @ts-ignore
-      process.env = {};
+      (clientEnv.GIT_TAG as jest.Mock).mockReturnValue(undefined);
+      (clientEnv.GIT_COMMIT as jest.Mock).mockReturnValue(undefined);
     });
 
     it('should display N/A as the git tag', () => {
@@ -57,11 +57,8 @@ describe('the AboutDialog component', () => {
 
   describe('when deployed via CircleCI', () => {
     beforeEach(() => {
-      // @ts-ignore
-      process.env = {
-        REACT_APP_GIT_TAG: 'v0.1',
-        REACT_APP_GIT_COMMIT: '01b2c3',
-      };
+      (clientEnv.GIT_TAG as jest.Mock).mockReturnValue('v0.1');
+      (clientEnv.GIT_COMMIT as jest.Mock).mockReturnValue('01b2c3');
     });
 
     it('should display the git tag', () => {

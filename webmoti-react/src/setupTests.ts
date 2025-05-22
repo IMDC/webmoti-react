@@ -8,6 +8,27 @@ if (!global.TextEncoder) {
   global.TextEncoder = TextEncoder;
 }
 
+// mock env
+jest.mock('./clientEnv', () => ({
+  clientEnv: {
+    FIREBASE_API_KEY: jest.fn(() => 'mock-firebase-key'),
+    FIREBASE_AUTH_DOMAIN: jest.fn(() => 'mock-auth-domain'),
+    FIREBASE_STORAGE_BUCKET: jest.fn(() => 'mock-storage-bucket'),
+    FIREBASE_MESSAGING_SENDER_ID: jest.fn(() => '1234567890'),
+
+    API_DOMAIN: jest.fn(() => 'mock-api-domain'),
+    LIVEKIT_URL: jest.fn(() => 'mock-livekit-url'),
+
+    SET_AUTH: jest.fn(() => 'firebase'),
+    DISABLE_TWILIO_CONVERSATIONS: jest.fn(() => undefined),
+    TOKEN_ENDPOINT: jest.fn(() => undefined),
+    ROOM_TYPE: jest.fn(() => 'go'),
+
+    GIT_TAG: jest.fn(() => 'v0.0'),
+    GIT_COMMIT: jest.fn(() => '12345abcde'),
+  },
+}));
+
 // Mocks the Fullscreen API. This is needed for ToggleFullScreenButton.test.tsx.
 Object.defineProperty(document, 'fullscreenEnabled', { value: true, writable: true });
 

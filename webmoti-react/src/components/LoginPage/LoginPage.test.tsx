@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import LoginPage from './LoginPage';
 import { useAppState } from '../../state';
+import { clientEnv } from '../../clientEnv';
 
 jest.mock('react-router-dom', () => {
   return {
@@ -22,18 +23,19 @@ mockUseNavigate.mockImplementation(() => mockNavigate);
 mockUseLocation.mockImplementation(() => ({ pathname: '/login' }));
 
 describe('the LoginPage component', () => {
-  beforeEach(jest.clearAllMocks);
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (clientEnv.SET_AUTH as jest.Mock).mockReturnValue('firebase');
+  });
 
   describe('with auth enabled', () => {
     it('should redirect to "/" when there is a user ', () => {
-      process.env.REACT_APP_SET_AUTH = 'firebase';
       mockUseAppState.mockImplementation(() => ({ user: {}, signIn: () => Promise.resolve(), isAuthReady: true }));
       render(<LoginPage />);
       expect(mockNavigate).toHaveBeenCalledWith('/', { replace: true });
     });
 
     it('should render the login page when there is no user', () => {
-      process.env.REACT_APP_SET_AUTH = 'firebase';
       mockUseAppState.mockImplementation(() => ({ user: null, signIn: () => Promise.resolve(), isAuthReady: true }));
       const { getByText } = render(<LoginPage />);
       expect(mockNavigate).not.toHaveBeenCalled();
@@ -41,7 +43,6 @@ describe('the LoginPage component', () => {
     });
 
     it('should redirect the user to "/" after signIn when there is no previous location', async () => {
-      process.env.REACT_APP_SET_AUTH = 'firebase';
       mockUseAppState.mockImplementation(() => ({ user: null, signIn: () => Promise.resolve(), isAuthReady: true }));
       const { getByText } = render(<LoginPage />);
       getByText('Sign in with Google').click();
@@ -51,7 +52,6 @@ describe('the LoginPage component', () => {
     });
 
     it('should redirect the user to their previous location after signIn', async () => {
-      process.env.REACT_APP_SET_AUTH = 'firebase';
       mockUseLocation.mockImplementation(() => ({ state: { from: { pathname: '/room/test' } } }));
       mockUseAppState.mockImplementation(() => ({ user: null, signIn: () => Promise.resolve(), isAuthReady: true }));
       const { getByText } = render(<LoginPage />);
@@ -62,7 +62,6 @@ describe('the LoginPage component', () => {
     });
 
     it('should not render anything when isAuthReady is false', () => {
-      process.env.REACT_APP_SET_AUTH = 'firebase';
       mockUseAppState.mockImplementation(() => ({ user: null, signIn: () => Promise.resolve(), isAuthReady: false }));
       const { container } = render(<LoginPage />);
       expect(mockNavigate).not.toHaveBeenCalled();
@@ -71,9 +70,12 @@ describe('the LoginPage component', () => {
   });
 
   describe('with passcode auth enabled', () => {
+    beforeEach(() => {
+      (clientEnv.SET_AUTH as jest.Mock).mockReturnValue('passcode');
+    });
+
     it('should call sign in with the supplied passcode', async () => {
       const mockSignin = jest.fn(() => Promise.resolve());
-      process.env.REACT_APP_SET_AUTH = 'passcode';
       mockUseAppState.mockImplementation(() => ({ user: null, signIn: mockSignin, isAuthReady: true }));
       const { getByLabelText, getByText } = render(<LoginPage />);
 
@@ -91,7 +93,6 @@ describe('the LoginPage component', () => {
 
     it('should call render error messages when signin fails', async () => {
       const mockSignin = jest.fn(() => Promise.reject(new Error('Test Error')));
-      process.env.REACT_APP_SET_AUTH = 'passcode';
       mockUseAppState.mockImplementation(() => ({ user: null, signIn: mockSignin, isAuthReady: true }));
       const { getByLabelText, getByText } = render(<LoginPage />);
 
@@ -109,7 +110,7 @@ describe('the LoginPage component', () => {
   });
 
   it('should redirect to "/" when auth is disabled', () => {
-    delete process.env.REACT_APP_SET_AUTH;
+    (clientEnv.SET_AUTH as jest.Mock).mockReturnValue(undefined);
     mockUseAppState.mockImplementation(() => ({ user: null, signIn: () => Promise.resolve(), isAuthReady: true }));
     render(<LoginPage />);
     expect(mockNavigate).toHaveBeenCalledWith('/', { replace: true });
