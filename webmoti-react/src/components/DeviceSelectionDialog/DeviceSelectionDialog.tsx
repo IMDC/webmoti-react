@@ -6,10 +6,11 @@ import {
   DialogActions,
   Button,
   DialogTitle,
-  Hidden,
   FormControlLabel,
   Switch,
   Tooltip,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
@@ -96,6 +97,9 @@ export default function DeviceSelectionDialog({ open, onClose }: { open: boolean
   const { isKrispEnabled, isKrispInstalled } = useAppState();
   const { toggleKrisp } = useKrispToggle();
 
+  const theme = useTheme();
+  const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
+
   return (
     <StyledDialog open={open} onClose={onClose} classes={{ paper: classes.paper }}>
       <DialogTitle>Audio and Video Settings</DialogTitle>
@@ -155,15 +159,17 @@ export default function DeviceSelectionDialog({ open, onClose }: { open: boolean
         <div className={classes.listSection}>
           <AudioOutputList />
         </div>
-        <Hidden mdDown>
-          <Divider />
-          <div className={classes.listSection}>
-            <Typography variant="h6" className={classes.headline}>
-              Gallery View
-            </Typography>
-            <MaxGalleryViewParticipants />
-          </div>
-        </Hidden>
+        {isMdUp && (
+          <>
+            <Divider />
+            <div className={classes.listSection}>
+              <Typography variant="h6" className={classes.headline}>
+                Gallery View
+              </Typography>
+              <MaxGalleryViewParticipants />
+            </div>
+          </>
+        )}
       </DialogContent>
       <Divider />
       <DialogActions>

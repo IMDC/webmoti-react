@@ -1,4 +1,4 @@
-import { Grid, Hidden, Typography } from '@mui/material';
+import { Grid, Typography, useTheme, useMediaQuery } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import ControlsMenu from './ControlsMenu/ControlsMenu';
@@ -54,10 +54,13 @@ export default function MenuBar() {
 
   const isReconnecting = roomState === 'reconnecting';
 
+  const theme = useTheme();
+  const isLgUp = useMediaQuery(theme.breakpoints.up('lg'));
+
   return (
     <Root className={classes.container}>
       <Grid container justifyContent="space-around" alignItems="center">
-        <Hidden lgDown>
+        {isLgUp && (
           <Grid style={{ flex: 1 }}>
             <Typography variant="body1">
               {/* only show room name in dev */}
@@ -67,43 +70,41 @@ export default function MenuBar() {
               {participants.length ? 's' : ''} */}
             </Typography>
           </Grid>
-        </Hidden>
+        )}
 
         <Grid>
           <Grid container justifyContent="center" alignItems="center">
             <ToggleAudioButton disabled={isReconnecting} />
             <ToggleVideoButton disabled={isReconnecting} />
 
-            <Hidden lgDown>
-              <ToggleCaptionsButton />
-            </Hidden>
+            {isLgUp && <ToggleCaptionsButton />}
 
             <RaiseHandButton />
             <NotifyButton />
 
             <AudioMixer />
 
-            <Hidden lgDown>
-              {clientEnv.DISABLE_TWILIO_CONVERSATIONS() !== 'true' && (
-                <span style={{ marginLeft: '10px' }}>
-                  <ToggleChatButton />
-                </span>
-              )}
-
-              <ControlsMenu />
-
-              <Menu />
-            </Hidden>
+            {isLgUp && (
+              <>
+                {clientEnv.DISABLE_TWILIO_CONVERSATIONS() !== 'true' && (
+                  <span style={{ marginLeft: '10px' }}>
+                    <ToggleChatButton />
+                  </span>
+                )}
+                <ControlsMenu />
+                <Menu />
+              </>
+            )}
           </Grid>
         </Grid>
 
-        <Hidden lgDown>
+        {isLgUp && (
           <Grid style={{ flex: 1 }}>
             <Grid container justifyContent="flex-end">
               <EndCallButton />
             </Grid>
           </Grid>
-        </Hidden>
+        )}
       </Grid>
     </Root>
   );

@@ -2,12 +2,13 @@ import {
   Typography,
   Grid,
   Button,
-  Hidden,
   Switch,
   Tooltip,
   CircularProgress,
   Divider,
   FormControlLabel,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
@@ -112,6 +113,9 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
   const { toggleKrisp } = useKrispToggle();
   const disableButtons = isFetching || isAcquiringLocalTracks || isConnecting;
 
+  const theme = useTheme();
+  const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
+
   const handleJoin = () => {
     getToken(name, roomName).then(({ token }) => {
       videoConnect(token);
@@ -144,31 +148,37 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
           size={{
             md: 7,
             sm: 12,
-            xs: 12
-          }}>
+            xs: 12,
+          }}
+        >
           <div className={classes.localPreviewContainer}>
             <LocalVideoPreview identity={name} />
           </div>
           <div className={classes.mobileButtonBar}>
-            <Hidden mdUp>
-              <ToggleAudioButton className={classes.mobileButton} disabled={disableButtons} />
-              <ToggleVideoButton className={classes.mobileButton} disabled={disableButtons} />
-              <SettingsMenu mobileButtonClass={classes.mobileButton} />
-            </Hidden>
+            {!isMdUp && (
+              <>
+                <ToggleAudioButton className={classes.mobileButton} disabled={disableButtons} />
+                <ToggleVideoButton className={classes.mobileButton} disabled={disableButtons} />
+                <SettingsMenu mobileButtonClass={classes.mobileButton} />
+              </>
+            )}
           </div>
         </Grid>
         <Grid
           size={{
             md: 5,
             sm: 12,
-            xs: 12
-          }}>
+            xs: 12,
+          }}
+        >
           <Grid container direction="column" justifyContent="space-between" style={{ alignItems: 'normal' }}>
             <div>
-              <Hidden mdDown>
-                <ToggleAudioButton className={classes.deviceButton} disabled={disableButtons} />
-                <ToggleVideoButton className={classes.deviceButton} disabled={disableButtons} />
-              </Hidden>
+              {isMdUp && (
+                <>
+                  <ToggleAudioButton className={classes.deviceButton} disabled={disableButtons} />
+                  <ToggleVideoButton className={classes.deviceButton} disabled={disableButtons} />
+                </>
+              )}
             </div>
           </Grid>
         </Grid>
@@ -177,8 +187,9 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
           size={{
             md: 12,
             sm: 12,
-            xs: 12
-          }}>
+            xs: 12,
+          }}
+        >
           {isKrispInstalled && (
             <Grid
               container
@@ -225,26 +236,23 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
           size={{
             md: 12,
             sm: 12,
-            xs: 12
-          }}>
+            xs: 12,
+          }}
+        >
           <Grid container direction="row" alignItems="center" style={{ marginTop: '1em' }}>
-            <Hidden mdDown>
-              <Grid
-                size={{
-                  md: 7,
-                  sm: 12,
-                  xs: 12
-                }}>
+            {isMdUp && (
+              <Grid size={{ md: 7, sm: 12, xs: 12 }}>
                 <SettingsMenu mobileButtonClass={classes.mobileButton} />
               </Grid>
-            </Hidden>
+            )}
 
             <Grid
               size={{
                 md: 5,
                 sm: 12,
-                xs: 12
-              }}>
+                xs: 12,
+              }}
+            >
               <div className={classes.joinButtons}>
                 {clientEnv.SET_AUTH() === 'passcode' ? (
                   <Button variant="outlined" color="primary" onClick={() => setStep(Steps.roomNameStep)}>
@@ -252,7 +260,7 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
                   </Button>
                 ) : (
                   // placeholder that keeps join button on the right
-                  (<span style={{ flexGrow: 1 }} />)
+                  <span style={{ flexGrow: 1 }} />
                 )}
                 <Button
                   variant="contained"
