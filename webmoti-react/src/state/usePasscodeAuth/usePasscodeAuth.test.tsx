@@ -18,6 +18,23 @@ const wrapper = (props: React.PropsWithChildren<unknown>) => (
   <MemoryRouter initialEntries={['/test-pathname']}>{props.children}</MemoryRouter>
 );
 
+function mockLocationSearch(search: string): () => void {
+  const original = window.location;
+
+  delete (window as any).location;
+  (window as any).location = {
+    ...original,
+    search,
+    href: `http://localhost${search}`,
+    origin: 'http://test-origin',
+    pathname: '/test-pathname',
+  };
+
+  return () => {
+    (window as any).location = original;
+  };
+}
+
 describe('the usePasscodeAuth hook', () => {
   describe('on first render', () => {
     beforeEach(() => {
@@ -43,15 +60,7 @@ describe('the usePasscodeAuth hook', () => {
         Promise.resolve({ ok: true, json: () => Promise.resolve({ token: 'mockVideoToken' }) })
       );
 
-      const originalLocation = window.location;
-      // override window.location
-      delete (window as any).location;
-      (window as any).location = {
-        ...originalLocation,
-        search: '?passcode=000000',
-        origin: 'http://test-origin',
-        pathname: '/test-pathname',
-      };
+      const restoreLocation = mockLocationSearch('?passcode=000000');
 
       Object.defineProperty(window.history, 'replaceState', { value: jest.fn() });
       window.sessionStorage.setItem('passcode', '123123');
@@ -60,8 +69,7 @@ describe('the usePasscodeAuth hook', () => {
         expect(navigate).toHaveBeenLastCalledWith('/test-pathname', { replace: true });
       });
 
-      // restore window.location
-      (window as any).location = originalLocation;
+      restoreLocation();
     });
 
     it('should not return a user when the app code is invalid', async () => {
@@ -251,16 +259,16 @@ describe('the getPasscode function', () => {
   });
 
   it('should return the passcode from the URL', () => {
-    window.location.search = '?passcode=234234';
-
+    const restoreLocation = mockLocationSearch('?passcode=234234');
     expect(getPasscode()).toBe('234234');
+    restoreLocation();
   });
 
-  it('should return the passcode from the URL when the app code is also sotred in sessionstorage', () => {
+  it('should return the passcode from the URL when the app code is also stored in sessionstorage', () => {
     window.sessionStorage.setItem('passcode', '123123');
-    window.location.search = '?passcode=234234';
-
+    const restoreLocation = mockLocationSearch('?passcode=234234');
     expect(getPasscode()).toBe('234234');
+    restoreLocation();
   });
 
   it('should return null when there is no passcode', () => {
