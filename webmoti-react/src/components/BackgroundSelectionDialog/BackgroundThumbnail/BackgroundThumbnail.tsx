@@ -1,5 +1,6 @@
 import { styled } from '@mui/material/styles';
-import { BlurOn, FilterNone } from '@mui/icons-material';
+import BlurOnIcon from '@mui/icons-material/BlurOn';
+import FilterNoneIcon from '@mui/icons-material/FilterNone';
 import clsx from 'clsx';
 
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
@@ -120,8 +121,8 @@ export default function BackgroundThumbnail({
     ? backgroundSettings.index === index && backgroundSettings.type === 'image'
     : backgroundSettings.type === thumbnail;
   const icons = {
-    none: FilterNone,
-    blur: BlurOn,
+    none: FilterNoneIcon,
+    blur: BlurOnIcon,
     image: null,
   };
   const ThumbnailIcon = icons[thumbnail];

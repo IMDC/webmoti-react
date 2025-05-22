@@ -1,11 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import {
-  Mic as MicIcon,
-  MicOff as MicOffIcon,
-  VolumeOff as VolumeOffIcon,
-  VolumeUp as VolumeUpIcon,
-} from '@mui/icons-material';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import VolumeOffIcon from '@mui/icons-material/VolumeOff';
+import MicOffIcon from '@mui/icons-material/MicOff';
+import MicIcon from '@mui/icons-material/Mic';
 import { Box, Button, Popover, TextField, Typography } from '@mui/material';
 import { Message } from '@twilio/conversations';
 
