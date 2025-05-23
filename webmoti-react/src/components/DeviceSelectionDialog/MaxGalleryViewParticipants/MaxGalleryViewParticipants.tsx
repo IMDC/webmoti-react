@@ -16,7 +16,7 @@ export default function MaxGalleryViewParticipants() {
         <div className="inputSelect">
           <FormControl variant="standard" fullWidth>
             <Select
-              onChange={(e) => setMaxGalleryViewParticipants(parseInt(e.target.value as string))}
+              onChange={(e) => setMaxGalleryViewParticipants(e.target.value)}
               value={maxGalleryViewParticipants}
               variant="outlined"
             >
