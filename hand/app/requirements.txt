@@ -10,7 +10,7 @@ pytest-mock==3.14.0
 openai==1.51.2
 python-multipart==0.0.12
 jinja2==3.1.4
-livekit-api==0.8.0
+livekit-api==1.0.2
 
 # for raspberry pi only
 rpi-lgpio==0.6; 'rpi' in platform_release
