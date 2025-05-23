@@ -12,6 +12,7 @@ import useLocalAudioToggle from '../../../hooks/useLocalAudioToggle/useLocalAudi
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../../state';
 import Snackbar from '../../Snackbar/Snackbar';
+import { CaptionActionMessage, CaptionSendMessage, CaptionWebSocketMessage } from '../../CaptionRenderer/CaptionTypes';
 
 const PREFIX = 'ToggleCaptionsButton';
 
@@ -51,7 +52,7 @@ export default function ToggleCaptionsButton() {
 
   const { displayCaptions, setDisplayCaptions } = useAppState();
 
-  const { lastJsonMessage, sendJsonMessage } = useWebSocket(`${WS_SERVER_URL}/captions`, {
+  const { lastJsonMessage, sendJsonMessage } = useWebSocket<CaptionWebSocketMessage>(`${WS_SERVER_URL}/captions`, {
     queryParams: { identity },
     share: true,
     shouldReconnect: () => true,
@@ -120,11 +121,12 @@ export default function ToggleCaptionsButton() {
 
   const sendCaption = useCallback(
     (caption: string, isFinal: boolean) => {
-      sendJsonMessage({
+      const message: CaptionSendMessage = {
         type: 'caption',
         transcript: caption,
         id: captionIdRef.current,
-      });
+      };
+      sendJsonMessage(message);
 
       if (isFinal) {
         // update caption id
@@ -147,13 +149,12 @@ export default function ToggleCaptionsButton() {
   }, [interimTranscript, finalTranscript, resetTranscript, sendCaption]);
 
   const toggleCaptions = () => {
-    if (!displayCaptions) {
-      setDisplayCaptions(true);
-      sendJsonMessage({ type: 'caption_action', action: 'start' });
-    } else {
-      setDisplayCaptions(false);
-      sendJsonMessage({ type: 'caption_action', action: 'stop' });
-    }
+    const message: CaptionActionMessage = {
+      type: 'caption_action',
+      action: displayCaptions ? 'stop' : 'start',
+    };
+    setDisplayCaptions(!displayCaptions);
+    sendJsonMessage(message);
   };
 
   return (
