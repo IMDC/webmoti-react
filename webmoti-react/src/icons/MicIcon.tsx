@@ -1,8 +1,6 @@
-import React from 'react';
-
 export default function MicIcon() {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="17" viewBox="0 0 12 17">
+    <svg data-testid="mic-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="17" viewBox="0 0 12 17">
       <path
         fill="#707578"
         fillRule="evenodd"

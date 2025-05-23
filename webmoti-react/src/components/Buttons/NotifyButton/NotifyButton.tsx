@@ -60,17 +60,12 @@ export default function NotifyButton() {
   });
 
   return (
-    // the div and span make the tooltip in same place as raise hand button
-    <div>
-      <Tooltip title="Play an audio notification in the physical classroom">
-        <span>
-          <Button variant="contained" color="primary" onClick={notifyProfessor} style={{ marginLeft: '10px' }}>
-            {isMobile ? <NotificationImportantIcon /> : 'Sound Alert'}
+    <Tooltip title="Play an audio notification in the physical classroom">
+      <Button variant="contained" color="primary" onClick={notifyProfessor} style={{ marginLeft: '10px' }}>
+        {isMobile ? <NotificationImportantIcon /> : 'Sound Alert'}
 
-            {!isMobile && <ShortcutIndicator shortcut="A" />}
-          </Button>
-        </span>
-      </Tooltip>
-    </div>
+        {!isMobile && <ShortcutIndicator shortcut="A" />}
+      </Button>
+    </Tooltip>
   );
 }

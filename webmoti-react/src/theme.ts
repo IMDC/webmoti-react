@@ -58,6 +58,7 @@ export default createTheme({
           '&:hover': {
             boxShadow: 'none',
           },
+          color: '#FFFFFF',
         },
         outlinedPrimary: {
           border: '2px solid #027AC5',
@@ -88,7 +89,7 @@ export default createTheme({
     MuiSelect: {
       styleOverrides: {
         root: {
-          padding: '0.85em',
+          padding: '0.25em',
         },
       },
     },
@@ -118,6 +119,10 @@ export default createTheme({
     },
     MuiOutlinedInput: {
       styleOverrides: {
+        input: {
+          fontSize: '0.9rem',
+          padding: '6px 14px',
+        },
         notchedOutline: {
           borderColor: 'rgb(136, 140, 142)',
         },

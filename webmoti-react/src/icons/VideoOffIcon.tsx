@@ -1,8 +1,6 @@
-import React from 'react';
-
 export default function VideoOffIcon() {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+    <svg data-testid="video-off-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
       <g fill="none" fillRule="evenodd">
         <path
           fill="#707578"

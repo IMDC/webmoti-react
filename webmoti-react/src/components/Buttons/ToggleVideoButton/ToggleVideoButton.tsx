@@ -36,17 +36,7 @@ export default function ToggleVideoButton(props: { disabled?: boolean; className
           className={props.className}
           onClick={toggleVideo}
           disabled={!hasVideoInputDevices || props.disabled}
-          startIcon={
-            isVideoEnabled ? (
-              <span data-testid="video-on-icon">
-                <VideoOnIcon />
-              </span>
-            ) : (
-              <span data-testid="video-off-icon">
-                <VideoOffIcon />
-              </span>
-            )
-          }
+          startIcon={isVideoEnabled ? <VideoOnIcon /> : <VideoOffIcon />}
           // override minWidth: 64 for mobile
           style={{ minWidth: 0 }}
         >

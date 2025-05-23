@@ -318,32 +318,30 @@ export default function RaiseHandButton() {
       )}
       {/* main raise hand button */}
       <Tooltip title={isHandRaised ? 'Release to lower hand' : 'Click & hold to raise hand'}>
-        <span>
-          <Button
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-            onTouchStart={handleMouseDown}
-            onTouchEnd={handleMouseUp}
-            variant="contained"
-            color={isHandRaised ? 'secondary' : 'primary'}
-            // countdown > 0 for some time after raising hand
-            disabled={isLoading || countdown > 0}
-          >
-            {isMobile ? <PanToolIcon /> : isHandRaised ? 'Lower Hand' : 'Raise Hand'}
-            {isLoading && <CircularProgress size={24} className={classes.progress} />}
+        <Button
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+          onTouchStart={handleMouseDown}
+          onTouchEnd={handleMouseUp}
+          variant="contained"
+          color={isHandRaised ? 'secondary' : 'primary'}
+          // countdown > 0 for some time after raising hand
+          disabled={isLoading || countdown > 0}
+        >
+          {isMobile ? <PanToolIcon /> : isHandRaised ? 'Lower Hand' : 'Raise Hand'}
+          {isLoading && <CircularProgress size={24} className={classes.progress} />}
 
-            {!isMobile && <ShortcutIndicator shortcut="H" />}
+          {!isMobile && <ShortcutIndicator shortcut="H" />}
 
-            {countdown > 0 && (
-              <CircularProgress
-                variant="determinate"
-                value={(countdown / buttonCountdownDuration) * 100}
-                size={24}
-                className={classes.progress}
-              />
-            )}
-          </Button>
-        </span>
+          {countdown > 0 && (
+            <CircularProgress
+              variant="determinate"
+              value={(countdown / buttonCountdownDuration) * 100}
+              size={24}
+              className={classes.progress}
+            />
+          )}
+        </Button>
       </Tooltip>
     </Root>
   );
