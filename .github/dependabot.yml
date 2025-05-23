@@ -5,7 +5,14 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/webmoti-react" # Location of package manifests
+  - package-ecosystem: "npm"
+    directories:
+      - "/webmoti-react"
+      - "/standalone-join"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "pip"
+    directory: "/hand/app"
     schedule:
       interval: "weekly"
