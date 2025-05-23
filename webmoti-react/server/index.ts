@@ -39,7 +39,7 @@ app.use((req, res, next) => {
 
 app.use(express.static(path.join(__dirname, '../build')));
 
-app.get('*', (_, res) => {
+app.get(/.*/, (_, res) => {
   // Don't cache index.html
   res.set('Cache-Control', 'no-cache');
   res.sendFile(path.join(__dirname, '../build/index.html'), { etag: false, lastModified: false });
