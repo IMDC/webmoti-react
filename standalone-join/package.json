@@ -6,7 +6,7 @@
   "private": true,
   "dependencies": {
     "dotenv": "^16.4.7",
-    "puppeteer": "^24.1.1",
+    "puppeteer": "^24.9.0",
     "twilio": "^3.80.0",
     "winston": "^3.17.0"
   }
