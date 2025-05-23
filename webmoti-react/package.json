@@ -32,7 +32,7 @@
     "react-scripts": "^5.0.1",
     "react-speech-recognition": "^4.0.1",
     "react-use-websocket": "^4.13.0",
-    "swiper": "^8.1.5",
+    "swiper": "^11.2.8",
     "ts-node": "^10.9.2",
     "twilio": "^5.6.1",
     "twilio-video": "^2.31.0"
