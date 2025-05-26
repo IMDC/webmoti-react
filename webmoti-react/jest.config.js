@@ -20,5 +20,6 @@ module.exports = {
     'swiper/css': '<rootDir>/node_modules/swiper/swiper.min.css',
     'swiper/css/pagination': '<rootDir>/node_modules/swiper/modules/autoplay/pagination.min.css',
     '^d3-timer$': '<rootDir>/node_modules/d3-timer/dist/d3-timer.js',
+    '\\.svg\\?react$': '<rootDir>/src/__mocks__/svgMock.ts',
   },
 };

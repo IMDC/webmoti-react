@@ -12,7 +12,6 @@ jest.mock('react-router-dom', () => {
   };
 });
 jest.mock('../../state');
-jest.mock('./google-logo.svg', () => ({ ReactComponent: () => null }));
 
 const mockUseAppState = useAppState as jest.Mock<any>;
 const mockUseLocation = useLocation as jest.Mock<any>;
