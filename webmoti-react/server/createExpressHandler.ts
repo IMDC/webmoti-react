@@ -8,7 +8,7 @@ const {
   TWILIO_API_KEY_SID,
   TWILIO_API_KEY_SECRET,
   TWILIO_CONVERSATIONS_SERVICE_SID,
-  REACT_APP_ROOM_TYPE,
+  VITE_ROOM_TYPE,
 } = process.env;
 
 const twilioClient = Twilio(TWILIO_API_KEY_SID, TWILIO_API_KEY_SECRET, {
@@ -20,7 +20,7 @@ const context: ServerlessContext = {
   TWILIO_API_KEY_SID,
   TWILIO_API_KEY_SECRET,
   // this is for running the app locally so npm start will use 'go' room type
-  ROOM_TYPE: REACT_APP_ROOM_TYPE || 'go',
+  ROOM_TYPE: VITE_ROOM_TYPE || 'go',
   CONVERSATIONS_SERVICE_SID: TWILIO_CONVERSATIONS_SERVICE_SID,
   getTwilioClient: () => twilioClient,
 };

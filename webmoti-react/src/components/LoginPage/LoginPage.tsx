@@ -6,7 +6,7 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { Button, Grid, InputLabel, TextField, Typography } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { ReactComponent as GoogleLogo } from './google-logo.svg';
+import GoogleLogo from './google-logo.svg?react';
 import { useAppState } from '../../state';
 import IntroContainer from '../IntroContainer/IntroContainer';
 import { clientEnv } from '../../clientEnv';
