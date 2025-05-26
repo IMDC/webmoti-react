@@ -63,7 +63,7 @@ export default function MobileTopMenuBar() {
       <div className={classes.row}>
         <Typography variant="subtitle1" component="span">
           {/* only show room name in dev */}
-          {process.env.NODE_ENV === 'development' && !isMobile && room!.name}
+          {clientEnv.IS_DEV_MODE() && !isMobile && room!.name}
         </Typography>
 
         <ControlsMenu />

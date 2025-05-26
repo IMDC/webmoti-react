@@ -9,6 +9,7 @@ import useRoomState from '../../hooks/useRoomState/useRoomState';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import * as utils from '../../utils';
+import { clientEnv } from '../../clientEnv';
 
 jest.mock('../../hooks/useRoomState/useRoomState');
 jest.mock('../../hooks/useVideoContext/useVideoContext');
@@ -53,7 +54,7 @@ describe('the MenuBar component', () => {
   beforeEach(() => {
     //@ts-ignore
     utils.isMobile = false;
-    process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS = 'false';
+    (clientEnv.DISABLE_TWILIO_CONVERSATIONS as jest.Mock).mockReturnValue('false');
   });
 
   // TODO move ToggleScreenShareButton tests to Menu.test.tsx (toggleScreenShare was moved to menu)
@@ -118,7 +119,7 @@ describe('the MenuBar component', () => {
   // });
 
   // it('should hide the ToggleChatButton when REACT_APP_DISABLE_TWILIO_CONVERSATIONS is true', () => {
-  //   process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS = 'true';
+  //   (clientEnv.DISABLE_TWILIO_CONVERSATIONS as jest.Mock).mockReturnValue('true');
   //   render(<MenuBar />);
   //   expect(screen.getByTestId('toggle-chat-button')).not.toBeInTheDocument();
   // });

@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import IntroContainer from './IntroContainer';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../state';
+import { clientEnv } from '../../clientEnv';
 
 jest.mock('react-router-dom', () => ({
   useLocation: jest.fn(),
@@ -23,7 +24,7 @@ describe('IntroContainer', () => {
   beforeEach(() => {
     mockUseLocation.mockReset();
     mockUseAppState.mockReset();
-    process.env.REACT_APP_SET_AUTH = 'firebase';
+    (clientEnv.SET_AUTH as jest.Mock).mockReturnValue('firebase');
   });
 
   it('renders UserMenu when user exists and pathname is not /login', () => {

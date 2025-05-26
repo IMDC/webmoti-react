@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 import { Typography, TextField, Grid, Button, InputLabel } from '@mui/material';
 
 import { useAppState } from '../../../state';
+import { clientEnv } from '../../../clientEnv';
 
 const PREFIX = 'RoomNameScreen';
 
@@ -100,7 +101,7 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
           )}
           {/* hide room name field when running prod */}
           {/* (it confuses participants and we only need one room for now) */}
-          {process.env.NODE_ENV === 'development' && (
+          {clientEnv.IS_DEV_MODE() && (
             <div className={classes.textFieldContainer}>
               <InputLabel shrink htmlFor="input-room-name">
                 Room Name

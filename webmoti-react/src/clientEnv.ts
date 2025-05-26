@@ -16,6 +16,8 @@ const clientEnv = {
 
   GIT_TAG: () => import.meta.env.VITE_GIT_TAG,
   GIT_COMMIT: () => import.meta.env.VITE_GIT_COMMIT,
+
+  IS_DEV_MODE: () => import.meta.env.DEV,
 };
 
 export { clientEnv };
