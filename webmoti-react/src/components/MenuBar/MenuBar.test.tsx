@@ -1,4 +1,3 @@
-import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { act, render, screen } from '@testing-library/react';
 
 import MenuBar from './MenuBar';
@@ -12,25 +11,25 @@ import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmot
 import * as utils from '../../utils';
 import { clientEnv } from '../../clientEnv';
 
-vi.mock('../../hooks/useRoomState/useRoomState');
-vi.mock('../../hooks/useVideoContext/useVideoContext');
-vi.mock('../../hooks/useParticipants/useParticipants');
-vi.mock('../../hooks/useChatContext/useChatContext');
-vi.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
+jest.mock('../../hooks/useRoomState/useRoomState');
+jest.mock('../../hooks/useVideoContext/useVideoContext');
+jest.mock('../../hooks/useParticipants/useParticipants');
+jest.mock('../../hooks/useChatContext/useChatContext');
+jest.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 
-vi.mock('@mui/material/useMediaQuery', () => vi.fn(() => false));
+jest.mock('@mui/material/useMediaQuery', () => jest.fn(() => false));
 
-vi.mock('../../hooks/useDevices/useDevices');
+jest.mock('../../hooks/useDevices/useDevices');
 
-const mockUseDevices = useDevices as Mock<any>;
+const mockUseDevices = useDevices as jest.Mock<any>;
 
 mockUseDevices.mockImplementation(() => ({ hasVideoInputDevices: true }));
 
-const mockUseRoomState = useRoomState as Mock<any>;
-const mockUseParticipants = useParticipants as Mock<any>;
-const mockUseVideoContext = useVideoContext as Mock<any>;
-const mockUseChatContext = useChatContext as Mock<any>;
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as Mock<any>;
+const mockUseRoomState = useRoomState as jest.Mock<any>;
+const mockUseParticipants = useParticipants as jest.Mock<any>;
+const mockUseVideoContext = useVideoContext as jest.Mock<any>;
+const mockUseChatContext = useChatContext as jest.Mock<any>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
 
 const mockAudioTrack = createMockLocalTrack('audio');
 const mockVideoTrack = createMockLocalTrack('video');
@@ -48,14 +47,14 @@ mockUseChatContext.mockImplementation(() => ({
   conversation: createMockConversation(),
 }));
 mockUseWebmotiVideoContext.mockImplementation(() => ({
-  sendHandRequest: vi.fn(() => Promise.resolve({ status: 200 })),
+  sendHandRequest: jest.fn(() => Promise.resolve({ status: 200 })),
 }));
 
 describe('the MenuBar component', () => {
   beforeEach(() => {
     //@ts-ignore
     utils.isMobile = false;
-    (clientEnv.DISABLE_TWILIO_CONVERSATIONS as Mock).mockReturnValue('false');
+    (clientEnv.DISABLE_TWILIO_CONVERSATIONS as jest.Mock).mockReturnValue('false');
   });
 
   // TODO move ToggleScreenShareButton tests to Menu.test.tsx (toggleScreenShare was moved to menu)

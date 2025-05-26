@@ -1,14 +1,13 @@
-import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 
 import EndCallButton from './EndCallButton';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 
-vi.mock('../../../hooks/useChatContext/useChatContext');
+jest.mock('../../../hooks/useChatContext/useChatContext');
 
-const mockDisconnect = vi.fn();
+const mockDisconnect = jest.fn();
 
-vi.mock('../../../hooks/useVideoContext/useVideoContext', () => () => ({
+jest.mock('../../../hooks/useVideoContext/useVideoContext', () => () => ({
   room: {
     disconnect: mockDisconnect,
   },
@@ -16,7 +15,7 @@ vi.mock('../../../hooks/useVideoContext/useVideoContext', () => () => ({
 
 describe('EndCallButton', () => {
   beforeEach(() => {
-    (useChatContext as Mock).mockReturnValue({});
+    (useChatContext as jest.Mock).mockReturnValue({});
     mockDisconnect.mockClear();
   });
 

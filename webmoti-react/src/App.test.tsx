@@ -1,33 +1,20 @@
-import { describe, expect, it, vi, Mock } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import App from './App';
 import useRoomState from './hooks/useRoomState/useRoomState';
 import useHeight from './hooks/useHeight/useHeight';
 
-vi.mock('./hooks/useRoomState/useRoomState');
-vi.mock('./hooks/useHeight/useHeight');
+jest.mock('./hooks/useRoomState/useRoomState');
+jest.mock('./hooks/useHeight/useHeight');
 
-vi.mock('./components/PreJoinScreens/PreJoinScreens', () => ({
-  default: () => <div data-testid="PreJoinScreens" />,
-}));
-vi.mock('./components/Room/Room', () => ({
-  default: () => <div data-testid="Room" />,
-}));
-vi.mock('./components/MenuBar/MenuBar', () => ({
-  default: () => <div data-testid="MenuBar" />,
-}));
-vi.mock('./components/MobileTopMenuBar/MobileTopMenuBar', () => ({
-  default: () => <div />,
-}));
-vi.mock('./components/ReconnectingNotification/ReconnectingNotification', () => ({
-  default: () => <div />,
-}));
-vi.mock('./components/RecordingNotifications/RecordingNotifications', () => ({
-  default: () => <div />,
-}));
+jest.mock('./components/PreJoinScreens/PreJoinScreens', () => () => <div data-testid="PreJoinScreens" />);
+jest.mock('./components/Room/Room', () => () => <div data-testid="Room" />);
+jest.mock('./components/MenuBar/MenuBar', () => () => <div data-testid="MenuBar" />);
+jest.mock('./components/MobileTopMenuBar/MobileTopMenuBar', () => () => <div />);
+jest.mock('./components/ReconnectingNotification/ReconnectingNotification', () => () => <div />);
+jest.mock('./components/RecordingNotifications/RecordingNotifications', () => () => <div />);
 
-const mockUseRoomState = useRoomState as Mock;
-const mockUseHeight = useHeight as Mock;
+const mockUseRoomState = useRoomState as jest.Mock;
+const mockUseHeight = useHeight as jest.Mock;
 
 mockUseHeight.mockReturnValue('500px');
 

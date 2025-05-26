@@ -1,4 +1,3 @@
-import { describe, expect, it } from "vitest";
 import { getDeviceInfo, isPermissionDenied, removeUndefineds } from '.';
 
 describe('the removeUndefineds function', () => {

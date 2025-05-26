@@ -1,4 +1,3 @@
-import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { useMediaQuery } from '@mui/material';
 import { render, screen } from '@testing-library/react';
 
@@ -7,28 +6,28 @@ import useParticipantContext from '../../hooks/useParticipantsContext/usePartici
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import { createMockParticipant, createMockRoom } from '../../__mocks__/mockCreator';
 
-vi.mock('swiper/react', () => ({
+jest.mock('swiper/react', () => ({
   Swiper: ({ children }: any) => <div>{children}</div>,
   SwiperSlide: ({ children }: any) => <div>{children}</div>,
 }));
-vi.mock('swiper', () => ({
-  Pagination: vi.fn(),
+jest.mock('swiper', () => ({
+  Pagination: jest.fn(),
 }));
-vi.mock('../../hooks/useVideoContext/useVideoContext');
-vi.mock('../../hooks/useParticipantsContext/useParticipantsContext');
+jest.mock('../../hooks/useVideoContext/useVideoContext');
+jest.mock('../../hooks/useParticipantsContext/useParticipantsContext');
 // jest.mock('../../state');
-vi.mock('@mui/material/useMediaQuery');
+jest.mock('@mui/material/useMediaQuery');
 
-const mockUseMediaQuery = useMediaQuery as Mock;
-const mockUseVideoContext = useVideoContext as Mock;
-const mockUseParticipantContext = useParticipantContext as Mock;
+const mockUseMediaQuery = useMediaQuery as jest.Mock;
+const mockUseVideoContext = useVideoContext as jest.Mock;
+const mockUseParticipantContext = useParticipantContext as jest.Mock;
 // const mockUseAppState = useAppState as jest.Mock;
 
-vi.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext', () => () => ({}));
+jest.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext', () => () => ({}));
 
-vi.mock('../../state', () => ({
+jest.mock('../../state', () => ({
   __esModule: true,
-  useAppState: vi.fn(() => ({
+  useAppState: jest.fn(() => ({
     isGalleryViewActive: true,
     maxGalleryViewParticipants: 9,
   })),

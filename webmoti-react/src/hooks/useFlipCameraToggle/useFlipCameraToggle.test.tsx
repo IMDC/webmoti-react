@@ -1,4 +1,3 @@
-import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { renderHook } from '@testing-library/react';
 
 import useFlipCameraToggle from './useFlipCameraToggle';
@@ -6,11 +5,11 @@ import { DEFAULT_VIDEO_CONSTRAINTS } from '../../constants';
 import useDevices from '../useDevices/useDevices';
 import useVideoContext from '../useVideoContext/useVideoContext';
 
-vi.mock('../useMediaStreamTrack/useMediaStreamTrack');
-vi.mock('../useVideoContext/useVideoContext');
-vi.mock('../useDevices/useDevices');
-const mockUseVideoContext = useVideoContext as Mock<any>;
-const mockUseDevices = useDevices as Mock<any>;
+jest.mock('../useMediaStreamTrack/useMediaStreamTrack');
+jest.mock('../useVideoContext/useVideoContext');
+jest.mock('../useDevices/useDevices');
+const mockUseVideoContext = useVideoContext as jest.Mock<any>;
+const mockUseDevices = useDevices as jest.Mock<any>;
 
 const mockStreamSettings = { facingMode: 'user' };
 
@@ -20,16 +19,16 @@ const mockVideoTrack = {
   mediaStreamTrack: {
     getSettings: () => mockStreamSettings,
   },
-  restart: vi.fn(),
+  restart: jest.fn(),
 };
 
 const mockVideoContext = {
   localTracks: [mockVideoTrack],
-  getLocalVideoTrack: vi.fn(() => Promise.resolve('newMockTrack')),
+  getLocalVideoTrack: jest.fn(() => Promise.resolve('newMockTrack')),
 };
 
 describe('the useFlipCameraToggle hook', () => {
-  beforeEach(vi.clearAllMocks);
+  beforeEach(jest.clearAllMocks);
   beforeEach(() => {
     mockUseDevices.mockImplementation(() => ({ videoInputDevices: ['mockCamera1', 'mockCamera2'] }));
   });

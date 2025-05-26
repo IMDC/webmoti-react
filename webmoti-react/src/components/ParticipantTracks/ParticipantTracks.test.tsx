@@ -1,18 +1,17 @@
-import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import ParticipantTracks from './ParticipantTracks';
 import usePublications from '../../hooks/usePublications/usePublications';
 
-vi.mock('../../hooks/usePublications/usePublications');
+jest.mock('../../hooks/usePublications/usePublications');
 
-const mockUsePublications = usePublications as Mock;
+const mockUsePublications = usePublications as jest.Mock;
 
 describe('ParticipantTracks', () => {
   const mockParticipant = { identity: 'mock', tracks: new Map() } as any;
 
   const createPublication = (overrides: Partial<any>) => ({
-    on: vi.fn(),
-    off: vi.fn(),
+    on: jest.fn(),
+    off: jest.fn(),
     ...overrides,
   });
 

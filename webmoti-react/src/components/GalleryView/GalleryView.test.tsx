@@ -1,4 +1,3 @@
-import { describe, expect, it, vi, Mock } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { GalleryView } from './GalleryView';
 import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
@@ -15,41 +14,41 @@ const mockParticipants = [
   createMockParticipant('test-participant-4', 4),
 ];
 
-vi.mock('@fireworks-js/react', () => ({
-  Fireworks: vi.fn(() => <div data-testid="mock-fireworks" />),
+jest.mock('@fireworks-js/react', () => ({
+  Fireworks: jest.fn(() => <div data-testid="mock-fireworks" />),
 }));
-vi.mock('../../constants', () => ({
+jest.mock('../../constants', () => ({
   GALLERY_VIEW_ASPECT_RATIO: 9 / 16,
   GALLERY_VIEW_MARGIN: 3,
   Events: {
     Fireworks: 'fireworks',
   },
 }));
-vi.mock('../../hooks/useVideoContext/useVideoContext', () => () => ({
+jest.mock('../../hooks/useVideoContext/useVideoContext', () => () => ({
   room: createMockRoom('mock room', mockLocalParticipant),
 }));
-vi.mock('../../hooks/useParticipantsContext/useParticipantsContext', () => () => ({
+jest.mock('../../hooks/useParticipantsContext/useParticipantsContext', () => () => ({
   galleryViewParticipants: mockParticipants,
 }));
-vi.mock('../../hooks/useGalleryViewLayout/useGalleryViewLayout', () =>
-  vi.fn(() => ({
+jest.mock('../../hooks/useGalleryViewLayout/useGalleryViewLayout', () =>
+  jest.fn(() => ({
     participantVideoWidth: 720,
     containerRef: { current: null },
   }))
 );
-vi.mock('./usePagination/usePagination', () => ({
-  usePagination: vi.fn(),
+jest.mock('./usePagination/usePagination', () => ({
+  usePagination: jest.fn(),
 }));
-vi.mock('../../state');
+jest.mock('../../state');
 
-const mockUsePagination = usePagination as Mock;
-const mockUseAppState = useAppState as Mock;
+const mockUsePagination = usePagination as jest.Mock;
+const mockUseAppState = useAppState as jest.Mock;
 
 mockUseAppState.mockImplementation(() => ({ maxGalleryViewParticipants: 9 }));
 
-vi.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
+jest.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as Mock<any>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
 mockUseWebmotiVideoContext.mockImplementation(() => ({}));
 
 describe('GalleryView', () => {
@@ -57,7 +56,7 @@ describe('GalleryView', () => {
     mockUsePagination.mockImplementation(() => ({
       currentPage: 2,
       totalPages: 4,
-      setCurrentPage: vi.fn(),
+      setCurrentPage: jest.fn(),
       paginatedParticipants: [mockLocalParticipant, ...mockParticipants],
     }));
 
@@ -72,7 +71,7 @@ describe('GalleryView', () => {
     mockUsePagination.mockImplementation(() => ({
       currentPage: 1,
       totalPages: 4,
-      setCurrentPage: vi.fn(),
+      setCurrentPage: jest.fn(),
       paginatedParticipants: [mockLocalParticipant, ...mockParticipants],
     }));
 
@@ -85,7 +84,7 @@ describe('GalleryView', () => {
     mockUsePagination.mockImplementation(() => ({
       currentPage: 4,
       totalPages: 4,
-      setCurrentPage: vi.fn(),
+      setCurrentPage: jest.fn(),
       paginatedParticipants: [mockLocalParticipant, ...mockParticipants],
     }));
 
@@ -98,7 +97,7 @@ describe('GalleryView', () => {
     mockUsePagination.mockImplementation(() => ({
       currentPage: 1,
       totalPages: 1,
-      setCurrentPage: vi.fn(),
+      setCurrentPage: jest.fn(),
       paginatedParticipants: [mockLocalParticipant, ...mockParticipants],
     }));
 

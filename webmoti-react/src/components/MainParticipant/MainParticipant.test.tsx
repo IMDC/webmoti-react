@@ -1,4 +1,3 @@
-import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import useMainParticipant from '../../hooks/useMainParticipant/useMainParticipant';
 import useSelectedParticipant from '../VideoProvider/useSelectedParticipant/useSelectedParticipant';
@@ -7,12 +6,12 @@ import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import MainParticipant from './MainParticipant';
 import { createMockParticipant, createMockRoom } from '../../__mocks__/mockCreator';
 
-vi.mock('../../hooks/useMainParticipant/useMainParticipant');
-vi.mock('../VideoProvider/useSelectedParticipant/useSelectedParticipant');
-vi.mock('../../hooks/useScreenShareParticipant/useScreenShareParticipant');
-vi.mock('../../hooks/useVideoContext/useVideoContext');
+jest.mock('../../hooks/useMainParticipant/useMainParticipant');
+jest.mock('../VideoProvider/useSelectedParticipant/useSelectedParticipant');
+jest.mock('../../hooks/useScreenShareParticipant/useScreenShareParticipant');
+jest.mock('../../hooks/useVideoContext/useVideoContext');
 
-vi.mock('../ParticipantTracks/ParticipantTracks', () => (props: any) => (
+jest.mock('../ParticipantTracks/ParticipantTracks', () => (props: any) => (
   <div
     data-testid="participant-tracks"
     data-video-priority={props.videoPriority}
@@ -21,16 +20,16 @@ vi.mock('../ParticipantTracks/ParticipantTracks', () => (props: any) => (
   />
 ));
 
-vi.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext', () => () => ({}));
+jest.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext', () => () => ({}));
 
-const mockUseMainParticipant = useMainParticipant as Mock;
-const mockUseSelectedParticipant = useSelectedParticipant as Mock;
-const mockUseScreenShareParticipant = useScreenShareParticipant as Mock;
-const mockUseVideoContext = useVideoContext as Mock;
+const mockUseMainParticipant = useMainParticipant as jest.Mock;
+const mockUseSelectedParticipant = useSelectedParticipant as jest.Mock;
+const mockUseScreenShareParticipant = useScreenShareParticipant as jest.Mock;
+const mockUseVideoContext = useVideoContext as jest.Mock;
 
 describe('MainParticipant', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   it('sets videoPriority to high when mainParticipant is selected', () => {

@@ -1,4 +1,3 @@
-import { describe, expect, it, vi, Mock } from 'vitest';
 import { EventEmitter } from 'events';
 
 import { screen, render, act } from '@testing-library/react';
@@ -10,29 +9,29 @@ import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import { checkSystemMsg } from '../../../utils';
 
-vi.mock('../../../hooks/useChatContext/useChatContext');
-vi.mock('../../../hooks/useVideoContext/useVideoContext');
-vi.mock('../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
-vi.mock('../../../utils');
+jest.mock('../../../hooks/useChatContext/useChatContext');
+jest.mock('../../../hooks/useVideoContext/useVideoContext');
+jest.mock('../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
+jest.mock('../../../utils');
 
-const mockUseChatContext = useChatContext as Mock<any>;
-const mockUseVideoContext = useVideoContext as Mock<any>;
+const mockUseChatContext = useChatContext as jest.Mock<any>;
+const mockUseVideoContext = useVideoContext as jest.Mock<any>;
 
 const mockConversation = new EventEmitter();
-const mockToggleChatWindow = vi.fn();
+const mockToggleChatWindow = jest.fn();
 mockUseChatContext.mockImplementation(() => ({
   setIsChatWindowOpen: mockToggleChatWindow,
   isChatWindowOpen: false,
   conversation: mockConversation,
 }));
 
-const mockSetIsBackgroundSelectionOpen = vi.fn();
+const mockSetIsBackgroundSelectionOpen = jest.fn();
 mockUseVideoContext.mockImplementation(() => ({ setIsBackgroundSelectionOpen: mockSetIsBackgroundSelectionOpen }));
 
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as Mock<any>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
 mockUseWebmotiVideoContext.mockImplementation(() => ({}));
 
-(checkSystemMsg as Mock).mockImplementation(() => false);
+(checkSystemMsg as jest.Mock).mockImplementation(() => false);
 
 const mockMessage = {
   attachedMedia: [],
@@ -92,7 +91,7 @@ describe('the ToggleChatButton component', () => {
   });
 
   it(`should add the 'animate' class for ${ANIMATION_DURATION}ms when a new message is received when the chat window is closed`, () => {
-    vi.useFakeTimers();
+    jest.useFakeTimers();
     mockUseChatContext.mockImplementationOnce(() => ({
       setIsChatWindowOpen: mockToggleChatWindow,
       isChatWindowOpen: false,
@@ -109,7 +108,7 @@ describe('the ToggleChatButton component', () => {
     expect(screen.getByTestId('chat-ring-animation')).toBeInTheDocument();
 
     act(() => {
-      vi.advanceTimersByTime(ANIMATION_DURATION);
+      jest.advanceTimersByTime(ANIMATION_DURATION);
     });
 
     expect(screen.queryByTestId('chat-ring-animation')).toBeNull();

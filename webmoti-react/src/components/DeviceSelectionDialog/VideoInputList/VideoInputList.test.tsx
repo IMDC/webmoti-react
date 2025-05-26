@@ -1,4 +1,3 @@
-import { afterEach, describe, expect, it, vi, Mock } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
 import VideoInputList from './VideoInputList';
@@ -8,15 +7,15 @@ import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import { renderWithUser } from '../../../utils/testUtils';
 
-vi.mock('../../../hooks/useVideoContext/useVideoContext');
-vi.mock('../../../hooks/useDevices/useDevices');
-vi.mock('../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
+jest.mock('../../../hooks/useVideoContext/useVideoContext');
+jest.mock('../../../hooks/useDevices/useDevices');
+jest.mock('../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 
-const mockUseVideoContext = useVideoContext as Mock<any>;
-const mockUseDevices = useDevices as Mock<any>;
-const mockGetLocalVideotrack = vi.fn(() => Promise.resolve);
+const mockUseVideoContext = useVideoContext as jest.Mock<any>;
+const mockUseDevices = useDevices as jest.Mock<any>;
+const mockGetLocalVideotrack = jest.fn(() => Promise.resolve);
 
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as Mock<any>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
 mockUseWebmotiVideoContext.mockImplementation(() => ({}));
 
 const mockDevice = {
@@ -36,11 +35,11 @@ const mockLocalTrack = {
     getSettings: () => ({ deviceId: '234' }),
   },
   name: 'mock name',
-  on: vi.fn(),
-  off: vi.fn(),
-  attach: vi.fn(),
-  detach: vi.fn(),
-  restart: vi.fn(),
+  on: jest.fn(),
+  off: jest.fn(),
+  attach: jest.fn(),
+  detach: jest.fn(),
+  restart: jest.fn(),
 };
 
 mockUseVideoContext.mockImplementation(() => ({
@@ -51,7 +50,7 @@ mockUseVideoContext.mockImplementation(() => ({
 
 describe('the VideoInputList component', () => {
   afterEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     window.localStorage.clear();
   });
 

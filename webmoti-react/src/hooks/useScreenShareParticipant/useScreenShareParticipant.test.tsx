@@ -1,12 +1,11 @@
-import { describe, expect, it, vi, Mock } from 'vitest';
 import { act, renderHook } from '@testing-library/react';
 import { EventEmitter } from 'events';
 import useScreenShareParticipant from './useScreenShareParticipant';
 import useVideoContext from '../useVideoContext/useVideoContext';
 
-vi.mock('../useVideoContext/useVideoContext');
+jest.mock('../useVideoContext/useVideoContext');
 
-const mockUseVideoContext = useVideoContext as Mock<any>;
+const mockUseVideoContext = useVideoContext as jest.Mock<any>;
 
 function MockRoom() {
   const mockRoom = new EventEmitter() as any;

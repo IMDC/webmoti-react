@@ -1,4 +1,3 @@
-import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { ReactNode } from 'react';
 
 import { act, renderHook, waitFor } from '@testing-library/react';
@@ -8,14 +7,14 @@ import { clientEnv } from '../clientEnv';
 import useFirebaseAuth from './useFirebaseAuth/useFirebaseAuth';
 import usePasscodeAuth from './usePasscodeAuth/usePasscodeAuth';
 
-vi.mock('./useFirebaseAuth/useFirebaseAuth', () => vi.fn(() => ({ user: 'firebaseUser' })));
-vi.mock('./usePasscodeAuth/usePasscodeAuth', () => vi.fn(() => ({ user: 'passcodeUser' })));
-vi.mock('./useActiveSinkId/useActiveSinkId.ts', () => () => ['default', () => {}]);
+jest.mock('./useFirebaseAuth/useFirebaseAuth', () => jest.fn(() => ({ user: 'firebaseUser' })));
+jest.mock('./usePasscodeAuth/usePasscodeAuth', () => jest.fn(() => ({ user: 'passcodeUser' })));
+jest.mock('./useActiveSinkId/useActiveSinkId.ts', () => () => ['default', () => {}]);
 
-const mockUsePasscodeAuth = usePasscodeAuth as Mock<any>;
+const mockUsePasscodeAuth = usePasscodeAuth as jest.Mock<any>;
 
 // @ts-ignore
-window.fetch = vi.fn(() =>
+window.fetch = jest.fn(() =>
   Promise.resolve({
     text: () => 'mockVideoToken',
     json: () => ({
@@ -27,10 +26,10 @@ window.fetch = vi.fn(() =>
 const wrapper = ({ children }: { children: ReactNode }) => <AppStateProvider>{children}</AppStateProvider>;
 
 describe('the useAppState hook', () => {
-  beforeEach(vi.clearAllMocks);
+  beforeEach(jest.clearAllMocks);
   beforeEach(() => {
-    (clientEnv.SET_AUTH as Mock).mockReturnValue(undefined);
-    (clientEnv.TOKEN_ENDPOINT as Mock).mockReturnValue(undefined);
+    (clientEnv.SET_AUTH as jest.Mock).mockReturnValue(undefined);
+    (clientEnv.TOKEN_ENDPOINT as jest.Mock).mockReturnValue(undefined);
   });
 
   it('should set an error', () => {
@@ -44,7 +43,7 @@ describe('the useAppState hook', () => {
   });
 
   it('should get a token using the REACT_APP_TOKEN_ENDPOINT environment variable when avaiable', async () => {
-    (clientEnv.TOKEN_ENDPOINT as Mock).mockReturnValue('http://test.com/api/token');
+    (clientEnv.TOKEN_ENDPOINT as jest.Mock).mockReturnValue('http://test.com/api/token');
 
     const { result } = renderHook(useAppState, { wrapper });
 
@@ -64,7 +63,7 @@ describe('the useAppState hook', () => {
 
   describe('with auth disabled', () => {
     it('should not use any auth hooks', async () => {
-      (clientEnv.SET_AUTH as Mock).mockReturnValue(undefined);
+      (clientEnv.SET_AUTH as jest.Mock).mockReturnValue(undefined);
 
       renderHook(useAppState, { wrapper });
       expect(useFirebaseAuth).not.toHaveBeenCalled();
@@ -74,7 +73,7 @@ describe('the useAppState hook', () => {
 
   describe('with firebase auth enabled', () => {
     it('should use the useFirebaseAuth hook', async () => {
-      (clientEnv.SET_AUTH as Mock).mockReturnValue('firebase');
+      (clientEnv.SET_AUTH as jest.Mock).mockReturnValue('firebase');
 
       const { result } = renderHook(useAppState, { wrapper });
       expect(useFirebaseAuth).toHaveBeenCalled();
@@ -84,7 +83,7 @@ describe('the useAppState hook', () => {
 
   describe('with passcode auth enabled', () => {
     it('should use the usePasscodeAuth hook', async () => {
-      (clientEnv.SET_AUTH as Mock).mockReturnValue('passcode');
+      (clientEnv.SET_AUTH as jest.Mock).mockReturnValue('passcode');
 
       const { result } = renderHook(useAppState, { wrapper });
       expect(usePasscodeAuth).toHaveBeenCalled();
@@ -95,7 +94,7 @@ describe('the useAppState hook', () => {
   describe('the getToken function', () => {
     it('should set isFetching to true after getToken is called, and false after getToken succeeds', async () => {
       // Using passcode auth because it's easier to mock the getToken function
-      (clientEnv.SET_AUTH as Mock).mockReturnValue('passcode');
+      (clientEnv.SET_AUTH as jest.Mock).mockReturnValue('passcode');
 
       mockUsePasscodeAuth.mockImplementation(() => {
         return {
@@ -107,7 +106,7 @@ describe('the useAppState hook', () => {
         };
       });
 
-      vi.useFakeTimers();
+      jest.useFakeTimers();
 
       const { result } = renderHook(useAppState, { wrapper });
 
@@ -121,7 +120,7 @@ describe('the useAppState hook', () => {
         expect(result.current.isFetching).toEqual(true);
       });
 
-      vi.runOnlyPendingTimers();
+      jest.runOnlyPendingTimers();
 
       await waitFor(() => {
         expect(result.current.isFetching).toEqual(false);
@@ -129,7 +128,7 @@ describe('the useAppState hook', () => {
     });
 
     it('should set isFetching to true after getToken is called, and false after getToken fails', async () => {
-      (clientEnv.SET_AUTH as Mock).mockReturnValue('passcode');
+      (clientEnv.SET_AUTH as jest.Mock).mockReturnValue('passcode');
 
       mockUsePasscodeAuth.mockImplementation(() => {
         return {
@@ -140,7 +139,7 @@ describe('the useAppState hook', () => {
         };
       });
 
-      vi.useFakeTimers();
+      jest.useFakeTimers();
 
       const { result } = renderHook(useAppState, { wrapper });
 
@@ -154,7 +153,7 @@ describe('the useAppState hook', () => {
         expect(result.current.isFetching).toEqual(true);
       });
 
-      vi.runOnlyPendingTimers();
+      jest.runOnlyPendingTimers();
 
       await waitFor(() => {
         expect(result.current.isFetching).toEqual(false);

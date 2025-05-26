@@ -1,12 +1,11 @@
-import { vi } from "vitest";
 import { EventEmitter } from 'events';
 
 class MockRoom extends EventEmitter {
   state = 'connected';
-  disconnect = vi.fn();
+  disconnect = jest.fn();
   localParticipant = {
-    publishTrack: vi.fn(),
-    videoTracks: [{ setPriority: vi.fn() }],
+    publishTrack: jest.fn(),
+    videoTracks: [{ setPriority: jest.fn() }],
   };
 }
 
@@ -14,7 +13,7 @@ const mockRoom = new MockRoom();
 
 class MockTrack extends EventEmitter {
   kind = '';
-  stop = vi.fn();
+  stop = jest.fn();
   mediaStreamTrack = { getSettings: () => ({ deviceId: 'mockDeviceId' }) };
 
   constructor(kind: string) {
@@ -24,12 +23,12 @@ class MockTrack extends EventEmitter {
 }
 
 const twilioVideo = {
-  connect: vi.fn(() => Promise.resolve(mockRoom)),
-  createLocalTracks: vi.fn(
+  connect: jest.fn(() => Promise.resolve(mockRoom)),
+  createLocalTracks: jest.fn(
     // Here we use setTimeout so we can control when this function resolves with jest.runAllTimers()
     () => new Promise(resolve => setTimeout(() => resolve([new MockTrack('video'), new MockTrack('audio')])))
   ),
-  createLocalVideoTrack: vi.fn(() => new Promise(resolve => setTimeout(() => resolve(new MockTrack('video'))))),
+  createLocalVideoTrack: jest.fn(() => new Promise(resolve => setTimeout(() => resolve(new MockTrack('video'))))),
 };
 
 export { mockRoom };

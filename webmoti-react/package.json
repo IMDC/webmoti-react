@@ -48,7 +48,6 @@
     "@types/react-dom": "^18.3.7",
     "@types/react-speech-recognition": "^3.9.6",
     "@vitejs/plugin-react": "^4.5.0",
-    "@vitest/ui": "^3.1.4",
     "eslint": "^8.57.1",
     "eslint-plugin-import": "^2.31.0",
     "isomorphic-fetch": "^3.0.0",
@@ -59,8 +58,7 @@
     "ts-jest": "^29.3.4",
     "typescript": "^4.9.5",
     "vite": "^6.3.5",
-    "vite-plugin-svgr": "^4.3.0",
-    "vitest": "^3.1.4"
+    "vite-plugin-svgr": "^4.3.0"
   },
   "engines": {
     "node": ">=20.0.0"
@@ -71,11 +69,12 @@
     "start": "concurrently npm:server npm:dev",
     "dev": "vite",
     "build": "vite build",
-    "test": "vitest",
-    "test-specific": "vitest run --testPathPattern",
-    "update-snapshot-specific": "vitest run --update --testPathPattern",
-    "update-all-snapshots": "vitest run --update",
-    "test:ci": "vitest run --coverage --silent",
+    "test:base": "cross-env TZ=utc jest --config jest.config.js",
+    "test": "npm run test:base",
+    "test-specific": "npm run test:base -- --testPathPattern",
+    "update-snapshot-specific": "npm run test:base -- -u --testPathPattern",
+    "update-all-snapshots": "npm run test:base -- -u",
+    "test:ci": "npm run test:base -- --ci --runInBand --reporters=default --reporters=jest-junit --coverage --silent",
     "lint": "eslint src server",
     "lint-fix-imports": "eslint --config .eslintrc_on_save.json --fix",
     "server": "ts-node -T -P server/tsconfig.json server/index.ts",

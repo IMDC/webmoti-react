@@ -1,4 +1,3 @@
-import { describe, expect, it, vi, Mock } from 'vitest';
 import { screen, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -11,13 +10,13 @@ import ToggleScreenShareButton, {
   SHARE_NOT_SUPPORTED_TEXT,
 } from './ToggleScreenShareButton';
 
-vi.mock('../../../hooks/useScreenShareParticipant/useScreenShareParticipant');
-vi.mock('../../../hooks/useVideoContext/useVideoContext');
+jest.mock('../../../hooks/useScreenShareParticipant/useScreenShareParticipant');
+jest.mock('../../../hooks/useVideoContext/useVideoContext');
 
-const mockUseScreenShareParticipant = useScreenShareParticipant as Mock<any>;
-const mockUseVideoContext = useVideoContext as Mock<any>;
+const mockUseScreenShareParticipant = useScreenShareParticipant as jest.Mock<any>;
+const mockUseVideoContext = useVideoContext as jest.Mock<any>;
 
-const mockToggleScreenShare = vi.fn();
+const mockToggleScreenShare = jest.fn();
 mockUseVideoContext.mockImplementation(() => ({ toggleScreenShare: mockToggleScreenShare }));
 
 describe('the ToggleScreenShareButton component', () => {
@@ -64,7 +63,7 @@ describe('the ToggleScreenShareButton component', () => {
     Object.defineProperty(navigator.mediaDevices, 'getDisplayMedia', {
       configurable: true,
       writable: true,
-      value: vi.fn(),
+      value: jest.fn(),
     });
   });
 });

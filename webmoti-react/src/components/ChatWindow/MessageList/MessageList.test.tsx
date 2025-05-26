@@ -1,4 +1,3 @@
-import { describe, expect, it, vi, Mock } from 'vitest';
 import EventEmitter from 'events';
 
 import { render } from '@testing-library/react';
@@ -6,13 +5,13 @@ import { render } from '@testing-library/react';
 import MessageList from './MessageList';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 
-vi.mock('../../../hooks/useChatContext/useChatContext');
+jest.mock('../../../hooks/useChatContext/useChatContext');
 
-vi.mock('../../../hooks/useVideoContext/useVideoContext', () => () => ({
+jest.mock('../../../hooks/useVideoContext/useVideoContext', () => () => ({
   room: { localParticipant: { identity: 'olivia' } },
 }));
 
-const mockUseChatContext = useChatContext as Mock<any>;
+const mockUseChatContext = useChatContext as jest.Mock<any>;
 const mockConversation = new EventEmitter();
 mockUseChatContext.mockImplementation(() => ({ conversation: mockConversation }));
 

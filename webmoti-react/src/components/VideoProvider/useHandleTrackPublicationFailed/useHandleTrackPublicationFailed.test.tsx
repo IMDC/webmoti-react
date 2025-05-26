@@ -1,4 +1,3 @@
-import { describe, expect, it, vi } from "vitest";
 import EventEmitter from 'events';
 
 import { act, renderHook } from '@testing-library/react';
@@ -17,7 +16,7 @@ describe('the useHandleTrackPublicationFailed hook', () => {
   let mockRoom = MockRoom();
 
   it('should react to the localParticipant "trackPublicationFailed" event and invoke onError callback', () => {
-    const mockOnError = vi.fn();
+    const mockOnError = jest.fn();
     renderHook(() => useHandleTrackPublicationFailed(mockRoom, mockOnError));
     act(() => {
       mockRoom.localParticipant.emit('trackPublicationFailed', 'mockTrack');

@@ -1,4 +1,3 @@
-import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { EventEmitter } from 'events';
 
 import { act, renderHook } from '@testing-library/react';
@@ -7,9 +6,9 @@ import { Room } from 'twilio-video';
 import useSelectedParticipant, { SelectedParticipantProvider } from './useSelectedParticipant';
 import { useAppState } from '../../../state';
 
-vi.mock('../../../state');
+jest.mock('../../../state');
 
-const mockUseAppState = useAppState as Mock<any>;
+const mockUseAppState = useAppState as jest.Mock<any>;
 
 mockUseAppState.mockImplementation(() => ({ isGalleryViewActive: false }));
 

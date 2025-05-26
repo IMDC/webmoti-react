@@ -1,24 +1,23 @@
-import { describe, expect, it, vi, Mock } from 'vitest';
 import { render } from '@testing-library/react';
 
 import LocalVideoPreview from './LocalVideoPreview';
 import useVideoContext from '../../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
-vi.mock('../../../../hooks/useVideoContext/useVideoContext');
-vi.mock('../../../../hooks/useMediaStreamTrack/useMediaStreamTrack');
-vi.mock('../../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
+jest.mock('../../../../hooks/useVideoContext/useVideoContext');
+jest.mock('../../../../hooks/useMediaStreamTrack/useMediaStreamTrack');
+jest.mock('../../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as Mock<any>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
 
-vi.mock('../../../VideoTrack/VideoTrack', () => ({
+jest.mock('../../../VideoTrack/VideoTrack', () => ({
   __esModule: true,
   default: () => <div data-testid="video-track" />,
 }));
 
-vi.mock('../../../../icons/AvatarIcon', () => () => <div data-testid="avatar-icon" />);
+jest.mock('../../../../icons/AvatarIcon', () => () => <div data-testid="avatar-icon" />);
 
-const mockedVideoContext = useVideoContext as Mock;
+const mockedVideoContext = useVideoContext as jest.Mock;
 
 mockUseWebmotiVideoContext.mockImplementation(() => ({
   isMuted: false,
@@ -31,11 +30,11 @@ describe('the LocalVideoPreview component', () => {
         {
           name: '',
           kind: 'video',
-          attach: vi.fn(),
-          detach: vi.fn(),
+          attach: jest.fn(),
+          detach: jest.fn(),
           mediaStreamTrack: { getSettings: () => ({}) },
-          on: vi.fn(),
-          off: vi.fn(),
+          on: jest.fn(),
+          off: jest.fn(),
         },
       ],
     }));
@@ -51,10 +50,10 @@ describe('the LocalVideoPreview component', () => {
         {
           name: 'microphone',
           kind: 'audio',
-          attach: vi.fn(),
-          detach: vi.fn(),
-          on: vi.fn(),
-          off: vi.fn(),
+          attach: jest.fn(),
+          detach: jest.fn(),
+          on: jest.fn(),
+          off: jest.fn(),
         },
       ],
     }));

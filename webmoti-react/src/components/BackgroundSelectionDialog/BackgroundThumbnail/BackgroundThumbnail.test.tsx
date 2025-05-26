@@ -1,12 +1,11 @@
-import { describe, expect, it, vi, Mock } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import BackgroundThumbnail from './BackgroundThumbnail';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 
-vi.mock('../../../hooks/useVideoContext/useVideoContext');
-const mockUseVideoContext = useVideoContext as Mock<any>;
-const mockSetBackgroundSettings = vi.fn();
+jest.mock('../../../hooks/useVideoContext/useVideoContext');
+const mockUseVideoContext = useVideoContext as jest.Mock<any>;
+const mockSetBackgroundSettings = jest.fn();
 mockUseVideoContext.mockImplementation(() => ({
   backgroundSettings: {
     type: 'blur',

@@ -1,15 +1,14 @@
-import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
 import MediaErrorSnackBar, { getSnackbarContent } from './MediaErrorSnackbar';
 import useDevices from '../../../hooks/useDevices/useDevices';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 
-vi.mock('../../../hooks/useVideoContext/useVideoContext');
-vi.mock('../../../hooks/useDevices/useDevices');
+jest.mock('../../../hooks/useVideoContext/useVideoContext');
+jest.mock('../../../hooks/useDevices/useDevices');
 
-const mockUseVideoContext = useVideoContext as Mock<any>;
-const mockUseDevices = useDevices as Mock<any>;
+const mockUseVideoContext = useVideoContext as jest.Mock<any>;
+const mockUseDevices = useDevices as jest.Mock<any>;
 
 describe('the MediaErrorSnackBar', () => {
   beforeEach(() => {

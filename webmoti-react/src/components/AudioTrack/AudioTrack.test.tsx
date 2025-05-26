@@ -1,21 +1,20 @@
-import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import React from 'react';
 import { render } from '@testing-library/react';
 import AudioTrack from './AudioTrack';
 import { useAppState } from '../../state';
 
 const audioEl = document.createElement('audio');
-audioEl.setSinkId = vi.fn();
+audioEl.setSinkId = jest.fn();
 
-const mockTrack = { attach: vi.fn(() => audioEl), detach: vi.fn(() => [audioEl]) } as any;
+const mockTrack = { attach: jest.fn(() => audioEl), detach: jest.fn(() => [audioEl]) } as any;
 
-vi.mock('../../state');
-const mockUseAppState = useAppState as Mock<any>;
+jest.mock('../../state');
+const mockUseAppState = useAppState as jest.Mock<any>;
 
 mockUseAppState.mockImplementation(() => ({ activeSinkId: '' }));
 
 describe('the AudioTrack component', () => {
-  beforeEach(vi.clearAllMocks);
+  beforeEach(jest.clearAllMocks);
 
   it('should add an audio element to the DOM when the component mounts', () => {
     render(<AudioTrack track={mockTrack} />);

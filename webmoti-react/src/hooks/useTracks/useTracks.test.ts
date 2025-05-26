@@ -1,11 +1,10 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
 import EventEmitter from 'events';
 
 import { renderHook, act } from '@testing-library/react';
 
 import useTracks from './useTracks';
 
-vi.mock('../useVideoContext/useVideoContext', () => () => ({
+jest.mock('../useVideoContext/useVideoContext', () => () => ({
   localTracks: [],
   room: { sid: 'mockRoomSid' },
 }));

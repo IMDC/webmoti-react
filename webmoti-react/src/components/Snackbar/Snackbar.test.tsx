@@ -1,4 +1,3 @@
-import { describe, expect, it, vi } from "vitest";
 import { render, screen, fireEvent } from '@testing-library/react';
 import Snackbar from './Snackbar';
 
@@ -35,7 +34,7 @@ describe('the Snackbar component', () => {
 
   describe('the handleClose function', () => {
     it('should be called when close button is clicked', () => {
-      const mockHandleClose = vi.fn();
+      const mockHandleClose = jest.fn();
 
       render(
         <Snackbar
@@ -52,7 +51,7 @@ describe('the Snackbar component', () => {
     });
 
     it('should call handleClose when close icon is clicked', () => {
-      const mockHandleClose = vi.fn();
+      const mockHandleClose = jest.fn();
 
       render(
         <Snackbar

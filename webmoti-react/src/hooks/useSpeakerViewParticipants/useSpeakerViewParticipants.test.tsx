@@ -1,15 +1,14 @@
-import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { act, renderHook } from '@testing-library/react';
 import EventEmitter from 'events';
 import useDominantSpeaker from '../useDominantSpeaker/useDominantSpeaker';
 import useSpeakerViewParticipants from './useSpeakerViewParticipants';
 import useVideoContext from '../useVideoContext/useVideoContext';
 
-vi.mock('../useVideoContext/useVideoContext');
-vi.mock('../useDominantSpeaker/useDominantSpeaker');
+jest.mock('../useVideoContext/useVideoContext');
+jest.mock('../useDominantSpeaker/useDominantSpeaker');
 
-const mockUseDominantSpeaker = useDominantSpeaker as Mock<any>;
-const mockedVideoContext = useVideoContext as Mock<any>;
+const mockUseDominantSpeaker = useDominantSpeaker as jest.Mock<any>;
+const mockedVideoContext = useVideoContext as jest.Mock<any>;
 
 describe('the useSpeakerViewParticipants hook', () => {
   let mockRoom: any;

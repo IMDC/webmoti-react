@@ -1,4 +1,3 @@
-import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import React from 'react';
 
 import { render, act } from '@testing-library/react';
@@ -22,40 +21,40 @@ window.location = {
   origin: '',
 };
 
-const mockReplaceState = vi.fn();
+const mockReplaceState = jest.fn();
 Object.defineProperty(window.history, 'replaceState', { value: mockReplaceState });
 
-vi.mock('./MediaErrorSnackbar/MediaErrorSnackbar', () => {
-  const mockFn = vi.fn(() => null);
+jest.mock('./MediaErrorSnackbar/MediaErrorSnackbar', () => {
+  const mockFn = jest.fn(() => null);
   return {
     __esModule: true,
     default: mockFn,
   };
 });
 
-vi.mock('../../state');
-vi.mock('react-router-dom', () => ({ useParams: vi.fn() }));
-vi.mock('../../hooks/useVideoContext/useVideoContext');
-const mockUseAppState = useAppState as Mock<any>;
-const mockUseParams = useParams as Mock<any>;
-const mockUseVideoContext = useVideoContext as Mock<any>;
+jest.mock('../../state');
+jest.mock('react-router-dom', () => ({ useParams: jest.fn() }));
+jest.mock('../../hooks/useVideoContext/useVideoContext');
+const mockUseAppState = useAppState as jest.Mock<any>;
+const mockUseParams = useParams as jest.Mock<any>;
+const mockUseVideoContext = useVideoContext as jest.Mock<any>;
 
-vi.mock(
+jest.mock(
   '../IntroContainer/IntroContainer',
   () =>
     ({ children }: { children: React.ReactNode }) =>
       children
 );
-vi.mock('./RoomNameScreen/RoomNameScreen', () => () => null);
-vi.mock('./DeviceSelectionScreen/DeviceSelectionScreen', () => () => null);
-vi.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
+jest.mock('./RoomNameScreen/RoomNameScreen', () => () => null);
+jest.mock('./DeviceSelectionScreen/DeviceSelectionScreen', () => () => null);
+jest.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as Mock<any>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
 mockUseWebmotiVideoContext.mockImplementation(() => ({}));
 
 describe('the PreJoinScreens component', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     mockUseAppState.mockImplementation(() => ({ user: { displayName: 'Test User' } }));
     mockUseParams.mockImplementation(() => ({ URLRoomName: 'testRoom' }));
     mockUseWebmotiVideoContext.mockImplementation(() => ({}));
@@ -122,7 +121,7 @@ describe('the PreJoinScreens component', () => {
 
   it('should capture errors from getAudioAndVideoTracks and pass them to the MediaErrorSnackbar component', async () => {
     const error = 'testError';
-    const mockGetTracks = vi.fn(() => Promise.reject(error));
+    const mockGetTracks = jest.fn(() => Promise.reject(error));
     mockUseVideoContext.mockImplementation(() => ({ getAudioAndVideoTracks: mockGetTracks }));
 
     await act(async () => {
@@ -131,7 +130,7 @@ describe('the PreJoinScreens component', () => {
 
     expect(mockGetTracks).toHaveBeenCalledTimes(1);
 
-    const { default: mockMediaErrorSnackbar } = await vi.importMock('./MediaErrorSnackbar/MediaErrorSnackbar');
+    const { default: mockMediaErrorSnackbar } = jest.requireMock('./MediaErrorSnackbar/MediaErrorSnackbar');
 
     expect(mockMediaErrorSnackbar).toHaveBeenCalledWith(expect.objectContaining({ error }), expect.anything());
   });

@@ -1,15 +1,14 @@
-import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
 import AudioLevelIndicator from './AudioLevelIndicator';
 import useIsTrackEnabled from '../../hooks/useIsTrackEnabled/useIsTrackEnabled';
 import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
-vi.mock('../../hooks/useIsTrackEnabled/useIsTrackEnabled');
-vi.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
+jest.mock('../../hooks/useIsTrackEnabled/useIsTrackEnabled');
+jest.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 
-const mockUseIsTrackEnabled = useIsTrackEnabled as Mock<boolean>;
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as Mock<any>;
+const mockUseIsTrackEnabled = useIsTrackEnabled as jest.Mock<boolean>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
 
 beforeEach(() => {
   mockUseWebmotiVideoContext.mockReturnValue({ isMuted: () => true });

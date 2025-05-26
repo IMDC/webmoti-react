@@ -1,15 +1,14 @@
-import { describe, expect, it, vi, Mock } from 'vitest';
 import { screen, render } from '@testing-library/react';
 
 import AudioOutputList from './AudioOutputList';
 import useDevices from '../../../hooks/useDevices/useDevices';
 import { useAppState } from '../../../state';
 
-vi.mock('../../../state');
-vi.mock('../../../hooks/useDevices/useDevices');
+jest.mock('../../../state');
+jest.mock('../../../hooks/useDevices/useDevices');
 
-const mockUseAppState = useAppState as Mock<any>;
-const mockUseDevices = useDevices as Mock<any>;
+const mockUseAppState = useAppState as jest.Mock<any>;
+const mockUseDevices = useDevices as jest.Mock<any>;
 
 mockUseAppState.mockImplementation(() => ({ activeSinkId: '123' }));
 

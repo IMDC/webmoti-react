@@ -1,4 +1,3 @@
-import { describe, expect, it, vi, Mock } from 'vitest';
 import { EventEmitter } from 'events';
 
 import React, { ReactNode } from 'react';
@@ -17,9 +16,9 @@ import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 
 const mockRoom = new EventEmitter() as Room;
 
-vi.mock('./useRoom/useRoom', () => vi.fn(() => ({ room: mockRoom, isConnecting: false, connect: () => {} })));
-vi.mock('./useLocalTracks/useLocalTracks', () =>
-  vi.fn(() => ({
+jest.mock('./useRoom/useRoom', () => jest.fn(() => ({ room: mockRoom, isConnecting: false, connect: () => {} })));
+jest.mock('./useLocalTracks/useLocalTracks', () =>
+  jest.fn(() => ({
     localTracks: [{ name: 'mockTrack' }],
     getLocalVideoTrack: () => {},
     getLocalAudioTrack: () => {},
@@ -28,21 +27,21 @@ vi.mock('./useLocalTracks/useLocalTracks', () =>
     removeLocalVideoTrack: () => {},
   }))
 );
-vi.mock('../../state');
-vi.mock('./useHandleRoomDisconnection/useHandleRoomDisconnection');
-vi.mock('./useHandleTrackPublicationFailed/useHandleTrackPublicationFailed');
-vi.mock('./useRestartAudioTrackOnDeviceChange/useRestartAudioTrackOnDeviceChange');
-vi.mock('@twilio/video-processors', () => {
+jest.mock('../../state');
+jest.mock('./useHandleRoomDisconnection/useHandleRoomDisconnection');
+jest.mock('./useHandleTrackPublicationFailed/useHandleTrackPublicationFailed');
+jest.mock('./useRestartAudioTrackOnDeviceChange/useRestartAudioTrackOnDeviceChange');
+jest.mock('@twilio/video-processors', () => {
   return {
-    GaussianBlurBackgroundProcessor: vi.fn().mockImplementation(() => {
+    GaussianBlurBackgroundProcessor: jest.fn().mockImplementation(() => {
       return {
-        loadModel: vi.fn(),
+        loadModel: jest.fn(),
       };
     }),
   };
 });
 
-const mockUseAppState = useAppState as Mock<any>;
+const mockUseAppState = useAppState as jest.Mock<any>;
 
 mockUseAppState.mockImplementation(() => ({ isGalleryViewActive: false }));
 
@@ -90,7 +89,7 @@ describe('the VideoProvider component', () => {
   });
 
   it('should call the onError function when there is an error', () => {
-    const mockOnError = vi.fn();
+    const mockOnError = jest.fn();
     const wrapper = ({ children }: { children: ReactNode }) => (
       <VideoProvider onError={mockOnError} options={{ dominantSpeaker: true }}>
         {children}

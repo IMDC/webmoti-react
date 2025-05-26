@@ -1,4 +1,3 @@
-import { describe, expect, it, vi, Mock } from 'vitest';
 import { EventEmitter } from 'events';
 
 import { render, screen } from '@testing-library/react';
@@ -6,7 +5,7 @@ import { render, screen } from '@testing-library/react';
 import { ParticipantAudioTracks } from './ParticipantAudioTracks';
 import useParticipants from '../../hooks/useParticipants/useParticipants';
 
-vi.mock('../../hooks/useVideoContext/useVideoContext', () => () => ({
+jest.mock('../../hooks/useVideoContext/useVideoContext', () => () => ({
   localTracks: [],
   room: { sid: 'mockRoomSid' },
 }));
@@ -15,10 +14,10 @@ function MockAudioTrack() {
   return <div data-testid="mock-audio-track">Mock Audio Track</div>;
 }
 
-vi.mock('../../hooks/useParticipants/useParticipants');
-vi.mock('../AudioTrack/AudioTrack', () => MockAudioTrack);
+jest.mock('../../hooks/useParticipants/useParticipants');
+jest.mock('../AudioTrack/AudioTrack', () => MockAudioTrack);
 
-const mockUseParticipants = useParticipants as Mock<any>;
+const mockUseParticipants = useParticipants as jest.Mock<any>;
 
 class MockParticipant extends EventEmitter {
   sid: string;

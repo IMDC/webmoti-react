@@ -1,17 +1,16 @@
-import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import RoomNameScreen from './RoomNameScreen';
 import { useAppState } from '../../../state';
 
-vi.mock('../../../state');
-const mockUseAppState = useAppState as Mock<any>;
+jest.mock('../../../state');
+const mockUseAppState = useAppState as jest.Mock<any>;
 
 // !
 // ! we don't use the customIdentity query parameter so these tests aren't needed
 // !
 describe.skip('the RoomNameScreen component', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   it('should render correctly when there is no logged-in user', () => {

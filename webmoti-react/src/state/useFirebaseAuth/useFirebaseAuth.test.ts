@@ -1,4 +1,3 @@
-import { afterEach, describe, expect, it, vi, Mock } from 'vitest';
 import useFirebaseAuth from './useFirebaseAuth';
 import { renderHook, waitFor } from '@testing-library/react';
 import { setImmediate } from 'timers';
@@ -6,21 +5,21 @@ import { clientEnv } from '../../clientEnv';
 
 const mockUser = { getIdToken: () => Promise.resolve('idToken') };
 
-vi.mock('firebase/app', () => ({
-  initializeApp: vi.fn(),
-  getApps: vi.fn(() => []),
+jest.mock('firebase/app', () => ({
+  initializeApp: jest.fn(),
+  getApps: jest.fn(() => []),
 }));
 
-vi.mock('firebase/auth', () => {
+jest.mock('firebase/auth', () => {
   const mockAuth = () => ({
     onAuthStateChanged: (fn: Function) => {
       setImmediate(() => fn('mockUser'));
-      return vi.fn(() => {});
+      return jest.fn(() => {});
     },
-    signOut: vi.fn(() => Promise.resolve()),
+    signOut: jest.fn(() => Promise.resolve()),
   });
-  const mockSignInWithPopup = vi.fn(() => Promise.resolve({ user: mockUser }));
-  const mockGoogleAuthProvider = vi.fn(() => ({ addScope: vi.fn() }));
+  const mockSignInWithPopup = jest.fn(() => Promise.resolve({ user: mockUser }));
+  const mockGoogleAuthProvider = jest.fn(() => ({ addScope: jest.fn() }));
   return {
     getAuth: mockAuth,
     signInWithPopup: mockSignInWithPopup,
@@ -29,7 +28,7 @@ vi.mock('firebase/auth', () => {
 });
 
 // @ts-ignore
-window.fetch = vi.fn(() =>
+window.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     text: () => Promise.resolve(JSON.stringify({ token: 'mockVideoToken' })),
@@ -38,7 +37,7 @@ window.fetch = vi.fn(() =>
 );
 
 describe('the useFirebaseAuth hook', () => {
-  afterEach(vi.clearAllMocks);
+  afterEach(jest.clearAllMocks);
 
   it('should set isAuthReady to true and set a user on load', async () => {
     const { result } = renderHook(() => useFirebaseAuth());
@@ -75,7 +74,7 @@ describe('the useFirebaseAuth hook', () => {
   });
 
   it('should include the users idToken in request to the video token server', async () => {
-    (clientEnv.TOKEN_ENDPOINT as Mock).mockReturnValue('http://test-endpoint.com/token');
+    (clientEnv.TOKEN_ENDPOINT as jest.Mock).mockReturnValue('http://test-endpoint.com/token');
 
     const { result } = renderHook(() => useFirebaseAuth());
     await waitFor(() => {

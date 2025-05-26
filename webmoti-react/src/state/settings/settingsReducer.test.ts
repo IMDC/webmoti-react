@@ -1,4 +1,3 @@
-import { describe, expect, it } from "vitest";
 import { settingsReducer, initialSettings } from './settingsReducer';
 
 describe('the settingsReducer', () => {

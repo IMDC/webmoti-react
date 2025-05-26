@@ -1,4 +1,3 @@
-import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import EventEmitter from 'events';
 
 import { screen, render } from '@testing-library/react';
@@ -13,21 +12,21 @@ import useSelectedParticipant from '../VideoProvider/useSelectedParticipant/useS
 import { useAppState } from '../../state';
 import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
-vi.mock('../../hooks/useParticipantsContext/useParticipantsContext');
-vi.mock('../../hooks/useVideoContext/useVideoContext');
-vi.mock('../VideoProvider/useSelectedParticipant/useSelectedParticipant');
-vi.mock('../../hooks/useMainParticipant/useMainParticipant');
-vi.mock('../../hooks/useScreenShareParticipant/useScreenShareParticipant');
-vi.mock('../../state');
-vi.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
+jest.mock('../../hooks/useParticipantsContext/useParticipantsContext');
+jest.mock('../../hooks/useVideoContext/useVideoContext');
+jest.mock('../VideoProvider/useSelectedParticipant/useSelectedParticipant');
+jest.mock('../../hooks/useMainParticipant/useMainParticipant');
+jest.mock('../../hooks/useScreenShareParticipant/useScreenShareParticipant');
+jest.mock('../../state');
+jest.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 
-const mockParticipantContext = useParticipantContext as Mock<any>;
-const mockedVideoContext = useVideoContext as Mock<any>;
-const mockUseSelectedParticipant = useSelectedParticipant as Mock<any>;
-const mockUseMainParticipant = useMainParticipant as Mock<any>;
-const mockUseScreenShareParticipant = useScreenShareParticipant as Mock<any>;
-const mockUseAppState = useAppState as Mock<any>;
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as Mock<any>;
+const mockParticipantContext = useParticipantContext as jest.Mock<any>;
+const mockedVideoContext = useVideoContext as jest.Mock<any>;
+const mockUseSelectedParticipant = useSelectedParticipant as jest.Mock<any>;
+const mockUseMainParticipant = useMainParticipant as jest.Mock<any>;
+const mockUseScreenShareParticipant = useScreenShareParticipant as jest.Mock<any>;
+const mockUseAppState = useAppState as jest.Mock<any>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
 
 mockUseAppState.mockImplementation(() => ({ activeSinkId: '' }));
 
@@ -48,8 +47,8 @@ function createMockParticipant({
   return {
     sid,
     identity,
-    on: vi.fn(),
-    off: vi.fn(),
+    on: jest.fn(),
+    off: jest.fn(),
     tracks: new Map(),
     ...additionalProps,
   };

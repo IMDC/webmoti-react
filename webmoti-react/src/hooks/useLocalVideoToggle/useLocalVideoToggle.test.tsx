@@ -1,4 +1,3 @@
-import { describe, expect, it, vi, Mock } from 'vitest';
 import { EventEmitter } from 'events';
 
 import { act, renderHook, waitFor } from '@testing-library/react';
@@ -7,8 +6,8 @@ import { LocalParticipant } from 'twilio-video';
 import useLocalVideoToggle from './useLocalVideoToggle';
 import useVideoContext from '../useVideoContext/useVideoContext';
 
-vi.mock('../useVideoContext/useVideoContext');
-const mockUseVideoContext = useVideoContext as Mock<any>;
+jest.mock('../useVideoContext/useVideoContext');
+const mockUseVideoContext = useVideoContext as jest.Mock<any>;
 
 function getMockTrack(kind: string, deviceId?: string) {
   return {
@@ -45,7 +44,7 @@ describe('the useLocalVideoToggle hook', () => {
 
   describe('toggleVideoEnabled function', () => {
     it('should call removeLocalVideoTrack when a localVideoTrack exists', () => {
-      const mockRemoveLocalVideoTrack = vi.fn();
+      const mockRemoveLocalVideoTrack = jest.fn();
 
       mockUseVideoContext.mockImplementation(() => ({
         localTracks: [getMockTrack('video')],
@@ -61,11 +60,11 @@ describe('the useLocalVideoToggle hook', () => {
     it('should call localParticipant.unpublishTrack when a localVideoTrack and localParticipant exists', () => {
       const mockLocalTrack = {
         ...getMockTrack('video'),
-        stop: vi.fn(),
+        stop: jest.fn(),
       };
 
       const mockLocalParticipant = new EventEmitter() as LocalParticipant;
-      mockLocalParticipant.unpublishTrack = vi.fn();
+      mockLocalParticipant.unpublishTrack = jest.fn();
 
       mockUseVideoContext.mockImplementation(() => ({
         localTracks: [mockLocalTrack],
@@ -79,7 +78,7 @@ describe('the useLocalVideoToggle hook', () => {
     });
 
     it('should call getLocalVideoTrack when a localVideoTrack does not exist', async () => {
-      const mockGetLocalVideoTrack = vi.fn(() => Promise.resolve());
+      const mockGetLocalVideoTrack = jest.fn(() => Promise.resolve());
       mockUseVideoContext.mockImplementation(() => ({
         localTracks: [],
         getLocalVideoTrack: mockGetLocalVideoTrack,
@@ -96,10 +95,10 @@ describe('the useLocalVideoToggle hook', () => {
     });
 
     it('should call mockLocalParticipant.publishTrack when a localVideoTrack does not exist and localParticipant does exist', async () => {
-      const mockGetLocalVideoTrack = vi.fn(() => Promise.resolve('mockTrack'));
+      const mockGetLocalVideoTrack = jest.fn(() => Promise.resolve('mockTrack'));
 
       const mockLocalParticipant = new EventEmitter() as LocalParticipant;
-      mockLocalParticipant.publishTrack = vi.fn();
+      mockLocalParticipant.publishTrack = jest.fn();
 
       mockUseVideoContext.mockImplementation(() => ({
         localTracks: [],
@@ -117,10 +116,10 @@ describe('the useLocalVideoToggle hook', () => {
     });
 
     it('should not call mockLocalParticipant.publishTrack when isPublishing is true', async () => {
-      const mockGetLocalVideoTrack = vi.fn(() => Promise.resolve('mockTrack'));
+      const mockGetLocalVideoTrack = jest.fn(() => Promise.resolve('mockTrack'));
 
       const mockLocalParticipant = new EventEmitter() as LocalParticipant;
-      mockLocalParticipant.publishTrack = vi.fn();
+      mockLocalParticipant.publishTrack = jest.fn();
 
       mockUseVideoContext.mockImplementation(() => ({
         localTracks: [],
@@ -139,11 +138,11 @@ describe('the useLocalVideoToggle hook', () => {
     });
 
     it('should call onError when publishTrack throws an error', async () => {
-      const mockGetLocalVideoTrack = vi.fn(() => Promise.resolve('mockTrack'));
-      const mockOnError = vi.fn();
+      const mockGetLocalVideoTrack = jest.fn(() => Promise.resolve('mockTrack'));
+      const mockOnError = jest.fn();
 
       const mockLocalParticipant = new EventEmitter() as LocalParticipant;
-      mockLocalParticipant.publishTrack = vi.fn(() => Promise.reject('mockError'));
+      mockLocalParticipant.publishTrack = jest.fn(() => Promise.reject('mockError'));
 
       mockUseVideoContext.mockImplementation(() => ({
         localTracks: [],
