@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi, Mock } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import App from './App';
 import useRoomState from './hooks/useRoomState/useRoomState';
@@ -7,15 +7,27 @@ import useHeight from './hooks/useHeight/useHeight';
 vi.mock('./hooks/useRoomState/useRoomState');
 vi.mock('./hooks/useHeight/useHeight');
 
-vi.mock('./components/PreJoinScreens/PreJoinScreens', () => () => <div data-testid="PreJoinScreens" />);
-vi.mock('./components/Room/Room', () => () => <div data-testid="Room" />);
-vi.mock('./components/MenuBar/MenuBar', () => () => <div data-testid="MenuBar" />);
-vi.mock('./components/MobileTopMenuBar/MobileTopMenuBar', () => () => <div />);
-vi.mock('./components/ReconnectingNotification/ReconnectingNotification', () => () => <div />);
-vi.mock('./components/RecordingNotifications/RecordingNotifications', () => () => <div />);
+vi.mock('./components/PreJoinScreens/PreJoinScreens', () => ({
+  default: () => <div data-testid="PreJoinScreens" />,
+}));
+vi.mock('./components/Room/Room', () => ({
+  default: () => <div data-testid="Room" />,
+}));
+vi.mock('./components/MenuBar/MenuBar', () => ({
+  default: () => <div data-testid="MenuBar" />,
+}));
+vi.mock('./components/MobileTopMenuBar/MobileTopMenuBar', () => ({
+  default: () => <div />,
+}));
+vi.mock('./components/ReconnectingNotification/ReconnectingNotification', () => ({
+  default: () => <div />,
+}));
+vi.mock('./components/RecordingNotifications/RecordingNotifications', () => ({
+  default: () => <div />,
+}));
 
-const mockUseRoomState = useRoomState as vi.Mock;
-const mockUseHeight = useHeight as vi.Mock;
+const mockUseRoomState = useRoomState as Mock;
+const mockUseHeight = useHeight as Mock;
 
 mockUseHeight.mockReturnValue('500px');
 
