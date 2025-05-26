@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { screen, render, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -10,7 +10,7 @@ import { TwilioError } from 'twilio-video';
 vi.mock('@mui/material/useMediaQuery');
 vi.mock('../../../state');
 
-const mockUseAppState = useAppState as vi.Mock<any>;
+const mockUseAppState = useAppState as Mock<any>;
 mockUseAppState.mockImplementation(() => ({ setError: (_: TwilioError | Error | null) => {} }));
 
 const mockHandleSendMessage = vi.fn<any, (string | FormData)[]>(() => Promise.resolve());

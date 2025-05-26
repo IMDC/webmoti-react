@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import DeviceSelectionScreen from './DeviceSelectionScreen';
@@ -14,15 +14,15 @@ const mockConnect = vi.fn();
 const mockChatConnect = vi.fn(() => Promise.resolve());
 const mockGetToken = vi.fn(() => Promise.resolve({ token: 'mockToken' }));
 
-const mockUseVideoContext = useVideoContext as vi.Mock;
-const mockUseAppState = useAppState as vi.Mock;
+const mockUseVideoContext = useVideoContext as Mock;
+const mockUseAppState = useAppState as Mock;
 
 vi.mock('../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext', () => () => ({}));
 
 describe('the DeviceSelectionScreen component', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    (clientEnv.DISABLE_TWILIO_CONVERSATIONS as vi.Mock).mockReturnValue('false');
+    (clientEnv.DISABLE_TWILIO_CONVERSATIONS as Mock).mockReturnValue('false');
     mockUseAppState.mockImplementation(() => ({
       getToken: mockGetToken,
       isFetching: false,
@@ -114,7 +114,7 @@ describe('the DeviceSelectionScreen component', () => {
   });
 
   it('should only connect to video if chat is disabled', async () => {
-    (clientEnv.DISABLE_TWILIO_CONVERSATIONS as vi.Mock).mockReturnValue('true');
+    (clientEnv.DISABLE_TWILIO_CONVERSATIONS as Mock).mockReturnValue('true');
     render(<DeviceSelectionScreen name="test name" roomName="test room name" setStep={() => {}} />);
     fireEvent.click(screen.getByRole('button', { name: /join now/i }));
 

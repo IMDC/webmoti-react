@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, Mock } from "vitest";
+import { describe, expect, it, vi, Mock } from 'vitest';
 import EventEmitter from 'events';
 
 import { render } from '@testing-library/react';
@@ -12,7 +12,7 @@ vi.mock('../../../hooks/useVideoContext/useVideoContext', () => () => ({
   room: { localParticipant: { identity: 'olivia' } },
 }));
 
-const mockUseChatContext = useChatContext as vi.Mock<any>;
+const mockUseChatContext = useChatContext as Mock<any>;
 const mockConversation = new EventEmitter();
 mockUseChatContext.mockImplementation(() => ({ conversation: mockConversation }));
 

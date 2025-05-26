@@ -1,10 +1,10 @@
-import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { render, screen, act } from '@testing-library/react';
 import RecordingNotifications from './RecordingNotifications';
 import useIsRecording from '../../hooks/useIsRecording/useIsRecording';
 
 vi.mock('../../hooks/useIsRecording/useIsRecording');
-const mockUseIsRecording = useIsRecording as vi.Mock<boolean | null>;
+const mockUseIsRecording = useIsRecording as Mock<boolean | null>;
 
 describe('the RecordingNotifications component', () => {
   beforeEach(() => {

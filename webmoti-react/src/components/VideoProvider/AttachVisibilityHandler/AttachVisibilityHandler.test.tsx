@@ -1,4 +1,4 @@
-import { beforeAll, beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import React from 'react';
 import AttachVisibilityHandler from './AttachVisibilityHandler';
 import useLocalVideoToggle from '../../../hooks/useLocalVideoToggle/useLocalVideoToggle';
@@ -9,8 +9,8 @@ import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 vi.mock('../../../hooks/useVideoContext/useVideoContext');
 vi.mock('../../../hooks/useLocalVideoToggle/useLocalVideoToggle');
 
-const mockUseVideoContext = useVideoContext as vi.Mock<any>;
-const mockUseLocalVideoToggle = useLocalVideoToggle as vi.Mock<any>;
+const mockUseVideoContext = useVideoContext as Mock<any>;
+const mockUseLocalVideoToggle = useLocalVideoToggle as Mock<any>;
 const mockToggleVideoEnabled = vi.fn();
 
 Object.defineProperty(document, 'visibilityState', { value: '', writable: true });

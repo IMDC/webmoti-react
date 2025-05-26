@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, Mock } from "vitest";
+import { describe, expect, it, vi, Mock } from 'vitest';
 import { screen } from '@testing-library/react';
 import { renderWithUser } from '../../../utils/testUtils';
 
@@ -7,7 +7,7 @@ import useChatContext from '../../../hooks/useChatContext/useChatContext';
 
 vi.mock('../../../hooks/useChatContext/useChatContext');
 
-const mockUseChatContext = useChatContext as vi.Mock<any>;
+const mockUseChatContext = useChatContext as Mock<any>;
 
 const mockToggleChatWindow = vi.fn();
 mockUseChatContext.mockImplementation(() => ({ setIsChatWindowOpen: mockToggleChatWindow }));

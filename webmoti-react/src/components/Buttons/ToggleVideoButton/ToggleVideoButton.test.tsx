@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it, vi, Mock } from "vitest";
+import { beforeAll, describe, expect, it, vi, Mock } from 'vitest';
 import { screen, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -9,8 +9,8 @@ import useLocalVideoToggle from '../../../hooks/useLocalVideoToggle/useLocalVide
 vi.mock('../../../hooks/useDevices/useDevices');
 vi.mock('../../../hooks/useLocalVideoToggle/useLocalVideoToggle');
 
-const mockUseLocalVideoToggle = useLocalVideoToggle as vi.Mock<any>;
-const mockUseDevices = useDevices as vi.Mock<any>;
+const mockUseLocalVideoToggle = useLocalVideoToggle as Mock<any>;
+const mockUseDevices = useDevices as Mock<any>;
 
 describe('the ToggleVideoButton component', () => {
   beforeAll(() => {

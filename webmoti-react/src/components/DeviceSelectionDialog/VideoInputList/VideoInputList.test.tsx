@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi, Mock } from "vitest";
+import { afterEach, describe, expect, it, vi, Mock } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
 import VideoInputList from './VideoInputList';
@@ -12,11 +12,11 @@ vi.mock('../../../hooks/useVideoContext/useVideoContext');
 vi.mock('../../../hooks/useDevices/useDevices');
 vi.mock('../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 
-const mockUseVideoContext = useVideoContext as vi.Mock<any>;
-const mockUseDevices = useDevices as vi.Mock<any>;
+const mockUseVideoContext = useVideoContext as Mock<any>;
+const mockUseDevices = useDevices as Mock<any>;
 const mockGetLocalVideotrack = vi.fn(() => Promise.resolve);
 
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as vi.Mock<any>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as Mock<any>;
 mockUseWebmotiVideoContext.mockImplementation(() => ({}));
 
 const mockDevice = {

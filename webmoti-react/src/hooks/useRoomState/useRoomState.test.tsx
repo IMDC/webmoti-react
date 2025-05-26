@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { act, renderHook } from '@testing-library/react';
 import EventEmitter from 'events';
 import { Room } from 'twilio-video';
@@ -7,7 +7,7 @@ import useVideoContext from '../useVideoContext/useVideoContext';
 
 vi.mock('../useVideoContext/useVideoContext');
 
-const mockUseVideoContext = useVideoContext as vi.Mock<any>;
+const mockUseVideoContext = useVideoContext as Mock<any>;
 
 describe('the useRoomState hook', () => {
   let mockRoom: Room;

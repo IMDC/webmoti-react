@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, Mock } from "vitest";
+import { describe, expect, it, vi, Mock } from 'vitest';
 import { screen, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -14,8 +14,8 @@ import ToggleScreenShareButton, {
 vi.mock('../../../hooks/useScreenShareParticipant/useScreenShareParticipant');
 vi.mock('../../../hooks/useVideoContext/useVideoContext');
 
-const mockUseScreenShareParticipant = useScreenShareParticipant as vi.Mock<any>;
-const mockUseVideoContext = useVideoContext as vi.Mock<any>;
+const mockUseScreenShareParticipant = useScreenShareParticipant as Mock<any>;
+const mockUseVideoContext = useVideoContext as Mock<any>;
 
 const mockToggleScreenShare = vi.fn();
 mockUseVideoContext.mockImplementation(() => ({ toggleScreenShare: mockToggleScreenShare }));

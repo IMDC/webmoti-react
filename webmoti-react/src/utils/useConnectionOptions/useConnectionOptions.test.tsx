@@ -1,9 +1,9 @@
-import { describe, expect, it, vi, Mock } from "vitest";
+import { describe, expect, it, vi, Mock } from 'vitest';
 import { Settings } from '../../state/settings/settingsReducer';
 import { useAppState } from '../../state';
 import useConnectionOptions from './useConnectionOptions';
 
-const mockUseAppState = useAppState as vi.Mock<any>;
+const mockUseAppState = useAppState as Mock<any>;
 vi.mock('../../state');
 
 describe('the useConnectionOptions function', () => {

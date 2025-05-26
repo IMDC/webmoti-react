@@ -1,11 +1,11 @@
-import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import ParticipantTracks from './ParticipantTracks';
 import usePublications from '../../hooks/usePublications/usePublications';
 
 vi.mock('../../hooks/usePublications/usePublications');
 
-const mockUsePublications = usePublications as vi.Mock;
+const mockUsePublications = usePublications as Mock;
 
 describe('ParticipantTracks', () => {
   const mockParticipant = { identity: 'mock', tracks: new Map() } as any;

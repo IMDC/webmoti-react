@@ -1,4 +1,4 @@
-import { beforeAll, beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { useMediaQuery } from '@mui/material';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -10,13 +10,13 @@ import { useAppState } from '../../../../state';
 vi.mock('../../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext', () => () => ({}));
 
 vi.mock('@mui/material/useMediaQuery');
-const mockUseMediaQuery = useMediaQuery as vi.Mock<boolean>;
+const mockUseMediaQuery = useMediaQuery as Mock<boolean>;
 
 vi.mock('../../../../state');
-const mockUseAppState = useAppState as vi.Mock<any>;
+const mockUseAppState = useAppState as Mock<any>;
 
 vi.mock('../../../../hooks/useVideoContext/useVideoContext');
-const mockUseVideoContext = useVideoContext as vi.Mock<any>;
+const mockUseVideoContext = useVideoContext as Mock<any>;
 mockUseVideoContext.mockImplementation(() => ({
   localTracks: [],
   backgroundSettings: {

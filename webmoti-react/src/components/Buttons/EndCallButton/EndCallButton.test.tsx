@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 
 import EndCallButton from './EndCallButton';
@@ -16,7 +16,7 @@ vi.mock('../../../hooks/useVideoContext/useVideoContext', () => () => ({
 
 describe('EndCallButton', () => {
   beforeEach(() => {
-    (useChatContext as vi.Mock).mockReturnValue({});
+    (useChatContext as Mock).mockReturnValue({});
     mockDisconnect.mockClear();
   });
 

@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import useMainParticipant from '../../hooks/useMainParticipant/useMainParticipant';
 import useSelectedParticipant from '../VideoProvider/useSelectedParticipant/useSelectedParticipant';
@@ -23,10 +23,10 @@ vi.mock('../ParticipantTracks/ParticipantTracks', () => (props: any) => (
 
 vi.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext', () => () => ({}));
 
-const mockUseMainParticipant = useMainParticipant as vi.Mock;
-const mockUseSelectedParticipant = useSelectedParticipant as vi.Mock;
-const mockUseScreenShareParticipant = useScreenShareParticipant as vi.Mock;
-const mockUseVideoContext = useVideoContext as vi.Mock;
+const mockUseMainParticipant = useMainParticipant as Mock;
+const mockUseSelectedParticipant = useSelectedParticipant as Mock;
+const mockUseScreenShareParticipant = useScreenShareParticipant as Mock;
+const mockUseVideoContext = useVideoContext as Mock;
 
 describe('MainParticipant', () => {
   beforeEach(() => {

@@ -8,7 +8,7 @@ import useLocalVideoToggle from './useLocalVideoToggle';
 import useVideoContext from '../useVideoContext/useVideoContext';
 
 vi.mock('../useVideoContext/useVideoContext');
-const mockUseVideoContext = useVideoContext as vi.Mock<any>;
+const mockUseVideoContext = useVideoContext as Mock<any>;
 
 function getMockTrack(kind: string, deviceId?: string) {
   return {

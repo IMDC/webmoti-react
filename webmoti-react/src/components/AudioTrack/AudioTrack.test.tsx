@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import React from 'react';
 import { render } from '@testing-library/react';
 import AudioTrack from './AudioTrack';
@@ -10,7 +10,7 @@ audioEl.setSinkId = vi.fn();
 const mockTrack = { attach: vi.fn(() => audioEl), detach: vi.fn(() => [audioEl]) } as any;
 
 vi.mock('../../state');
-const mockUseAppState = useAppState as vi.Mock<any>;
+const mockUseAppState = useAppState as Mock<any>;
 
 mockUseAppState.mockImplementation(() => ({ activeSinkId: '' }));
 

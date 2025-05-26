@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -15,9 +15,9 @@ vi.mock('react-router-dom', () => {
 vi.mock('../../state');
 vi.mock('./google-logo.svg', () => ({ ReactComponent: () => null }));
 
-const mockUseAppState = useAppState as vi.Mock<any>;
-const mockUseLocation = useLocation as vi.Mock<any>;
-const mockUseNavigate = useNavigate as vi.Mock<any>;
+const mockUseAppState = useAppState as Mock<any>;
+const mockUseLocation = useLocation as Mock<any>;
+const mockUseNavigate = useNavigate as Mock<any>;
 
 const mockNavigate = vi.fn();
 mockUseNavigate.mockImplementation(() => mockNavigate);
@@ -26,7 +26,7 @@ mockUseLocation.mockImplementation(() => ({ pathname: '/login' }));
 describe('the LoginPage component', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    (clientEnv.SET_AUTH as vi.Mock).mockReturnValue('firebase');
+    (clientEnv.SET_AUTH as Mock).mockReturnValue('firebase');
   });
 
   describe('with auth enabled', () => {
@@ -72,7 +72,7 @@ describe('the LoginPage component', () => {
 
   describe('with passcode auth enabled', () => {
     beforeEach(() => {
-      (clientEnv.SET_AUTH as vi.Mock).mockReturnValue('passcode');
+      (clientEnv.SET_AUTH as Mock).mockReturnValue('passcode');
     });
 
     it('should call sign in with the supplied passcode', async () => {
@@ -111,7 +111,7 @@ describe('the LoginPage component', () => {
   });
 
   it('should redirect to "/" when auth is disabled', () => {
-    (clientEnv.SET_AUTH as vi.Mock).mockReturnValue(undefined);
+    (clientEnv.SET_AUTH as Mock).mockReturnValue(undefined);
     mockUseAppState.mockImplementation(() => ({ user: null, signIn: () => Promise.resolve(), isAuthReady: true }));
     render(<LoginPage />);
     expect(mockNavigate).toHaveBeenCalledWith('/', { replace: true });

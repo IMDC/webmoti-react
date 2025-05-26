@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import React from 'react';
 
 import { render, screen, renderHook, act } from '@testing-library/react';
@@ -27,11 +27,11 @@ vi.mock('../../state');
 vi.mock('../../hooks/useParticipantsContext/useParticipantsContext');
 vi.mock('../../components/VideoProvider/useSelectedParticipant/useSelectedParticipant');
 
-const mockUseChatContext = useChatContext as vi.Mock;
-const mockUseVideoContext = useVideoContext as vi.Mock<any>;
-const mockUseAppState = useAppState as vi.Mock<any>;
-const mockUseParticipantContext = useParticipantContext as vi.Mock;
-const mockUseSelectedParticipant = useSelectedParticipant as vi.Mock;
+const mockUseChatContext = useChatContext as Mock;
+const mockUseVideoContext = useVideoContext as Mock<any>;
+const mockUseAppState = useAppState as Mock<any>;
+const mockUseParticipantContext = useParticipantContext as Mock;
+const mockUseSelectedParticipant = useSelectedParticipant as Mock;
 
 const mockLocalParticipant = createMockParticipant('local-participant', 0);
 const mockRemoteParticipant = createMockParticipant('remote-participant', 1);

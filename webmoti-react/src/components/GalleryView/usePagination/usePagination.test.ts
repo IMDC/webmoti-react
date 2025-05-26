@@ -1,11 +1,11 @@
-import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useAppState } from '../../../state';
 import { usePagination } from './usePagination';
 
 vi.mock('../../../state');
 
-const mockUseAppState = useAppState as vi.Mock<any>;
+const mockUseAppState = useAppState as Mock<any>;
 
 describe('the usePagination hook', () => {
   beforeEach(() => {
@@ -38,7 +38,7 @@ describe('the usePagination hook', () => {
   });
 
   it('should correctly respond to participants leaving the room when the user is on the last page', () => {
-    const { result, rerender } = renderHook(props => usePagination(props.participants as any[]), {
+    const { result, rerender } = renderHook((props) => usePagination(props.participants as any[]), {
       initialProps: { participants: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] },
     });
 

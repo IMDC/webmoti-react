@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import EventEmitter from 'events';
 
 import { screen, render } from '@testing-library/react';
@@ -21,13 +21,13 @@ vi.mock('../../hooks/useScreenShareParticipant/useScreenShareParticipant');
 vi.mock('../../state');
 vi.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 
-const mockParticipantContext = useParticipantContext as vi.Mock<any>;
-const mockedVideoContext = useVideoContext as vi.Mock<any>;
-const mockUseSelectedParticipant = useSelectedParticipant as vi.Mock<any>;
-const mockUseMainParticipant = useMainParticipant as vi.Mock<any>;
-const mockUseScreenShareParticipant = useScreenShareParticipant as vi.Mock<any>;
-const mockUseAppState = useAppState as vi.Mock<any>;
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as vi.Mock<any>;
+const mockParticipantContext = useParticipantContext as Mock<any>;
+const mockedVideoContext = useVideoContext as Mock<any>;
+const mockUseSelectedParticipant = useSelectedParticipant as Mock<any>;
+const mockUseMainParticipant = useMainParticipant as Mock<any>;
+const mockUseScreenShareParticipant = useScreenShareParticipant as Mock<any>;
+const mockUseAppState = useAppState as Mock<any>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as Mock<any>;
 
 mockUseAppState.mockImplementation(() => ({ activeSinkId: '' }));
 

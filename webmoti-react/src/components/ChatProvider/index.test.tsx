@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import EventEmitter from 'events';
 import { setImmediate } from 'timers';
 
@@ -23,7 +23,7 @@ vi.mock('@twilio/conversations', () => {
 });
 vi.mock('../../hooks/useVideoContext/useVideoContext');
 
-const mockUseVideoContext = useVideoContext as vi.Mock<any>;
+const mockUseVideoContext = useVideoContext as Mock<any>;
 const mockOnError = vi.fn();
 
 const mockRoom = { sid: 'mockRoomSid' };

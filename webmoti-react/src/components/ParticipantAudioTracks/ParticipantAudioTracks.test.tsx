@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, Mock } from "vitest";
+import { describe, expect, it, vi, Mock } from 'vitest';
 import { EventEmitter } from 'events';
 
 import { render, screen } from '@testing-library/react';
@@ -18,7 +18,7 @@ function MockAudioTrack() {
 vi.mock('../../hooks/useParticipants/useParticipants');
 vi.mock('../AudioTrack/AudioTrack', () => MockAudioTrack);
 
-const mockUseParticipants = useParticipants as vi.Mock<any>;
+const mockUseParticipants = useParticipants as Mock<any>;
 
 class MockParticipant extends EventEmitter {
   sid: string;

@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi, Mock } from "vitest";
+import { afterEach, describe, expect, it, vi, Mock } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { renderWithUser } from '../../../utils/testUtils';
 
@@ -12,9 +12,9 @@ vi.mock('../../../hooks/useVideoContext/useVideoContext');
 vi.mock('../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 vi.mock('../../../hooks/useDevices/useDevices');
 
-const mockUseVideoContext = useVideoContext as vi.Mock<any>;
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as vi.Mock<any>;
-const mockUseDevices = useDevices as vi.Mock<any>;
+const mockUseVideoContext = useVideoContext as Mock<any>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as Mock<any>;
+const mockUseDevices = useDevices as Mock<any>;
 const mockGetLocalAudiotrack = vi.fn(() => Promise.resolve);
 
 const mockDevice1 = { deviceId: '123', label: 'Mic 1' };

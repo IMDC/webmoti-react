@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi, Mock } from "vitest";
+import { afterEach, describe, expect, it, vi, Mock } from 'vitest';
 import firebaseAuthMiddleware from '../firebaseAuthMiddleware';
 import firebaseAdmin from 'firebase-admin';
 
@@ -27,7 +27,7 @@ const mockResponse: any = {
 
 const mockNext = vi.fn();
 
-const mockVerifyIdToken = firebaseAdmin.auth().verifyIdToken as vi.Mock<any>;
+const mockVerifyIdToken = firebaseAdmin.auth().verifyIdToken as Mock<any>;
 
 describe('the firebaseAuthMiddleware function', () => {
   afterEach(vi.clearAllMocks);

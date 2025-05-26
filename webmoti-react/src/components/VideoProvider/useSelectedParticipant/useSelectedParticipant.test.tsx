@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { EventEmitter } from 'events';
 
 import { act, renderHook } from '@testing-library/react';
@@ -9,7 +9,7 @@ import { useAppState } from '../../../state';
 
 vi.mock('../../../state');
 
-const mockUseAppState = useAppState as vi.Mock<any>;
+const mockUseAppState = useAppState as Mock<any>;
 
 mockUseAppState.mockImplementation(() => ({ isGalleryViewActive: false }));
 

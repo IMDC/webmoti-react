@@ -1,10 +1,10 @@
-import { describe, expect, it, vi, Mock } from "vitest";
+import { describe, expect, it, vi, Mock } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import useLocalAudioToggle from './useLocalAudioToggle';
 import useVideoContext from '../useVideoContext/useVideoContext';
 
 vi.mock('../useVideoContext/useVideoContext');
-const mockUseVideoContext = useVideoContext as vi.Mock<any>;
+const mockUseVideoContext = useVideoContext as Mock<any>;
 
 vi.mock('../useIsTrackEnabled/useIsTrackEnabled', () => () => true);
 

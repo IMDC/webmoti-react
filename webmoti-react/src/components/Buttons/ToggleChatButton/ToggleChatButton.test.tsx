@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, Mock } from "vitest";
+import { describe, expect, it, vi, Mock } from 'vitest';
 import { EventEmitter } from 'events';
 
 import { screen, render, act } from '@testing-library/react';
@@ -15,8 +15,8 @@ vi.mock('../../../hooks/useVideoContext/useVideoContext');
 vi.mock('../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 vi.mock('../../../utils');
 
-const mockUseChatContext = useChatContext as vi.Mock<any>;
-const mockUseVideoContext = useVideoContext as vi.Mock<any>;
+const mockUseChatContext = useChatContext as Mock<any>;
+const mockUseVideoContext = useVideoContext as Mock<any>;
 
 const mockConversation = new EventEmitter();
 const mockToggleChatWindow = vi.fn();
@@ -29,10 +29,10 @@ mockUseChatContext.mockImplementation(() => ({
 const mockSetIsBackgroundSelectionOpen = vi.fn();
 mockUseVideoContext.mockImplementation(() => ({ setIsBackgroundSelectionOpen: mockSetIsBackgroundSelectionOpen }));
 
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as vi.Mock<any>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as Mock<any>;
 mockUseWebmotiVideoContext.mockImplementation(() => ({}));
 
-(checkSystemMsg as vi.Mock).mockImplementation(() => false);
+(checkSystemMsg as Mock).mockImplementation(() => false);
 
 const mockMessage = {
   attachedMedia: [],

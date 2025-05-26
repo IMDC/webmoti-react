@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, Mock } from "vitest";
+import { describe, expect, it, vi, Mock } from 'vitest';
 import { render } from '@testing-library/react';
 
 import LocalVideoPreview from './LocalVideoPreview';
@@ -9,7 +9,7 @@ vi.mock('../../../../hooks/useVideoContext/useVideoContext');
 vi.mock('../../../../hooks/useMediaStreamTrack/useMediaStreamTrack');
 vi.mock('../../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as vi.Mock<any>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as Mock<any>;
 
 vi.mock('../../../VideoTrack/VideoTrack', () => ({
   __esModule: true,
@@ -18,7 +18,7 @@ vi.mock('../../../VideoTrack/VideoTrack', () => ({
 
 vi.mock('../../../../icons/AvatarIcon', () => () => <div data-testid="avatar-icon" />);
 
-const mockedVideoContext = useVideoContext as vi.Mock;
+const mockedVideoContext = useVideoContext as Mock;
 
 mockUseWebmotiVideoContext.mockImplementation(() => ({
   isMuted: false,

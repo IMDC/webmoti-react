@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { screen } from '@testing-library/react';
 import { renderWithUser } from '../../../utils/testUtils';
 
@@ -7,7 +7,7 @@ import useParticipantIsReconnecting from '../../../hooks/useParticipantIsReconne
 
 vi.mock('../../../hooks/useParticipantIsReconnecting/useParticipantIsReconnecting');
 
-const mockUseParticipantIsReconnecting = useParticipantIsReconnecting as vi.Mock<boolean>;
+const mockUseParticipantIsReconnecting = useParticipantIsReconnecting as Mock<boolean>;
 
 describe('the ParticipantConnectionIndicator component', () => {
   describe('when the participant is reconnecting', () => {

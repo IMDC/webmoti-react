@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it, vi, Mock } from "vitest";
+import { beforeAll, describe, expect, it, vi, Mock } from 'vitest';
 import EventEmitter from 'events';
 
 import { screen, render, within } from '@testing-library/react';
@@ -17,17 +17,17 @@ vi.mock('../../../hooks/useChatContext/useChatContext');
 vi.mock('../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 vi.mock('../../../utils');
 
-const mockUseLocalAudioToggle = useLocalAudioToggle as vi.Mock<any>;
-const mockUseVideoContext = useVideoContext as vi.Mock<any>;
+const mockUseLocalAudioToggle = useLocalAudioToggle as Mock<any>;
+const mockUseVideoContext = useVideoContext as Mock<any>;
 
-const mockUseChatContext = useChatContext as vi.Mock<any>;
+const mockUseChatContext = useChatContext as Mock<any>;
 const mockConversation = new EventEmitter();
 mockUseChatContext.mockImplementation(() => ({ conversation: mockConversation }));
 
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as vi.Mock<any>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as Mock<any>;
 mockUseWebmotiVideoContext.mockImplementation(() => ({}));
 
-(isWebmotiVideo as unknown as vi.Mock).mockImplementation(() => true);
+(isWebmotiVideo as unknown as Mock).mockImplementation(() => true);
 
 describe('the ToggleAudioButton component', () => {
   beforeAll(() => {
@@ -70,7 +70,7 @@ describe('the ToggleAudioButton component', () => {
 
     render(<ToggleAudioButton />);
     const button = screen.getByRole('button');
-    await userEvent.click(button)
+    await userEvent.click(button);
     expect(mockFn).toHaveBeenCalled();
   });
 });

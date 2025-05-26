@@ -1,10 +1,10 @@
-import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import RoomNameScreen from './RoomNameScreen';
 import { useAppState } from '../../../state';
 
 vi.mock('../../../state');
-const mockUseAppState = useAppState as vi.Mock<any>;
+const mockUseAppState = useAppState as Mock<any>;
 
 // !
 // ! we don't use the customIdentity query parameter so these tests aren't needed

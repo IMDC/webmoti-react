@@ -1,4 +1,4 @@
-import { beforeAll, beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { render, fireEvent, screen } from '@testing-library/react';
 
 import '@testing-library/jest-dom';
@@ -35,13 +35,13 @@ vi.mock('../../../hooks/useDevices/useDevices', () => () => ({
   hasVideoInputDevices: true,
 }));
 
-const mockUseFlipCameraToggle = useFlipCameraToggle as vi.Mock<any>;
-const mockUseMediaQuery = useMediaQuery as vi.Mock<boolean>;
-const mockUseAppState = useAppState as vi.Mock<any>;
-const mockUseChatContext = useChatContext as vi.Mock<any>;
-const mockUseRoomState = useRoomState as vi.Mock<any>;
-const mockUseScreenShareParticipant = useScreenShareParticipant as vi.Mock<any>;
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as vi.Mock<any>;
+const mockUseFlipCameraToggle = useFlipCameraToggle as Mock<any>;
+const mockUseMediaQuery = useMediaQuery as Mock<boolean>;
+const mockUseAppState = useAppState as Mock<any>;
+const mockUseChatContext = useChatContext as Mock<any>;
+const mockUseRoomState = useRoomState as Mock<any>;
+const mockUseScreenShareParticipant = useScreenShareParticipant as Mock<any>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as Mock<any>;
 
 const mockToggleChatWindow = vi.fn();
 const mockSetIsGalleryViewActive = vi.fn();

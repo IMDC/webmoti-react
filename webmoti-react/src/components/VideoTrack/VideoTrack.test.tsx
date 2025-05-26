@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi, Mock } from "vitest";
+import { afterEach, describe, expect, it, vi, Mock } from 'vitest';
 import { render } from '@testing-library/react';
 
 import VideoTrack from './VideoTrack';
@@ -9,10 +9,10 @@ vi.mock('../../hooks/useMediaStreamTrack/useMediaStreamTrack');
 vi.mock('../../hooks/useVideoTrackDimensions/useVideoTrackDimensions');
 vi.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 
-const mockUseVideoTrackDimensions = useVideoTrackDimensions as vi.Mock<any>;
+const mockUseVideoTrackDimensions = useVideoTrackDimensions as Mock<any>;
 mockUseVideoTrackDimensions.mockImplementation(() => ({ width: 200, height: 100 }));
 
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as vi.Mock<any>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as Mock<any>;
 mockUseWebmotiVideoContext.mockImplementation(() => ({ setMaxPan: () => {} }));
 
 describe('the VideoTrack component', () => {

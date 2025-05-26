@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import React from 'react';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
@@ -7,7 +7,7 @@ import { clientEnv } from '../../clientEnv';
 
 const navigate = vi.fn();
 
-vi.mock('react-router-dom', async importActual => {
+vi.mock('react-router-dom', async (importActual) => {
   const actual = await importActual('react-router-dom');
   return {
     ...actual,
@@ -179,7 +179,7 @@ describe('the usePasscodeAuth hook', () => {
     });
 
     it('should call the API with the correct parameters when REACT_APP_DISABLE_TWILIO_CONVERSATIONS is true', async () => {
-      (clientEnv.DISABLE_TWILIO_CONVERSATIONS as vi.Mock).mockReturnValue('true');
+      (clientEnv.DISABLE_TWILIO_CONVERSATIONS as Mock).mockReturnValue('true');
 
       // @ts-ignore
       window.fetch = vi.fn(() =>
@@ -202,7 +202,7 @@ describe('the usePasscodeAuth hook', () => {
       });
 
       // reset the environment variable
-      (clientEnv.DISABLE_TWILIO_CONVERSATIONS as vi.Mock).mockReturnValue(undefined);
+      (clientEnv.DISABLE_TWILIO_CONVERSATIONS as Mock).mockReturnValue(undefined);
     });
 
     it('should return a token', async () => {
@@ -281,9 +281,7 @@ describe('the getPasscode function', () => {
 describe('the verifyPasscode function', () => {
   it('should return the correct response when the passcode is valid', async () => {
     // @ts-ignore
-    window.fetch = vi.fn(() =>
-      Promise.resolve({ ok: true, json: () => Promise.resolve({ token: 'mockVideoToken' }) })
-    );
+    window.fetch = vi.fn(() => Promise.resolve({ ok: true, json: () => Promise.resolve({ token: 'mockVideoToken' }) }));
 
     const result = await verifyPasscode('123456');
     expect(result).toEqual({ isValid: true });

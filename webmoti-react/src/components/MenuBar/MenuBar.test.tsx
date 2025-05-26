@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { act, render, screen } from '@testing-library/react';
 
 import MenuBar from './MenuBar';
@@ -22,15 +22,15 @@ vi.mock('@mui/material/useMediaQuery', () => vi.fn(() => false));
 
 vi.mock('../../hooks/useDevices/useDevices');
 
-const mockUseDevices = useDevices as vi.Mock<any>;
+const mockUseDevices = useDevices as Mock<any>;
 
 mockUseDevices.mockImplementation(() => ({ hasVideoInputDevices: true }));
 
-const mockUseRoomState = useRoomState as vi.Mock<any>;
-const mockUseParticipants = useParticipants as vi.Mock<any>;
-const mockUseVideoContext = useVideoContext as vi.Mock<any>;
-const mockUseChatContext = useChatContext as vi.Mock<any>;
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as vi.Mock<any>;
+const mockUseRoomState = useRoomState as Mock<any>;
+const mockUseParticipants = useParticipants as Mock<any>;
+const mockUseVideoContext = useVideoContext as Mock<any>;
+const mockUseChatContext = useChatContext as Mock<any>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as Mock<any>;
 
 const mockAudioTrack = createMockLocalTrack('audio');
 const mockVideoTrack = createMockLocalTrack('video');
@@ -55,7 +55,7 @@ describe('the MenuBar component', () => {
   beforeEach(() => {
     //@ts-ignore
     utils.isMobile = false;
-    (clientEnv.DISABLE_TWILIO_CONVERSATIONS as vi.Mock).mockReturnValue('false');
+    (clientEnv.DISABLE_TWILIO_CONVERSATIONS as Mock).mockReturnValue('false');
   });
 
   // TODO move ToggleScreenShareButton tests to Menu.test.tsx (toggleScreenShare was moved to menu)

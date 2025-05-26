@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, Mock } from "vitest";
+import { describe, expect, it, vi, Mock } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { GalleryView } from './GalleryView';
 import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
@@ -42,14 +42,14 @@ vi.mock('./usePagination/usePagination', () => ({
 }));
 vi.mock('../../state');
 
-const mockUsePagination = usePagination as vi.Mock;
-const mockUseAppState = useAppState as vi.Mock;
+const mockUsePagination = usePagination as Mock;
+const mockUseAppState = useAppState as Mock;
 
 mockUseAppState.mockImplementation(() => ({ maxGalleryViewParticipants: 9 }));
 
 vi.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as vi.Mock<any>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as Mock<any>;
 mockUseWebmotiVideoContext.mockImplementation(() => ({}));
 
 describe('GalleryView', () => {

@@ -1,4 +1,4 @@
-import { beforeAll, beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 
 import UserMenu from './UserMenu';
@@ -9,8 +9,8 @@ import { clientEnv } from '../../../clientEnv';
 vi.mock('../../../state');
 vi.mock('../../../hooks/useVideoContext/useVideoContext');
 
-const mockUseAppState = useAppState as vi.Mock<any>;
-const mockUseVideoContext = useVideoContext as vi.Mock<any>;
+const mockUseAppState = useAppState as Mock<any>;
+const mockUseVideoContext = useVideoContext as Mock<any>;
 
 describe('the UserMenu component', () => {
   const mockTrack = { stop: vi.fn() };
@@ -27,7 +27,7 @@ describe('the UserMenu component', () => {
 
   describe('when logged in with firebase', () => {
     beforeAll(() => {
-      (clientEnv.SET_AUTH as vi.Mock).mockReturnValue('firebase');
+      (clientEnv.SET_AUTH as Mock).mockReturnValue('firebase');
     });
 
     it('should open the menu when clicked', () => {
@@ -51,7 +51,7 @@ describe('the UserMenu component', () => {
 
   describe('when logged in with passcode auth', () => {
     beforeAll(() => {
-      (clientEnv.SET_AUTH as vi.Mock).mockReturnValue('passcode');
+      (clientEnv.SET_AUTH as Mock).mockReturnValue('passcode');
     });
 
     it('should stop all tracks and sign out when logout link is clicked', () => {

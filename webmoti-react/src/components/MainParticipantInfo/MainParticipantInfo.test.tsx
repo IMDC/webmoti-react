@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
 import MainParticipantInfo from './MainParticipantInfo';
@@ -20,14 +20,14 @@ vi.mock('../../hooks/useParticipantIsReconnecting/useParticipantIsReconnecting')
 vi.mock('../../hooks/useIsRecording/useIsRecording');
 vi.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 
-const mockUsePublications = usePublications as vi.Mock<any>;
-const mockUseIsTrackSwitchedOff = useIsTrackSwitchedOff as vi.Mock<any>;
-const mockUseTrack = useTrack as vi.Mock<any>;
-const mockUseVideoContext = useVideoContext as vi.Mock<any>;
-const mockUseParticipantIsReconnecting = useParticipantIsReconnecting as vi.Mock<boolean>;
-const mockUseIsRecording = useIsRecording as vi.Mock<boolean>;
+const mockUsePublications = usePublications as Mock<any>;
+const mockUseIsTrackSwitchedOff = useIsTrackSwitchedOff as Mock<any>;
+const mockUseTrack = useTrack as Mock<any>;
+const mockUseVideoContext = useVideoContext as Mock<any>;
+const mockUseParticipantIsReconnecting = useParticipantIsReconnecting as Mock<boolean>;
+const mockUseIsRecording = useIsRecording as Mock<boolean>;
 
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as vi.Mock<any>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as Mock<any>;
 mockUseWebmotiVideoContext.mockImplementation(() => ({}));
 
 const mockLocalParticipant = createMockParticipant('mockIdentity', 0);

@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { renderWithUser } from '../../utils/testUtils';
 
@@ -10,8 +10,8 @@ import useRoomState from '../../hooks/useRoomState/useRoomState';
 vi.mock('../../hooks/useRoomState/useRoomState');
 vi.mock('../../state');
 
-const mockUseAppState = useAppState as vi.Mock<any>;
-const mockUseRoomState = useRoomState as vi.Mock<any>;
+const mockUseAppState = useAppState as Mock<any>;
+const mockUseRoomState = useRoomState as Mock<any>;
 
 const mockDispatchSetting = vi.fn();
 mockUseAppState.mockImplementation(() => ({ settings: initialSettings, dispatchSetting: mockDispatchSetting }));

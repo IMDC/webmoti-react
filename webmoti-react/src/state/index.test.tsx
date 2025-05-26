@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { ReactNode } from 'react';
 
 import { act, renderHook, waitFor } from '@testing-library/react';
@@ -12,7 +12,7 @@ vi.mock('./useFirebaseAuth/useFirebaseAuth', () => vi.fn(() => ({ user: 'firebas
 vi.mock('./usePasscodeAuth/usePasscodeAuth', () => vi.fn(() => ({ user: 'passcodeUser' })));
 vi.mock('./useActiveSinkId/useActiveSinkId.ts', () => () => ['default', () => {}]);
 
-const mockUsePasscodeAuth = usePasscodeAuth as vi.Mock<any>;
+const mockUsePasscodeAuth = usePasscodeAuth as Mock<any>;
 
 // @ts-ignore
 window.fetch = vi.fn(() =>
@@ -29,8 +29,8 @@ const wrapper = ({ children }: { children: ReactNode }) => <AppStateProvider>{ch
 describe('the useAppState hook', () => {
   beforeEach(vi.clearAllMocks);
   beforeEach(() => {
-    (clientEnv.SET_AUTH as vi.Mock).mockReturnValue(undefined);
-    (clientEnv.TOKEN_ENDPOINT as vi.Mock).mockReturnValue(undefined);
+    (clientEnv.SET_AUTH as Mock).mockReturnValue(undefined);
+    (clientEnv.TOKEN_ENDPOINT as Mock).mockReturnValue(undefined);
   });
 
   it('should set an error', () => {
@@ -44,7 +44,7 @@ describe('the useAppState hook', () => {
   });
 
   it('should get a token using the REACT_APP_TOKEN_ENDPOINT environment variable when avaiable', async () => {
-    (clientEnv.TOKEN_ENDPOINT as vi.Mock).mockReturnValue('http://test.com/api/token');
+    (clientEnv.TOKEN_ENDPOINT as Mock).mockReturnValue('http://test.com/api/token');
 
     const { result } = renderHook(useAppState, { wrapper });
 
@@ -64,7 +64,7 @@ describe('the useAppState hook', () => {
 
   describe('with auth disabled', () => {
     it('should not use any auth hooks', async () => {
-      (clientEnv.SET_AUTH as vi.Mock).mockReturnValue(undefined);
+      (clientEnv.SET_AUTH as Mock).mockReturnValue(undefined);
 
       renderHook(useAppState, { wrapper });
       expect(useFirebaseAuth).not.toHaveBeenCalled();
@@ -74,7 +74,7 @@ describe('the useAppState hook', () => {
 
   describe('with firebase auth enabled', () => {
     it('should use the useFirebaseAuth hook', async () => {
-      (clientEnv.SET_AUTH as vi.Mock).mockReturnValue('firebase');
+      (clientEnv.SET_AUTH as Mock).mockReturnValue('firebase');
 
       const { result } = renderHook(useAppState, { wrapper });
       expect(useFirebaseAuth).toHaveBeenCalled();
@@ -84,7 +84,7 @@ describe('the useAppState hook', () => {
 
   describe('with passcode auth enabled', () => {
     it('should use the usePasscodeAuth hook', async () => {
-      (clientEnv.SET_AUTH as vi.Mock).mockReturnValue('passcode');
+      (clientEnv.SET_AUTH as Mock).mockReturnValue('passcode');
 
       const { result } = renderHook(useAppState, { wrapper });
       expect(usePasscodeAuth).toHaveBeenCalled();
@@ -95,7 +95,7 @@ describe('the useAppState hook', () => {
   describe('the getToken function', () => {
     it('should set isFetching to true after getToken is called, and false after getToken succeeds', async () => {
       // Using passcode auth because it's easier to mock the getToken function
-      (clientEnv.SET_AUTH as vi.Mock).mockReturnValue('passcode');
+      (clientEnv.SET_AUTH as Mock).mockReturnValue('passcode');
 
       mockUsePasscodeAuth.mockImplementation(() => {
         return {
@@ -129,7 +129,7 @@ describe('the useAppState hook', () => {
     });
 
     it('should set isFetching to true after getToken is called, and false after getToken fails', async () => {
-      (clientEnv.SET_AUTH as vi.Mock).mockReturnValue('passcode');
+      (clientEnv.SET_AUTH as Mock).mockReturnValue('passcode');
 
       mockUsePasscodeAuth.mockImplementation(() => {
         return {

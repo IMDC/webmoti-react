@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import React from 'react';
 
 import { render, act } from '@testing-library/react';
@@ -36,9 +36,9 @@ vi.mock('./MediaErrorSnackbar/MediaErrorSnackbar', () => {
 vi.mock('../../state');
 vi.mock('react-router-dom', () => ({ useParams: vi.fn() }));
 vi.mock('../../hooks/useVideoContext/useVideoContext');
-const mockUseAppState = useAppState as vi.Mock<any>;
-const mockUseParams = useParams as vi.Mock<any>;
-const mockUseVideoContext = useVideoContext as vi.Mock<any>;
+const mockUseAppState = useAppState as Mock<any>;
+const mockUseParams = useParams as Mock<any>;
+const mockUseVideoContext = useVideoContext as Mock<any>;
 
 vi.mock(
   '../IntroContainer/IntroContainer',
@@ -50,7 +50,7 @@ vi.mock('./RoomNameScreen/RoomNameScreen', () => () => null);
 vi.mock('./DeviceSelectionScreen/DeviceSelectionScreen', () => () => null);
 vi.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as vi.Mock<any>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as Mock<any>;
 mockUseWebmotiVideoContext.mockImplementation(() => ({}));
 
 describe('the PreJoinScreens component', () => {

@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi, Mock } from "vitest";
+import { afterEach, describe, expect, it, vi, Mock } from 'vitest';
 import useFirebaseAuth from './useFirebaseAuth';
 import { renderHook, waitFor } from '@testing-library/react';
 import { setImmediate } from 'timers';
@@ -75,7 +75,7 @@ describe('the useFirebaseAuth hook', () => {
   });
 
   it('should include the users idToken in request to the video token server', async () => {
-    (clientEnv.TOKEN_ENDPOINT as vi.Mock).mockReturnValue('http://test-endpoint.com/token');
+    (clientEnv.TOKEN_ENDPOINT as Mock).mockReturnValue('http://test-endpoint.com/token');
 
     const { result } = renderHook(() => useFirebaseAuth());
     await waitFor(() => {

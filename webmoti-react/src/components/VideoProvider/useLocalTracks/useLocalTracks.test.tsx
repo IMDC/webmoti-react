@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import Video from 'twilio-video';
 
@@ -10,9 +10,9 @@ import { getDeviceInfo, isPermissionDenied } from '../../../utils';
 vi.mock('../../../state');
 vi.mock('../../../utils');
 
-const mockGetDeviceInfo = getDeviceInfo as vi.Mock<any>;
-const mockIsPermissionDenied = isPermissionDenied as vi.Mock<Promise<boolean>>;
-const mockUseAppState = useAppState as vi.Mock<any>;
+const mockGetDeviceInfo = getDeviceInfo as Mock<any>;
+const mockIsPermissionDenied = isPermissionDenied as Mock<Promise<boolean>>;
+const mockUseAppState = useAppState as Mock<any>;
 
 mockUseAppState.mockImplementation(() => ({ setIsKrispEnabled: false }));
 
@@ -289,7 +289,7 @@ describe('the useLocalTracks hook', () => {
     });
 
     it('should return an error when there is an error creating a track', async () => {
-      (Video.createLocalTracks as vi.Mock<any>).mockImplementationOnce(() => Promise.reject('testError'));
+      (Video.createLocalTracks as Mock<any>).mockImplementationOnce(() => Promise.reject('testError'));
       const { result } = renderHook(useLocalTracks);
 
       await act(async () => {

@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { useMediaQuery } from '@mui/material';
 import { render, screen } from '@testing-library/react';
 
@@ -19,9 +19,9 @@ vi.mock('../../hooks/useParticipantsContext/useParticipantsContext');
 // jest.mock('../../state');
 vi.mock('@mui/material/useMediaQuery');
 
-const mockUseMediaQuery = useMediaQuery as vi.Mock;
-const mockUseVideoContext = useVideoContext as vi.Mock;
-const mockUseParticipantContext = useParticipantContext as vi.Mock;
+const mockUseMediaQuery = useMediaQuery as Mock;
+const mockUseVideoContext = useVideoContext as Mock;
+const mockUseParticipantContext = useParticipantContext as Mock;
 // const mockUseAppState = useAppState as jest.Mock;
 
 vi.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext', () => () => ({}));

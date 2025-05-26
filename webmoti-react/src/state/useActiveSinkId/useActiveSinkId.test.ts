@@ -1,11 +1,11 @@
-import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { act, renderHook } from '@testing-library/react';
 import { SELECTED_AUDIO_OUTPUT_KEY } from '../../constants';
 import useActiveSinkId from './useActiveSinkId';
 import useDevices from '../../hooks/useDevices/useDevices';
 
 vi.mock('../../hooks/useDevices/useDevices');
-const mockUseDevices = useDevices as vi.Mock<any>;
+const mockUseDevices = useDevices as Mock<any>;
 
 mockUseDevices.mockImplementation(() => ({ audioOutputDevices: [] }));
 

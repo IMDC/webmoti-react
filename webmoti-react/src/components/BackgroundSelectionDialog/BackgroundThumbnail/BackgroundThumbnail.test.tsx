@@ -1,11 +1,11 @@
-import { describe, expect, it, vi, Mock } from "vitest";
+import { describe, expect, it, vi, Mock } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import BackgroundThumbnail from './BackgroundThumbnail';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 
 vi.mock('../../../hooks/useVideoContext/useVideoContext');
-const mockUseVideoContext = useVideoContext as vi.Mock<any>;
+const mockUseVideoContext = useVideoContext as Mock<any>;
 const mockSetBackgroundSettings = vi.fn();
 mockUseVideoContext.mockImplementation(() => ({
   backgroundSettings: {

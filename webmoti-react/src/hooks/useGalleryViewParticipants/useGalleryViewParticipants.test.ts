@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { act, renderHook } from '@testing-library/react';
 
 import EventEmitter from 'events';
@@ -12,9 +12,9 @@ vi.mock('../../state');
 vi.mock('../../hooks/useVideoContext/useVideoContext');
 vi.mock('../useDominantSpeaker/useDominantSpeaker');
 
-const mockUseAppState = useAppState as vi.Mock<any>;
-const mockVideoContext = useVideoContext as vi.Mock<any>;
-const mockUseDominantSpeaker = useDominantSpeaker as vi.Mock<any>;
+const mockUseAppState = useAppState as Mock<any>;
+const mockVideoContext = useVideoContext as Mock<any>;
+const mockUseDominantSpeaker = useDominantSpeaker as Mock<any>;
 
 mockUseAppState.mockImplementation(() => ({ maxGalleryViewParticipants: 9 }));
 

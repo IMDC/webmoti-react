@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, Mock } from "vitest";
+import { describe, expect, it, vi, Mock } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import ParticipantInfo from './ParticipantInfo';
 import { createMockPublication } from '../../__mocks__/mockCreator';
@@ -15,11 +15,11 @@ vi.mock('../../hooks/useIsTrackSwitchedOff/useIsTrackSwitchedOff');
 vi.mock('../../hooks/useParticipantIsReconnecting/useParticipantIsReconnecting');
 vi.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 
-const mockUseAppState = useAppState as vi.Mock<any>;
-const mockUsePublications = usePublications as vi.Mock<any>;
-const mockUseIsTrackSwitchedOff = useIsTrackSwitchedOff as vi.Mock<any>;
-const mockUseParticipantIsReconnecting = useParticipantIsReconnecting as vi.Mock<boolean>;
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as vi.Mock<any>;
+const mockUseAppState = useAppState as Mock<any>;
+const mockUsePublications = usePublications as Mock<any>;
+const mockUseIsTrackSwitchedOff = useIsTrackSwitchedOff as Mock<any>;
+const mockUseParticipantIsReconnecting = useParticipantIsReconnecting as Mock<boolean>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as Mock<any>;
 
 mockUseWebmotiVideoContext.mockImplementation(() => ({
   isCameraOneOff: () => false,

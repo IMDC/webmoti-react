@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
 import MediaErrorSnackBar, { getSnackbarContent } from './MediaErrorSnackbar';
@@ -8,8 +8,8 @@ import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 vi.mock('../../../hooks/useVideoContext/useVideoContext');
 vi.mock('../../../hooks/useDevices/useDevices');
 
-const mockUseVideoContext = useVideoContext as vi.Mock<any>;
-const mockUseDevices = useDevices as vi.Mock<any>;
+const mockUseVideoContext = useVideoContext as Mock<any>;
+const mockUseDevices = useDevices as Mock<any>;
 
 describe('the MediaErrorSnackBar', () => {
   beforeEach(() => {

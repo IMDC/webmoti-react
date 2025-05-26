@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
 import AudioLevelIndicator from './AudioLevelIndicator';
@@ -8,8 +8,8 @@ import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmot
 vi.mock('../../hooks/useIsTrackEnabled/useIsTrackEnabled');
 vi.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 
-const mockUseIsTrackEnabled = useIsTrackEnabled as vi.Mock<boolean>;
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as vi.Mock<any>;
+const mockUseIsTrackEnabled = useIsTrackEnabled as Mock<boolean>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as Mock<any>;
 
 beforeEach(() => {
   mockUseWebmotiVideoContext.mockReturnValue({ isMuted: () => true });
