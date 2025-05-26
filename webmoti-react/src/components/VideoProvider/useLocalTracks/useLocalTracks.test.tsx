@@ -8,10 +8,13 @@ import { useAppState } from '../../../state';
 import { getDeviceInfo, isPermissionDenied } from '../../../utils';
 
 vi.mock('../../../state');
-vi.mock('../../../utils');
+vi.mock('../../../utils', () => ({
+  getDeviceInfo: vi.fn(),
+  isPermissionDenied: vi.fn(),
+}));
 
-const mockGetDeviceInfo = getDeviceInfo as Mock<any>;
-const mockIsPermissionDenied = isPermissionDenied as Mock<Promise<boolean>>;
+const mockGetDeviceInfo = getDeviceInfo as Mock;
+const mockIsPermissionDenied = isPermissionDenied as Mock;
 const mockUseAppState = useAppState as Mock<any>;
 
 mockUseAppState.mockImplementation(() => ({ setIsKrispEnabled: false }));

@@ -1,6 +1,8 @@
-import { vi } from "vitest";
+import { vi } from 'vitest';
 import 'isomorphic-fetch';
 import '@testing-library/jest-dom';
+
+vi.mock('twilio-video', () => import('./__mocks__/twilio-video'));
 
 import { TextEncoder } from 'util';
 
@@ -40,7 +42,6 @@ vi.mock('./clientEnv', () => ({
 // Mocks the Fullscreen API. This is needed for ToggleFullScreenButton.test.tsx.
 Object.defineProperty(document, 'fullscreenEnabled', { value: true, writable: true });
 
-
 Object.defineProperty(navigator, 'mediaDevices', {
   configurable: true,
   writable: true,
@@ -52,7 +53,6 @@ Object.defineProperty(navigator, 'mediaDevices', {
     removeEventListener: vi.fn(),
   },
 });
-
 
 class LocalStorage {
   store = {} as { [key: string]: string };
