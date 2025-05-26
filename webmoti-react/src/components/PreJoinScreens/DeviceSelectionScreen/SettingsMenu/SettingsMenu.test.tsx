@@ -1,3 +1,4 @@
+import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { useMediaQuery } from '@mui/material';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -6,28 +7,28 @@ import Menu from './SettingsMenu';
 import useVideoContext from '../../../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../../../state';
 
-jest.mock('../../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext', () => () => ({}));
+vi.mock('../../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext', () => () => ({}));
 
-jest.mock('@mui/material/useMediaQuery');
-const mockUseMediaQuery = useMediaQuery as jest.Mock<boolean>;
+vi.mock('@mui/material/useMediaQuery');
+const mockUseMediaQuery = useMediaQuery as vi.Mock<boolean>;
 
-jest.mock('../../../../state');
-const mockUseAppState = useAppState as jest.Mock<any>;
+vi.mock('../../../../state');
+const mockUseAppState = useAppState as vi.Mock<any>;
 
-jest.mock('../../../../hooks/useVideoContext/useVideoContext');
-const mockUseVideoContext = useVideoContext as jest.Mock<any>;
+vi.mock('../../../../hooks/useVideoContext/useVideoContext');
+const mockUseVideoContext = useVideoContext as vi.Mock<any>;
 mockUseVideoContext.mockImplementation(() => ({
   localTracks: [],
   backgroundSettings: {
     type: 'blur',
     index: 0,
   },
-  setBackgroundSettings: jest.fn(),
+  setBackgroundSettings: vi.fn(),
 }));
 
 describe('the SettingsMenu component', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     mockUseAppState.mockImplementation(() => ({
       roomType: 'group',
       settings: {
@@ -38,7 +39,7 @@ describe('the SettingsMenu component', () => {
         contentPreferencesMode: 'auto',
         maxAudioBitrate: '',
       },
-      dispatchSetting: jest.fn(),
+      dispatchSetting: vi.fn(),
     }));
   });
 

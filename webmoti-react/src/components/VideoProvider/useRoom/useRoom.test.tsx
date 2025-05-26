@@ -1,3 +1,4 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, renderHook, waitFor } from '@testing-library/react';
 import Video, { LocalTrack } from 'twilio-video';
 
@@ -5,10 +6,10 @@ import useRoom from './useRoom';
 import { mockRoom } from '../../../__mocks__/twilio-video';
 import * as utils from '../../../utils';
 
-const mockVideoConnect = Video.connect as jest.Mock<any>;
+const mockVideoConnect = Video.connect as vi.Mock<any>;
 
 describe('the useRoom hook', () => {
-  beforeEach(jest.clearAllMocks);
+  beforeEach(vi.clearAllMocks);
   afterEach(() => mockRoom.removeAllListeners());
 
   it('should set isConnecting to true while connecting to the room ', async () => {
@@ -47,7 +48,7 @@ describe('the useRoom hook', () => {
   });
 
   it('should add a listener for the "beforeUnload" event when connected to a room', async () => {
-    jest.spyOn(window, 'addEventListener');
+    vi.spyOn(window, 'addEventListener');
     const { result } = renderHook(() => useRoom([], () => {}, {}));
     act(() => {
       result.current.connect('token');
@@ -58,7 +59,7 @@ describe('the useRoom hook', () => {
   });
 
   it('should remove the listener for the "beforeUnload" event when the room is disconnected', async () => {
-    jest.spyOn(window, 'removeEventListener');
+    vi.spyOn(window, 'removeEventListener');
     const { result } = renderHook(() => useRoom([], () => {}, {}));
     act(() => {
       result.current.connect('token');
@@ -75,7 +76,7 @@ describe('the useRoom hook', () => {
   });
 
   it('should call onError and set isConnecting to false when there is an error', async () => {
-    const mockOnError = jest.fn();
+    const mockOnError = vi.fn();
     mockVideoConnect.mockImplementationOnce(() => Promise.reject('mockError'));
     const { result } = renderHook(() => useRoom([], mockOnError, {}));
     await act(() => result.current.connect('token'));
@@ -102,7 +103,7 @@ describe('the useRoom hook', () => {
     utils.isMobile = true;
 
     it('should add a listener for the "pagehide" event when connected to a room', async () => {
-      jest.spyOn(window, 'addEventListener');
+      vi.spyOn(window, 'addEventListener');
       const { result } = renderHook(() => useRoom([], () => {}, {}));
       act(() => {
         result.current.connect('token');
@@ -113,7 +114,7 @@ describe('the useRoom hook', () => {
     });
 
     it('should remove the listener for the "pagehide" event when the room is disconnected', async () => {
-      jest.spyOn(window, 'removeEventListener');
+      vi.spyOn(window, 'removeEventListener');
       const { result } = renderHook(() => useRoom([], () => {}, {}));
       act(() => {
         result.current.connect('token');

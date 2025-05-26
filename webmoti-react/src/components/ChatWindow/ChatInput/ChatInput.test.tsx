@@ -1,3 +1,4 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { screen, render, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -6,13 +7,13 @@ import * as utils from '../../../utils';
 import { useAppState } from '../../../state';
 import { TwilioError } from 'twilio-video';
 
-jest.mock('@mui/material/useMediaQuery');
-jest.mock('../../../state');
+vi.mock('@mui/material/useMediaQuery');
+vi.mock('../../../state');
 
-const mockUseAppState = useAppState as jest.Mock<any>;
+const mockUseAppState = useAppState as vi.Mock<any>;
 mockUseAppState.mockImplementation(() => ({ setError: (_: TwilioError | Error | null) => {} }));
 
-const mockHandleSendMessage = jest.fn<any, (string | FormData)[]>(() => Promise.resolve());
+const mockHandleSendMessage = vi.fn<any, (string | FormData)[]>(() => Promise.resolve());
 
 describe('the ChatInput component', () => {
   beforeEach(() => {
@@ -20,7 +21,7 @@ describe('the ChatInput component', () => {
     utils.isMobile = false;
   });
 
-  afterEach(jest.clearAllMocks);
+  afterEach(vi.clearAllMocks);
 
   it('should enable the send message button when user types a valid message', async () => {
     render(<ChatInput conversation={{ sendMessage: mockHandleSendMessage } as any} isChatWindowOpen={true} />);
@@ -194,7 +195,7 @@ describe('the ChatInput component', () => {
     );
 
     const textarea = screen.getByTestId('chatinput-textarea');
-    const focusSpy = jest.spyOn(textarea, 'focus');
+    const focusSpy = vi.spyOn(textarea, 'focus');
 
     expect(focusSpy).not.toHaveBeenCalled();
 

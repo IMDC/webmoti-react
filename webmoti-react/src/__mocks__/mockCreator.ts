@@ -1,10 +1,11 @@
+import { vi } from "vitest";
 export function createMockParticipant(identity = 'mockIdentity', sid = 1, overrides = {}): any {
   return {
     identity,
     sid,
     tracks: new Map(),
-    on: jest.fn(),
-    off: jest.fn(),
+    on: vi.fn(),
+    off: vi.fn(),
     ...overrides,
   };
 }
@@ -14,8 +15,8 @@ export function createMockRoom(name = 'mockRoom', localParticipant: any = null):
     name,
     localParticipant,
     participants: new Map(),
-    on: jest.fn(),
-    off: jest.fn(),
+    on: vi.fn(),
+    off: vi.fn(),
   };
 }
 
@@ -31,17 +32,17 @@ export function createMockLocalTrack(
       label: `mock local ${kind} track`,
       getSettings: () => ({ deviceId: 'mock-device-id' }),
     },
-    restart: jest.fn(),
-    on: jest.fn(),
-    off: jest.fn(),
+    restart: vi.fn(),
+    on: vi.fn(),
+    off: vi.fn(),
     ...overrides,
   };
 }
 
 export function createMockConversation(): any {
   return {
-    on: jest.fn(),
-    off: jest.fn(),
+    on: vi.fn(),
+    off: vi.fn(),
   };
 }
 
@@ -57,8 +58,8 @@ export function createMockPublication(
     kind,
     isSubscribed,
     track: { sid: trackSid },
-    on: jest.fn(),
-    off: jest.fn(),
+    on: vi.fn(),
+    off: vi.fn(),
     ...overrides,
   };
 }

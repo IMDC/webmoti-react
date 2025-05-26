@@ -1,20 +1,21 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { act, renderHook } from '@testing-library/react';
 
 import { SELECTED_BACKGROUND_SETTINGS_KEY } from '../../../constants';
 import useBackgroundSettings, { BackgroundSettings } from './useBackgroundSettings';
 
-const mockLoadModel = jest.fn();
+const mockLoadModel = vi.fn();
 let mockIsSupported = true;
-jest.mock('@twilio/video-processors', () => {
+vi.mock('@twilio/video-processors', () => {
   return {
-    GaussianBlurBackgroundProcessor: jest.fn().mockImplementation(() => {
+    GaussianBlurBackgroundProcessor: vi.fn().mockImplementation(() => {
       return {
         loadModel: mockLoadModel,
         // added name attribute for testing purposes
         name: 'GaussianBlurBackgroundProcessor',
       };
     }),
-    VirtualBackgroundProcessor: jest.fn().mockImplementation(() => {
+    VirtualBackgroundProcessor: vi.fn().mockImplementation(() => {
       return {
         loadModel: mockLoadModel,
         backgroundImage: '',
@@ -47,7 +48,7 @@ const imgSettings = {
 
 const globalAny: any = global;
 
-globalAny.Image = jest.fn().mockImplementation(() => {
+globalAny.Image = vi.fn().mockImplementation(() => {
   return {
     set src(newSrc: String) {
       this.onload();
@@ -65,8 +66,8 @@ beforeEach(async () => {
   mockVideoTrack = {
     kind: 'video',
     processor: '',
-    addProcessor: jest.fn(),
-    removeProcessor: jest.fn(),
+    addProcessor: vi.fn(),
+    removeProcessor: vi.fn(),
   };
   mockRoom = {
     localParticipant: 'participant',
@@ -152,8 +153,8 @@ describe('The useBackgroundSettings hook ', () => {
       mockVideoTrack = {
         kind: 'video',
         processor: 'processor',
-        addProcessor: jest.fn(),
-        removeProcessor: jest.fn(),
+        addProcessor: vi.fn(),
+        removeProcessor: vi.fn(),
       };
       const { result } = renderHook(() => useBackgroundSettings(mockVideoTrack as any, mockRoom));
       renderResult = result;

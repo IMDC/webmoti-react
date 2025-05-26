@@ -1,3 +1,4 @@
+import { beforeAll, describe, expect, it, vi } from "vitest";
 import { screen, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -5,11 +6,11 @@ import ToggleVideoButton from './ToggleVideoButton';
 import useDevices from '../../../hooks/useDevices/useDevices';
 import useLocalVideoToggle from '../../../hooks/useLocalVideoToggle/useLocalVideoToggle';
 
-jest.mock('../../../hooks/useDevices/useDevices');
-jest.mock('../../../hooks/useLocalVideoToggle/useLocalVideoToggle');
+vi.mock('../../../hooks/useDevices/useDevices');
+vi.mock('../../../hooks/useLocalVideoToggle/useLocalVideoToggle');
 
-const mockUseLocalVideoToggle = useLocalVideoToggle as jest.Mock<any>;
-const mockUseDevices = useDevices as jest.Mock<any>;
+const mockUseLocalVideoToggle = useLocalVideoToggle as vi.Mock<any>;
+const mockUseDevices = useDevices as vi.Mock<any>;
 
 describe('the ToggleVideoButton component', () => {
   beforeAll(() => {
@@ -17,7 +18,7 @@ describe('the ToggleVideoButton component', () => {
   });
 
   it('should render correctly when video is enabled', () => {
-    mockUseLocalVideoToggle.mockImplementation(() => [true, jest.fn()]);
+    mockUseLocalVideoToggle.mockImplementation(() => [true, vi.fn()]);
 
     render(<ToggleVideoButton />);
     expect(screen.getByTestId('video-on-icon')).toBeInTheDocument();
@@ -25,7 +26,7 @@ describe('the ToggleVideoButton component', () => {
   });
 
   it('should render correctly when video is disabled', () => {
-    mockUseLocalVideoToggle.mockImplementation(() => [false, jest.fn()]);
+    mockUseLocalVideoToggle.mockImplementation(() => [false, vi.fn()]);
 
     render(<ToggleVideoButton />);
     expect(screen.getByTestId('video-off-icon')).toBeInTheDocument();
@@ -33,7 +34,7 @@ describe('the ToggleVideoButton component', () => {
   });
 
   it('should render correctly when no video devices exist', () => {
-    mockUseLocalVideoToggle.mockImplementation(() => [true, jest.fn()]);
+    mockUseLocalVideoToggle.mockImplementation(() => [true, vi.fn()]);
     mockUseDevices.mockImplementationOnce(() => ({ hasVideoInputDevices: false }));
 
     render(<ToggleVideoButton />);
@@ -43,7 +44,7 @@ describe('the ToggleVideoButton component', () => {
   });
 
   it('should call the correct toggle function when clicked', async () => {
-    const mockToggle = jest.fn();
+    const mockToggle = vi.fn();
     mockUseLocalVideoToggle.mockImplementation(() => [false, mockToggle]);
 
     render(<ToggleVideoButton />);
@@ -52,10 +53,10 @@ describe('the ToggleVideoButton component', () => {
   });
 
   it('should throttle the toggle function to 200ms', async () => {
-    const mockToggle = jest.fn();
+    const mockToggle = vi.fn();
     mockUseLocalVideoToggle.mockImplementation(() => [false, mockToggle]);
 
-    const nowSpy = jest.spyOn(Date, 'now');
+    const nowSpy = vi.spyOn(Date, 'now');
     nowSpy.mockReturnValue(100000);
 
     render(<ToggleVideoButton />);

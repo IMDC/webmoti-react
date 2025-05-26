@@ -1,3 +1,4 @@
+import { beforeAll, describe, expect, it, vi } from "vitest";
 import EventEmitter from 'events';
 
 import { screen, render, within } from '@testing-library/react';
@@ -10,23 +11,23 @@ import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import { isWebmotiVideo } from '../../../utils';
 
-jest.mock('../../../hooks/useLocalAudioToggle/useLocalAudioToggle');
-jest.mock('../../../hooks/useVideoContext/useVideoContext');
-jest.mock('../../../hooks/useChatContext/useChatContext');
-jest.mock('../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
-jest.mock('../../../utils');
+vi.mock('../../../hooks/useLocalAudioToggle/useLocalAudioToggle');
+vi.mock('../../../hooks/useVideoContext/useVideoContext');
+vi.mock('../../../hooks/useChatContext/useChatContext');
+vi.mock('../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
+vi.mock('../../../utils');
 
-const mockUseLocalAudioToggle = useLocalAudioToggle as jest.Mock<any>;
-const mockUseVideoContext = useVideoContext as jest.Mock<any>;
+const mockUseLocalAudioToggle = useLocalAudioToggle as vi.Mock<any>;
+const mockUseVideoContext = useVideoContext as vi.Mock<any>;
 
-const mockUseChatContext = useChatContext as jest.Mock<any>;
+const mockUseChatContext = useChatContext as vi.Mock<any>;
 const mockConversation = new EventEmitter();
 mockUseChatContext.mockImplementation(() => ({ conversation: mockConversation }));
 
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as vi.Mock<any>;
 mockUseWebmotiVideoContext.mockImplementation(() => ({}));
 
-(isWebmotiVideo as unknown as jest.Mock).mockImplementation(() => true);
+(isWebmotiVideo as unknown as vi.Mock).mockImplementation(() => true);
 
 describe('the ToggleAudioButton component', () => {
   beforeAll(() => {
@@ -64,7 +65,7 @@ describe('the ToggleAudioButton component', () => {
   });
 
   it('should call the correct toggle function when clicked', async () => {
-    const mockFn = jest.fn();
+    const mockFn = vi.fn();
     mockUseLocalAudioToggle.mockImplementation(() => [false, mockFn]);
 
     render(<ToggleAudioButton />);

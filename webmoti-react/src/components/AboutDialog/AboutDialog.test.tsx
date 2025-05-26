@@ -1,13 +1,14 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import AboutDialog from './AboutDialog';
 import { render } from '@testing-library/react';
 import { useAppState } from '../../state';
 import { clientEnv } from '../../clientEnv';
 
-jest.mock('twilio-video', () => ({ version: '1.2', isSupported: true }));
-jest.mock('../../state');
-jest.mock('../../../package.json', () => ({ version: '1.3' }));
+vi.mock('twilio-video', () => ({ version: '1.2', isSupported: true }));
+vi.mock('../../state');
+vi.mock('../../../package.json', () => ({ version: '1.3' }));
 
-const mockUseAppState = useAppState as jest.Mock<any>;
+const mockUseAppState = useAppState as vi.Mock<any>;
 mockUseAppState.mockImplementation(() => ({ roomType: undefined }));
 
 describe('the AboutDialog component', () => {
@@ -40,8 +41,8 @@ describe('the AboutDialog component', () => {
 
   describe('when running locally', () => {
     beforeEach(() => {
-      (clientEnv.GIT_TAG as jest.Mock).mockReturnValue(undefined);
-      (clientEnv.GIT_COMMIT as jest.Mock).mockReturnValue(undefined);
+      (clientEnv.GIT_TAG as vi.Mock).mockReturnValue(undefined);
+      (clientEnv.GIT_COMMIT as vi.Mock).mockReturnValue(undefined);
     });
 
     it('should display N/A as the git tag', () => {
@@ -57,8 +58,8 @@ describe('the AboutDialog component', () => {
 
   describe('when deployed via CircleCI', () => {
     beforeEach(() => {
-      (clientEnv.GIT_TAG as jest.Mock).mockReturnValue('v0.1');
-      (clientEnv.GIT_COMMIT as jest.Mock).mockReturnValue('01b2c3');
+      (clientEnv.GIT_TAG as vi.Mock).mockReturnValue('v0.1');
+      (clientEnv.GIT_COMMIT as vi.Mock).mockReturnValue('01b2c3');
     });
 
     it('should display the git tag', () => {

@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import React from 'react';
 
 import { renderHook } from '@testing-library/react';
@@ -24,7 +25,7 @@ describe('the layoutIsTooSmall function', () => {
 
 const mockContainerEl = { offsetHeight: 720, offsetWidth: 1280 };
 
-jest.spyOn(React, 'useRef').mockReturnValue({
+vi.spyOn(React, 'useRef').mockReturnValue({
   current: mockContainerEl,
 });
 
@@ -55,7 +56,7 @@ describe('the useGalleryViewLayout hook', () => {
   });
 
   it('should return 0 when the containerRef is null', () => {
-    jest.spyOn(React, 'useRef').mockReturnValueOnce({
+    vi.spyOn(React, 'useRef').mockReturnValueOnce({
       current: null,
     });
     const { result } = renderHook(() => useGalleryViewLayout(3));

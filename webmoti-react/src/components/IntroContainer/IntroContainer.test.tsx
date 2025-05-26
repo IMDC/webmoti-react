@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen } from '@testing-library/react';
 import { useLocation } from 'react-router-dom';
 
@@ -6,15 +7,15 @@ import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../state';
 import { clientEnv } from '../../clientEnv';
 
-jest.mock('react-router-dom', () => ({
-  useLocation: jest.fn(),
+vi.mock('react-router-dom', () => ({
+  useLocation: vi.fn(),
 }));
-jest.mock('../../state');
-jest.mock('../../hooks/useVideoContext/useVideoContext');
+vi.mock('../../state');
+vi.mock('../../hooks/useVideoContext/useVideoContext');
 
-const mockUseLocation = useLocation as jest.Mock<any>;
-const mockUseAppState = useAppState as jest.Mock<any>;
-const mockUseVideoContext = useVideoContext as jest.Mock<any>;
+const mockUseLocation = useLocation as vi.Mock<any>;
+const mockUseAppState = useAppState as vi.Mock<any>;
+const mockUseVideoContext = useVideoContext as vi.Mock<any>;
 
 mockUseVideoContext.mockImplementation(() => ({
   localTracks: [{ kind: 'audio' }],
@@ -24,7 +25,7 @@ describe('IntroContainer', () => {
   beforeEach(() => {
     mockUseLocation.mockReset();
     mockUseAppState.mockReset();
-    (clientEnv.SET_AUTH as jest.Mock).mockReturnValue('firebase');
+    (clientEnv.SET_AUTH as vi.Mock).mockReturnValue('firebase');
   });
 
   it('renders UserMenu when user exists and pathname is not /login', () => {

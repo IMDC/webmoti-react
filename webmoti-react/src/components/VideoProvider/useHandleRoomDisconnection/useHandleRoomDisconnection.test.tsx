@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import EventEmitter from 'events';
 
 import { act, renderHook } from '@testing-library/react';
@@ -5,15 +6,15 @@ import { Room } from 'twilio-video';
 
 import useHandleRoomDisconnection from './useHandleRoomDisconnection';
 
-const mockOnError = jest.fn();
-const mockRemoveLocalAudioTrack = jest.fn();
-const mockRemoveLocalVideoTrack = jest.fn();
-const mockToggleScreenSharing = jest.fn();
+const mockOnError = vi.fn();
+const mockRemoveLocalAudioTrack = vi.fn();
+const mockRemoveLocalVideoTrack = vi.fn();
+const mockToggleScreenSharing = vi.fn();
 
 describe('the useHandleRoomDisconnection hook', () => {
   let mockRoom: any = new EventEmitter();
 
-  beforeEach(jest.clearAllMocks);
+  beforeEach(vi.clearAllMocks);
 
   it('should do nothing if the room emits a "disconnected" event with no error', () => {
     renderHook(() =>

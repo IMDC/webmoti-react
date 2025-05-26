@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import React from 'react';
 
 import { render, screen, renderHook, act } from '@testing-library/react';
@@ -11,62 +12,62 @@ import useSelectedParticipant from '../../components/VideoProvider/useSelectedPa
 import Room, { useSetSpeakerViewOnScreenShare } from './Room';
 import { createMockParticipant, createMockRoom } from '../../__mocks__/mockCreator';
 
-jest.mock('swiper/react', () => ({
-  Swiper: jest.fn(),
-  SwiperSlide: jest.fn(),
+vi.mock('swiper/react', () => ({
+  Swiper: vi.fn(),
+  SwiperSlide: vi.fn(),
 }));
 
-jest.mock('swiper', () => ({
-  Pagination: jest.fn(),
+vi.mock('swiper', () => ({
+  Pagination: vi.fn(),
 }));
 
-jest.mock('../../hooks/useChatContext/useChatContext');
-jest.mock('../../hooks/useVideoContext/useVideoContext');
-jest.mock('../../state');
-jest.mock('../../hooks/useParticipantsContext/useParticipantsContext');
-jest.mock('../../components/VideoProvider/useSelectedParticipant/useSelectedParticipant');
+vi.mock('../../hooks/useChatContext/useChatContext');
+vi.mock('../../hooks/useVideoContext/useVideoContext');
+vi.mock('../../state');
+vi.mock('../../hooks/useParticipantsContext/useParticipantsContext');
+vi.mock('../../components/VideoProvider/useSelectedParticipant/useSelectedParticipant');
 
-const mockUseChatContext = useChatContext as jest.Mock;
-const mockUseVideoContext = useVideoContext as jest.Mock<any>;
-const mockUseAppState = useAppState as jest.Mock<any>;
-const mockUseParticipantContext = useParticipantContext as jest.Mock;
-const mockUseSelectedParticipant = useSelectedParticipant as jest.Mock;
+const mockUseChatContext = useChatContext as vi.Mock;
+const mockUseVideoContext = useVideoContext as vi.Mock<any>;
+const mockUseAppState = useAppState as vi.Mock<any>;
+const mockUseParticipantContext = useParticipantContext as vi.Mock;
+const mockUseSelectedParticipant = useSelectedParticipant as vi.Mock;
 
 const mockLocalParticipant = createMockParticipant('local-participant', 0);
 const mockRemoteParticipant = createMockParticipant('remote-participant', 1);
 
-const mockToggleChatWindow = jest.fn();
-const mockOpenBackgroundSelection = jest.fn();
-const mockSetIsGalleryViewActive = jest.fn();
+const mockToggleChatWindow = vi.fn();
+const mockOpenBackgroundSelection = vi.fn();
+const mockSetIsGalleryViewActive = vi.fn();
 
-jest.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext', () => () => ({}));
+vi.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext', () => () => ({}));
 
-jest.mock('react-use-websocket', () => ({
+vi.mock('react-use-websocket', () => ({
   __esModule: true,
   default: () => ({
-    sendMessage: jest.fn(),
+    sendMessage: vi.fn(),
     lastJsonMessage: null,
     readyState: 1,
   }),
 }));
-jest.mock('@fireworks-js/react', () => ({
-  Fireworks: jest.fn(() => <div data-testid="mock-fireworks" />),
+vi.mock('@fireworks-js/react', () => ({
+  Fireworks: vi.fn(() => <div data-testid="mock-fireworks" />),
 }));
 
-jest.mock('../GalleryView/GalleryView', () => ({
+vi.mock('../GalleryView/GalleryView', () => ({
   GalleryView: React.forwardRef(() => <div data-testid="gallery-view" />),
 }));
 
-jest.mock('../MobileGalleryView/MobileGalleryView', () => ({
+vi.mock('../MobileGalleryView/MobileGalleryView', () => ({
   MobileGalleryView: React.forwardRef(() => <div data-testid="mobile-gallery-view" />),
 }));
 
-jest.mock('../MainParticipant/MainParticipant', () => ({
+vi.mock('../MainParticipant/MainParticipant', () => ({
   __esModule: true,
   default: () => <div data-testid="main-participant" />,
 }));
 
-jest.mock('../ParticipantList/ParticipantList', () => ({
+vi.mock('../ParticipantList/ParticipantList', () => ({
   __esModule: true,
   default: () => <div data-testid="participant-list" />,
 }));
@@ -80,7 +81,7 @@ class ResizeObserver {
 window.ResizeObserver = ResizeObserver;
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 
   mockUseAppState.mockImplementation(() => ({
     isGalleryViewActive: false,
@@ -104,7 +105,7 @@ beforeEach(() => {
     speakerViewParticipants: [mockRemoteParticipant],
   }));
 
-  mockUseSelectedParticipant.mockImplementation(() => [null, jest.fn()]);
+  mockUseSelectedParticipant.mockImplementation(() => [null, vi.fn()]);
 });
 
 describe('the Room component', () => {

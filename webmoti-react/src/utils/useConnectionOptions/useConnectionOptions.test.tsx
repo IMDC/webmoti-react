@@ -1,9 +1,10 @@
+import { describe, expect, it, vi } from "vitest";
 import { Settings } from '../../state/settings/settingsReducer';
 import { useAppState } from '../../state';
 import useConnectionOptions from './useConnectionOptions';
 
-const mockUseAppState = useAppState as jest.Mock<any>;
-jest.mock('../../state');
+const mockUseAppState = useAppState as vi.Mock<any>;
+vi.mock('../../state');
 
 describe('the useConnectionOptions function', () => {
   it('should remove any undefined values from settings', () => {

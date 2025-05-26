@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from "vitest";
 import { screen, waitFor } from '@testing-library/react';
 import { renderWithUser } from '../../../../utils/testUtils';
 
@@ -35,8 +36,8 @@ describe('the MediaMessage component', () => {
 
     // mock anchor needs to be after it renders but before it gets clicked
     const mockAnchorElement = document.createElement('a');
-    mockAnchorElement.click = jest.fn();
-    document.createElement = jest.fn(() => mockAnchorElement);
+    mockAnchorElement.click = vi.fn();
+    document.createElement = vi.fn(() => mockAnchorElement);
 
     const clickable = screen.getByText(/foo\.txt/i).closest('div');
     await user.click(clickable!);

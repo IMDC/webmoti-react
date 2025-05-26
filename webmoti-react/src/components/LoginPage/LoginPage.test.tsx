@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -5,27 +6,27 @@ import LoginPage from './LoginPage';
 import { useAppState } from '../../state';
 import { clientEnv } from '../../clientEnv';
 
-jest.mock('react-router-dom', () => {
+vi.mock('react-router-dom', () => {
   return {
-    useLocation: jest.fn(),
-    useNavigate: jest.fn(),
+    useLocation: vi.fn(),
+    useNavigate: vi.fn(),
   };
 });
-jest.mock('../../state');
-jest.mock('./google-logo.svg', () => ({ ReactComponent: () => null }));
+vi.mock('../../state');
+vi.mock('./google-logo.svg', () => ({ ReactComponent: () => null }));
 
-const mockUseAppState = useAppState as jest.Mock<any>;
-const mockUseLocation = useLocation as jest.Mock<any>;
-const mockUseNavigate = useNavigate as jest.Mock<any>;
+const mockUseAppState = useAppState as vi.Mock<any>;
+const mockUseLocation = useLocation as vi.Mock<any>;
+const mockUseNavigate = useNavigate as vi.Mock<any>;
 
-const mockNavigate = jest.fn();
+const mockNavigate = vi.fn();
 mockUseNavigate.mockImplementation(() => mockNavigate);
 mockUseLocation.mockImplementation(() => ({ pathname: '/login' }));
 
 describe('the LoginPage component', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
-    (clientEnv.SET_AUTH as jest.Mock).mockReturnValue('firebase');
+    vi.clearAllMocks();
+    (clientEnv.SET_AUTH as vi.Mock).mockReturnValue('firebase');
   });
 
   describe('with auth enabled', () => {
@@ -71,11 +72,11 @@ describe('the LoginPage component', () => {
 
   describe('with passcode auth enabled', () => {
     beforeEach(() => {
-      (clientEnv.SET_AUTH as jest.Mock).mockReturnValue('passcode');
+      (clientEnv.SET_AUTH as vi.Mock).mockReturnValue('passcode');
     });
 
     it('should call sign in with the supplied passcode', async () => {
-      const mockSignin = jest.fn(() => Promise.resolve());
+      const mockSignin = vi.fn(() => Promise.resolve());
       mockUseAppState.mockImplementation(() => ({ user: null, signIn: mockSignin, isAuthReady: true }));
       const { getByLabelText, getByText } = render(<LoginPage />);
 
@@ -92,7 +93,7 @@ describe('the LoginPage component', () => {
     });
 
     it('should call render error messages when signin fails', async () => {
-      const mockSignin = jest.fn(() => Promise.reject(new Error('Test Error')));
+      const mockSignin = vi.fn(() => Promise.reject(new Error('Test Error')));
       mockUseAppState.mockImplementation(() => ({ user: null, signIn: mockSignin, isAuthReady: true }));
       const { getByLabelText, getByText } = render(<LoginPage />);
 
@@ -110,7 +111,7 @@ describe('the LoginPage component', () => {
   });
 
   it('should redirect to "/" when auth is disabled', () => {
-    (clientEnv.SET_AUTH as jest.Mock).mockReturnValue(undefined);
+    (clientEnv.SET_AUTH as vi.Mock).mockReturnValue(undefined);
     mockUseAppState.mockImplementation(() => ({ user: null, signIn: () => Promise.resolve(), isAuthReady: true }));
     render(<LoginPage />);
     expect(mockNavigate).toHaveBeenCalledWith('/', { replace: true });

@@ -1,3 +1,4 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen, waitFor } from '@testing-library/react';
 import { renderWithUser } from '../../utils/testUtils';
 
@@ -6,17 +7,17 @@ import { initialSettings } from '../../state/settings/settingsReducer';
 import { useAppState } from '../../state';
 import useRoomState from '../../hooks/useRoomState/useRoomState';
 
-jest.mock('../../hooks/useRoomState/useRoomState');
-jest.mock('../../state');
+vi.mock('../../hooks/useRoomState/useRoomState');
+vi.mock('../../state');
 
-const mockUseAppState = useAppState as jest.Mock<any>;
-const mockUseRoomState = useRoomState as jest.Mock<any>;
+const mockUseAppState = useAppState as vi.Mock<any>;
+const mockUseRoomState = useRoomState as vi.Mock<any>;
 
-const mockDispatchSetting = jest.fn();
+const mockDispatchSetting = vi.fn();
 mockUseAppState.mockImplementation(() => ({ settings: initialSettings, dispatchSetting: mockDispatchSetting }));
 
 describe('the ConnectionOptionsDialog component', () => {
-  afterEach(jest.clearAllMocks);
+  afterEach(vi.clearAllMocks);
 
   describe('when not connected to a room', () => {
     beforeEach(() => {

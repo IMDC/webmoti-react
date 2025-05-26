@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from "vitest";
 import { render, screen, fireEvent } from '@testing-library/react';
 import ErrorDialog from './ErrorDialog';
 import { TwilioError } from 'twilio-video';
@@ -49,7 +50,7 @@ describe('the ErrorDialog component', () => {
   });
 
   it('should invoke dismissError when user clicks OK', () => {
-    const dismissError = jest.fn();
+    const dismissError = vi.fn();
     const error = { message, code } as TwilioError;
     render(<ErrorDialog dismissError={dismissError} error={error} />);
     fireEvent.click(screen.getByRole('button', { name: /ok/i }));

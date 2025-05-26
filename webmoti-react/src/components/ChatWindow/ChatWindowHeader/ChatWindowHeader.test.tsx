@@ -1,14 +1,15 @@
+import { describe, expect, it, vi } from "vitest";
 import { screen } from '@testing-library/react';
 import { renderWithUser } from '../../../utils/testUtils';
 
 import ChatWindowHeader from './ChatWindowHeader';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 
-jest.mock('../../../hooks/useChatContext/useChatContext');
+vi.mock('../../../hooks/useChatContext/useChatContext');
 
-const mockUseChatContext = useChatContext as jest.Mock<any>;
+const mockUseChatContext = useChatContext as vi.Mock<any>;
 
-const mockToggleChatWindow = jest.fn();
+const mockToggleChatWindow = vi.fn();
 mockUseChatContext.mockImplementation(() => ({ setIsChatWindowOpen: mockToggleChatWindow }));
 
 describe('the CloseChatWindowHeader component', () => {

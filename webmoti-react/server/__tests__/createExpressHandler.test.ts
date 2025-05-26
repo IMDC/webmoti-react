@@ -4,11 +4,13 @@ process.env.TWILIO_API_KEY_SID = 'mockApiKeySid';
 process.env.TWILIO_API_KEY_SECRET = 'mockApiKeySecret';
 process.env.TWILIO_CONVERSATIONS_SERVICE_SID = 'mockConversationsServiceSid';
 
+import { afterEach, describe, expect, it, vi } from "vitest";
+
 import { createExpressHandler } from '../createExpressHandler';
 import { ServerlessFunction } from '../types';
 import Twilio from 'twilio';
 
-jest.mock('twilio', () => jest.fn(() => 'mockTwilioClient'));
+vi.mock('twilio', () => vi.fn(() => 'mockTwilioClient'));
 
 const mockRequest: any = {
   body: {
@@ -17,13 +19,13 @@ const mockRequest: any = {
 };
 
 const mockResponse: any = {
-  status: jest.fn(() => mockResponse),
-  set: jest.fn(() => mockResponse),
-  json: jest.fn(),
+  status: vi.fn(() => mockResponse),
+  set: vi.fn(() => mockResponse),
+  json: vi.fn(),
 };
 
 describe('the createExpressHandler function', () => {
-  afterEach(jest.clearAllMocks);
+  afterEach(vi.clearAllMocks);
 
   it('should correctly initialize a Twilio client', () => {
     expect(Twilio).toHaveBeenCalledWith('mockApiKeySid', 'mockApiKeySecret', { accountSid: 'mockAccountSid' });

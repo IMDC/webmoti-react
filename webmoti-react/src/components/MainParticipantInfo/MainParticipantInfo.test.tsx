@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen } from '@testing-library/react';
 
 import MainParticipantInfo from './MainParticipantInfo';
@@ -10,30 +11,30 @@ import useTrack from '../../hooks/useTrack/useTrack';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 
-jest.mock('../../hooks/useParticipantNetworkQualityLevel/useParticipantNetworkQualityLevel', () => () => 4);
-jest.mock('../../hooks/usePublications/usePublications');
-jest.mock('../../hooks/useIsTrackSwitchedOff/useIsTrackSwitchedOff');
-jest.mock('../../hooks/useTrack/useTrack');
-jest.mock('../../hooks/useVideoContext/useVideoContext');
-jest.mock('../../hooks/useParticipantIsReconnecting/useParticipantIsReconnecting');
-jest.mock('../../hooks/useIsRecording/useIsRecording');
-jest.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
+vi.mock('../../hooks/useParticipantNetworkQualityLevel/useParticipantNetworkQualityLevel', () => () => 4);
+vi.mock('../../hooks/usePublications/usePublications');
+vi.mock('../../hooks/useIsTrackSwitchedOff/useIsTrackSwitchedOff');
+vi.mock('../../hooks/useTrack/useTrack');
+vi.mock('../../hooks/useVideoContext/useVideoContext');
+vi.mock('../../hooks/useParticipantIsReconnecting/useParticipantIsReconnecting');
+vi.mock('../../hooks/useIsRecording/useIsRecording');
+vi.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 
-const mockUsePublications = usePublications as jest.Mock<any>;
-const mockUseIsTrackSwitchedOff = useIsTrackSwitchedOff as jest.Mock<any>;
-const mockUseTrack = useTrack as jest.Mock<any>;
-const mockUseVideoContext = useVideoContext as jest.Mock<any>;
-const mockUseParticipantIsReconnecting = useParticipantIsReconnecting as jest.Mock<boolean>;
-const mockUseIsRecording = useIsRecording as jest.Mock<boolean>;
+const mockUsePublications = usePublications as vi.Mock<any>;
+const mockUseIsTrackSwitchedOff = useIsTrackSwitchedOff as vi.Mock<any>;
+const mockUseTrack = useTrack as vi.Mock<any>;
+const mockUseVideoContext = useVideoContext as vi.Mock<any>;
+const mockUseParticipantIsReconnecting = useParticipantIsReconnecting as vi.Mock<boolean>;
+const mockUseIsRecording = useIsRecording as vi.Mock<boolean>;
 
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as vi.Mock<any>;
 mockUseWebmotiVideoContext.mockImplementation(() => ({}));
 
 const mockLocalParticipant = createMockParticipant('mockIdentity', 0);
 const mockRemoteParticipant = createMockParticipant('remoteIdentity', 1);
 
 describe('MainParticipantInfo component', () => {
-  beforeEach(jest.clearAllMocks);
+  beforeEach(vi.clearAllMocks);
 
   beforeEach(() => {
     mockUseVideoContext.mockImplementation(() => ({

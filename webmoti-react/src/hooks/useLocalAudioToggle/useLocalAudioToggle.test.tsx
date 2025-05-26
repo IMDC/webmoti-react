@@ -1,19 +1,20 @@
+import { describe, expect, it, vi } from "vitest";
 import { renderHook } from '@testing-library/react';
 import useLocalAudioToggle from './useLocalAudioToggle';
 import useVideoContext from '../useVideoContext/useVideoContext';
 
-jest.mock('../useVideoContext/useVideoContext');
-const mockUseVideoContext = useVideoContext as jest.Mock<any>;
+vi.mock('../useVideoContext/useVideoContext');
+const mockUseVideoContext = useVideoContext as vi.Mock<any>;
 
-jest.mock('../useIsTrackEnabled/useIsTrackEnabled', () => () => true);
+vi.mock('../useIsTrackEnabled/useIsTrackEnabled', () => () => true);
 
 describe('the useLocalAudioToggle hook', () => {
   it('should return the value from the useIsTrackEnabled hook', () => {
     const mockLocalTrack = {
       kind: 'audio',
       isEnabled: true,
-      enable: jest.fn(),
-      disable: jest.fn(),
+      enable: vi.fn(),
+      disable: vi.fn(),
     };
 
     mockUseVideoContext.mockImplementation(() => ({
@@ -29,8 +30,8 @@ describe('the useLocalAudioToggle hook', () => {
       const mockLocalTrack = {
         kind: 'audio',
         isEnabled: true,
-        enable: jest.fn(),
-        disable: jest.fn(),
+        enable: vi.fn(),
+        disable: vi.fn(),
       };
 
       mockUseVideoContext.mockImplementation(() => ({
@@ -47,8 +48,8 @@ describe('the useLocalAudioToggle hook', () => {
       const mockLocalTrack = {
         kind: 'audio',
         isEnabled: false,
-        enable: jest.fn(),
-        disable: jest.fn(),
+        enable: vi.fn(),
+        disable: vi.fn(),
       };
 
       mockUseVideoContext.mockImplementation(() => ({

@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import EventEmitter from 'events';
 import { setImmediate } from 'timers';
 
@@ -12,25 +13,25 @@ import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 const mockMessage = { body: 'newMockMessage', attributes: {} };
 
 const mockConversation: any = new EventEmitter();
-mockConversation.getMessages = jest.fn(() => Promise.resolve({ items: [mockMessage] }));
+mockConversation.getMessages = vi.fn(() => Promise.resolve({ items: [mockMessage] }));
 
 const mockConversationsClient: any = new EventEmitter();
-mockConversationsClient.getConversationByUniqueName = jest.fn(() => Promise.resolve(mockConversation));
+mockConversationsClient.getConversationByUniqueName = vi.fn(() => Promise.resolve(mockConversation));
 
-jest.mock('@twilio/conversations', () => {
-  return { Client: jest.fn(() => mockConversationsClient) };
+vi.mock('@twilio/conversations', () => {
+  return { Client: vi.fn(() => mockConversationsClient) };
 });
-jest.mock('../../hooks/useVideoContext/useVideoContext');
+vi.mock('../../hooks/useVideoContext/useVideoContext');
 
-const mockUseVideoContext = useVideoContext as jest.Mock<any>;
-const mockOnError = jest.fn();
+const mockUseVideoContext = useVideoContext as vi.Mock<any>;
+const mockOnError = vi.fn();
 
 const mockRoom = { sid: 'mockRoomSid' };
 const wrapper = ({ children }: { children: React.ReactNode }) => <ChatProvider>{children}</ChatProvider>;
 
 describe('the ChatProvider component', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     mockUseVideoContext.mockImplementation(() => ({ room: mockRoom, onError: mockOnError }));
   });
 

@@ -1,3 +1,4 @@
+import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import React from 'react';
 import AttachVisibilityHandler from './AttachVisibilityHandler';
 import useLocalVideoToggle from '../../../hooks/useLocalVideoToggle/useLocalVideoToggle';
@@ -5,12 +6,12 @@ import { render } from '@testing-library/react';
 import * as utils from '../../../utils';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 
-jest.mock('../../../hooks/useVideoContext/useVideoContext');
-jest.mock('../../../hooks/useLocalVideoToggle/useLocalVideoToggle');
+vi.mock('../../../hooks/useVideoContext/useVideoContext');
+vi.mock('../../../hooks/useLocalVideoToggle/useLocalVideoToggle');
 
-const mockUseVideoContext = useVideoContext as jest.Mock<any>;
-const mockUseLocalVideoToggle = useLocalVideoToggle as jest.Mock<any>;
-const mockToggleVideoEnabled = jest.fn();
+const mockUseVideoContext = useVideoContext as vi.Mock<any>;
+const mockUseLocalVideoToggle = useLocalVideoToggle as vi.Mock<any>;
+const mockToggleVideoEnabled = vi.fn();
 
 Object.defineProperty(document, 'visibilityState', { value: '', writable: true });
 mockUseLocalVideoToggle.mockImplementation(() => [true, mockToggleVideoEnabled]);
@@ -33,10 +34,10 @@ describe('the AttachVisibilityHandler component', () => {
       utils.isMobile = true;
     });
 
-    beforeEach(jest.clearAllMocks);
+    beforeEach(vi.clearAllMocks);
 
     it('should add a visibilitychange event handler to the document', () => {
-      jest.spyOn(document, 'addEventListener');
+      vi.spyOn(document, 'addEventListener');
       render(<AttachVisibilityHandler />);
       expect(document.addEventListener).toHaveBeenCalled();
     });
@@ -49,7 +50,7 @@ describe('the AttachVisibilityHandler component', () => {
       document.dispatchEvent(new Event('visibilitychange'));
       expect(mockToggleVideoEnabled).toHaveBeenCalled();
 
-      jest.clearAllMocks();
+      vi.clearAllMocks();
 
       // @ts-ignore
       document.visibilityState = 'visible';
@@ -66,7 +67,7 @@ describe('the AttachVisibilityHandler component', () => {
       document.dispatchEvent(new Event('visibilitychange'));
       expect(mockToggleVideoEnabled).not.toHaveBeenCalled();
 
-      jest.clearAllMocks();
+      vi.clearAllMocks();
 
       // @ts-ignore
       document.visibilityState = 'visible';
@@ -76,7 +77,7 @@ describe('the AttachVisibilityHandler component', () => {
 
     it('should not add a visibilitychange event handler to the document when a room does not exist', () => {
       mockUseVideoContext.mockImplementationOnce(() => ({}));
-      jest.spyOn(document, 'addEventListener');
+      vi.spyOn(document, 'addEventListener');
       render(<AttachVisibilityHandler />);
       expect(document.addEventListener).not.toHaveBeenCalled();
     });

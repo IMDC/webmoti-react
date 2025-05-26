@@ -1,3 +1,4 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, renderHook, waitFor } from '@testing-library/react';
 import Video from 'twilio-video';
 
@@ -6,12 +7,12 @@ import { SELECTED_AUDIO_INPUT_KEY, SELECTED_VIDEO_INPUT_KEY, DEFAULT_VIDEO_CONST
 import { useAppState } from '../../../state';
 import { getDeviceInfo, isPermissionDenied } from '../../../utils';
 
-jest.mock('../../../state');
-jest.mock('../../../utils');
+vi.mock('../../../state');
+vi.mock('../../../utils');
 
-const mockGetDeviceInfo = getDeviceInfo as jest.Mock<any>;
-const mockIsPermissionDenied = isPermissionDenied as jest.Mock<Promise<boolean>>;
-const mockUseAppState = useAppState as jest.Mock<any>;
+const mockGetDeviceInfo = getDeviceInfo as vi.Mock<any>;
+const mockIsPermissionDenied = isPermissionDenied as vi.Mock<Promise<boolean>>;
+const mockUseAppState = useAppState as vi.Mock<any>;
 
 mockUseAppState.mockImplementation(() => ({ setIsKrispEnabled: false }));
 
@@ -28,7 +29,7 @@ describe('the useLocalTracks hook', () => {
     );
     mockIsPermissionDenied.mockImplementation(() => Promise.resolve(false));
   });
-  afterEach(jest.clearAllMocks);
+  afterEach(vi.clearAllMocks);
   afterEach(() => window.localStorage.clear());
 
   describe('the getAudioAndVideoTracks function', () => {
@@ -221,7 +222,7 @@ describe('the useLocalTracks hook', () => {
     });
 
     it('should set isAcquiringLocalTracks to true while acquiring tracks', async () => {
-      jest.useFakeTimers();
+      vi.useFakeTimers();
       const { result } = renderHook(useLocalTracks);
 
       expect(result.current.isAcquiringLocalTracks).toBe(false);
@@ -235,13 +236,13 @@ describe('the useLocalTracks hook', () => {
       });
 
       await act(async () => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
 
       await waitFor(() => {
         expect(result.current.isAcquiringLocalTracks).toBe(false);
       });
-      jest.useRealTimers();
+      vi.useRealTimers();
     });
 
     it('should save the deviceId of the video track to localStorage after it is acquired', async () => {
@@ -255,7 +256,7 @@ describe('the useLocalTracks hook', () => {
     });
 
     it('should ignore calls to getAudioAndVideoTracks while isAcquiringLocalTracks is true', async () => {
-      jest.useFakeTimers();
+      vi.useFakeTimers();
       const { result } = renderHook(useLocalTracks);
 
       await act(async () => {
@@ -268,13 +269,13 @@ describe('the useLocalTracks hook', () => {
       result.current.getAudioAndVideoTracks(); // This call is ignored
 
       await act(async () => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
 
       await waitFor(() => {
         expect(Video.createLocalTracks).toHaveBeenCalledTimes(1);
       });
-      jest.useRealTimers();
+      vi.useRealTimers();
     });
 
     it('should not create any tracks when no input devices are present', async () => {
@@ -288,7 +289,7 @@ describe('the useLocalTracks hook', () => {
     });
 
     it('should return an error when there is an error creating a track', async () => {
-      (Video.createLocalTracks as jest.Mock<any>).mockImplementationOnce(() => Promise.reject('testError'));
+      (Video.createLocalTracks as vi.Mock<any>).mockImplementationOnce(() => Promise.reject('testError'));
       const { result } = renderHook(useLocalTracks);
 
       await act(async () => {

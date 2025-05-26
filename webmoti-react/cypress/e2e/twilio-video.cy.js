@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 /// <reference types="cypress" />
 
 // If you are on MacOS and have many popups about Chromium when these tests run, please see: https://github.com/puppeteer/puppeteer/issues/4752

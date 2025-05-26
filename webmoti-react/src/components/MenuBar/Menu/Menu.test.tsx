@@ -1,3 +1,4 @@
+import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { render, fireEvent, screen } from '@testing-library/react';
 
 import '@testing-library/jest-dom';
@@ -12,21 +13,21 @@ import { useMediaQuery } from '@mui/material';
 
 import { useAppState } from '../../../state';
 
-jest.mock('../../../hooks/useFlipCameraToggle/useFlipCameraToggle');
-jest.mock('@mui/material/useMediaQuery');
-jest.mock('../../../state');
-jest.mock('../../../hooks/useVideoContext/useVideoContext', () => () => ({
+vi.mock('../../../hooks/useFlipCameraToggle/useFlipCameraToggle');
+vi.mock('@mui/material/useMediaQuery');
+vi.mock('../../../state');
+vi.mock('../../../hooks/useVideoContext/useVideoContext', () => () => ({
   localTracks: [],
   room: { sid: 'mockRoomSid' },
 }));
-jest.mock('../../../hooks/useIsRecording/useIsRecording');
-jest.mock('../../../hooks/useChatContext/useChatContext');
-jest.mock('../../../hooks/useLocalVideoToggle/useLocalVideoToggle');
-jest.mock('../../../hooks/useRoomState/useRoomState');
-jest.mock('../../../hooks/useScreenShareParticipant/useScreenShareParticipant');
-jest.mock('../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
+vi.mock('../../../hooks/useIsRecording/useIsRecording');
+vi.mock('../../../hooks/useChatContext/useChatContext');
+vi.mock('../../../hooks/useLocalVideoToggle/useLocalVideoToggle');
+vi.mock('../../../hooks/useRoomState/useRoomState');
+vi.mock('../../../hooks/useScreenShareParticipant/useScreenShareParticipant');
+vi.mock('../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 // silence act warnings by mocking useDevices
-jest.mock('../../../hooks/useDevices/useDevices', () => () => ({
+vi.mock('../../../hooks/useDevices/useDevices', () => () => ({
   audioInputDevices: [],
   audioOutputDevices: [],
   videoInputDevices: [],
@@ -34,16 +35,16 @@ jest.mock('../../../hooks/useDevices/useDevices', () => () => ({
   hasVideoInputDevices: true,
 }));
 
-const mockUseFlipCameraToggle = useFlipCameraToggle as jest.Mock<any>;
-const mockUseMediaQuery = useMediaQuery as jest.Mock<boolean>;
-const mockUseAppState = useAppState as jest.Mock<any>;
-const mockUseChatContext = useChatContext as jest.Mock<any>;
-const mockUseRoomState = useRoomState as jest.Mock<any>;
-const mockUseScreenShareParticipant = useScreenShareParticipant as jest.Mock<any>;
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
+const mockUseFlipCameraToggle = useFlipCameraToggle as vi.Mock<any>;
+const mockUseMediaQuery = useMediaQuery as vi.Mock<boolean>;
+const mockUseAppState = useAppState as vi.Mock<any>;
+const mockUseChatContext = useChatContext as vi.Mock<any>;
+const mockUseRoomState = useRoomState as vi.Mock<any>;
+const mockUseScreenShareParticipant = useScreenShareParticipant as vi.Mock<any>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as vi.Mock<any>;
 
-const mockToggleChatWindow = jest.fn();
-const mockSetIsGalleryViewActive = jest.fn();
+const mockToggleChatWindow = vi.fn();
+const mockSetIsGalleryViewActive = vi.fn();
 
 beforeAll(() => {
   mockUseFlipCameraToggle.mockImplementation(() => ({
@@ -53,7 +54,7 @@ beforeAll(() => {
 });
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   mockUseChatContext.mockImplementation(() => ({ setIsChatWindowOpen: mockToggleChatWindow }));
   mockUseRoomState.mockImplementation(() => 'connected');
   mockUseScreenShareParticipant.mockImplementation(() => 'mockParticipant');
@@ -66,7 +67,7 @@ describe('Menu component', () => {
       mockUseMediaQuery.mockImplementation(() => false);
       mockUseAppState.mockImplementation(() => ({
         isFetching: false,
-        updateRecordingRules: jest.fn(),
+        updateRecordingRules: vi.fn(),
         roomType: 'group',
         setIsGalleryViewActive: mockSetIsGalleryViewActive,
         isGalleryViewActive: false,
@@ -132,7 +133,7 @@ describe('Menu component', () => {
       mockUseFlipCameraToggle.mockImplementation(() => ({
         flipCameraSupported: true,
         flipCameraDisabled: false,
-        toggleFacingMode: jest.fn(),
+        toggleFacingMode: vi.fn(),
       }));
 
       render(<Menu />);
@@ -145,7 +146,7 @@ describe('Menu component', () => {
       mockUseFlipCameraToggle.mockImplementation(() => ({
         flipCameraSupported: true,
         flipCameraDisabled: true,
-        toggleFacingMode: jest.fn(),
+        toggleFacingMode: vi.fn(),
       }));
 
       render(<Menu />);
@@ -157,7 +158,7 @@ describe('Menu component', () => {
       mockUseFlipCameraToggle.mockImplementation(() => ({
         flipCameraSupported: false,
         flipCameraDisabled: false,
-        toggleFacingMode: jest.fn(),
+        toggleFacingMode: vi.fn(),
       }));
 
       render(<Menu />);

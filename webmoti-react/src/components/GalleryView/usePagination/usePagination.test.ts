@@ -1,10 +1,11 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { renderHook, act } from '@testing-library/react';
 import { useAppState } from '../../../state';
 import { usePagination } from './usePagination';
 
-jest.mock('../../../state');
+vi.mock('../../../state');
 
-const mockUseAppState = useAppState as jest.Mock<any>;
+const mockUseAppState = useAppState as vi.Mock<any>;
 
 describe('the usePagination hook', () => {
   beforeEach(() => {

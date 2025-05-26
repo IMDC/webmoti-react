@@ -1,22 +1,23 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render } from '@testing-library/react';
 import Publication from './Publication';
 import useTrack from '../../hooks/useTrack/useTrack';
 import * as VideoTrackModule from '../VideoTrack/VideoTrack';
 
-jest.mock('../../hooks/useTrack/useTrack');
-jest.mock('../VideoTrack/VideoTrack', () => ({
+vi.mock('../../hooks/useTrack/useTrack');
+vi.mock('../VideoTrack/VideoTrack', () => ({
   __esModule: true,
-  default: jest.fn(() => <div data-testid="video-track" />),
+  default: vi.fn(() => <div data-testid="video-track" />),
 }));
 
-const mockUseTrack = useTrack as jest.Mock;
+const mockUseTrack = useTrack as vi.Mock;
 
 describe('the Publication component', () => {
   const mockPublication = 'mockPublication' as any;
   const mockParticipant = { identity: 'some-user' } as any;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('when track.kind is "video"', () => {

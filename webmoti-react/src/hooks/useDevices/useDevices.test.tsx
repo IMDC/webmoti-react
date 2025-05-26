@@ -1,10 +1,11 @@
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { act, renderHook, waitFor } from '@testing-library/react';
 
 import { getDeviceInfo } from '../../utils';
 import useDevices from './useDevices';
 
-jest.mock('../../utils', () => ({
-  getDeviceInfo: jest.fn(() =>
+vi.mock('../../utils', () => ({
+  getDeviceInfo: vi.fn(() =>
     Promise.resolve({
       audioInputDevices: [],
       videoInputDevices: [],
@@ -15,8 +16,8 @@ jest.mock('../../utils', () => ({
   ),
 }));
 
-let mockAddEventListener = jest.fn();
-let mockRemoveEventListener = jest.fn();
+let mockAddEventListener = vi.fn();
+let mockRemoveEventListener = vi.fn();
 
 // @ts-ignore
 navigator.mediaDevices = {
@@ -25,7 +26,7 @@ navigator.mediaDevices = {
 };
 
 describe('the useDevices hook', () => {
-  afterEach(jest.clearAllMocks);
+  afterEach(vi.clearAllMocks);
 
   it('should return the correct default values', async () => {
     const { result } = renderHook(useDevices);

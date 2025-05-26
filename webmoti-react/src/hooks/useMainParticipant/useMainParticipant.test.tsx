@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { EventEmitter } from 'events';
 import { renderHook } from '@testing-library/react';
 import useMainParticipant from './useMainParticipant';
@@ -5,12 +6,12 @@ import useSelectedParticipant from '../../components/VideoProvider/useSelectedPa
 import useVideoContext from '../useVideoContext/useVideoContext';
 import useScreenShareParticipant from '../useScreenShareParticipant/useScreenShareParticipant';
 
-jest.mock('../useVideoContext/useVideoContext');
-jest.mock('../../components/VideoProvider/useSelectedParticipant/useSelectedParticipant');
-jest.mock('../useScreenShareParticipant/useScreenShareParticipant');
-const mockUseVideoContext = useVideoContext as jest.Mock<any>;
-const mockSelectedParticipant = useSelectedParticipant as jest.Mock<any>;
-const mockUseScreenShareParticipant = useScreenShareParticipant as jest.Mock<any>;
+vi.mock('../useVideoContext/useVideoContext');
+vi.mock('../../components/VideoProvider/useSelectedParticipant/useSelectedParticipant');
+vi.mock('../useScreenShareParticipant/useScreenShareParticipant');
+const mockUseVideoContext = useVideoContext as vi.Mock<any>;
+const mockSelectedParticipant = useSelectedParticipant as vi.Mock<any>;
+const mockUseScreenShareParticipant = useScreenShareParticipant as vi.Mock<any>;
 
 describe('the useMainParticipant hook', () => {
   beforeEach(() => {

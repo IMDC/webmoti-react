@@ -1,9 +1,10 @@
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { renderHook } from '@testing-library/react';
 
 import useRestartAudioTrackOnDeviceChange from './useRestartAudioTrackOnDeviceChange';
 
-let mockAddEventListener = jest.fn();
-let mockRemoveEventListener = jest.fn();
+let mockAddEventListener = vi.fn();
+let mockRemoveEventListener = vi.fn();
 
 // @ts-ignore
 navigator.mediaDevices = {
@@ -12,10 +13,10 @@ navigator.mediaDevices = {
 };
 
 describe('the useHandleTrackPublicationFailed hook', () => {
-  afterEach(jest.clearAllMocks);
+  afterEach(vi.clearAllMocks);
 
   it('should not restart the audio track if mediaStreamTrack readyState has not ended', () => {
-    const localTrack = [{ kind: 'audio', mediaStreamTrack: { readyState: 'live' }, restart: jest.fn() }];
+    const localTrack = [{ kind: 'audio', mediaStreamTrack: { readyState: 'live' }, restart: vi.fn() }];
     renderHook(() => useRestartAudioTrackOnDeviceChange(localTrack as any));
 
     // call handleDeviceChange function:
@@ -25,7 +26,7 @@ describe('the useHandleTrackPublicationFailed hook', () => {
   });
 
   it('should restart the audio track if mediaStreamTrack readyState has ended', () => {
-    const localTrack = [{ kind: 'audio', mediaStreamTrack: { readyState: 'ended' }, restart: jest.fn() }];
+    const localTrack = [{ kind: 'audio', mediaStreamTrack: { readyState: 'ended' }, restart: vi.fn() }];
     renderHook(() => useRestartAudioTrackOnDeviceChange(localTrack as any));
 
     // call handleDeviceChange function:

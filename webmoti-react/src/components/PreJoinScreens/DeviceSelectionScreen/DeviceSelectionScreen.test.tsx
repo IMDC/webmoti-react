@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import DeviceSelectionScreen from './DeviceSelectionScreen';
@@ -5,23 +6,23 @@ import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../../state';
 import { clientEnv } from '../../../clientEnv';
 
-jest.mock('../../../hooks/useChatContext/useChatContext', () => () => ({ connect: mockChatConnect }));
-jest.mock('../../../hooks/useVideoContext/useVideoContext');
-jest.mock('../../../state');
+vi.mock('../../../hooks/useChatContext/useChatContext', () => () => ({ connect: mockChatConnect }));
+vi.mock('../../../hooks/useVideoContext/useVideoContext');
+vi.mock('../../../state');
 
-const mockConnect = jest.fn();
-const mockChatConnect = jest.fn(() => Promise.resolve());
-const mockGetToken = jest.fn(() => Promise.resolve({ token: 'mockToken' }));
+const mockConnect = vi.fn();
+const mockChatConnect = vi.fn(() => Promise.resolve());
+const mockGetToken = vi.fn(() => Promise.resolve({ token: 'mockToken' }));
 
-const mockUseVideoContext = useVideoContext as jest.Mock;
-const mockUseAppState = useAppState as jest.Mock;
+const mockUseVideoContext = useVideoContext as vi.Mock;
+const mockUseAppState = useAppState as vi.Mock;
 
-jest.mock('../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext', () => () => ({}));
+vi.mock('../../../hooks/useWebmotiVideoContext/useWebmotiVideoContext', () => () => ({}));
 
 describe('the DeviceSelectionScreen component', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
-    (clientEnv.DISABLE_TWILIO_CONVERSATIONS as jest.Mock).mockReturnValue('false');
+    vi.clearAllMocks();
+    (clientEnv.DISABLE_TWILIO_CONVERSATIONS as vi.Mock).mockReturnValue('false');
     mockUseAppState.mockImplementation(() => ({
       getToken: mockGetToken,
       isFetching: false,
@@ -113,7 +114,7 @@ describe('the DeviceSelectionScreen component', () => {
   });
 
   it('should only connect to video if chat is disabled', async () => {
-    (clientEnv.DISABLE_TWILIO_CONVERSATIONS as jest.Mock).mockReturnValue('true');
+    (clientEnv.DISABLE_TWILIO_CONVERSATIONS as vi.Mock).mockReturnValue('true');
     render(<DeviceSelectionScreen name="test name" roomName="test room name" setStep={() => {}} />);
     fireEvent.click(screen.getByRole('button', { name: /join now/i }));
 

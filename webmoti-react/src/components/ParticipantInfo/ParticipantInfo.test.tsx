@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from "vitest";
 import { render, screen } from '@testing-library/react';
 import ParticipantInfo from './ParticipantInfo';
 import { createMockPublication } from '../../__mocks__/mockCreator';
@@ -7,18 +8,18 @@ import usePublications from '../../hooks/usePublications/usePublications';
 import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import { useAppState } from '../../state';
 
-jest.mock('../../state');
-jest.mock('../../hooks/useParticipantNetworkQualityLevel/useParticipantNetworkQualityLevel', () => () => 4);
-jest.mock('../../hooks/usePublications/usePublications');
-jest.mock('../../hooks/useIsTrackSwitchedOff/useIsTrackSwitchedOff');
-jest.mock('../../hooks/useParticipantIsReconnecting/useParticipantIsReconnecting');
-jest.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
+vi.mock('../../state');
+vi.mock('../../hooks/useParticipantNetworkQualityLevel/useParticipantNetworkQualityLevel', () => () => 4);
+vi.mock('../../hooks/usePublications/usePublications');
+vi.mock('../../hooks/useIsTrackSwitchedOff/useIsTrackSwitchedOff');
+vi.mock('../../hooks/useParticipantIsReconnecting/useParticipantIsReconnecting');
+vi.mock('../../hooks/useWebmotiVideoContext/useWebmotiVideoContext');
 
-const mockUseAppState = useAppState as jest.Mock<any>;
-const mockUsePublications = usePublications as jest.Mock<any>;
-const mockUseIsTrackSwitchedOff = useIsTrackSwitchedOff as jest.Mock<any>;
-const mockUseParticipantIsReconnecting = useParticipantIsReconnecting as jest.Mock<boolean>;
-const mockUseWebmotiVideoContext = useWebmotiVideoContext as jest.Mock<any>;
+const mockUseAppState = useAppState as vi.Mock<any>;
+const mockUsePublications = usePublications as vi.Mock<any>;
+const mockUseIsTrackSwitchedOff = useIsTrackSwitchedOff as vi.Mock<any>;
+const mockUseParticipantIsReconnecting = useParticipantIsReconnecting as vi.Mock<boolean>;
+const mockUseWebmotiVideoContext = useWebmotiVideoContext as vi.Mock<any>;
 
 mockUseWebmotiVideoContext.mockImplementation(() => ({
   isCameraOneOff: () => false,

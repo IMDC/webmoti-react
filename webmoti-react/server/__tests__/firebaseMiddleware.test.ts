@@ -1,35 +1,36 @@
+import { afterEach, describe, expect, it, vi } from "vitest";
 import firebaseAuthMiddleware from '../firebaseAuthMiddleware';
 import firebaseAdmin from 'firebase-admin';
 
-jest.mock('../../../plugin-rtc/firebase_service_account.json', () => ({ mockCertificate: 'foo' }), {
+vi.mock('../../../plugin-rtc/firebase_service_account.json', () => ({ mockCertificate: 'foo' }), {
   virtual: true,
 });
-jest.mock('firebase-admin', () => {
-  const mockVerifyIdToken = jest.fn();
+vi.mock('firebase-admin', () => {
+  const mockVerifyIdToken = vi.fn();
 
   return {
-    initializeApp: jest.fn(),
+    initializeApp: vi.fn(),
     auth: () => ({
       verifyIdToken: mockVerifyIdToken,
     }),
     credential: {
-      cert: jest.fn((cert: any) => cert),
+      cert: vi.fn((cert: any) => cert),
     },
   };
 });
 
-const mockRequest: any = { get: jest.fn(() => 'mockToken') };
+const mockRequest: any = { get: vi.fn(() => 'mockToken') };
 const mockResponse: any = {
-  status: jest.fn(() => mockResponse),
-  json: jest.fn(() => mockResponse),
+  status: vi.fn(() => mockResponse),
+  json: vi.fn(() => mockResponse),
 };
 
-const mockNext = jest.fn();
+const mockNext = vi.fn();
 
-const mockVerifyIdToken = firebaseAdmin.auth().verifyIdToken as jest.Mock<any>;
+const mockVerifyIdToken = firebaseAdmin.auth().verifyIdToken as vi.Mock<any>;
 
 describe('the firebaseAuthMiddleware function', () => {
-  afterEach(jest.clearAllMocks);
+  afterEach(vi.clearAllMocks);
 
   it('should correctly initialize the firebase client', async () => {
     mockVerifyIdToken.mockImplementationOnce(() => Promise.resolve({ email: 'test@foo.com' }));
