@@ -14,6 +14,14 @@ export default defineConfig({
   build: {
     outDir: 'build',
   },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/setupTests.ts',
+    coverage: {
+      reporter: ['text', 'json', 'html'],
+    },
+  },
   server: {
     open: true,
     port: 3000,
