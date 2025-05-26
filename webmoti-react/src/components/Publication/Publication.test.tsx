@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
 import { render } from '@testing-library/react';
 import Publication from './Publication';
 import useTrack from '../../hooks/useTrack/useTrack';

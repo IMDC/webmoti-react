@@ -1,4 +1,4 @@
-import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it, vi, Mock } from "vitest";
 import { render, fireEvent, screen } from '@testing-library/react';
 
 import '@testing-library/jest-dom';

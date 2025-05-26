@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi, Mock } from "vitest";
 import firebaseAuthMiddleware from '../firebaseAuthMiddleware';
 import firebaseAdmin from 'firebase-admin';
 

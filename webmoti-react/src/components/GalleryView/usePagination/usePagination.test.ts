@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
 import { renderHook, act } from '@testing-library/react';
 import { useAppState } from '../../../state';
 import { usePagination } from './usePagination';

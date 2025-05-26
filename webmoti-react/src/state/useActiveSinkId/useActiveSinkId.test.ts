@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
 import { act, renderHook } from '@testing-library/react';
 import { SELECTED_AUDIO_OUTPUT_KEY } from '../../constants';
 import useActiveSinkId from './useActiveSinkId';

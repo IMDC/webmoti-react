@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi, Mock } from "vitest";
 import { Settings } from '../../state/settings/settingsReducer';
 import { useAppState } from '../../state';
 import useConnectionOptions from './useConnectionOptions';

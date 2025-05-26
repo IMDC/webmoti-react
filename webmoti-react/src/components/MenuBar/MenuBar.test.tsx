@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
 import { act, render, screen } from '@testing-library/react';
 
 import MenuBar from './MenuBar';

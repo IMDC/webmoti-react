@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
 import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import { useLocation, useNavigate } from 'react-router-dom';
 

@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
 import { EventEmitter } from 'events';
 
 import { act, renderHook } from '@testing-library/react';

@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi, Mock } from "vitest";
 import { render } from '@testing-library/react';
 
 import VideoTrack from './VideoTrack';

@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi, Mock } from "vitest";
 import { render, screen } from '@testing-library/react';
 import { GalleryView } from './GalleryView';
 import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';

@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi, Mock } from "vitest";
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import BackgroundThumbnail from './BackgroundThumbnail';

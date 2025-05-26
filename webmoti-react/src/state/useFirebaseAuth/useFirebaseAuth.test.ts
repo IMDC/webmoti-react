@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi, Mock } from "vitest";
 import useFirebaseAuth from './useFirebaseAuth';
 import { renderHook, waitFor } from '@testing-library/react';
 import { setImmediate } from 'timers';

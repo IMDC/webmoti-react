@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi, Mock } from "vitest";
 import { render, screen, waitFor } from '@testing-library/react';
 import { renderWithUser } from '../../utils/testUtils';
 
