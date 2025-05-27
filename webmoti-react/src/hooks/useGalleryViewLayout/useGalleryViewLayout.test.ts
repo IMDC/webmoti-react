@@ -23,8 +23,12 @@ describe('the layoutIsTooSmall function', () => {
 
 const mockContainerEl = { offsetHeight: 720, offsetWidth: 1280 };
 
-jest.spyOn(React, 'useRef').mockReturnValue({
-  current: mockContainerEl,
+jest.mock('react', () => {
+  const actualReact = jest.requireActual('react');
+  return {
+    ...actualReact,
+    useRef: jest.fn(() => ({ current: mockContainerEl })),
+  };
 });
 
 describe('the useGalleryViewLayout hook', () => {
