@@ -1,9 +1,11 @@
 import { RequestHandler } from 'express';
-import admin, { ServiceAccount } from 'firebase-admin';
-import serviceAccount from '../../plugin-rtc/firebase_service_account.json';
+import admin from 'firebase-admin';
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const serviceAccount = require('../../plugin-rtc/firebase_service_account.json');
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount as ServiceAccount),
+  credential: admin.credential.cert(serviceAccount),
 });
 
 const firebaseAuthMiddleware: RequestHandler = async (req, res, next) => {
