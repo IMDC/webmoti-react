@@ -1,4 +1,3 @@
-import 'isomorphic-fetch';
 import '@testing-library/jest-dom';
 
 import { TextEncoder } from 'util';

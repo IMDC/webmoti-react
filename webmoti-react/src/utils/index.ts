@@ -1,5 +1,4 @@
 import { Conversation, JSONObject, Message } from '@twilio/conversations';
-import { isPlainObject } from 'is-plain-object';
 
 import { WEBMOTI_CAMERA_1, WEBMOTI_CAMERA_2 } from '../constants';
 import TTSMessage from '../components/ChatWindow/TTSMessage';
@@ -10,6 +9,10 @@ export const isMobile = (() => {
   }
   return /Mobile/.test(navigator.userAgent);
 })();
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && value.constructor === Object;
+}
 
 // Recursively removes any object keys with a value of undefined
 export function removeUndefineds<T>(obj: T): T {
