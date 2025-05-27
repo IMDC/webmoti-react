@@ -25,7 +25,7 @@ const StyledContainer = styled(Container)({
   },
 });
 
-export default function UnsupportedBrowserWarning({ children }: { children: React.ReactElement<any> }) {
+export default function UnsupportedBrowserWarning({ children }: { children: React.ReactElement }) {
 
 
   if (!Video.isSupported) {
