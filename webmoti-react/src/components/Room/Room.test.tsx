@@ -11,15 +11,6 @@ import useSelectedParticipant from '../../components/VideoProvider/useSelectedPa
 import Room, { useSetSpeakerViewOnScreenShare } from './Room';
 import { createMockParticipant, createMockRoom } from '../../__mocks__/mockCreator';
 
-jest.mock('swiper/react', () => ({
-  Swiper: jest.fn(),
-  SwiperSlide: jest.fn(),
-}));
-
-jest.mock('swiper', () => ({
-  Pagination: jest.fn(),
-}));
-
 jest.mock('../../hooks/useChatContext/useChatContext');
 jest.mock('../../hooks/useVideoContext/useVideoContext');
 jest.mock('../../state');

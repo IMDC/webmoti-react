@@ -6,13 +6,6 @@ import useParticipantContext from '../../hooks/useParticipantsContext/usePartici
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import { createMockParticipant, createMockRoom } from '../../__mocks__/mockCreator';
 
-jest.mock('swiper/react', () => ({
-  Swiper: ({ children }: any) => <div>{children}</div>,
-  SwiperSlide: ({ children }: any) => <div>{children}</div>,
-}));
-jest.mock('swiper', () => ({
-  Pagination: jest.fn(),
-}));
 jest.mock('../../hooks/useVideoContext/useVideoContext');
 jest.mock('../../hooks/useParticipantsContext/useParticipantsContext');
 // jest.mock('../../state');

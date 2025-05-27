@@ -6,7 +6,7 @@ import { useMediaQuery } from '@mui/material';
 import clsx from 'clsx';
 
 import {} from '@mui/material/styles';
-import { Pagination } from 'swiper';
+import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Participant as IParticipant } from 'twilio-video';
 
