@@ -27,7 +27,7 @@ jest.mock('firebase/auth', () => {
   };
 });
 
-// @ts-ignore
+// @ts-expect-error: mock browser property
 window.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,

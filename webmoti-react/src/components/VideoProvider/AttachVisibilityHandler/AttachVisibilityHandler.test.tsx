@@ -18,7 +18,7 @@ mockUseVideoContext.mockImplementation(() => ({ room: {} }));
 describe('the AttachVisibilityHandler component', () => {
   // describe('when isMobile is false', () => {
   //   it('should not add a visibilitychange event handler to the document', () => {
-  //     // @ts-ignore
+  //     // @ts-expect-error: read only mock
   //     utils.isMobile = false;
   //     jest.spyOn(document, 'addEventListener');
   //     render(<AttachVisibilityHandler />);
@@ -28,7 +28,7 @@ describe('the AttachVisibilityHandler component', () => {
 
   describe('when isMobile is true', () => {
     beforeAll(() => {
-      // @ts-ignore
+      // @ts-expect-error: read only mock
       utils.isMobile = true;
     });
 
@@ -43,14 +43,14 @@ describe('the AttachVisibilityHandler component', () => {
     it('should correctly toggle video when it is already enabled', () => {
       render(<AttachVisibilityHandler />);
 
-      // @ts-ignore
+      // @ts-expect-error: read only mock
       document.visibilityState = 'hidden';
       document.dispatchEvent(new Event('visibilitychange'));
       expect(mockToggleVideoEnabled).toHaveBeenCalled();
 
       jest.clearAllMocks();
 
-      // @ts-ignore
+      // @ts-expect-error: read only mock
       document.visibilityState = 'visible';
       document.dispatchEvent(new Event('visibilitychange'));
       expect(mockToggleVideoEnabled).toHaveBeenCalled();
@@ -60,14 +60,14 @@ describe('the AttachVisibilityHandler component', () => {
       mockUseLocalVideoToggle.mockImplementation(() => [false, mockToggleVideoEnabled]);
       render(<AttachVisibilityHandler />);
 
-      // @ts-ignore
+      // @ts-expect-error: read only mock
       document.visibilityState = 'hidden';
       document.dispatchEvent(new Event('visibilitychange'));
       expect(mockToggleVideoEnabled).not.toHaveBeenCalled();
 
       jest.clearAllMocks();
 
-      // @ts-ignore
+      // @ts-expect-error: read only mock
       document.visibilityState = 'visible';
       document.dispatchEvent(new Event('visibilitychange'));
       expect(mockToggleVideoEnabled).not.toHaveBeenCalled();

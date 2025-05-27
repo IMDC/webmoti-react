@@ -31,7 +31,7 @@ describe('the removeUndefineds function', () => {
 });
 
 describe('the getDeviceInfo function', () => {
-  // @ts-ignore
+  // @ts-expect-error: mock browser property
   navigator.mediaDevices = {};
 
   const mockDevices = [
@@ -41,7 +41,7 @@ describe('the getDeviceInfo function', () => {
   ];
 
   it('should correctly return a list of audio input devices', async () => {
-    // @ts-ignore
+    // @ts-expect-error: mock browser property
     navigator.mediaDevices.enumerateDevices = () => Promise.resolve(mockDevices);
     const result = await getDeviceInfo();
     expect(result).toMatchInlineSnapshot(`
@@ -75,7 +75,7 @@ describe('the getDeviceInfo function', () => {
 
   it('should return hasAudioInputDevices: false when there are no audio input devices', async () => {
     navigator.mediaDevices.enumerateDevices = () =>
-      // @ts-ignore
+      // @ts-expect-error: mock browser property
       Promise.resolve([
         { deviceId: 2, label: '2', kind: 'videoinput' },
         { deviceId: 3, label: '3', kind: 'audiooutput' },
@@ -86,7 +86,7 @@ describe('the getDeviceInfo function', () => {
 
   it('should return hasVideoInputDevices: false when there are no video input devices', async () => {
     navigator.mediaDevices.enumerateDevices = () =>
-      // @ts-ignore
+      // @ts-expect-error: mock browser property
       Promise.resolve([
         { deviceId: 1, label: '1', kind: 'audioinput' },
         { deviceId: 3, label: '3', kind: 'audiooutput' },
@@ -98,28 +98,28 @@ describe('the getDeviceInfo function', () => {
 
 describe('the isPermissionsDenied function', () => {
   it('should return false when navigator.permissions does not exist', () => {
-    // @ts-ignore
+    // @ts-expect-error: mock browser property
     navigator.permissions = undefined;
 
     expect(isPermissionDenied('camera')).resolves.toBe(false);
   });
 
   it('should return false when navigator.permissions.query throws an error', () => {
-    // @ts-ignore
+    // @ts-expect-error: mock browser property
     navigator.permissions = { query: () => Promise.reject() };
 
     expect(isPermissionDenied('camera')).resolves.toBe(false);
   });
 
   it('should return false when navigator.permissions.query returns "granted"', () => {
-    // @ts-ignore
+    // @ts-expect-error: mock browser property
     navigator.permissions = { query: () => Promise.resolve({ state: 'granted' }) };
 
     expect(isPermissionDenied('camera')).resolves.toBe(false);
   });
 
   it('should return true when navigator.permissions.query returns "denied"', () => {
-    // @ts-ignore
+    // @ts-expect-error: mock browser property
     navigator.permissions = { query: () => Promise.resolve({ state: 'denied' }) };
 
     expect(isPermissionDenied('camera')).resolves.toBe(true);

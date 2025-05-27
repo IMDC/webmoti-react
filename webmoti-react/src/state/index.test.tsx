@@ -13,7 +13,7 @@ jest.mock('./useActiveSinkId/useActiveSinkId.ts', () => () => ['default', () => 
 
 const mockUsePasscodeAuth = usePasscodeAuth as jest.Mock<any>;
 
-// @ts-ignore
+// @ts-expect-error: mock browser property
 window.fetch = jest.fn(() =>
   Promise.resolve({
     text: () => 'mockVideoToken',

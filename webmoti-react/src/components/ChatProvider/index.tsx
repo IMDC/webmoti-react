@@ -36,7 +36,7 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
 
       const handleClientInitialized = (state: string) => {
         if (state === 'initialized') {
-          // @ts-ignore
+          //@ts-expect-error: mock browser property
           window.chatClient = client;
           setChatClient(client);
         } else if (state === 'failed') {
@@ -90,7 +90,7 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
       chatClient
         .getConversationByUniqueName(room.sid)
         .then((newConversation) => {
-          //@ts-ignore
+          //@ts-expect-error: mock browser property
           window.chatConversation = newConversation;
           setConversation(newConversation);
         })

@@ -43,7 +43,7 @@ describe('the usePasscodeAuth hook', () => {
     });
 
     it('should return a user when the passcode is valid', async () => {
-      // @ts-ignore
+      //@ts-expect-error: mock browser property
       window.fetch = jest.fn(() =>
         Promise.resolve({ ok: true, json: () => Promise.resolve({ token: 'mockVideoToken' }) })
       );
@@ -55,7 +55,7 @@ describe('the usePasscodeAuth hook', () => {
     });
 
     it('should remove the query parameter from the URL when the passcode is valid', async () => {
-      // @ts-ignore
+      //@ts-expect-error: mock browser property
       window.fetch = jest.fn(() =>
         Promise.resolve({ ok: true, json: () => Promise.resolve({ token: 'mockVideoToken' }) })
       );
@@ -73,7 +73,7 @@ describe('the usePasscodeAuth hook', () => {
     });
 
     it('should not return a user when the app code is invalid', async () => {
-      // @ts-ignore
+      //@ts-expect-error: mock browser property
       window.fetch = jest.fn(() =>
         Promise.resolve({ status: 401, json: () => Promise.resolve({ type: 'errorMessage' }) })
       );
@@ -93,7 +93,7 @@ describe('the usePasscodeAuth hook', () => {
 
   describe('signout function', () => {
     it('should clear session storage and user on signout', async () => {
-      // @ts-ignore
+      //@ts-expect-error: mock browser property
       window.fetch = jest.fn(() =>
         Promise.resolve({ ok: true, json: () => Promise.resolve({ token: 'mockVideoToken' }) })
       );
@@ -113,7 +113,7 @@ describe('the usePasscodeAuth hook', () => {
 
   describe('signin function', () => {
     it('should set a user when a valid passcode is submitted', async () => {
-      // @ts-ignore
+      //@ts-expect-error: mock browser property
       window.fetch = jest.fn(() =>
         Promise.resolve({ ok: true, json: () => Promise.resolve({ token: 'mockVideoToken' }) })
       );
@@ -123,7 +123,7 @@ describe('the usePasscodeAuth hook', () => {
     });
 
     it('should return an error when an invalid passcode is submitted', async () => {
-      // @ts-ignore
+      //@ts-expect-error: mock browser property
       window.fetch = jest.fn(() =>
         Promise.resolve({ status: 401, json: () => Promise.resolve({ error: { message: 'passcode incorrect' } }) })
       );
@@ -137,7 +137,7 @@ describe('the usePasscodeAuth hook', () => {
     });
 
     it('should return an error when an expired passcode is submitted', async () => {
-      // @ts-ignore
+      //@ts-expect-error: mock browser property
       window.fetch = jest.fn(() =>
         Promise.resolve({ status: 401, json: () => Promise.resolve({ error: { message: 'passcode expired' } }) })
       );
@@ -156,7 +156,7 @@ describe('the usePasscodeAuth hook', () => {
 
   describe('the getToken function', () => {
     it('should call the API with the correct parameters', async () => {
-      // @ts-ignore
+      //@ts-expect-error: mock browser property
       window.fetch = jest.fn(() =>
         Promise.resolve({ ok: true, json: () => Promise.resolve({ token: 'mockVideoToken' }) })
       );
@@ -180,7 +180,7 @@ describe('the usePasscodeAuth hook', () => {
     it('should call the API with the correct parameters when REACT_APP_DISABLE_TWILIO_CONVERSATIONS is true', async () => {
       (clientEnv.DISABLE_TWILIO_CONVERSATIONS as jest.Mock).mockReturnValue('true');
 
-      // @ts-ignore
+      //@ts-expect-error: mock browser property
       window.fetch = jest.fn(() =>
         Promise.resolve({ ok: true, json: () => Promise.resolve({ token: 'mockVideoToken' }) })
       );
@@ -205,7 +205,7 @@ describe('the usePasscodeAuth hook', () => {
     });
 
     it('should return a token', async () => {
-      // @ts-ignore
+      //@ts-expect-error: mock browser property
       window.fetch = jest.fn(() =>
         Promise.resolve({ ok: true, json: () => Promise.resolve({ token: 'mockVideoToken' }) })
       );
@@ -223,7 +223,7 @@ describe('the usePasscodeAuth hook', () => {
     });
 
     it('should return a useful error message from the serverless function', async () => {
-      // @ts-ignore
+      // @ts-expect-error: mock browser property
       window.fetch = jest.fn(() =>
         // Return a successful response when the passcode is initially verified
         Promise.resolve({ ok: true, json: () => Promise.resolve({ token: 'mockVideoToken' }) })
@@ -233,7 +233,7 @@ describe('the usePasscodeAuth hook', () => {
       await waitFor(() => {
         expect(result.current.isAuthReady).toBe(true);
       });
-      // @ts-ignore
+      // @ts-expect-error: mock browser property
       window.fetch = jest.fn(() =>
         // Return an error when the user tries to join a room
         Promise.resolve({ status: 401, json: () => Promise.resolve({ error: { message: 'passcode expired' } }) })
@@ -279,7 +279,7 @@ describe('the getPasscode function', () => {
 
 describe('the verifyPasscode function', () => {
   it('should return the correct response when the passcode is valid', async () => {
-    // @ts-ignore
+    // @ts-expect-error: mock browser property
     window.fetch = jest.fn(() =>
       Promise.resolve({ ok: true, json: () => Promise.resolve({ token: 'mockVideoToken' }) })
     );
@@ -289,7 +289,7 @@ describe('the verifyPasscode function', () => {
   });
 
   it('should return the correct response when the passcode is invalid', async () => {
-    // @ts-ignore
+    // @ts-expect-error: mock browser property
     window.fetch = jest.fn(() =>
       Promise.resolve({ status: 401, json: () => Promise.resolve({ error: { message: 'errorMessage' } }) })
     );

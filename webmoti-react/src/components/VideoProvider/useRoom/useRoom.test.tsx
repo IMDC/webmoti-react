@@ -98,7 +98,7 @@ describe('the useRoom hook', () => {
   });
 
   describe('when isMobile is true', () => {
-    // @ts-ignore
+    // @ts-expect-error: read only mock
     utils.isMobile = true;
 
     it('should add a listener for the "pagehide" event when connected to a room', async () => {

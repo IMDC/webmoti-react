@@ -190,7 +190,7 @@ export default function useBackgroundSettings(videoTrack: LocalVideoTrack | unde
       // Switch to 640x480 dimensions on browsers that do not support
       // WebAssembly SIMD to achieve optimum performance.
       const processor = blurProcessor || virtualBackgroundProcessor;
-      // @ts-ignore
+      // @ts-expect-error: private mock
       if (!processor._isSimdEnabled) {
         await setCaptureConstraints();
       }

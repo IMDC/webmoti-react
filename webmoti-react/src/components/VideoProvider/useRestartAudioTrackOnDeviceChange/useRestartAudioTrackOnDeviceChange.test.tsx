@@ -5,7 +5,7 @@ import useRestartAudioTrackOnDeviceChange from './useRestartAudioTrackOnDeviceCh
 const mockAddEventListener = jest.fn();
 const mockRemoveEventListener = jest.fn();
 
-// @ts-ignore
+// @ts-expect-error: mock browser property
 navigator.mediaDevices = {
   addEventListener: mockAddEventListener,
   removeEventListener: mockRemoveEventListener,

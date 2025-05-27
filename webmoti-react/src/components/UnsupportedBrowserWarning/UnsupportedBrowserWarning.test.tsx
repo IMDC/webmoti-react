@@ -5,7 +5,7 @@ import UnsupportedBrowserWarning from './UnsupportedBrowserWarning';
 
 describe('the UnsupportedBrowserWarning component', () => {
   it('should render the warning when isSupported is false', () => {
-    // @ts-ignore
+    // @ts-expect-error: read only mock
     Video.isSupported = false;
 
     render(
@@ -19,7 +19,7 @@ describe('the UnsupportedBrowserWarning component', () => {
   });
 
   it('should render children when isSupported is true', () => {
-    // @ts-ignore
+    // @ts-expect-error: read only mock
     Video.isSupported = true;
 
     render(

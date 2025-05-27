@@ -52,7 +52,7 @@ mockUseWebmotiVideoContext.mockImplementation(() => ({
 
 describe('the MenuBar component', () => {
   beforeEach(() => {
-    //@ts-ignore
+    // @ts-expect-error: read only mock
     utils.isMobile = false;
     (clientEnv.DISABLE_TWILIO_CONVERSATIONS as jest.Mock).mockReturnValue('false');
   });
@@ -107,7 +107,7 @@ describe('the MenuBar component', () => {
   //     toggleScreenShare: () => {},
   //     room: { name: 'Test Room' },
   //   }));
-  //   // @ts-ignore
+  //   // @ts-expect-error: read only mock
   //   utils.isMobile = true;
   //   const wrapper = shallow(<MenuBar />);
   //   expect(wrapper.find(ToggleScreenShareButton).exists()).toBe(false);

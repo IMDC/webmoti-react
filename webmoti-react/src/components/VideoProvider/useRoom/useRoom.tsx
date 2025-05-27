@@ -4,7 +4,7 @@ import Video, { ConnectOptions, LocalTrack, Room } from 'twilio-video';
 // import { VideoRoomMonitor } from '@twilio/video-room-monitor';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-// @ts-ignore
+//@ts-expect-error: mock browser property
 window.TwilioVideo = Video;
 
 export default function useRoom(localTracks: LocalTrack[], onError: Callback, options?: ConnectOptions) {
@@ -41,7 +41,7 @@ export default function useRoom(localTracks: LocalTrack[], onError: Callback, op
             }
           });
 
-          // @ts-ignore
+          // @ts-expect-error: mock browser property
           window.twilioRoom = newRoom;
 
           newRoom.localParticipant.videoTracks.forEach((publication) =>

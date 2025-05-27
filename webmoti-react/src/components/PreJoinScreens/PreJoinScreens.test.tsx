@@ -10,13 +10,12 @@ import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import useWebmotiVideoContext from '../../hooks/useWebmotiVideoContext/useWebmotiVideoContext';
 import { useAppState } from '../../state';
 
-// @ts-ignore
+//@ts-expect-error: mock browser property
 delete window.location;
 
-// @ts-ignore
 window.location = {
   pathname: '',
-  // @ts-ignore
+  //@ts-expect-error: mock browser property
   search: '',
   origin: '',
 };
@@ -74,7 +73,6 @@ describe('the PreJoinScreens component', () => {
   // });
 
   // it('should not update the URL when the app is deployed as a Twilio function', () => {
-  //   // @ts-ignore
   //   window.location = { ...window.location, origin: 'https://video-app-1234-twil.io' };
   //   const wrapper = shallow(<PreJoinScreens />);
 

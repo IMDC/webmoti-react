@@ -54,8 +54,7 @@ export default function PreJoinScreens() {
     event.preventDefault();
 
     // If this app is deployed as a twilio function, don't change the URL because routing isn't supported.
-    // @ts-ignore
-    if (!window.location.origin.includes('twil.io') && !window.STORYBOOK_ENV) {
+    if (!window.location.origin.includes('twil.io')) {
       window.history.replaceState(null, '', window.encodeURI(`/room/${roomName}${window.location.search || ''}`));
     }
     setStep(Steps.deviceSelectionStep);

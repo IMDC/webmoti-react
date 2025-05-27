@@ -9,7 +9,6 @@ class MockResizeObserver {
   disconnect() {}
 }
 
-// @ts-ignore
 window.ResizeObserver = MockResizeObserver as any;
 
 describe('the layoutIsTooSmall function', () => {

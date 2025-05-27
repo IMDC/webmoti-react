@@ -12,7 +12,7 @@ import { WEBMOTI_CAMERA_1 } from '../../constants';
 let clipId = 0;
 const getUniqueClipId = () => clipId++;
 
-// @ts-ignore
+// @ts-expect-error: mock webkitAudioContext for Safari
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 
 export function initializeAnalyser(stream: MediaStream) {
@@ -66,7 +66,7 @@ function AudioLevelIndicator({ audioTrack, color = 'white', participant }: Audio
         if (isIOS) {
           // If we are on iOS, then we want to stop the MediaStreamTrack that we have previously cloned.
           // If we are not on iOS, then we do not stop the MediaStreamTrack since it is the original and still in use.
-          newMediaStream.getTracks().forEach(track => track.stop());
+          newMediaStream.getTracks().forEach((track) => track.stop());
         }
         newMediaStream.dispatchEvent(new Event('cleanup')); // Stop the audioContext
       };

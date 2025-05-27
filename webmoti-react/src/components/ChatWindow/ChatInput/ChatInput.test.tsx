@@ -16,7 +16,7 @@ const mockHandleSendMessage = jest.fn<any, (string | FormData)[]>(() => Promise.
 
 describe('the ChatInput component', () => {
   beforeEach(() => {
-    // @ts-ignore
+    // @ts-expect-error: read only mock
     utils.isMobile = false;
   });
 
@@ -69,7 +69,7 @@ describe('the ChatInput component', () => {
   });
 
   it('should not send a message when Enter is pressed on mobile', async () => {
-    // @ts-ignore
+    // @ts-expect-error: read only mock
     utils.isMobile = true;
     render(<ChatInput conversation={{ sendMessage: mockHandleSendMessage } as any} isChatWindowOpen={true} />);
 
