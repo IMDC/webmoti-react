@@ -2,7 +2,12 @@ import path from 'path';
 
 import express, { RequestHandler } from 'express';
 
+// import bootstrap globals first to make globals available to below imports
 import './bootstrap-globals';
+import tokenModule from '../../plugin-rtc/src/serverless/functions/token';
+import recordingRulesModule from '../../plugin-rtc/src/serverless/functions/recordingrules';
+import firebaseAuthMiddleware from './firebaseAuthMiddleware';
+
 import { createExpressHandler } from './createExpressHandler';
 import { ServerlessFunction } from './types';
 
@@ -11,16 +16,14 @@ const PORT = process.env.PORT ?? 8081;
 const app = express();
 app.use(express.json());
 
-const tokenFunction: ServerlessFunction = require('../../plugin-rtc/src/serverless/functions/token').handler;
+const tokenFunction: ServerlessFunction = tokenModule.handler;
 const tokenEndpoint = createExpressHandler(tokenFunction);
 
-const recordingRulesFunction: ServerlessFunction =
-  require('../../plugin-rtc/src/serverless/functions/recordingrules').handler;
+const recordingRulesFunction: ServerlessFunction = recordingRulesModule.handler;
 const recordingRulesEndpoint = createExpressHandler(recordingRulesFunction);
 
 const noopMiddleware: RequestHandler = (_, __, next) => next();
-const authMiddleware =
-  process.env.VITE_SET_AUTH === 'firebase' ? require('./firebaseAuthMiddleware') : noopMiddleware;
+const authMiddleware = process.env.VITE_SET_AUTH === 'firebase' ? firebaseAuthMiddleware : noopMiddleware;
 
 app.all('/token', authMiddleware, tokenEndpoint);
 app.all('/recordingrules', authMiddleware, recordingRulesEndpoint);

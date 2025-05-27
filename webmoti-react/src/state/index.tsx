@@ -52,7 +52,7 @@ export const StateContext = createContext<StateContextType>(null!);
   included in the bundle that is produced (due to tree-shaking). Thus, in this instance, it
   is ok to call hooks inside if() statements.
 */
-export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
+export default function AppStateProvider(props: React.PropsWithChildren) {
   const [error, setError] = useState<TwilioError | null>(null);
   const [isFetching, setIsFetching] = useState(false);
   const [isGalleryViewActive, setIsGalleryViewActive] = useLocalStorageState('gallery-view-active-key', true);

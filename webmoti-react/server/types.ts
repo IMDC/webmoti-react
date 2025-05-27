@@ -3,11 +3,11 @@ import { TwilioResponse } from './bootstrap-globals';
 
 export interface ServerlessContext {
   getTwilioClient: () => Twilio;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export type ServerlessFunction = (
   context: ServerlessContext,
-  body: any,
-  callback: (err: any, response: TwilioResponse) => void
+  body: unknown,
+  callback: (err: unknown, response: TwilioResponse) => void
 ) => void;

@@ -4,13 +4,12 @@ import userEvent from '@testing-library/user-event';
 import ChatInput from '../ChatInput/ChatInput';
 import * as utils from '../../../utils';
 import { useAppState } from '../../../state';
-import { TwilioError } from 'twilio-video';
 
 jest.mock('@mui/material/useMediaQuery');
 jest.mock('../../../state');
 
 const mockUseAppState = useAppState as jest.Mock<any>;
-mockUseAppState.mockImplementation(() => ({ setError: (_: TwilioError | Error | null) => {} }));
+mockUseAppState.mockImplementation(() => ({ setError: () => {} }));
 
 const mockHandleSendMessage = jest.fn<any, (string | FormData)[]>(() => Promise.resolve());
 

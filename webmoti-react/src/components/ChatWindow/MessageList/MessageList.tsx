@@ -67,7 +67,7 @@ const showChatMessages = (messages: Message[], localParticipant: LocalParticipan
   });
 };
 
-const showTTSMessages = (conversation: Conversation | null, messages: TTSMessage[], styleClasses: any) => {
+const showTTSMessages = (conversation: Conversation | null, messages: TTSMessage[], styleClasses: typeof classes) => {
   return messages.map((message, idx) => {
     const time = getFormattedTime(message)!;
     const previousTime = getFormattedTime(messages[idx - 1]);

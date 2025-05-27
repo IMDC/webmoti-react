@@ -35,7 +35,7 @@ const Root = styled('div')(({ theme }) => ({
 interface AudioToggleDetail {
   enabled: boolean;
 }
-interface AudioToggleEvent extends CustomEvent<AudioToggleDetail> {}
+type AudioToggleEvent = CustomEvent<AudioToggleDetail>;
 
 export default function ToggleCaptionsButton() {
   const { room } = useVideoContext();

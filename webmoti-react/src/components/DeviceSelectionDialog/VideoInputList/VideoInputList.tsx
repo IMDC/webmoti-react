@@ -46,7 +46,7 @@ export default function VideoInputList() {
     setStoredLocalVideoDeviceId(newDeviceId);
     window.localStorage.setItem(SELECTED_VIDEO_INPUT_KEY, newDeviceId);
     localVideoTrack?.restart({
-      ...(DEFAULT_VIDEO_CONSTRAINTS as {}),
+      ...(DEFAULT_VIDEO_CONSTRAINTS as MediaTrackConstraints),
       deviceId: { exact: newDeviceId },
     });
   }

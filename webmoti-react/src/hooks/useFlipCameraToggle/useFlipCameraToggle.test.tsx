@@ -102,7 +102,7 @@ describe('the useFlipCameraToggle hook', () => {
     const { result } = renderHook(useFlipCameraToggle);
     result.current.toggleFacingMode();
     expect(mockVideoTrack.restart).toHaveBeenCalledWith({
-      ...(DEFAULT_VIDEO_CONSTRAINTS as {}),
+      ...(DEFAULT_VIDEO_CONSTRAINTS as MediaTrackConstraints),
       facingMode: 'user',
     });
   });

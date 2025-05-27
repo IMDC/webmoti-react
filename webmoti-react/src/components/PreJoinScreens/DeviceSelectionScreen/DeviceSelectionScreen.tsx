@@ -119,7 +119,9 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
   const handleJoin = () => {
     getToken(name, roomName).then(({ token }) => {
       videoConnect(token);
-      clientEnv.DISABLE_TWILIO_CONVERSATIONS() !== 'true' && chatConnect(token);
+      if (clientEnv.DISABLE_TWILIO_CONVERSATIONS() !== 'true') {
+        chatConnect(token);
+      }
     });
   };
 

@@ -15,7 +15,7 @@ export const isMobile = (() => {
 export function removeUndefineds<T>(obj: T): T {
   if (!isPlainObject(obj)) return obj;
 
-  const target: { [name: string]: any } = {};
+  const target: { [name: string]: unknown } = {};
 
   for (const key in obj) {
     const val = obj[key];
@@ -93,7 +93,7 @@ const checkMessageAttribute = (message: Message, attribute: string): boolean => 
   try {
     const parsedAttributes = JSON.parse(attrObj.attributes as string);
     return parsedAttributes[attribute] === true;
-  } catch (error) {
+  } catch {
     return false;
   }
 };

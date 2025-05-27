@@ -18,7 +18,7 @@ export default function useScreenShareToggle(room: Room | null, onError: ErrorCa
         audio: false,
         video: true,
       })
-      .then(stream => {
+      .then((stream) => {
         const track = stream.getTracks()[0];
 
         // All video tracks are published with 'low' priority. This works because the video
@@ -29,7 +29,7 @@ export default function useScreenShareToggle(room: Room | null, onError: ErrorCa
             name: 'screen', // Tracks can be named to easily find them later
             priority: 'low', // Priority is set to high by the subscriber when the video track is rendered
           } as MediaStreamTrackPublishOptions)
-          .then(trackPublication => {
+          .then((trackPublication) => {
             stopScreenShareRef.current = () => {
               room!.localParticipant.unpublishTrack(track);
               // TODO: remove this if the SDK is updated to emit this event
@@ -43,7 +43,7 @@ export default function useScreenShareToggle(room: Room | null, onError: ErrorCa
           })
           .catch(onError);
       })
-      .catch(error => {
+      .catch((error) => {
         const blockMsg = 'The request is not allowed by the user agent or the platform in the current context.';
         // Don't display an error if the user closes the screen share dialog
         if (
@@ -59,7 +59,11 @@ export default function useScreenShareToggle(room: Room | null, onError: ErrorCa
 
   const toggleScreenShare = useCallback(() => {
     if (room) {
-      !isSharing ? shareScreen() : stopScreenShareRef.current();
+      if (!isSharing) {
+        shareScreen();
+      } else {
+        stopScreenShareRef.current();
+      }
     }
   }, [isSharing, shareScreen, room]);
 

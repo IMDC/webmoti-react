@@ -6,7 +6,7 @@ import { TwilioError } from 'twilio-video';
 import enhanceMessage from './enhanceMessage';
 
 interface ErrorDialogProps {
-  dismissError: Function;
+  dismissError: () => void;
   error: TwilioError | Error | null;
 }
 

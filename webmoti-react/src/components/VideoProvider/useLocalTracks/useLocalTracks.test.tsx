@@ -359,7 +359,7 @@ describe('the useLocalTracks hook', () => {
 
       await waitFor(() => {
         expect(Video.createLocalVideoTrack).toHaveBeenCalledWith({
-          ...(DEFAULT_VIDEO_CONSTRAINTS as {}),
+          ...(DEFAULT_VIDEO_CONSTRAINTS as MediaTrackConstraints),
           name: 'camera-123456',
         });
       });
@@ -376,7 +376,7 @@ describe('the useLocalTracks hook', () => {
 
       await waitFor(() => {
         expect(Video.createLocalVideoTrack).toHaveBeenCalledWith({
-          ...(DEFAULT_VIDEO_CONSTRAINTS as {}),
+          ...(DEFAULT_VIDEO_CONSTRAINTS as MediaTrackConstraints),
           name: 'camera-123456',
         });
       });
@@ -393,7 +393,7 @@ describe('the useLocalTracks hook', () => {
 
       await waitFor(() => {
         expect(Video.createLocalVideoTrack).toHaveBeenCalledWith({
-          ...(DEFAULT_VIDEO_CONSTRAINTS as {}),
+          ...(DEFAULT_VIDEO_CONSTRAINTS as MediaTrackConstraints),
           name: 'camera-123456',
           deviceId: { exact: 'mockVideoDeviceId' },
         });

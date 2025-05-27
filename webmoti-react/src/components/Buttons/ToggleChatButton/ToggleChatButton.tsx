@@ -23,7 +23,7 @@ const IconContainer = styled('div')({
   display: 'flex',
 });
 
-const Circle = styled('div')(({ theme }) => ({
+const Circle = styled('div')(() => ({
   width: '10px',
   height: '10px',
   backgroundColor: '#027AC5',

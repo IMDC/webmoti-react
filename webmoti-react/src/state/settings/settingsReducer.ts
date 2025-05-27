@@ -36,13 +36,13 @@ export const initialSettings: Settings = {
 // This inputLabels object is used by ConnectionOptions.tsx. It is used to populate the id, name, and label props
 // of the various input elements. Using a typed object like this (instead of strings) eliminates the possibility
 // of there being a typo.
-export const inputLabels = (() => {
-  const target: any = {};
-  for (const setting in initialSettings) {
-    target[setting] = setting as SettingsKeys;
-  }
-  return target as { [key in SettingsKeys]: string };
-})();
+export const inputLabels: Record<SettingsKeys, string> = Object.keys(initialSettings).reduce(
+  (acc, key) => {
+    acc[key as SettingsKeys] = key;
+    return acc;
+  },
+  {} as Record<SettingsKeys, string>
+);
 
 export function settingsReducer(state: Settings, action: SettingsAction) {
   return {

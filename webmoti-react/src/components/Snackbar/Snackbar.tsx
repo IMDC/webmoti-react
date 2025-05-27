@@ -74,7 +74,7 @@ interface SnackbarProps {
 }
 
 export default function Snackbar({ headline, message, variant, open, handleClose }: SnackbarProps) {
-  const handleOnClose = (_: React.SyntheticEvent<any> | Event, reason: SnackbarCloseReason) => {
+  const handleOnClose = (_: React.SyntheticEvent<HTMLElement> | Event, reason: SnackbarCloseReason) => {
     if (reason === 'clickaway') {
       return;
     }

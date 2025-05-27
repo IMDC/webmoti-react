@@ -113,7 +113,7 @@ export default function usePasscodeAuth() {
       verifyPasscode(passcode)
         .then((verification) => {
           if (verification?.isValid) {
-            setUser({ passcode } as any);
+            setUser({ passcode, displayName: undefined, photoURL: undefined });
             window.sessionStorage.setItem('passcode', passcode);
             navigate(window.location.pathname, { replace: true });
           }
@@ -127,7 +127,7 @@ export default function usePasscodeAuth() {
   const signIn = useCallback((passcode: string) => {
     return verifyPasscode(passcode).then((verification) => {
       if (verification?.isValid) {
-        setUser({ passcode } as any);
+        setUser({ passcode, displayName: undefined, photoURL: undefined });
         window.sessionStorage.setItem('passcode', passcode);
       } else {
         throw new Error(getErrorMessage(verification?.error));

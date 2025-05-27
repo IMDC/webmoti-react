@@ -1,4 +1,3 @@
-/* eslint-disable import/first */
 process.env.TWILIO_ACCOUNT_SID = 'mockAccountSid';
 process.env.TWILIO_API_KEY_SID = 'mockApiKeySid';
 process.env.TWILIO_API_KEY_SECRET = 'mockApiKeySecret';

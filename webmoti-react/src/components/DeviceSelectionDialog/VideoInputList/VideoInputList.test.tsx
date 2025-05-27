@@ -100,7 +100,7 @@ describe('the VideoInputList component', () => {
     await user.click(screen.getByText(mockDevice2.label));
 
     expect(mockLocalTrack.restart).toHaveBeenCalledWith({
-      ...(DEFAULT_VIDEO_CONSTRAINTS as {}),
+      ...(DEFAULT_VIDEO_CONSTRAINTS as MediaTrackConstraints),
       deviceId: { exact: mockDevice2.deviceId },
     });
   });

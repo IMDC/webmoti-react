@@ -6,14 +6,14 @@ interface HeaderObj {
 
 export class TwilioResponse {
   headers: HeaderObj = {};
-  body: any;
+  body: unknown;
   statusCode = 200;
 
   setStatusCode(code: number) {
     this.statusCode = code;
   }
 
-  setBody(body: any) {
+  setBody(body: unknown) {
     this.body = body;
   }
 
@@ -43,10 +43,13 @@ interface TwilioGlobal extends Twilio {
 }
 
 declare global {
+  // eslint-disable-next-line no-var
   var Twilio: TwilioGlobal;
+  // eslint-disable-next-line no-var
   var Runtime: RuntimeType;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 global.Twilio = require('twilio');
 global.Twilio.Response = TwilioResponse;
 global.Runtime = Runtime;

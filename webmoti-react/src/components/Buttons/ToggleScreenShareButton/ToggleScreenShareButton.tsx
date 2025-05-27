@@ -12,7 +12,7 @@ const classes = {
   button: `${PREFIX}-button`,
 };
 
-const StyledTooltip = styled(Tooltip)(({ theme }) => ({
+const StyledTooltip = styled(Tooltip)(() => ({
   [`& .${classes.button}`]: {
     '&[disabled]': {
       color: '#bbb',

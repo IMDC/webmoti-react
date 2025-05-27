@@ -12,7 +12,7 @@ jest.mock('firebase/app', () => ({
 
 jest.mock('firebase/auth', () => {
   const mockAuth = () => ({
-    onAuthStateChanged: (fn: Function) => {
+    onAuthStateChanged: (fn: (user: unknown) => void) => {
       setImmediate(() => fn('mockUser'));
       return jest.fn(() => {});
     },

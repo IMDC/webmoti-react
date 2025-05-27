@@ -4,7 +4,7 @@ import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWeb
 export default function VideoRotationSlider() {
   const { rotation, setRotation } = useWebmotiVideoContext();
 
-  const handleRotationChange = (_: any, newValue: number | number[]) => {
+  const handleRotationChange = (_: unknown, newValue: number | number[]) => {
     setRotation(newValue as number);
   };
 

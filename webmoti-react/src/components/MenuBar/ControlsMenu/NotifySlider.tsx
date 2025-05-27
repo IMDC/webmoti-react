@@ -7,7 +7,7 @@ import useWebmotiVideoContext from '../../../hooks/useWebmotiVideoContext/useWeb
 export default function NotifySlider() {
   const { volume, setVolume } = useWebmotiVideoContext();
 
-  const handleVolumeSliderChange = (_: any, newValue: number | number[]) => {
+  const handleVolumeSliderChange = (_: Event, newValue: number | number[]) => {
     setVolume(newValue as number);
   };
 

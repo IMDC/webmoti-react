@@ -14,7 +14,7 @@ declare global {
   }
 
   interface HTMLMediaElement {
-    setSinkId?(sinkId: string): Promise<undefined>;
+    setSinkId(sinkId: string): Promise<undefined>;
   }
 
   // Helps create a union type with TwilioError
@@ -23,7 +23,7 @@ declare global {
   }
 }
 
-export type Callback = (...args: any[]) => void;
+export type Callback = (...args: unknown[]) => void;
 
 export type ErrorCallback = (error: TwilioError | Error) => void;
 

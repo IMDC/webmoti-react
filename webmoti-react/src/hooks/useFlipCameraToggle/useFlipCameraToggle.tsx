@@ -29,7 +29,7 @@ export default function useFlipCameraToggle() {
   const toggleFacingMode = useCallback(() => {
     const newFacingMode = mediaStreamTrack?.getSettings().facingMode === 'user' ? 'environment' : 'user';
     videoTrack?.restart({
-      ...(DEFAULT_VIDEO_CONSTRAINTS as {}),
+      ...(DEFAULT_VIDEO_CONSTRAINTS as MediaTrackConstraints),
       facingMode: newFacingMode,
     });
   }, [mediaStreamTrack, videoTrack]);

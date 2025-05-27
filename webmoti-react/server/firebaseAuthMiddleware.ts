@@ -1,8 +1,9 @@
 import { RequestHandler } from 'express';
-import firebaseAdmin from 'firebase-admin';
+import admin, { ServiceAccount } from 'firebase-admin';
+import serviceAccount from '../../plugin-rtc/firebase_service_account.json';
 
-firebaseAdmin.initializeApp({
-  credential: firebaseAdmin.credential.cert(require('../../plugin-rtc/firebase_service_account.json')),
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount as ServiceAccount),
 });
 
 const firebaseAuthMiddleware: RequestHandler = async (req, res, next) => {
@@ -17,7 +18,7 @@ const firebaseAuthMiddleware: RequestHandler = async (req, res, next) => {
     const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : authHeader;
 
     // Here we authenticate users be verifying the ID token that was sent
-    const decodedToken = await firebaseAdmin.auth().verifyIdToken(token);
+    const decodedToken = await admin.auth().verifyIdToken(token);
 
     // Here we authorize users to use this application only if they have a
     // TMU email address. The logic in this if statement can be changed if
