@@ -84,13 +84,13 @@ TWILIO_API_KEY_SID=SKxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 TWILIO_API_KEY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 TWILIO_CONVERSATIONS_SERVICE_SID=ISxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-# Using passcode auth is useful for testing multiple users
-# Un-comment the following line to enable passcode authentication for use with 
-# the Twilio CLI rtc-plugin.
+# Using no auth is useful for testing multiple users (or testing in general)
+# VITE_SET_AUTH=none
+# You can also enable passcode authentication for use with the Twilio CLI rtc-plugin.
 # See: https://github.com/twilio-labs/plugin-rtc
 # VITE_SET_AUTH=passcode
 
-# Un-comment the following line to enable Google authentication with Firebase.
+# Use firebase auth for deploying and only use passcode/none for testing
 VITE_SET_AUTH=firebase
 
 # The following values are used to configure the Firebase library.

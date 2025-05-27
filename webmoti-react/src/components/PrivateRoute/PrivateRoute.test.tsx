@@ -83,7 +83,7 @@ describe('PrivateRoute', () => {
 
   describe('with auth disabled', () => {
     it('renders children regardless of user or authReady', () => {
-      (clientEnv.SET_AUTH as jest.Mock).mockReturnValue(undefined);
+      (clientEnv.SET_AUTH as jest.Mock).mockReturnValue("none");
       mockUseAppState.mockReturnValue({ user: null, isAuthReady: false });
 
       render(

@@ -72,7 +72,7 @@ export default function LoginPage() {
   const [passcode, setPasscode] = useState('');
   const [authError, setAuthError] = useState<Error | null>(null);
 
-  const isAuthEnabled = Boolean(clientEnv.SET_AUTH());
+  const isAuthEnabled = clientEnv.SET_AUTH() !== 'none';
 
   const from = (location.state as { from?: Location })?.from?.pathname || '/';
 

@@ -256,7 +256,7 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
               }}
             >
               <div className={classes.joinButtons}>
-                {clientEnv.SET_AUTH() === 'passcode' ? (
+                {clientEnv.SET_AUTH() !== 'firebase' ? (
                   <Button variant="outlined" color="primary" onClick={() => setStep(Steps.roomNameStep)}>
                     Cancel
                   </Button>

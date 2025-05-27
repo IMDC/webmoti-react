@@ -28,8 +28,8 @@ const wrapper = ({ children }: { children: ReactNode }) => <AppStateProvider>{ch
 describe('the useAppState hook', () => {
   beforeEach(jest.clearAllMocks);
   beforeEach(() => {
-    (clientEnv.SET_AUTH as jest.Mock).mockReturnValue(undefined);
-    (clientEnv.TOKEN_ENDPOINT as jest.Mock).mockReturnValue(undefined);
+    (clientEnv.SET_AUTH as jest.Mock).mockReturnValue("none");
+    (clientEnv.TOKEN_ENDPOINT as jest.Mock).mockReturnValue("none");
   });
 
   it('should set an error', () => {
@@ -63,7 +63,7 @@ describe('the useAppState hook', () => {
 
   describe('with auth disabled', () => {
     it('should not use any auth hooks', async () => {
-      (clientEnv.SET_AUTH as jest.Mock).mockReturnValue(undefined);
+      (clientEnv.SET_AUTH as jest.Mock).mockReturnValue("none");
 
       renderHook(useAppState, { wrapper });
       expect(useFirebaseAuth).not.toHaveBeenCalled();
