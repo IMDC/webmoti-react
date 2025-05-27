@@ -1,4 +1,5 @@
-import React, { ReactNode, createContext, useCallback, useState } from 'react';
+import { ReactNode, createContext, useCallback, useState } from 'react';
+import * as React from 'react';
 
 import { Events, HTTPS_SERVER_URL, WEBMOTI_CAMERA_1 } from '../../constants';
 import soundsFile from '../../sounds/ClearAnnounceTones.wav';

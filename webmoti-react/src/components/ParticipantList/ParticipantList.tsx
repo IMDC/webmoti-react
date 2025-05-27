@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 
 import { styled } from '@mui/material/styles';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
@@ -77,7 +77,7 @@ export default function ParticipantList() {
   const mainParticipant = useMainParticipant();
   const isRemoteParticipantScreenSharing = screenShareParticipant && screenShareParticipant !== localParticipant;
 
-  const [showAll, setShowAll] = React.useState(false);
+  const [showAll, setShowAll] = useState(false);
 
   // Don't render this component if there are no remote participants.
   if (speakerViewParticipants.length === 0) return null;

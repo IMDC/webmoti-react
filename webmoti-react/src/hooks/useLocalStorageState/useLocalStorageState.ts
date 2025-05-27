@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import * as React from 'react';
 
 /* This hook is like a useState() hook, but it will store the state in LocalStorage.
    If a value exists in LocalStorage, it will be returned as the initial value when

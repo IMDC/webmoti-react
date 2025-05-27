@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode } from 'react';
+import { createContext, ReactNode } from 'react';
 import { RemoteParticipant } from 'twilio-video';
 import useGalleryViewParticipants from '../../hooks/useGalleryViewParticipants/useGalleryViewParticipants';
 import useSpeakerViewParticipants from '../../hooks/useSpeakerViewParticipants/useSpeakerViewParticipants';

@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useReducer, useState } from 'react';
+import { createContext, useContext, useReducer, useState } from 'react';
+import * as React from 'react';
 
 import { User } from 'firebase/auth';
 import { TwilioError } from 'twilio-video';

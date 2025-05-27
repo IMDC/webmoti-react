@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import ParticipantInfo from '../ParticipantInfo/ParticipantInfo';
 import ParticipantTracks from '../ParticipantTracks/ParticipantTracks';
 import { Participant as IParticipant } from 'twilio-video';
@@ -43,4 +43,4 @@ export function Participant({
   );
 }
 
-export default React.memo(Participant);
+export default memo(Participant);

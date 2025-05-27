@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 
 import { interval } from 'd3-timer';
 import { AudioTrack, LocalAudioTrack, Participant, RemoteAudioTrack } from 'twilio-video';
@@ -178,4 +178,4 @@ function AudioLevelIndicator({ audioTrack, color = 'white', participant }: Audio
   );
 }
 
-export default React.memo(AudioLevelIndicator);
+export default memo(AudioLevelIndicator);

@@ -1,7 +1,7 @@
 import EventEmitter from 'events';
 import { setImmediate } from 'timers';
 
-import React from 'react';
+import * as React from 'react';
 
 import { act, renderHook, waitFor } from '@testing-library/react';
 

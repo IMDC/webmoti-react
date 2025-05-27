@@ -1,4 +1,4 @@
-import React from 'react';
+import { forwardRef } from 'react';
 
 import { render, screen, renderHook, act } from '@testing-library/react';
 
@@ -54,11 +54,11 @@ jest.mock('@fireworks-js/react', () => ({
 }));
 
 jest.mock('../GalleryView/GalleryView', () => ({
-  GalleryView: React.forwardRef(() => <div data-testid="gallery-view" />),
+  GalleryView: forwardRef(() => <div data-testid="gallery-view" />),
 }));
 
 jest.mock('../MobileGalleryView/MobileGalleryView', () => ({
-  MobileGalleryView: React.forwardRef(() => <div data-testid="mobile-gallery-view" />),
+  MobileGalleryView: forwardRef(() => <div data-testid="mobile-gallery-view" />),
 }));
 
 jest.mock('../MainParticipant/MainParticipant', () => ({

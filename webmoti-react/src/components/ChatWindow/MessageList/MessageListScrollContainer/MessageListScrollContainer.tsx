@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import React, { ReactNode } from 'react';
+import { createRef, Component, ReactNode } from 'react';
 
 import { styled } from '@mui/material/styles';
 
@@ -75,11 +75,11 @@ interface MessageListScrollContainerState {
  *
  * Note that this component is tested with Cypress only.
  */
-export class MessageListScrollContainer extends React.Component<
+export class MessageListScrollContainer extends Component<
   MessageListScrollContainerProps,
   MessageListScrollContainerState
 > {
-  chatThreadRef = React.createRef<HTMLDivElement>();
+  chatThreadRef = createRef<HTMLDivElement>();
   state = { isScrolledToBottom: true, showButton: false, messageNotificationCount: 0 };
 
   scrollToBottom() {

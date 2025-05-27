@@ -1,4 +1,4 @@
-import React from 'react';
+import { Fragment } from 'react';
 
 import { styled } from '@mui/material/styles';
 
@@ -56,13 +56,13 @@ const showChatMessages = (messages: Message[], localParticipant: LocalParticipan
     const isLocalParticipant = localParticipant.identity === message.author;
 
     return (
-      <React.Fragment key={message.sid}>
+      <Fragment key={message.sid}>
         {shouldDisplayMessageInfo && (
           <MessageInfo author={message.author!} isLocalParticipant={isLocalParticipant} dateCreated={time} />
         )}
         {message.type === 'text' && <TextMessage body={message.body!} isLocalParticipant={isLocalParticipant} />}
         {message.type === 'media' && <MediaMessage media={message.attachedMedia![0]} />}
-      </React.Fragment>
+      </Fragment>
     );
   });
 };
@@ -75,7 +75,7 @@ const showTTSMessages = (conversation: Conversation | null, messages: TTSMessage
     const shouldDisplayMessageInfo = time !== previousTime;
 
     return (
-      <React.Fragment key={idx}>
+      <Fragment key={idx}>
         {shouldDisplayMessageInfo && <MessageInfo isLocalParticipant dateCreated={time} />}
         {/* need to use arrow function here because messages uses "this" property */}
         <div className={styleClasses.ttsMessageWrapper}>
@@ -94,7 +94,7 @@ const showTTSMessages = (conversation: Conversation | null, messages: TTSMessage
             <SendMessageIcon />
           </Button>
         </div>
-      </React.Fragment>
+      </Fragment>
     );
   });
 };
