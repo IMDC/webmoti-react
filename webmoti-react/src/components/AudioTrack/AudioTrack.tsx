@@ -8,7 +8,7 @@ interface AudioTrackProps {
 
 export default function AudioTrack({ track }: AudioTrackProps) {
   const { activeSinkId } = useAppState();
-  const audioEl = useRef<HTMLAudioElement>();
+  const audioEl = useRef<HTMLAudioElement>(undefined);
 
   useEffect(() => {
     audioEl.current = track.attach();

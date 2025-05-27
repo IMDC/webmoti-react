@@ -2,6 +2,8 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAppState } from '../../state';
 import { clientEnv } from '../../clientEnv';
 
+import type { JSX } from "react";
+
 interface Props {
   children: JSX.Element;
 }

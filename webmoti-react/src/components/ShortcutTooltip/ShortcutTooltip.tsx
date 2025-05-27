@@ -20,7 +20,7 @@ const StyledLightTooltip = styled(Tooltip)(({ theme }) => ({
 }));
 
 interface ShortcutTooltipProps {
-  children: ReactElement;
+  children: ReactElement<any>;
   shortcut: string;
   isCtrlDown?: boolean;
   isShiftDown?: boolean;
