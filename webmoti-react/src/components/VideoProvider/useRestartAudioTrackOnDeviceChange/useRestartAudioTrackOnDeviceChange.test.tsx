@@ -2,8 +2,8 @@ import { renderHook } from '@testing-library/react';
 
 import useRestartAudioTrackOnDeviceChange from './useRestartAudioTrackOnDeviceChange';
 
-let mockAddEventListener = jest.fn();
-let mockRemoveEventListener = jest.fn();
+const mockAddEventListener = jest.fn();
+const mockRemoveEventListener = jest.fn();
 
 // @ts-ignore
 navigator.mediaDevices = {

@@ -78,7 +78,7 @@ export default function useFirebaseAuth() {
       }
 
       if (!response.ok) {
-        let formattedError = typeof responseBody === 'object' ? JSON.stringify(responseBody) : responseBody;
+        const formattedError = typeof responseBody === 'object' ? JSON.stringify(responseBody) : responseBody;
 
         throw new Error(`Request failed with status ${response.status}: ${formattedError}`);
       }

@@ -44,7 +44,7 @@ export default function useGalleryViewLayout(participantCount: number) {
     let maxVideoWidth = 2 ** 14;
 
     while (maxVideoWidth - minVideoWidth > 1) {
-      let mid = (maxVideoWidth - minVideoWidth) / 2 + minVideoWidth;
+      const mid = (maxVideoWidth - minVideoWidth) / 2 + minVideoWidth;
       const isLower = layoutIsTooSmall(mid, participantCount, containerWidth, containerHeight);
 
       if (isLower) {
@@ -54,7 +54,7 @@ export default function useGalleryViewLayout(participantCount: number) {
       }
     }
 
-    let newParticipantVideoWidth = Math.ceil(minVideoWidth);
+    const newParticipantVideoWidth = Math.ceil(minVideoWidth);
 
     setParticipantVideoWidth(newParticipantVideoWidth - GALLERY_VIEW_MARGIN * 2);
   }, [participantCount]);

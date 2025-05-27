@@ -15,8 +15,8 @@ jest.mock('../../utils', () => ({
   ),
 }));
 
-let mockAddEventListener = jest.fn();
-let mockRemoveEventListener = jest.fn();
+const mockAddEventListener = jest.fn();
+const mockRemoveEventListener = jest.fn();
 
 // @ts-ignore
 navigator.mediaDevices = {

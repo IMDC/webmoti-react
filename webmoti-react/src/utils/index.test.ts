@@ -34,7 +34,7 @@ describe('the getDeviceInfo function', () => {
   // @ts-ignore
   navigator.mediaDevices = {};
 
-  let mockDevices = [
+  const mockDevices = [
     { deviceId: 1, label: '1', kind: 'audioinput' },
     { deviceId: 2, label: '2', kind: 'videoinput' },
     { deviceId: 3, label: '3', kind: 'audiooutput' },

@@ -15,7 +15,7 @@ export function usePagination(participants: Participant[]) {
     }
   }, [isBeyondLastPage, totalPages]);
 
-  let paginatedParticipants = participants.slice(
+  const paginatedParticipants = participants.slice(
     (currentPage - 1) * maxGalleryViewParticipants,
     currentPage * maxGalleryViewParticipants
   );

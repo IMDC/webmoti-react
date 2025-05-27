@@ -199,7 +199,7 @@ export default function ChatInput({
   const handleSendFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      var formData = new FormData();
+      const formData = new FormData();
       formData.append('userfile', file);
       setIsSendingFile(true);
       setFileSendError(null);

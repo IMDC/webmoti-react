@@ -49,7 +49,7 @@ const globalAny: any = global;
 
 globalAny.Image = jest.fn().mockImplementation(() => {
   return {
-    set src(newSrc: String) {
+    set src(newSrc: string) {
       this.onload();
     },
   };
