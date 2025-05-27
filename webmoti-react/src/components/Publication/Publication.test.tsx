@@ -10,6 +10,7 @@ jest.mock('../VideoTrack/VideoTrack', () => ({
 }));
 
 const mockUseTrack = useTrack as jest.Mock;
+const mockVideoTrack = VideoTrackModule.default as jest.Mock;
 
 describe('the Publication component', () => {
   const mockPublication = 'mockPublication' as any;
@@ -24,11 +25,7 @@ describe('the Publication component', () => {
       mockUseTrack.mockImplementation(() => ({ kind: 'video', name: '' }));
 
       const { getByTestId } = render(
-        <Publication
-          isLocalParticipant
-          publication={mockPublication}
-          participant={mockParticipant}
-        />
+        <Publication isLocalParticipant publication={mockPublication} participant={mockParticipant} />
       );
 
       expect(useTrack).toHaveBeenCalledWith('mockPublication');
@@ -38,35 +35,29 @@ describe('the Publication component', () => {
     it('should ignore the "isLocalParticipant" prop when track.name contains "screen"', () => {
       mockUseTrack.mockImplementation(() => ({ kind: 'video', name: 'screen-123456' }));
 
-      render(
-        <Publication
-          isLocalParticipant
-          publication={mockPublication}
-          participant={mockParticipant}
-        />
-      );
+      render(<Publication isLocalParticipant publication={mockPublication} participant={mockParticipant} />);
 
-      expect(VideoTrackModule.default).toHaveBeenCalledWith(
-        expect.objectContaining({ isLocal: false }),
-        expect.anything()
-      );
+      const calls = mockVideoTrack.mock.calls;
+      const matchedCall = calls.find(([props]) => {
+        const isLocal = props?.isLocal;
+        const trackName = props?.track?.name || '';
+        return isLocal === false && trackName.includes('screen');
+      });
+      expect(matchedCall).toBeDefined();
     });
 
     it('should use "isLocalParticipant" when track.name does not contain "screen"', () => {
       mockUseTrack.mockImplementation(() => ({ kind: 'video', name: '' }));
 
-      render(
-        <Publication
-          isLocalParticipant
-          publication={mockPublication}
-          participant={mockParticipant}
-        />
-      );
+      render(<Publication isLocalParticipant publication={mockPublication} participant={mockParticipant} />);
 
-      expect(VideoTrackModule.default).toHaveBeenCalledWith(
-        expect.objectContaining({ isLocal: true }),
-        expect.anything()
-      );
+      const calls = mockVideoTrack.mock.calls;
+      const matchedCall = calls.find(([props]) => {
+        const isLocal = props?.isLocal;
+        const trackName = props?.track?.name || '';
+        return isLocal === true && !trackName.includes('screen');
+      });
+      expect(matchedCall).toBeDefined();
     });
   });
 });

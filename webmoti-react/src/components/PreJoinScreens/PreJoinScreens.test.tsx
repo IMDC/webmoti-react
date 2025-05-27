@@ -130,6 +130,10 @@ describe('the PreJoinScreens component', () => {
 
     const { default: mockMediaErrorSnackbar } = jest.requireMock('./MediaErrorSnackbar/MediaErrorSnackbar');
 
-    expect(mockMediaErrorSnackbar).toHaveBeenCalledWith(expect.objectContaining({ error }), expect.anything());
+    const calls = mockMediaErrorSnackbar.mock.calls;
+    const foundMatchingCall = calls.find(([props]: [Record<string, any>]) => {
+      return props?.error === 'testError';
+    });
+    expect(foundMatchingCall).toBeDefined();
   });
 });

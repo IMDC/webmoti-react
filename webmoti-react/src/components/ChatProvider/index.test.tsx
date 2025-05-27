@@ -138,10 +138,16 @@ describe('the ChatProvider component', () => {
     });
 
     act(() => {
+      result.current.setIsChatWindowOpen(false);
+    });
+
+    act(() => {
       mockConversation.emit('messageAdded', mockMessage);
     });
 
-    expect(result.current.hasUnreadMessages).toBe(true);
+    await waitFor(() => {
+      expect(result.current.hasUnreadMessages).toBe(true);
+    });
   });
 
   it('should not set hasUnreadMessages to true when a message is received while then chat window is open', async () => {
