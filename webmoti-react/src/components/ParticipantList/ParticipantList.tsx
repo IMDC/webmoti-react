@@ -123,7 +123,7 @@ export default function ParticipantList() {
             );
           })}
         </div>
-        <div className={classes.arrowContainer}>
+        <div className={classes.arrowContainer} data-cy-show-all-arrow={showAll}>
           <ArrowIcon onClick={() => setShowAll(!showAll)} style={{ cursor: 'pointer', color: 'white' }} />
         </div>
       </div>

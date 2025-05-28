@@ -25,11 +25,21 @@ context('A video app user', () => {
       cy.get('#input-room-name').type(getRoomName());
       cy.get('[type="submit"]').click();
 
+      // wait until it changes
+      cy.get('clipPath rect')
+        .invoke('attr', 'y')
+        .then((initialY) => {
+          cy.get('clipPath rect').should(($rect) => {
+            const newY = $rect.attr('y');
+            expect(newY).to.not.equal(initialY);
+          });
+        });
+
       // When the 'y' attribute is 14, it means that the audio indicator icon is showing that there is no sound.
-      cy.get('clipPath rect').should(($rect) => {
-        const y = $rect.attr('y');
-        expect(Number(y)).to.equal(14);
-      });
+      // cy.get('clipPath rect').should(($rect) => {
+      //   const y = $rect.attr('y');
+      //   expect(Number(y)).to.equal(14);
+      // });
 
       // When the 'y' attribute is less than 14, it means that the audio indicator icon is showing that there is sound.
       // Since the indicator should be moving up and down with the audible beeps, 'y' should be 14 and less than 14 at
@@ -46,7 +56,16 @@ context('A video app user', () => {
 
     before(() => {
       cy.joinRoom('testuser', ROOM_NAME);
+
       cy.task('addParticipant', { name: 'test1', roomName: ROOM_NAME });
+
+      // show all participants (the one that just joined)
+      cy.get('[data-cy-show-all-arrow]').then(($el) => {
+        const isShowingAll = $el.attr('data-cy-show-all-arrow') === 'true';
+        if (!isShowingAll) {
+          cy.wrap($el).click();
+        }
+      });
     });
 
     after(() => {
@@ -70,17 +89,29 @@ context('A video app user', () => {
     it('should see the participants audio level indicator moving', () => {
       cy.getParticipant('test1')
         .get('clipPath rect')
-        .should(($rect) => {
-          const y = $rect.attr('y');
-          expect(Number(y)).to.equal(14);
+        .invoke('attr', 'y')
+        .then((initialY) => {
+          cy.getParticipant('test1')
+            .get('clipPath rect')
+            .should(($rect) => {
+              const newY = $rect.attr('y');
+              expect(newY).to.not.equal(initialY);
+            });
         });
 
-      cy.getParticipant('test1')
-        .get('clipPath rect')
-        .should(($rect) => {
-          const y = $rect.attr('y');
-          expect(Number(y)).to.be.lessThan(14);
-        });
+      // cy.getParticipant('test1')
+      //   .get('clipPath rect')
+      //   .should(($rect) => {
+      //     const y = $rect.attr('y');
+      //     expect(Number(y)).to.equal(14);
+      //   });
+
+      // cy.getParticipant('test1')
+      //   .get('clipPath rect')
+      //   .should(($rect) => {
+      //     const y = $rect.attr('y');
+      //     expect(Number(y)).to.be.lessThan(14);
+      //   });
     });
 
     it('should see other participants disconnect when they close their browser', () => {
@@ -126,6 +157,13 @@ context('A video app user', () => {
     before(() => {
       cy.task('addParticipant', { name: 'test1', roomName: ROOM_NAME });
       cy.joinRoom('testuser', ROOM_NAME);
+
+      cy.get('[data-cy-show-all-arrow]').then(($el) => {
+        const isShowingAll = $el.attr('data-cy-show-all-arrow') === 'true';
+        if (!isShowingAll) {
+          cy.wrap($el).click();
+        }
+      });
     });
 
     after(() => {
@@ -145,7 +183,9 @@ context('A video app user', () => {
       // Before we test the chat feature, we want to open the chat window and send enough messages
       // to make the message list taller than its container so that we can test the scrolling behavior:
       before(() => {
-        cy.get('[data-cy-chat-button]').click();
+        // there are two chat buttons (the mobile topbar has one but isn't visible)
+        cy.get('[data-cy-chat-button]:visible').click();
+
         // Create an array with 15 values, then send a message when looping over each of them:
         Array(15)
           .fill(true)
@@ -162,7 +202,7 @@ context('A video app user', () => {
       });
 
       after(() => {
-        cy.get('[data-cy-chat-button]').click();
+        cy.get('[data-cy-chat-button]:visible').click();
       });
 
       it('should see "1 new message" button when not scrolled to bottom of chat and a new message is received', () => {

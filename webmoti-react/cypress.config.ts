@@ -1,4 +1,5 @@
 import { defineConfig } from 'cypress';
+import setupParticipantTasks from './cypress/plugins/index.js';
 
 export default defineConfig({
   video: false,
@@ -11,5 +12,9 @@ export default defineConfig({
     viewportHeight: 800,
     // don't clear browser each test
     testIsolation: false,
+    // this is for cy.task
+    setupNodeEvents(on, config) {
+      return setupParticipantTasks(on, config);
+    },
   },
 });
