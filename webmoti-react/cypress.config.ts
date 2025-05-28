@@ -5,6 +5,10 @@ export default defineConfig({
   video: false,
   defaultCommandTimeout: 60000,
   retries: 2,
+  reporter: 'cypress-multi-reporters',
+  reporterOptions: {
+    configFile: 'cypress/reporter-config.json',
+  },
   e2e: {
     baseUrl: 'http://localhost:3000',
     // this avoids responsive layout changes
