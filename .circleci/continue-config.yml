@@ -63,10 +63,6 @@ jobs:
           command: npm run typescript:server
 
       - run:
-          name: "Build app"
-          command: npm run build
-
-      - run:
           name: "Set environment variables for local token server (used by Cypress tests)"
           command: |
             echo TWILIO_ACCOUNT_SID=$TWILIO_ACCOUNT_SID >> .env

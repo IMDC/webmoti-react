@@ -64,7 +64,8 @@ export default function MenuBar() {
           <Grid style={{ flex: 1 }}>
             <Typography variant="body1">
               {/* only show room name in dev */}
-              {clientEnv.IS_DEV_MODE() && `${room!.name}`}
+              {/* also show when SET_AUTH is none (in cypress tests) */}
+              {(clientEnv.IS_DEV_MODE() || clientEnv.SET_AUTH() === 'none') && `${room!.name}`}
               {/* {' | '}
               {participants.length + 1} participant
               {participants.length ? 's' : ''} */}

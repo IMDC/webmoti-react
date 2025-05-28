@@ -101,7 +101,8 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
           )}
           {/* hide room name field when running prod */}
           {/* (it confuses participants and we only need one room for now) */}
-          {clientEnv.IS_DEV_MODE() && (
+          {/* also show when SET_AUTH is none (in cypress tests) */}
+          {(clientEnv.IS_DEV_MODE() || clientEnv.SET_AUTH() === 'none') && (
             <div className={classes.textFieldContainer}>
               <InputLabel shrink htmlFor="input-room-name">
                 Room Name
