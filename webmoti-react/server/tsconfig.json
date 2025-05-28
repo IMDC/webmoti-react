@@ -1,22 +1,26 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "lib": ["esnext"],
+    "target": "es2022",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "outDir": "../server-build",
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "CommonJS",
-    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
     "strictNullChecks": true,
     "noFallthroughCasesInSwitch": true,
-    "outDir": "../server-build"
+    "types": [
+      "node"
+    ]
   },
-  "exclude": ["__tests__"]
+  "exclude": [
+    "__tests__"
+  ]
 }

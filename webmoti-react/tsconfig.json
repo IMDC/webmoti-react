@@ -1,19 +1,18 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "es2022",
     "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
+      "es2022",
+      "dom"
     ],
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "esnext",
-    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
@@ -29,7 +28,6 @@
     "setupTests.ts"
   ],
   "types": [
-    "node",
     "jest",
     "@testing-library/jest-dom"
   ],
