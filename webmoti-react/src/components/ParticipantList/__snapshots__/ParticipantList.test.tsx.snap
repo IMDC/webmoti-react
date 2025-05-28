@@ -355,6 +355,7 @@ exports[`the ParticipantList component should correctly render Participant compo
       </div>
       <div
         class="ParticipantList-arrowContainer"
+        data-cy-show-all-arrow="false"
       >
         <svg
           aria-hidden="true"
