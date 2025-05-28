@@ -1,14 +1,23 @@
 import { RequestHandler } from 'express';
 import admin from 'firebase-admin';
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const serviceAccount = require('../../plugin-rtc/firebase_service_account.json');
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
+let initialized = false;
 
 const firebaseAuthMiddleware: RequestHandler = async (req, res, next) => {
+  if (!initialized) {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const serviceAccount = require('../../plugin-rtc/firebase_service_account.json');
+      admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+      });
+      initialized = true;
+    } catch (err) {
+      console.error('Failed to initialize Firebase Admin:', err);
+      return res.status(500).json({ message: 'Failed to initialize Firebase Admin' });
+    }
+  }
+
   const authHeader = req.get('authorization');
 
   if (!authHeader) {
