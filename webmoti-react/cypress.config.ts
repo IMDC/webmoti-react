@@ -10,7 +10,6 @@ export default defineConfig({
     configFile: 'cypress/reporter-config.json',
   },
   e2e: {
-    baseUrl: 'http://localhost:3000',
     // this avoids responsive layout changes
     viewportWidth: 1400,
     viewportHeight: 800,
