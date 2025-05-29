@@ -9,7 +9,6 @@
   - [Testing](#testing)
     - [Unit Tests](#unit-tests)
     - [E2E Tests](#e2e-tests)
-  - [Storybook](#storybook)
 - [Hand server](#hand-server)
   - [Server setup](#server-setup)
   - [Remote.It](#remoteit)
@@ -27,8 +26,8 @@
     - [Create .env in home directory](#create-env-in-home-directory)
     - [Making the autojoin script run on boot](#making-the-autojoin-script-run-on-boot)
 - [Connecting raspberry pi to secure networks (like TMU)](#connecting-raspberry-pi-to-secure-networks-like-tmu)
-  - [dhcpcd method](#dhcpcd-method)
-  - [Network Manager alternative](#network-manager-alternative)
+  - [Using Network Manager GUI](#using-network-manager-gui)
+  - [Using dhcpcd config](#using-dhcpcd-config)
 - [Auto wifi setup](#auto-wifi-setup)
 - [Auto wifi](#auto-wifi)
 
@@ -40,7 +39,7 @@ Original app template: <https://github.com/twilio/twilio-video-app-react#readme>
 
 1. Install dependencies: `npm install`
 
-2. (Optional) Install noise cancellation: `npm run noisecancellation:krisp`
+2. (Optional and probably not needed) Install noise cancellation: `npm run noisecancellation:krisp`
 
 3. Install the CLI: `npm install -g twilio-cli` or use
  [scoop](https://www.twilio.com/docs/twilio-cli/getting-started/install#scoop)
@@ -48,7 +47,7 @@ Original app template: <https://github.com/twilio/twilio-video-app-react#readme>
 
 4. Login: `twilio login`
 
-5. Install the plugin (this is an edited version of the `@twilio-labs/plugin-rtc`):
+5. Install the plugin for deploying the app ([more info here](plugin-rtc/README.md)):
  `twilio plugins:install plugin-rtc`.
 
 ### Running the App locally for developement
@@ -60,7 +59,9 @@ npm start
 ```
 
 It's set up to use the twilio video `go` room type (2 participant max) when
- running locally.
+ running locally. Go rooms don't cost money so they can be used for development.
+ When the app is deployed, it uses group rooms.
+ <https://www.twilio.com/docs/video/legacy-room-types>
 
 #### Local setup
 
@@ -122,11 +123,8 @@ Undeploy the app: `npm run delete`
 #### Unit Tests
 
 ```bash
-# run all tests
+# run all jest tests
 npm test
-
-# run until fail
-npm run test-bail
 
 # run specific test (replace TEST_PATH with actual path of the test file)
 # you can get the path by right clicking the file then "Copy Relative Path"
@@ -138,13 +136,19 @@ npm run update-snapshots:file TEST_PATH
 
 #### E2E Tests
 
-(E2E tests are currently disabled in circleci)
+Cypress needs these variables set in
+ `Projects > PROJECT_NAME > Settings > Environment Variables`
 
 ```bash
-# make sure server is running
-npm start
-# open cypress web ui
-npm run cypress:open
+TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_API_KEY_SID=SKxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_API_KEY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_CONVERSATIONS_SERVICE_SID=ISxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+```bash
+# start cypress UI with vite dev server running
+npm run cypress:dev
 ```
 
 Run cypress tests:
@@ -152,14 +156,6 @@ Run cypress tests:
 1. E2E Testing
 2. Choose any browser
 3. Click `twilio-video.cy.js`
-
-### Storybook
-
-For viewing the UI with interactive controls
-
-```bash
-npm run storybook
-```
 
 ## Hand server
 
@@ -356,12 +352,14 @@ npm -v
 
 Installing `puppeteer` on raspberry pi (arm64) is broken. It doesn't install
  the proper chromium binary. To fix this, use `executablePath: /usr/bin/chromium-browser`
- when starting puppeteer.
+ when starting puppeteer. This is already in the script.
 
 #### Install dependencies
 
-1. Get `package.json` and `package-lock.json` from [standalone-join](standalone-join/)
-2. Run `npm install` on raspberry pi
+(on raspberry pi)
+
+1. `cd webmoti-react/standalone-join`
+2. `npm install`
 
 #### Create .env in home directory
 
@@ -400,7 +398,36 @@ pm2 save
 
 ## Connecting raspberry pi to secure networks (like TMU)
 
-### dhcpcd method
+### Using Network Manager GUI
+
+If you don't want to use your actual account, you can create a guest account:
+<https://www.torontomu.ca/ccs/services/accounts/guestaccount/>
+
+Settings:
+
+<https://www.torontomu.ca/ccs/services/connections/on-campus/wireless/ubuntu/#!tab-1510243563508-step-4>
+
+```plaintext
+Wireless
+
+SSID: TMU
+```
+
+```plaintext
+Wireless Security
+
+Security: WPA & WPA2 Enterprise
+
+Authentication: Protected EAP (PEAP)
+
+CA certificate: https://ai-apps.torontomu.ca/ccssoftware/allryerson/wireless/ca-bundle.crt
+
+Identity: TMU username
+
+Password: TMU password
+```
+
+### Using dhcpcd config
 
 <https://www.miskatonic.org/2019/04/24/networkingpi/>
 
@@ -464,32 +491,6 @@ pm2 save
   sudo systemctl enable dhcpcd
   sudo systemctl start dhcpcd
   ```
-
-### Network Manager alternative
-
-Settings:
-
-<https://www.torontomu.ca/ccs/services/connections/on-campus/wireless/ubuntu/#!tab-1510243563508-step-4>
-
-```plaintext
-Wireless
-
-SSID: TMU
-```
-
-```plaintext
-Wireless Security
-
-Security: WPA & WPA2 Enterprise
-
-Authentication: Protected EAP (PEAP)
-
-CA certificate: https://ai-apps.torontomu.ca/ccssoftware/allryerson/wireless/ca-bundle.crt
-
-Identity: TMU username
-
-Password: TMU password
-```
 
 ## Auto wifi setup
 
