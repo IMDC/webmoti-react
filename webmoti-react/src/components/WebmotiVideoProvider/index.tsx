@@ -141,7 +141,7 @@ export const WebmotiVideoProvider = ({ children }: WebmotiVideoProviderProps) =>
         if (!is_silent) {
           setError(new Error('Network error'));
         }
-        return new Response(null, { status: 0 });
+        return new Response(null, { status: 500 });
       }
     },
     [setError]
