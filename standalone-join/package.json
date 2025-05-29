@@ -2,12 +2,11 @@
   "name": "standalone-join",
   "version": "1.0.0",
   "main": "autojoin.js",
-  "license": "ISC",
   "private": true,
   "dependencies": {
-    "dotenv": "^16.4.7",
-    "puppeteer": "^24.1.1",
-    "twilio": "^3.80.0",
+    "dotenv": "^16.5.0",
+    "puppeteer": "^24.9.0",
+    "twilio": "^5.7.0",
     "winston": "^3.17.0"
   }
 }

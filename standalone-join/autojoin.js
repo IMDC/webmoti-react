@@ -108,14 +108,14 @@ async function ensureRoomExists(client, roomName) {
   try {
     // See if a room already exists
     logger.info("Fetching room...");
-    room = await client.video.rooms(roomName).fetch();
+    room = await client.video.v1.rooms(roomName).fetch();
     logger.info("Found room");
   } catch (e) {
     try {
       // If room doesn't exist, create it
       logger.info("Room doesn't exist");
       logger.info("Creating room...");
-      room = await client.video.rooms.create({
+      room = await client.video.v1.rooms.create({
         uniqueName: roomName,
         type: ROOM_TYPE,
       });
@@ -129,7 +129,7 @@ async function ensureRoomExists(client, roomName) {
 
 // from https://github.com/twilio-labs/plugin-rtc/blob/master/src/serverless/functions/token.js#L90
 async function ensureConversationExists(client, identity, room) {
-  const conversationsClient = client.conversations.services(
+  const conversationsClient = client.conversations.v1.services(
     conversationsServiceSid
   );
 
