@@ -1,0 +1,47 @@
+name: Auto-merge Dependabot (non-majors)
+
+# see ruleset for Dependabot in github project settings
+# (it requires pr approval and status checks to pass)
+# Settings > Rules > Rulesets > Dependabot auto merge
+
+on: pull_request
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  dependabot:
+    runs-on: ubuntu-latest
+    if: >
+      github.event.pull_request.user.login == 'dependabot[bot]' &&
+      github.repository == 'imdc/webmoti-react'
+
+    steps:
+      - name: Fetch Dependabot metadata
+        id: dependabot-metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Auto-approve
+        if: >
+          contains(
+            ['version-update:semver-patch', 'version-update:semver-minor'],
+            steps.dependabot-metadata.outputs.update-type
+          )
+        run: gh pr review --approve "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Auto-merge
+        if: >
+          contains(
+            ['version-update:semver-patch', 'version-update:semver-minor'],
+            steps.dependabot-metadata.outputs.update-type
+          )
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
