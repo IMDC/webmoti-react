@@ -1,4 +1,4 @@
-import { clientEnv } from "./clientEnv";
+import { clientEnv } from './clientEnv';
 
 export const BACKGROUND_FILTER_VIDEO_CONSTRAINTS: MediaStreamConstraints['video'] = {
   width: 640,
@@ -7,8 +7,8 @@ export const BACKGROUND_FILTER_VIDEO_CONSTRAINTS: MediaStreamConstraints['video'
 };
 
 export const DEFAULT_VIDEO_CONSTRAINTS: MediaStreamConstraints['video'] = {
-  width: 1920,
-  height: 1080,
+  width: { min: 1280, max: 1920 },
+  height: { min: 720, max: 1080 },
   frameRate: 24,
 };
 
