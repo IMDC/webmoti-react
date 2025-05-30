@@ -5,6 +5,9 @@
   - [Setup React App](#setup-react-app)
   - [Running the App locally for developement](#running-the-app-locally-for-developement)
     - [Local setup](#local-setup)
+  - [Weird errors that happen sometimes](#weird-errors-that-happen-sometimes)
+    - [Vite error](#vite-error)
+    - [Camera not readable error](#camera-not-readable-error)
   - [Deploying](#deploying)
   - [Testing](#testing)
     - [Unit Tests](#unit-tests)
@@ -108,6 +111,47 @@ VITE_API_DOMAIN=
 # set this to the livekit websocket url (if using livekit)
 VITE_LIVEKIT_URL=
 ```
+
+### Weird errors that happen sometimes
+
+#### Vite error
+
+This might happen after deleting js files and then running vite dev or vite build?
+This error will show in your dev terminal running vite and also in the browser
+ console as a "disallowed MIME type" error.
+
+```plaintext
+The file does not exist at "node_modules/.vite/deps/chunk-XXXXXXXX.js?v=XXXXXXXX"
+which is in the optimize deps directory.
+The dependency might be incompatible with the dep optimizer.
+Try adding it to `optimizeDeps.exclude`.
+```
+
+Solution:
+
+1. Delete `node_modules`
+2. Clear browser cache
+3. Reinstall packages (`npm run i`)
+
+(more info at <https://github.com/vitejs/vite/discussions/17738>)
+
+#### Camera not readable error
+
+This error will show in the browser console and in an app popup.
+It happens when allowing media permissions in the prejoin screens.
+It might only happen on Chromium browsers and Windows.
+
+```plaintext
+Error Acquiring Media: NotReadableError Could not start video source
+```
+
+Solution 1:
+
+Lower the minimum width and height in [DEFAULT_VIDEO_CONSTRAINTS](webmoti-react/src/constants.ts)
+
+Solution 2 (temporary):
+
+Only allow permissions to the microphone and not the camera in the browser options
 
 ### Deploying
 
