@@ -1,10 +1,28 @@
 version: 2
 updates:
   - package-ecosystem: "npm"
-    directories:
-      - "/webmoti-react"
-      - "/standalone-join"
-      - "/hand/app/client"
+    directory: "/webmoti-react"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 8
+    groups:
+      patch-and-minor-updates:
+        update-types:
+          - "patch"
+          - "minor"
+
+  - package-ecosystem: "npm"
+    directory: "/standalone-join"
+    schedule:
+      interval: "weekly"
+    groups:
+      patch-and-minor-updates:
+        update-types:
+          - "patch"
+          - "minor"
+
+  - package-ecosystem: "npm"
+    directory: "/hand/app/client"
     schedule:
       interval: "weekly"
     groups:
