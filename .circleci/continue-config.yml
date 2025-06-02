@@ -19,6 +19,14 @@ jobs:
     working_directory: ~/webmoti/webmoti-react
 
     steps:
+      - run:
+          name: Skip check if no relevant files changed
+          command: |
+            if [ "<< pipeline.parameters.build-and-test-react-app >>" != "true" ]; then
+              echo "Skipping build-and-test-react-app — no matching files changed."
+              exit 0
+            fi
+
       - checkout:
           path: ~/webmoti
       - browser-tools/install-chrome
@@ -84,6 +92,14 @@ jobs:
     working_directory: ~/webmoti/hand/app
 
     steps:
+      - run:
+          name: Skip check if no relevant files changed
+          command: |
+            if [ "<< pipeline.parameters.test-hand-server >>" != "true" ]; then
+              echo "Skipping test-hand-server — no matching files changed."
+              exit 0
+            fi
+
       - checkout:
           path: ~/webmoti
 
@@ -99,17 +115,9 @@ jobs:
 
 workflows:
   react-app:
-    when: << pipeline.parameters.build-and-test-react-app >>
     jobs:
       - build-and-test-react-app:
-          filters:
-            tags:
-              only: /.*/
 
   hand-server:
-    when: << pipeline.parameters.test-hand-server >>
     jobs:
       - test-hand-server:
-          filters:
-            tags:
-              only: /.*/
