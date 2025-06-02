@@ -1,5 +1,5 @@
 fastapi==0.115.12
-uvicorn==0.34.2
+uvicorn==0.34.3
 sse-starlette==2.3.5
 pywebpush==2.0.3
 python-dotenv==1.1.0
