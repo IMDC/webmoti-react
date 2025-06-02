@@ -48,8 +48,8 @@ describe('the useLocalTracks hook', () => {
         },
         video: {
           frameRate: 24,
-          width: 1920,
-          height: 1080,
+          width: { min: 1280, max: 1920 },
+          height: { min: 720, max: 1080 },
           name: 'camera-123456',
         },
       });
@@ -86,8 +86,8 @@ describe('the useLocalTracks hook', () => {
         audio: false,
         video: {
           frameRate: 24,
-          width: 1920,
-          height: 1080,
+          width: { min: 1280, max: 1920 },
+          height: { min: 720, max: 1080 },
           name: 'camera-123456',
         },
       });
@@ -131,8 +131,8 @@ describe('the useLocalTracks hook', () => {
         },
         video: {
           frameRate: 24,
-          width: 1920,
-          height: 1080,
+          width: { min: 1280, max: 1920 },
+          height: { min: 720, max: 1080 },
           name: 'camera-123456',
           deviceId: {
             exact: 'mockVideoDeviceId',
@@ -159,8 +159,8 @@ describe('the useLocalTracks hook', () => {
         },
         video: {
           frameRate: 24,
-          width: 1920,
-          height: 1080,
+          width: { min: 1280, max: 1920 },
+          height: { min: 720, max: 1080 },
           name: 'camera-123456',
         },
       });
@@ -213,8 +213,8 @@ describe('the useLocalTracks hook', () => {
         audio: false,
         video: {
           frameRate: 24,
-          width: 1920,
-          height: 1080,
+          width: { min: 1280, max: 1920 },
+          height: { min: 720, max: 1080 },
           name: 'camera-123456',
         },
       });
