@@ -14,7 +14,7 @@ updates:
   - package-ecosystem: "npm"
     directory: "/standalone-join"
     schedule:
-      interval: "weekly"
+      interval: "biweekly"
     groups:
       patch-and-minor-updates:
         update-types:
@@ -24,7 +24,7 @@ updates:
   - package-ecosystem: "npm"
     directory: "/hand/app/client"
     schedule:
-      interval: "weekly"
+      interval: "biweekly"
     groups:
       patch-and-minor-updates:
         update-types:
@@ -34,7 +34,7 @@ updates:
   - package-ecosystem: "pip"
     directory: "/hand/app"
     schedule:
-      interval: "weekly"
+      interval: "biweekly"
     groups:
       patch-and-minor-updates:
         update-types:

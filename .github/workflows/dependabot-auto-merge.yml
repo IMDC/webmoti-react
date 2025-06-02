@@ -25,9 +25,11 @@ jobs:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Auto-approve
+        # only non major versions in /webmoti-react
         if: >
-          steps.dependabot-metadata.outputs.update-type == 'version-update:semver-patch' ||
-          steps.dependabot-metadata.outputs.update-type == 'version-update:semver-minor'
+          (steps.dependabot-metadata.outputs.update-type == 'version-update:semver-patch' ||
+          steps.dependabot-metadata.outputs.update-type == 'version-update:semver-minor') &&
+          steps.dependabot-metadata.outputs.directory == '/webmoti-react'
         run: gh pr review --approve "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
@@ -35,8 +37,9 @@ jobs:
 
       - name: Auto-merge
         if: >
-          steps.dependabot-metadata.outputs.update-type == 'version-update:semver-patch' ||
-          steps.dependabot-metadata.outputs.update-type == 'version-update:semver-minor'
+          (steps.dependabot-metadata.outputs.update-type == 'version-update:semver-patch' ||
+          steps.dependabot-metadata.outputs.update-type == 'version-update:semver-minor') &&
+          steps.dependabot-metadata.outputs.directory == '/webmoti-react'
         run: gh pr merge --auto --merge "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
