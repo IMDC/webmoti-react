@@ -26,7 +26,7 @@ See the [project board](https://github.com/orgs/IMDC/projects/2) for issue prior
   - Board view zoom and pan
   - 1080p board view
   - Wave hand mode
-- [Sounds menu](webmoti-react/docs/docs.md#controls-menu#audio-notification)
+- [Sounds menu](webmoti-react/docs/docs.md#audio-notification)
   - Nudge professor
   - Select sound
   - Volume control
@@ -37,7 +37,7 @@ See the [project board](https://github.com/orgs/IMDC/projects/2) for issue prior
   - TTS chat previews
   - Send TTS message to class
 - Live captions
-- [AI Schedule](webmoti-react/docs/docs.md#controls-menu#set-class-schedule)
+- [AI Schedule](webmoti-react/docs/docs.md#set-class-schedule)
 - [Tactile mobile notifications](setup.md#tactile-notifications)
 - Chat
 - Noise cancellation
