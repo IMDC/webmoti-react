@@ -29,10 +29,11 @@
     - [Create .env in home directory](#create-env-in-home-directory)
     - [Making the autojoin script run on boot](#making-the-autojoin-script-run-on-boot)
 - [Connecting raspberry pi to secure networks (like TMU)](#connecting-raspberry-pi-to-secure-networks-like-tmu)
-  - [Using Network Manager GUI](#using-network-manager-gui)
-  - [Using dhcpcd config](#using-dhcpcd-config)
+  - [Option 1: Using Network Manager GUI](#option-1-using-network-manager-gui)
+  - [Option 2: Using dhcpcd config](#option-2-using-dhcpcd-config)
 - [Auto wifi setup](#auto-wifi-setup)
-- [Auto wifi](#auto-wifi)
+  - [Raspberry Pi setup](#raspberry-pi-setup)
+  - [USB setup](#usb-setup)
 
 ## React App (For virtual students)
 
@@ -254,7 +255,8 @@ REACT_APP_NOTIF_APP_KEY=
 APP_ENV=dev
 ```
 
-Vapid key pairs (for push notifications) can be generated using `npx web-push generate-vapid-keys`.
+Vapid key pairs (for tactile push notifications) can be generated using
+ `npx web-push generate-vapid-keys`.
 
 ### Remote.It
 
@@ -396,7 +398,7 @@ npm -v
 
 Installing `puppeteer` on raspberry pi (arm64) is broken. It doesn't install
  the proper chromium binary. To fix this, use `executablePath: /usr/bin/chromium-browser`
- when starting puppeteer. This is already in the script.
+ when starting puppeteer. (This is already in the script)
 
 #### Install dependencies
 
@@ -442,7 +444,10 @@ pm2 save
 
 ## Connecting raspberry pi to secure networks (like TMU)
 
-### Using Network Manager GUI
+### Option 1: Using Network Manager GUI
+
+You can join the network like you would on a linux computer.
+Click the network icon in the top right of the Raspberry Pi desktop.
 
 If you don't want to use your actual account, you can create a guest account:
 <https://www.torontomu.ca/ccs/services/accounts/guestaccount/>
@@ -471,7 +476,7 @@ Identity: TMU username
 Password: TMU password
 ```
 
-### Using dhcpcd config
+### Option 2: Using dhcpcd config
 
 <https://www.miskatonic.org/2019/04/24/networkingpi/>
 
@@ -538,7 +543,18 @@ Password: TMU password
 
 ## Auto wifi setup
 
-Make sure the usb drive is named `Webmoti`.
+This is a way for the raspberry pi boards to connect to a wifi network
+ in headless mode.
+This is in case you need to bring the WebMoti system somewhere that isn't TMU.
+It works by putting the wifi connection information on a USB and then plugging
+ it into the Raspberry Pi.
+
+> **Note:**
+>
+> For this to work, the dhcpcd config needs to be setup
+> (see above)
+
+### Raspberry Pi setup
 
 Create this file `/etc/udev/rules.d/99-usb-autorun.rules`.
  This rule will trigger the service below when a usb is plugged in.
@@ -571,10 +587,7 @@ WantedBy=multi-user.target
 
 Run `sudo systemctl enable usb-auto-wifi.service` to enable the service.
 
-## Auto wifi
-
-This is a way for the raspberry pi boards to connect to a wifi network
- in headless mode.
+### USB setup
 
 1. Get a USB drive and name it `Webmoti`.
 2. Create a file named `wifi.ini` on the USB and fill in the [connection information](./wifi/wifi.ini).

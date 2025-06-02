@@ -18,7 +18,7 @@
 
 <br>
 
-## Raise hand (with fireworks)
+## Raise hand
 
 ![Raise hand](raise_hand.png)
 

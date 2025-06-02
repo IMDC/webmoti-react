@@ -4,8 +4,7 @@
             "p",
             "img",
             "h1",
-            "figure",
-            "figcaption"
+            "br"
         ]
     },
     "MD041": false

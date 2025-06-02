@@ -18,15 +18,15 @@ See the [project board](https://github.com/orgs/IMDC/projects/2) for issue prior
 
 ## Features
 
-- Hold to raise hand
-  - Hand queue
+- [Hold to raise hand](webmoti-react/docs/docs.md#raise-hand)
+  - [Hand queue](setup.md#queue)
   - Fireworks
-- Classroom controls
+- [Classroom controls](webmoti-react/docs/docs.md#controls-menu)
   - Audio/video
   - Board view zoom and pan
-  - Increase video quality (1080p)
+  - 1080p board view
   - Wave hand mode
-- Sounds menu
+- [Sounds menu](webmoti-react/docs/docs.md#controls-menu#audio-notification)
   - Nudge professor
   - Select sound
   - Volume control
@@ -34,15 +34,13 @@ See the [project board](https://github.com/orgs/IMDC/projects/2) for issue prior
 - Admin/prof mixer controls
 - Muting system for feedback
 - Text to speech
-  - TTS chat history
-  - Click to replay
+  - TTS chat previews
+  - Send TTS message to class
 - Live captions
-- AI Schedule
-- Tactile mobile notifications
+- [AI Schedule](webmoti-react/docs/docs.md#controls-menu#set-class-schedule)
+- [Tactile mobile notifications](setup.md#tactile-notifications)
 - Chat
 - Noise cancellation
 - Speaker view
 - Share screen
 - Backgrounds
-
-See [webmoti-react/docs.md](webmoti-react/docs.md) for UI screenshots of the app.
