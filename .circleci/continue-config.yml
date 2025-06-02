@@ -113,6 +113,7 @@ jobs:
       - checkout
 
       - python/install-packages:
+          app-dir: hand/app
           pkg-manager: pip
 
       - run:
