@@ -16,35 +16,35 @@ jobs:
   build-and-test-react-app:
     docker:
       - image: cimg/node:22.16.0-browsers
-    working_directory: ~/webmoti/webmoti-react
 
     steps:
       - run:
-          name: Skip check if no relevant files changed
+          name: Halt if no files changed
           command: |
             if [ "<< pipeline.parameters.build-and-test-react-app >>" != "true" ]; then
               echo "Skipping build-and-test-react-app — no matching files changed."
-              exit 0
+              circleci-agent step halt
             fi
 
-      - checkout:
-          path: ~/webmoti
+      - checkout
+
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
 
       - restore_cache:
           keys:
-            - v1-deps-{{ .Branch }}-{{ checksum "package-lock.json" }}
+            - v1-deps-{{ .Branch }}-{{ checksum "webmoti-react/package-lock.json" }}
             - v1-deps-{{ .Branch }}
             - v1-deps
 
       - run:
           name: "Install Dependencies"
           command: |
+            cd webmoti-react
             npm ci
 
       - save_cache:
-          key: v1-deps-{{ .Branch }}-{{ checksum "package-lock.json" }}
+          key: v1-deps-{{ .Branch }}-{{ checksum "webmoti-react/package-lock.json" }}
           # cache NPM modules and the folder with the Cypress binary
           paths:
             - ~/.npm
@@ -52,7 +52,9 @@ jobs:
 
       - run:
           name: "Jest Unit Tests"
-          command: npm run test:ci
+          command: |
+            cd webmoti-react
+            npm run test:ci
           environment:
             JEST_JUNIT_OUTPUT_DIR: "test-reports/jest"
             JEST_JUNIT_OUTPUT_NAME: "results.xml"
@@ -60,64 +62,79 @@ jobs:
             JEST_JUNIT_TITLE: "{title}"
 
       - store_artifacts:
-          path: coverage
+          path: webmoti-react/coverage
 
       - run:
           name: "Eslint"
-          command: npm run lint -- --max-warnings 0
+          command: |
+            cd webmoti-react
+            npm run lint -- --max-warnings 0
 
       - run:
           name: "Check server types"
-          command: npm run typescript:server
+          command: |
+            cd webmoti-react
+            npm run typescript:server
 
       - run:
           name: "Set environment variables for local token server (used by Cypress tests)"
           command: |
+            cd webmoti-react
             echo TWILIO_ACCOUNT_SID=$TWILIO_ACCOUNT_SID >> .env
             echo TWILIO_API_KEY_SID=$TWILIO_API_KEY >> .env
             echo TWILIO_API_KEY_SECRET=$TWILIO_API_SECRET >> .env
             echo TWILIO_CONVERSATIONS_SERVICE_SID=$TWILIO_CONVERSATIONS_SERVICE_SID >> .env
 
-      - run: npm run cypress:ci
+      - run:
+          name: "Cypress tests"
+          command: |
+            cd webmoti-react
+            npm run cypress:ci
 
       - store_artifacts:
-          path: cypress/screenshots
+          path: webmoti-react/cypress/screenshots
 
       - store_test_results:
-          path: test-reports
+          path: webmoti-react/test-reports
 
   test-hand-server:
     docker:
       - image: cimg/python:3.12.4
-    working_directory: ~/webmoti/hand/app
 
     steps:
       - run:
-          name: Skip check if no relevant files changed
+          name: Halt if no files changed
           command: |
             if [ "<< pipeline.parameters.test-hand-server >>" != "true" ]; then
               echo "Skipping test-hand-server — no matching files changed."
-              exit 0
+              circleci-agent step halt
             fi
 
-      - checkout:
-          path: ~/webmoti
+      - checkout
 
       - python/install-packages:
           pkg-manager: pip
 
       - run:
           name: Run tests
-          command: pytest --junitxml=junit.xml || ((($? == 5)) && echo 'Did not find any tests to run.')
+          command: |
+            cd hand/app
+            pytest --junitxml=junit.xml || ((($? == 5)) && echo 'Did not find any tests to run.')
 
       - store_test_results:
-          path: junit.xml
+          path: hand/app/junit.xml
 
 workflows:
   react-app:
     jobs:
       - build-and-test-react-app:
+          filters:
+            tags:
+              only: /.*/
 
   hand-server:
     jobs:
       - test-hand-server:
+          filters:
+            tags:
+              only: /.*/
