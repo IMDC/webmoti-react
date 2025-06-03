@@ -146,13 +146,15 @@ It might only happen on Chromium browsers and Windows.
 Error Acquiring Media: NotReadableError Could not start video source
 ```
 
-Solution 1:
+Scenario 1: When on Windows and the camera is already in use by some other app
 
-Lower the minimum width and height in [DEFAULT_VIDEO_CONSTRAINTS](webmoti-react/src/constants.ts)
+Solution 1: Only allow permissions to the microphone and not the camera,
+ or close the other app using the camera
 
-Solution 2 (temporary):
+Scenario 2: When minimum video constraints are too high for the computer
+ visiting the website (like if the webcam is too low resolution)
 
-Only allow permissions to the microphone and not the camera in the browser options
+Solution 2: Lower the minimum width and height in [DEFAULT_VIDEO_CONSTRAINTS](webmoti-react/src/constants.ts)
 
 ### Deploying
 
