@@ -1,8 +1,8 @@
 # App screenshots
 
-## Join screen
+## Login screen
 
-![Join screen](join_screen.png)
+![Login screen](login_screen.png)
 
 <br>
 
@@ -24,6 +24,18 @@
 
 <br>
 
+## Speaker view
+
+![Speaker view](speaker_view.png)
+
+<br>
+
+## Text to speech
+
+![Text to speech](tts.png)
+
+<br>
+
 ## Controls menu
 
 ![Controls menu](controls_menu.png)
@@ -39,3 +51,17 @@
 ## Set class schedule
 
 ![Set class schedule](set_schedule.png)
+
+<br>
+
+## Medium size screen
+
+![Medium size screen](medium_screen_size.png)
+
+<br>
+
+## Mobile
+
+![Mobile size screen](mobile_screen_size.png)
+
+<br>
