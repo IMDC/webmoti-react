@@ -18,33 +18,35 @@ See the [project board](https://github.com/orgs/IMDC/projects/2) for issue prior
 
 ## Features
 
-- [Hold to raise hand](webmoti-react/docs/docs.md#raise-hand)
+- [Hold to raise hand](webmoti-react/docs/raise_hand.png)
   - [Hand queue](setup.md#queue)
   - Fireworks
-- [Classroom controls](webmoti-react/docs/docs.md#controls-menu)
+- [Classroom controls](webmoti-react/docs/controls_menu.png)
   - Audio/video
   - Board view zoom and pan
   - 1080p board view
   - Wave hand mode
-- [Sounds menu](webmoti-react/docs/docs.md#audio-notification)
+- [Sounds menu](webmoti-react/docs/audio_notification.png)
   - Nudge professor
   - Select sound
   - Volume control
 - Shortcuts
 - Admin/prof mixer controls
 - No audio feedback in classroom
-- [Text to speech](webmoti-react/docs/docs.md#text-to-speech)
+- [Text to speech](webmoti-react/docs/tts.png)
   - TTS chat previews
   - Send TTS message to classroom
 - Live captions
-- [AI Schedule](webmoti-react/docs/docs.md#set-class-schedule)
+- [AI Schedule](webmoti-react/docs/set_schedule.png)
 - [Tactile mobile notifications](setup.md#tactile-notifications)
 - Chat
 - Noise cancellation
-- [Speaker view](webmoti-react/docs/docs.md#speaker-view)
+- [Speaker view](webmoti-react/docs/speaker_view.png)
 - Share screen
 - Backgrounds
-- [Secure login with TMU google account](webmoti-react/docs/docs.md#login-screen)
+- [Secure login with TMU google account](webmoti-react/docs/login_screen.png)
 - Push to talk website for in person students
 - Hand queue website
-- [Works on mobile devices](webmoti-react/docs/docs.md#mobile)
+- [Works on mobile devices](webmoti-react/docs/mobile_screen_size.png)
+
+[More UI screenshots](webmoti-react/docs/docs.md)
