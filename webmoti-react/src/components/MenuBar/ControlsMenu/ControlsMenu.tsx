@@ -82,6 +82,13 @@ export default function ControlsMenu() {
           vertical: 'bottom',
           horizontal: 'center',
         }}
+        slotProps={{
+          paper: {
+            sx: {
+              padding: (theme) => theme.spacing(3),
+            },
+          },
+        }}
       >
         <div className={classes.cameraControlsPopover}>
           <Grid container justifyContent="center" alignItems="center" direction="column">

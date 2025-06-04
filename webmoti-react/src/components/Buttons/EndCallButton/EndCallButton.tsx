@@ -20,8 +20,6 @@ const StyledButton = styled(Button)(({ theme }) => ({
     '&:hover': {
       background: '#000000',
     },
-    paddingLeft: 5,
-    paddingRight: 5,
     minWidth: 0,
   },
 }));
