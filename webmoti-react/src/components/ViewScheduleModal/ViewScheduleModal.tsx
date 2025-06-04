@@ -41,6 +41,7 @@ const StyledModal = styled(Modal)(({ theme }) => ({
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
+    zIndex: theme.zIndex.modal + 1,
   },
 }));
 
@@ -83,8 +84,8 @@ export default function ViewScheduleModal({ open, onClose }: ViewScheduleModalPr
       onClose={onClose}
       className={classes.modal}
       closeAfterTransition
-      BackdropComponent={Backdrop}
-      BackdropProps={{ timeout: 500 }}
+      slots={{ backdrop: Backdrop }}
+      slotProps={{ backdrop: { timeout: 500 } }}
     >
       <Fade in={open}>
         <div className={classes.paper}>

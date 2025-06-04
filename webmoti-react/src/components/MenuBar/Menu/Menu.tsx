@@ -128,7 +128,10 @@ export default function Menu({ buttonClassName }: MenuProps) {
     {
       icon: <SettingsIcon />,
       label: 'Audio and Video Settings',
-      onClick: () => setSettingsOpen(true),
+      onClick: () => {
+        setSettingsOpen(true);
+        setMenuOpen(false);
+      },
     },
     ...(isSupported
       ? [
@@ -164,19 +167,28 @@ export default function Menu({ buttonClassName }: MenuProps) {
     {
       icon: <CalendarTodayIcon style={{ fill: '#707578', width: '0.9em' }} />,
       label: 'Set Schedule',
-      onClick: () => setSetScheduleOpen(true),
+      onClick: () => {
+        setSetScheduleOpen(true);
+        setMenuOpen(false);
+      },
     },
     {
       icon: <CalendarViewDayIcon style={{ fill: '#707578', width: '0.9em' }} />,
       label: 'View Schedule',
-      onClick: () => setViewScheduleOpen(true),
+      onClick: () => {
+        setViewScheduleOpen(true);
+        setMenuOpen(false);
+      },
     },
     ...(!isSharingScreen && !isMobile
       ? [
           {
             icon: <ScreenShareIcon />,
             label: SCREEN_SHARE_TEXT,
-            onClick: toggleScreenShare,
+            onClick: () => {
+              toggleScreenShare();
+              setMenuOpen(false);
+            },
             disabled: isScreenShareDisabled,
             tooltip: getTooltipMessage(),
           },
@@ -197,12 +209,18 @@ export default function Menu({ buttonClassName }: MenuProps) {
     {
       icon: <InfoIconOutlined />,
       label: 'About',
-      onClick: () => setAboutOpen(true),
+      onClick: () => {
+        setAboutOpen(true);
+        setMenuOpen(false);
+      },
     },
     {
       icon: <SupervisorAccountIcon style={{ fill: '#707578', width: '0.9em' }} />,
       label: 'Admin',
-      onClick: handleAdminLogin,
+      onClick: () => {
+        handleAdminLogin();
+        setMenuOpen(false);
+      },
     },
     {
       isCustomComponent: true,
