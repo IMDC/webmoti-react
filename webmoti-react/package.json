@@ -84,7 +84,7 @@
     "test-specific": "npm run test:base -- --testPathPattern",
     "update-snapshot-specific": "npm run test:base -- -u --testPathPattern",
     "update-all-snapshots": "npm run test:base -- -u",
-    "test:ci": "npm run test:base -- --ci --runInBand --reporters=default --reporters=jest-junit --coverage --silent",
+    "test:ci": "npm run test:base -- --ci --runInBand --reporters=default --reporters=jest-junit --silent",
     "lint": "eslint src server",
     "server": "ts-node -T -P server/tsconfig.json server/index.ts",
     "typescript:server": "tsc --noEmit -p server/",

@@ -61,9 +61,6 @@ jobs:
             JEST_JUNIT_CLASSNAME: "{classname}"
             JEST_JUNIT_TITLE: "{title}"
 
-      - store_artifacts:
-          path: webmoti-react/coverage
-
       - run:
           name: "Eslint"
           command: |
