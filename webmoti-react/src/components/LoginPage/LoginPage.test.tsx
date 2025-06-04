@@ -109,7 +109,7 @@ describe('the LoginPage component', () => {
   });
 
   it('should redirect to "/" when auth is disabled', () => {
-    (clientEnv.SET_AUTH as jest.Mock).mockReturnValue("none");
+    (clientEnv.SET_AUTH as jest.Mock).mockReturnValue(undefined);
     mockUseAppState.mockImplementation(() => ({ user: null, signIn: () => Promise.resolve(), isAuthReady: true }));
     render(<LoginPage />);
     expect(mockNavigate).toHaveBeenCalledWith('/', { replace: true });

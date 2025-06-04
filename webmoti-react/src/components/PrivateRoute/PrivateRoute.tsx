@@ -12,7 +12,8 @@ export default function PrivateRoute({ children }: Props) {
   const { isAuthReady, user } = useAppState();
   const location = useLocation();
 
-  const renderChildren = user || clientEnv.SET_AUTH() === 'none';
+  const isAuthDisabled = !clientEnv.SET_AUTH();
+  const renderChildren = user || isAuthDisabled;
 
   if (!renderChildren && !isAuthReady) {
     return null;

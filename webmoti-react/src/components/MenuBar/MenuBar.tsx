@@ -65,7 +65,7 @@ export default function MenuBar() {
             <Typography variant="body1">
               {/* only show room name in dev */}
               {/* also show when SET_AUTH is none (in cypress tests) */}
-              {(clientEnv.IS_DEV_MODE() || clientEnv.SET_AUTH() === 'none') && `${room!.name}`}
+              {(clientEnv.IS_DEV_MODE() || !clientEnv.SET_AUTH()) && `${room!.name}`}
               {/* {' | '}
               {participants.length + 1} participant
               {participants.length ? 's' : ''} */}
