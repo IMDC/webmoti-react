@@ -1,8 +1,11 @@
 __pycache__/
-test.rest
-webmoti-sa.json
 .venv
+static/build/
+
 test.py
 example_pdf.pdf
 test.rest
-static/build/
+
+.env
+.env.*
+!env.example

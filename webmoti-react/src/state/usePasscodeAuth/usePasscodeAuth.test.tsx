@@ -177,7 +177,7 @@ describe('the usePasscodeAuth hook', () => {
       });
     });
 
-    it('should call the API with the correct parameters when REACT_APP_DISABLE_TWILIO_CONVERSATIONS is true', async () => {
+    it('should call the API with the correct parameters when VITE_DISABLE_TWILIO_CONVERSATIONS is true', async () => {
       (clientEnv.DISABLE_TWILIO_CONVERSATIONS as jest.Mock).mockReturnValue('true');
 
       //@ts-expect-error: mock browser property

@@ -42,7 +42,7 @@ describe('the useAppState hook', () => {
     expect(() => renderHook(useAppState)).toThrow('useAppState must be used within the AppStateProvider');
   });
 
-  it('should get a token using the REACT_APP_TOKEN_ENDPOINT environment variable when avaiable', async () => {
+  it('should get a token using the VITE_TOKEN_ENDPOINT environment variable when avaiable', async () => {
     (clientEnv.TOKEN_ENDPOINT as jest.Mock).mockReturnValue('http://test.com/api/token');
 
     const { result } = renderHook(useAppState, { wrapper });

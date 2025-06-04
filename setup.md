@@ -69,6 +69,9 @@ It's set up to use the twilio video `go` room type (2 participant max) when
 
 #### Local setup
 
+Copy the [example](webmoti-react/.env.example)
+ environment file to `.env` in the same directory and fill in the values below
+
 - Open the [Twilio Console](https://www.twilio.com/console).
 - Click on 'Settings' and take note of your Account SID.
 - Create a new API Key in the [API Keys Section](https://www.twilio.com/console/video/project/api-keys)
@@ -77,42 +80,11 @@ It's set up to use the twilio video `go` room type (2 participant max) when
 - (This step is optional because plugin-rtc will
   create a new conversation service called
   `${APP_NAME}-conversations-service`. Make sure that both the react app .env
-  and the autojoin .env use the same conversation SID, otherwise they will be
+  and the standalone-join .env use the same conversation SID, otherwise they'll be
   in isolated chats) Create a new Conversations service in the [Services section](https://www.twilio.com/console/conversations/services)
  under the Conversations tab in the Twilio Console. Take note of the SID generated.
 - Store your Account SID, API Key SID, API Key Secret, and Conversations Service
- SID in a new file called `.env` in the root level of the application (example below).
-
-```bash
-TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-TWILIO_API_KEY_SID=SKxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-TWILIO_API_KEY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-TWILIO_CONVERSATIONS_SERVICE_SID=ISxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-# Using no auth is useful for testing multiple users (or testing in general)
-# VITE_SET_AUTH=none
-# You can also enable passcode authentication for use with the Twilio CLI rtc-plugin.
-# See: https://github.com/twilio-labs/plugin-rtc
-# VITE_SET_AUTH=passcode
-
-# Use firebase auth for deploying and only use passcode/none for testing
-VITE_SET_AUTH=firebase
-
-# The following values are used to configure the Firebase library.
-# See https://firebase.google.com/docs/web/setup#config-object
-# These variables must be set if FIREBASE_AUTH is enabled
-VITE_FIREBASE_API_KEY=
-VITE_FIREBASE_AUTH_DOMAIN=
-VITE_FIREBASE_STORAGE_BUCKET=
-VITE_FIREBASE_MESSAGING_SENDER_ID=
-
-# set this to the remote.it persistent link (ending in /api)
-# if running hand server locally, comment this out
-VITE_API_DOMAIN=
-
-# set this to the livekit websocket url (if using livekit)
-VITE_LIVEKIT_URL=
-```
+ SID in the `.env` file.
 
 ### Weird errors that happen sometimes
 
@@ -242,32 +214,8 @@ pip install -r ~/webmoti-react/hand/app/requirements.txt
 >
 > You can also activate it by typing activatehs (this is setup in .bashrc)
 
-Create `.env` file in project root:
-
-```bash
-# for tactile notifications
-VAPID_PRIVATE_KEY=
-VAPID_EMAIL=
-
-# for text to speech
-ELEVENLABS_API_KEY=
-
-# for AI schedule
-OPENAI_API_KEY=
-
-# for push to talk (if using)
-LIVEKIT_API_KEY=
-LIVEKIT_API_SECRET=
-
-# for vite client push to talk
-REACT_APP_LIVEKIT_URL=
-# for vite client tactile notifications
-REACT_APP_SAVE_SUB_URL=
-REACT_APP_NOTIF_APP_KEY=
-
-# set APP_ENV to dev for testing, set it to prod on raspberry pi
-APP_ENV=dev
-```
+Next, copy the [example](hand/app/.env.example)
+ environment file to `.env` in the same directory and fill in the values
 
 Vapid key pairs (for tactile push notifications) can be generated using
  `npx web-push generate-vapid-keys`.
@@ -423,22 +371,8 @@ Installing `puppeteer` on raspberry pi (arm64) is broken. It doesn't install
 
 #### Create .env in home directory
 
-```bash
-# these are the same values used in the react app .env
-TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-TWILIO_API_KEY_SID=SKxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-TWILIO_API_KEY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-TWILIO_CONVERSATIONS_SERVICE_SID=ISxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-# set this to the url of the deployed react app
-WEBMOTI_URL=
-
-# for student-view raspberry pi (remove this for board-view)
-IS_STUDENT_VIEW=true
-
-# for testing autojoin.js
-# IS_TEST_USER=true
-```
+Copy the [example](standalone-join/.env.example)
+ environment file to `.env` in the same directory and fill in the values
 
 #### Making the autojoin script run on boot
 

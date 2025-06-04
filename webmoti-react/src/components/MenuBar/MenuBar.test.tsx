@@ -113,12 +113,12 @@ describe('the MenuBar component', () => {
   //   expect(wrapper.find(ToggleScreenShareButton).exists()).toBe(false);
   // });
 
-  // it('should render the ToggleChatButton when REACT_APP_DISABLE_TWILIO_CONVERSATIONS is not true', () => {
+  // it('should render the ToggleChatButton when VITE_DISABLE_TWILIO_CONVERSATIONS is not true', () => {
   //   render(<MenuBar />);
   //   expect(screen.getByTestId('toggle-chat-button')).toBeInTheDocument();
   // });
 
-  // it('should hide the ToggleChatButton when REACT_APP_DISABLE_TWILIO_CONVERSATIONS is true', () => {
+  // it('should hide the ToggleChatButton when VITE_DISABLE_TWILIO_CONVERSATIONS is true', () => {
   //   (clientEnv.DISABLE_TWILIO_CONVERSATIONS as jest.Mock).mockReturnValue('true');
   //   render(<MenuBar />);
   //   expect(screen.getByTestId('toggle-chat-button')).not.toBeInTheDocument();

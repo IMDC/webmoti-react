@@ -1,8 +1,12 @@
 node_modules
-.env
-.vscode/
-hand_server.log
 .venv
 .pytest_cache
+
+.env
+.env.*
+!env.example
+
+hand_server.log
 autojoin.log
-todo.todo
+
+.vscode/
