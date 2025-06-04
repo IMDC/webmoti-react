@@ -107,6 +107,7 @@ VITE_FIREBASE_STORAGE_BUCKET=
 VITE_FIREBASE_MESSAGING_SENDER_ID=
 
 # set this to the remote.it persistent link (ending in /api)
+# if running hand server locally, comment this out
 VITE_API_DOMAIN=
 
 # set this to the livekit websocket url (if using livekit)
@@ -207,6 +208,17 @@ Run cypress tests:
 ## Hand server
 
 This runs on the raspberry pi (student-view only).
+
+It's responsible for:
+
+- Raising the hand on the raspberry pi
+- Keeping the hand queue updated
+- Live captions
+- Tactile notifications (from the hand queue website)
+- Ai schedules
+- Text to speech
+- Push to talk using livekit
+- Hosting the website for hand queue and in person students
 
 ### Server setup
 
