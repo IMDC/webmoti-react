@@ -65,3 +65,27 @@
 ![Mobile size screen](mobile_screen_size.png)
 
 <br>
+
+## Hand queue with two raised hands
+
+![Hand queue](hand_server/hand_queue.png)
+
+<br>
+
+## Push to talk (off)
+
+![Hand queue](hand_server/push_to_talk_off.png)
+
+<br>
+
+## Push to talk (on)
+
+![Hand queue](hand_server/push_to_talk_on.png)
+
+<br>
+
+## Homepage for in person students
+
+![Hand queue](hand_server/home.png)
+
+<br>

@@ -34,9 +34,10 @@ See the [project board](https://github.com/orgs/IMDC/projects/2) for issue prior
 - Admin/prof mixer controls
 - No audio feedback in classroom
 - [Text to speech](webmoti-react/docs/tts.png)
-  - TTS chat previews
+  - Different voice options
   - Send TTS message to classroom
-- Live captions
+  - TTS chat previews
+- Live captions using speech to text
 - [AI Schedule](webmoti-react/docs/set_schedule.png)
 - [Tactile mobile notifications](setup.md#tactile-notifications)
 - Chat
@@ -45,8 +46,8 @@ See the [project board](https://github.com/orgs/IMDC/projects/2) for issue prior
 - Share screen
 - Backgrounds
 - [Secure login with TMU google account](webmoti-react/docs/login_screen.png)
-- Push to talk website for in person students
-- Hand queue website
+- [Push to talk website for in person students](webmoti-react/docs/hand_server/push_to_talk_on.png)
+- [Hand queue website](webmoti-react/docs/hand_server/hand_queue.png)
 - [Works on mobile devices](webmoti-react/docs/mobile_screen_size.png)
 
 [More UI screenshots](webmoti-react/docs/docs.md)
