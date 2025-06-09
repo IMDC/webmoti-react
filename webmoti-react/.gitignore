@@ -23,7 +23,7 @@ yarn-error.log*
 # secrets
 .env
 .env.*
-!env.example
+!.env.example
 firebase_service_account.json
 
 # generated
