@@ -1,16 +1,16 @@
-fastapi==0.115.12
-uvicorn==0.34.3
+fastapi==0.115.14
+uvicorn==0.35.0
 sse-starlette==2.3.6
 pywebpush==2.0.3
-python-dotenv==1.1.0
+python-dotenv==1.1.1
 websockets==15.0.1
 httpx==0.28.1
-pytest==8.4.0
+pytest==8.4.1
 pytest-mock==3.14.1
-openai==1.83.0
+openai==1.93.0
 python-multipart==0.0.20
 jinja2==3.1.6
-livekit-api==1.0.2
+livekit-api==1.0.3
 
 # for raspberry pi only
 rpi-lgpio==0.6; 'rpi' in platform_release
