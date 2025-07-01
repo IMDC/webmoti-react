@@ -4,7 +4,7 @@
   "main": "autojoin.js",
   "private": true,
   "dependencies": {
-    "dotenv": "^16.5.0",
+    "dotenv": "^17.0.0",
     "puppeteer": "^24.10.0",
     "twilio": "^5.7.0",
     "winston": "^3.17.0"
